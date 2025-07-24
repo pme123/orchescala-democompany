@@ -15,15 +15,16 @@ object CompanyDevConfig:
     )
 
   lazy val config: DevConfig =
-     config(ApiProjectConfig())
-     
+    config(ApiProjectConfig())
+
   def config(apiProjectConfig: ApiProjectConfig) = DevConfig(
     apiProjectConfig,
-    //sbtConfig = companySbtConfig,
-    //versionConfig = companyVersionConfig,
-    //publishConfig = Some(companyPublishConfig),
-    //postmanConfig = Some(companyPostmanConfig),
-    //dockerConfig = companyDockerConfig
+    // sbtConfig = companySbtConfig,
+    // versionConfig = companyVersionConfig,
+    // publishConfig = Some(companyPublishConfig),
+    // postmanConfig = Some(companyPostmanConfig),
+    // dockerConfig = companyDockerConfig,
+    bpmnProcessType = BpmnProcessType.C8()
   )
 
   private lazy val companyVersionConfig = CompanyVersionConfig(
