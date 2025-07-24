@@ -1,0 +1,9 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Environment-dependent path to Maven home directory
+/git-temp/
+/.bsp/
+/.idea/
+/.scala-build/
+**/target/
