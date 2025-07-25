@@ -4,7 +4,7 @@ import orchescala.worker.WorkerError.ServiceAuthError
 import orchescala.worker.oauth.TokenService
 import sttp.client3.*
 
-class CompanyRestApiClient extends RestApiClient, CompanyC7Client:
+class CompanyRestApiC7Client extends RestApiClient, CompanyC7Client:
 
   override protected def auth(
                                request: Request[Either[String, String], Any]
@@ -26,4 +26,4 @@ class CompanyRestApiClient extends RestApiClient, CompanyC7Client:
 
   end auth
 
-end CompanyRestApiClient
+end CompanyRestApiC7Client

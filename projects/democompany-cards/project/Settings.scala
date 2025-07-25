@@ -85,7 +85,8 @@ object Settings {
       "ch.qos.logback" % "logback-classic" % logbackVersion % Runtime,
       "jakarta.xml.bind" % "jakarta.xml.bind-api" % jaxbApiVersion,
       customer %% s"$customer-orchescala-worker" % customerOrchescalaV,
-//      "io.github.pme123" %% "orchescala-worker-c7" % orchescalaV
+      "io.github.pme123" %% "orchescala-worker-c7" % orchescalaV,
+      "io.github.pme123" %% "orchescala-worker-c8" % orchescalaV
     )
 
   lazy val helperDeps = 
