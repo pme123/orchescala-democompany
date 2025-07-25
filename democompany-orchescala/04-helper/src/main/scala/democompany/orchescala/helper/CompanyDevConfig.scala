@@ -22,7 +22,7 @@ object CompanyDevConfig:
     // sbtConfig = companySbtConfig,
     // versionConfig = companyVersionConfig,
     // publishConfig = Some(companyPublishConfig),
-    // postmanConfig = Some(companyPostmanConfig),
+    postmanConfig = Some(companyPostmanConfig),
     // dockerConfig = companyDockerConfig,
     bpmnProcessType = BpmnProcessType.C8()
   )
@@ -33,5 +33,10 @@ object CompanyDevConfig:
     companyOrchescalaVersion = BuildInfo.version,
     sbtVersion = BuildInfo.sbtVersion,
     otherVersions = Map()
+  )
+
+  lazy val companyPostmanConfig = PostmanConfig(
+    collectionId = "41760907-6da81db9-00d3-4e0e-9fdd-c21202b2abc5",
+    localDevEnvId = "12738322-af7e1810-badd-4edb-8409-8bd9a7ad9866"
   )
 end CompanyDevConfig

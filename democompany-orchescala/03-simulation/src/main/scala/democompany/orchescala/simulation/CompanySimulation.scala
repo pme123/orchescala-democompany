@@ -47,7 +47,7 @@ trait CompanySimulation extends SimulationRunner:
       )
       // Set OAuth2 access token for authorization
       val tokenUrl =
-        s"${fssoBaseUrl}/auth/realms/${config.tenantId.get}/protocol/openid-connect/token"
+        s"$fssoBaseUrl/auth/realms/$fssoRealm/protocol/openid-connect/token"
 
       // Get token and set it in the ApiClient
       getOAuthToken(oauthClient, tokenUrl, params)
