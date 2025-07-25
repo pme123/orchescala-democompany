@@ -120,7 +120,7 @@ object Settings {
   )
   lazy val workerDeps = Seq(
     "io.github.pme123" %% "orchescala-worker-c7" % orchescalaV,
-    //"io.github.pme123" %% "orchescala-worker-c8" % orchescalaV,
+    "io.github.pme123" %% "orchescala-worker-c8" % orchescalaV,
   )
 
   lazy val helperDeps = apiDeps ++ Seq(

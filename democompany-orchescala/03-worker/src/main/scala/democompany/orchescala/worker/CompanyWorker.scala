@@ -12,7 +12,7 @@ import scala.reflect.ClassTag
  */
 trait CompanyWorker[In <: Product : InOutCodec, Out <: Product : InOutCodec]
   extends C7Worker[In, Out]/*, C8Worker[In, Out]*/:
-  protected def c7Context: C7Context = CompanyEngineContext(CompanyRestApiClient())
+  protected def c7Context: C7Context = CompanyEngineC7Context(CompanyRestApiClient())
 //  protected def c8Context: C8Context = CompanyEngineContext(CompanyRestApiClient())
 
 trait CompanyValidationWorkerDsl[
