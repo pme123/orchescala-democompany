@@ -1,0 +1,22 @@
+{
+  "creditCardAccount": {
+    "clientId": 1213456,
+    "accountId": 5555555
+  },
+  "mainCardHolder": {
+    "clientInformation": {
+      "clientId": 1213456,
+      "addressType": "Domicile",
+      "residencePermitCode": 2
+    },
+    "cards": [
+      {
+        "categoryType": "MainCard",
+        "cardLimit": 10000,
+        "cardCurrency": "CHF",
+        "embossedLineOne": "PETER PAN"
+      }
+    ]
+  },
+  "businessKey": "TEST: democompany-cards-orderCreditcardV1"
+}

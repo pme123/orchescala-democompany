@@ -26,8 +26,9 @@ object CompanyApiCreator:
   )
 
   private lazy val groupedProjectConfig = ProjectsPerGitRepoConfig(
-    "git@github.com:pme123",
-    projects
+    "ssh://git@github.com/pme123",
+    projects,
+    singleRepo = true
   )
 
   lazy val `democompany-cards` = generalProjectConfig("democompany-cards", "#c8feda")

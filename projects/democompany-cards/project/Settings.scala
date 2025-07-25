@@ -66,7 +66,8 @@ object Settings {
 
   lazy val apiDeps = 
     Seq(
-      customer %% s"$customer-orchescala-api" % customerOrchescalaV
+      customer %% s"$customer-orchescala-api" % customerOrchescalaV,
+      "io.github.pme123" %% "orchescala-api" % orchescalaV,
     )
 
   lazy val dmnDeps = 

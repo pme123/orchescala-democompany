@@ -22,6 +22,7 @@ object OrderCreditcard extends CompanyBpmnProcessDsl:
   object In:
     given ApiSchema[In] = deriveApiSchema
     given InOutCodec[In] = deriveInOutCodec
+
   case class InConfig(
     // Process Configuration
     // @description("To test cancel from other processes you need to set this flag.")

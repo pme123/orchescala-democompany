@@ -1,0 +1,10 @@
+{
+  "creditCardAccount": {
+    "value": "{\n  \"clientId\" : 1213456,\n  \"accountId\" : 5555555\n}",
+    "type": "Json"
+  },
+  "mainCardHolder": {
+    "value": "{\n  \"clientInformation\" : {\n    \"clientId\" : 1213456,\n    \"addressType\" : \"Domicile\",\n    \"residencePermitCode\" : 2\n  },\n  \"cards\" : [\n    {\n      \"categoryType\" : \"MainCard\",\n      \"cardLimit\" : 10000.0,\n      \"cardCurrency\" : \"CHF\",\n      \"embossedLineOne\" : \"PETER PAN\"\n    }\n  ]\n}",
+    "type": "Json"
+  }
+}

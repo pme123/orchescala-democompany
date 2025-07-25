@@ -3,23 +3,18 @@ package api
 
 object ApiProjectCreator extends CompanyApiCreator:
 
-  val title = "democompany-cards"
+  val title = "Card Management"
 
   lazy val projectDescr =
-    "TODO Your Project description."
+    "Processes and Workers related to Card Management."
 
   val version = "0.1.0-SNAPSHOT"
 
   document(
-    //myProcessApi,
-    //..
+    orderCreditcardApi
   )
 
-  /* example:
-  private lazy val myProcessApi =
-    import myProcess.v1.*
-    api(MyProcess.example)(
-      // userTasks / workers etc.
-    )
-  */
+  private lazy val orderCreditcardApi =
+    import democompany.cards.domain.orderCreditcard.v1.*
+    api(OrderCreditcard.example)()
 end ApiProjectCreator

@@ -1,0 +1,285 @@
+openapi: 3.1.0
+info:
+  title: Card Management
+  version: 0.1.0-SNAPSHOT
+  summary: "\n\nProcesses and Workers related to Card Management.\n\nCreated at 25.07.2025,\
+    \ 10:39\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \n# Package Configuration\n**Check all dependency trees here: [democompany-cards](../../dependencies/democompany-cards.html)**\n\
+    \n### Dependencies:\n\n\n\n\n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\
+    \n```\n\n// Project configuration\n\nprojectName: democompany-cards\nprojectVersion:\
+    \ 0.1.0-SNAPSHOT\nsubProjects: [\n  // subProject1\n  // subProject2\n]\ndependencies:\
+    \ [\n  // mastercompany-services\n  // mycompany-commons\n]\n\n```\n\n</p>\n</details>\n\
+    \n\nThere is no README.md in the Project.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
+    <p>\n\n\nAll notable changes to this project will be documented in this file.\n\
+    \n* Types of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
+    \ functionality\n  * Deprecated: soon-to-be-removed features\n  * Removed: now\
+    \ removed features\n  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\
+    \n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\n\
+    and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
+    \n\n</p>\n</details>\n\n\n<p/>\n<details>\n<summary>\n<b><i>General Variables</i></b>\n\
+    </summary>\n\n<p>\n\n### Mocking\n\n**servicesMocked**:\n\nMock all the _ServiceWorkers_\
+    \ in your process with their default Mock:\n\n- DSL:\n```scala\nprocess(..)\n\
+    \  .mockServices\n```\n\n- Json\n```json\n...\n\"servicesMocked\": true,\n...\n\
+    ```\n\n\n**mockedWorkers**:\n\nMock any Process- and/or ExternalTask-Worker with\
+    \ their default Mocks.\nThis is a list of the _Worker topicNames or Process processNames_,\
+    \ you want to mock.\nIt is also possible to use a _comma separated_ String,\n\
+    like `\"mySubProcess,myOtherSubProcess,myService\"`\n\n_Be aware_: For Sub-Processes,\
+    \ this expects an _InitWorker_ where the _topicName_ is equal to the _processName_.\n\
+    \n\n- DSL:\n```scala\nprocess(..)\n  .mockedWorkers(\"mySubProcess1\", \"mySubProcess2\"\
+    ) // creates a list with SubProcessess\n  .mockedWorker(\"myOtherSubProcess\"\
+    ) // adds a SubProcess\n```\n\n- Json\n```json\n...\n\"mockedWorkers\": [\"mySubProcess\"\
+    , \"myOtherSubProcess, myService\"],\n...\n```\n\n\n**outputMock**:\n\nMock the\
+    \ Process or ExternalTask (`Out`)\n - You find an example in every _Process_ and\
+    \ _ExternalTask_.\n\n\n- DSL:\n```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n\
+    \  .mockWith(outputMock)\n```\n\n- Json\n```json\n...\n\"outputMock\": {..},\n\
+    ...\n```\n\n\n**outputServiceMock**:\n\nMock the Inner-Service (`MockedServiceResponse[ServiceOut]`)\n\
+    \ - You find an example in every _ServiceTask_.\n\n\n- DSL:\n```scala\nserviceTask(..)\n\
+    \  .mockServiceWith(MockedServiceResponse\n     .success200(inOut.defaultServiceOutMock))\n\
+    ```\n\n- Json\n```json\n...\n\"outputServiceMock\": {\n  \"respStatus\" : 200,\n\
+    \  \"respBody\" : \"Example String Body\",\n  \"respHeaders\" : [\n  ]\n},\n...\n\
+    ```\n\n### Mapping\n**outputVariables**:\n\nYou can filter the Output with a list\
+    \ of variable names you are interested in.\nThis list may include all variables\
+    \ from the output (`Out`). We included an example for each Process or ExternalTask.\n\
+    It is also possible to use a _comma separated_ String,\nlike `\"name,firstName\"\
+    `\n\n\n- DSL:\n```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n  .withOutputVariables(\"\
+    name\", \"firstName\") // creates a list with outputVariables\n  .withOutputVariable(\"\
+    nickname\") // adds a outputVariable\n```\n\n- Json\n```json\n...\n\"outputVariables\"\
+    : [\"name\", \"firstName\"],\n...\n```\n\n\n**manualOutMapping**:\n\nBy default\
+    \ all output Variables (`Out`) are on the Process for _External Tasks_.\nIf the\
+    \ filter _outputVariables_ is not enough,\nyou can set this variable - every output\
+    \ variable is then local.\n\n_Be aware_ that you must then manually have _output\
+    \ mappings_ for each output variable!\n\n\n- DSL:\n```scala\nserviceTask(..) //\
+    \ or customTask(..)\n  .manualOutMapping\n```\n\n- Json\n```json\n...\n\"manualOutMapping\"\
+    : true,\n...\n```\n\n### Mocking\n**handledErrors**:\n\nA list of error codes\
+    \ that are handled (`BpmnError`)\nIt is also possible to use a _comma separated_\
+    \ String,\nlike `\"validation-failed,404\"`\n\nAt the moment only _ServiceTasks_\
+    \ supported.\n\n\n- DSL:\n```scala\nserviceTask(..)\n  .handleErrors(ErrorCodes.`validation-failed`,\
+    \ \"404\") // create a list of handledErrors\n  .handleError(\"404\") // add a\
+    \ handledError\n```\n\n- Json\n```json\n...\n\"handledErrors\": [\"validation-failed\"\
+    , \"404\"],\n...\n```\n\n\n**regexHandledErrors**:\n\nYou can further filter Handled\
+    \ Errors with a list of Regex expressions that the body error message must match.\n\
+    It is also possible to use a _comma separated_ String,\nlike `\"SQL exception,\"\
+    errorNr\":\"20000\"\"`\n\nAt the moment only _ServiceTasks_ supported.\n\n\n-\
+    \ DSL:\n```scala\nserviceTask(..)\n  .handleErrorWithRegex(\"SQL exception\")\n\
+    \  .handleErrorWithRegex(\"\\\"errorNr\\\":\\\"20000\\\"\")\n```\n\n- Json\n```json\n\
+    ...\n\"regexHandledErrors\": [\"SQL exception\", \"\"errorNr\":\"20000\"\"],\n\
+    ...\n```\n\n### Authorization\n**impersonateUserId**:\n\nUser-ID of a User that\
+    \ should be taken to authenticate to the services.\nThis must be supported by\
+    \ your implementation. *Be caution: this may be a security issue!*.\nIt is helpful\
+    \ if you have Tokens that expire, but long running Processes.\n\n- DSL:\n```scala\n\
+    process(..) // or serviceTask(..)/customTask(..)\n  .withImpersonateUserId(impersonateUserId)\n\
+    ```\n\n- Json\n```json\n...\n\"impersonateUserId\": \"myUserName\",\n...\n```\n\
+    \n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api v0.3.0-SNAPSHOT](https://github.com/pme123/orchescala)\n\
+    > - democompany-orchescala-api 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\
+    \n"
+paths:
+  /Bpmn/OrderCreditcardV1/orderCreditcardV1/democompany-cards-orderCreditcardV1:
+    head:
+      tags:
+      - Order Creditcard V1
+      summary: Process
+      description: "\nDemo Process to order a credit card.\n\n---\n\n- **Called Element**:\
+        \ `democompany-cards-orderCreditcardV1` (to define in the Call Activity)\n\
+        \n\n\n---\n\n\n\n\n- Input:  `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
+        \ > In`\n- Output: `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
+        \ > Out`\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"\
+        cards-orderCreditcardV1-88227\">\n    <img onLoad=\"openFromUrl('cards-orderCreditcardV1.bpmn',\
+        \ new BpmnJS({ container: $('#cards-orderCreditcardV1-88227'), height: '95%',\
+        \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [cards-orderCreditcardV1.bpmn](diagrams/cards-orderCreditcardV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('cards-orderCreditcardV1-88227')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n<p/>\n\n<details>\n<summary>\n\
+        <b><i>General Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\
+        \nJust take the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"processStatus\",\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\"\
+        : {\n  \"processStatus\" : \"succeeded\"\n},\n...\n```\n\n</p>\n</details>\n\
+        </p>\n      \n\n\n**Used in no other Process.**\n\n**Uses no other Processes.**\n"
+      operationId: Process
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/In'
+            examples:
+              democompany-cards-orderCreditcardV1:
+                value:
+                  creditCardAccount:
+                    clientId: 1213456
+                    accountId: 5555555
+                  mainCardHolder:
+                    clientInformation:
+                      clientId: 1213456
+                      addressType: Domicile
+                      residencePermitCode: 2
+                    cards:
+                    - categoryType: MainCard
+                      cardLimit: 10000.0
+                      cardCurrency: CHF
+                      embossedLineOne: PETER PAN
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Out'
+              examples:
+                democompany-cards-orderCreditcardV1:
+                  value:
+                    processStatus: succeeded
+  /Bpmn/OrderCreditcardV1/orderCreditcardV1/democompany-cards-orderCreditcardV1/init:
+    head:
+      tags:
+      - Order Creditcard V1
+      summary: Init Worker
+      description: |2
+
+
+        The Init Worker has the following responsibilities:
+
+          - Validates the Process Input (`In`). -> by Orchescala
+          - Maps the Configuration to Process Variables (`InConfig`). -> by Orchescala
+          - Custom validation the Process Input (`In`, e.g. combining 2 variables). -> Process Specific
+          - Initializes the default Variables with `In` as input (see _Process_ description) and `InitIn` as output. -> Process Specific
+
+        `NoInput` means there is no initialization needed.
+      operationId: Init Worker
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitIn'
+              examples:
+                InitIn:
+                  value: {}
+components:
+  schemas:
+    CardAccount:
+      title: CardAccount
+      type: object
+      required:
+      - clientId
+      properties:
+        clientId:
+          type: integer
+          format: int64
+        accountId:
+          type: integer
+          format: int64
+    CardCurrency:
+      title: CardCurrency
+      type: string
+      enum:
+      - CHF
+      - EUR
+      - USD
+    CardHolder:
+      title: CardHolder
+      type: object
+      required:
+      - clientInformation
+      - cards
+      properties:
+        clientInformation:
+          $ref: '#/components/schemas/ClientInfo'
+        cards:
+          description: The list of cards must have at least one _Card_.
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ModuleCard'
+    CardHolderType:
+      title: CardHolderType
+      type: string
+      enum:
+      - Additional
+      - Domicile
+    CategoryType:
+      title: CategoryType
+      type: string
+      enum:
+      - AdditionalCard
+      - MainCard
+    ClientInfo:
+      title: ClientInfo
+      type: object
+      required:
+      - clientId
+      - addressType
+      properties:
+        clientId:
+          type: integer
+          format: int64
+        addressType:
+          $ref: '#/components/schemas/CardHolderType'
+        residencePermitCode:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 7
+          - 3
+          - 4
+          - 5
+          - 6
+          - 8
+          format: int32
+    In:
+      title: In
+      type: object
+      required:
+      - creditCardAccount
+      properties:
+        creditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        mainCardHolder:
+          $ref: '#/components/schemas/CardHolder'
+        inConfig:
+          $ref: '#/components/schemas/InConfig'
+    InConfig:
+      title: InConfig
+      description: |-
+        A way to override process configuration.
+
+        **SHOULD NOT BE USED on Production!**
+      type: object
+    InitIn:
+      title: InitIn
+      type: object
+    ModuleCard:
+      title: ModuleCard
+      type: object
+      required:
+      - categoryType
+      - embossedLineOne
+      properties:
+        categoryType:
+          $ref: '#/components/schemas/CategoryType'
+        cardLimit:
+          type: number
+          format: double
+        cardCurrency:
+          $ref: '#/components/schemas/CardCurrency'
+        embossedLineOne:
+          type: string
+    Out:
+      title: Out
+      type: object
+      required:
+      - processStatus
+      properties:
+        processStatus:
+          $ref: '#/components/schemas/ProcessStatus'
+    ProcessStatus:
+      title: ProcessStatus
+      type: string
+      enum:
+      - canceled
+      - failed
+      - notValid
+      - output-mocked
+      - succeeded
+tags: []
