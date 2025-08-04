@@ -3,7 +3,7 @@
   <bpmn:collaboration id="Collaboration_0bb63t1">
     <bpmn:participant id="Participant_democompany-cards-orderCreditcardV1" name="democompany-cards-orderCreditcardV1" processRef="democompany-cards-orderCreditcardV1" />
   </bpmn:collaboration>
-  <bpmn:process id="democompany-cards-orderCreditcardV1" name="democompany-cards-orderCreditcardV1" isExecutable="true">
+  <bpmn:process id="democompany-cards-orderCreditcardV1" name="democompany-cards-orderCreditcardV1" isExecutable="true"><bpmn:extensionElements><zeebe:versionTag value="1.0"></zeebe:versionTag></bpmn:extensionElements>
     <bpmn:startEvent id="StartEvent_1" name="start">
       <bpmn:extensionElements>
         <zeebe:executionListeners>
