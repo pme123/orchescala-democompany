@@ -3,7 +3,10 @@
   <bpmn:collaboration id="Collaboration_1nchi5w" isClosed="false">
     <bpmn:participant id="democompany-cards-orderCreditcardV1-Participant" name="democompany-cards-orderCreditcardV1" processRef="democompany-cards-orderCreditcardV1" />
   </bpmn:collaboration>
-  <bpmn:process id="democompany-cards-orderCreditcardV1" name="democompany-cards-orderCreditcardV1" processType="None" isClosed="false" isExecutable="true"><bpmn:extensionElements><zeebe:versionTag value="1.0"></zeebe:versionTag></bpmn:extensionElements>
+  <bpmn:process id="democompany-cards-orderCreditcardV1" name="democompany-cards-orderCreditcardV1" processType="None" isClosed="false" isExecutable="true">
+    <bpmn:extensionElements>
+      <zeebe:versionTag value="1.0" />
+    </bpmn:extensionElements>
     <bpmn:serviceTask id="InitProcessTask" name="Init Process" implementation="##WebService">
       <bpmn:extensionElements>
         <conversion:message severity="REVIEW">Attribute 'topic' on 'serviceTask' was mapped. Is set as job type.</conversion:message>
@@ -49,9 +52,9 @@
     <bpmn:endEvent id="OutputmockedEndEvent" name="output-mocked">
       <bpmn:extensionElements>
         <conversion:message severity="TASK">Listener at 'start' with implementation '#{execution.setVariable("processStatus", "output-mocked")}' can be transformed to a job worker. Please adjust the job type.</conversion:message>
-        <zeebe:executionListeners>
-          <zeebe:executionListener eventType="start" type="#{execution.setVariable(&#34;processStatus&#34;, &#34;output-mocked&#34;)}" />
-        </zeebe:executionListeners>
+        <zeebe:ioMapping>
+          <zeebe:output source="=&#34;output-mocked&#34;" target="processStatus" />
+        </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0vdwlr8</bpmn:incoming>
     </bpmn:endEvent>
@@ -107,7 +110,7 @@
       <bpmndi:BPMNShape id="Event_047id8n_di" bpmnElement="MockedBoundaryEvent" color:background-color="#D5D5D5">
         <dc:Bounds x="392" y="319" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="453" y="193" width="73" height="14" />
+          <dc:Bounds x="433" y="353" width="73" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1jqb7g9_di" bpmnElement="Flow_1jqb7g9">
