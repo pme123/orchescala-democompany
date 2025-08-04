@@ -36,7 +36,7 @@
     <bpmn:sequenceFlow id="Flow_1gt1qt5" sourceRef="StartEvent_1" targetRef="Gateway_11ph763" />
     <bpmn:sequenceFlow id="Flow_0d9xarg" name="no" sourceRef="Gateway_11ph763" targetRef="Event_1p66wzz" />
     <bpmn:sequenceFlow id="Flow_1guvmo2" name="yes" sourceRef="Gateway_11ph763" targetRef="Event_0icvc39">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=processStatus is outputMocked</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=isMocked</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
