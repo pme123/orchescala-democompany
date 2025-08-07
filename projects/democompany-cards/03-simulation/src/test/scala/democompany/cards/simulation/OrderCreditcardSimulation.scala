@@ -1,18 +1,17 @@
-package democompany.cards
-package simulation
+package democompany.cards.simulation
 
 import democompany.cards.domain.orderCreditcard.v1.OrderCreditcard.*
 
-// ./helper.scala deploy OrderCreditcardSimulation
-// simulation/test
-// simulation/testOnly *OrderCreditcardSimulation
-class OrderCreditcardSimulation extends CompanySimulation:
+abstract class OrderCreditcardSimulation extends CompanySimulation:
 
   simulate(
     scenario(`OrderCreditcard`)(
       //TODO remove or add process steps like UserTasks
     ),
     scenario(`OrderCreditcard minimal`)(
+      //TODO remove or add process steps like UserTasks
+    ),
+    scenario(`OrderCreditcard mocked`)(
       //TODO remove or add process steps like UserTasks
     )
   )
@@ -32,6 +31,11 @@ class OrderCreditcardSimulation extends CompanySimulation:
       .mockServices
       .mockWorkers(workers*)
 
+  private lazy val `OrderCreditcard mocked` =
+    example
+      .withOut(outExample.copy(processStatus = ProcessStatus.`output-mocked`))
+      .mockWorkers(OrderCreditcard.processName)
+      
   private lazy val workers = Seq()
 
 end OrderCreditcardSimulation

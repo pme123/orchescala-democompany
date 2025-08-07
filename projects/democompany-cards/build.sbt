@@ -6,7 +6,9 @@ ThisBuild / versionScheme := Some("semver-spec")
 ThisBuild / libraryDependencySchemes += "io.github.pme123" %% "orchescala-api" % "early-semver"
 ThisBuild / evictionErrorLevel := Level.Warn
 ThisBuild / usePipelining := true
-
+ThisBuild / dependencyOverrides ++= Seq(
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.19.2"
+)
 
 lazy val root = project
   .in(file("."))

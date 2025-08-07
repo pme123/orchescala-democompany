@@ -9,6 +9,11 @@ class OrderCreditcardWorker extends CompanyInitWorkerDsl[In, Out, InitIn, InConf
   lazy val inOutExample = example
 
   override def customInit(in: In): InitIn =
-    InitIn() 
+    InitIn(
+      initCreditCardAccount = in.creditCardAccount.copy(accountId = None),
+      simpleValue = if in.clientId > 100 then Some("Hello World") else None
+    )
+ 
+ 
   
 end OrderCreditcardWorker

@@ -2,7 +2,7 @@ package democompany.orchescala.engine
 
 /** Using the SAAS version of Camunda 8 (Camunda Champions Access;).
   */
-object CompanyEngineC8Config:
+trait CompanyEngineC8Config:
 
   lazy val zeebeGrpc    = sys.env.getOrElse("CAMUNDA8_CLOUD_GRPC_URL", s"NOT_SET")
   lazy val zeebeRest    = sys.env.getOrElse("CAMUNDA8_CLOUD_REST_URL", s"NOT_SET")
@@ -12,4 +12,4 @@ object CompanyEngineC8Config:
   lazy val oAuthAPI     =
     sys.env.getOrElse("CAMUNDA8_CLOUD_OAUTH_URL", "https://login.cloud.camunda.io/oauth/token")
 
-end CompanyEngineC8Config
+object CompanyEngineC8Config extends CompanyEngineC8Config
