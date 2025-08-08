@@ -4,7 +4,7 @@ info:
   version: 0.1.0-SNAPSHOT
   summary: "\n         |**This is for Postman - to have example requests. Be aware\
     \ the Output is not provided!**\n         |\n         |\n\nMy services for the\
-    \ democompany\n\nCreated at 08.08.2025, 07:12\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ democompany\n\nCreated at 08.08.2025, 07:54\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n# Package Configuration\n**Check all dependency trees here: [democompany-services](../../dependencies/democompany-services.html)**\n\
     \n### Dependencies:\n\n\n\n\n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\
     \n```\n\n// Project configuration\n\nprojectName: democompany-services\nprojectVersion:\
@@ -77,27 +77,76 @@ servers:
 - url: http://localhost:8080/engine-rest
   description: Local Developer Server
 paths:
-  /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-services-clientsV1-GetClientsClientKey--:
+  /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-services-clientsV1-GetClientsClientId--:
     post:
       tags:
       - Clients 1.0
-      summary: 'Worker: GetClientsClientKey'
-      description: "\n\n---\n\n\n\n<details>\n<summary><b>Wrapped Service:</b>\n\n\
-        (Clients 1.0 - v1.0 - GET: my/path/TODO)\n</summary>\n<p>\nInput Body: `orchescala.domain.NoInput`:\n\
-        \n\nExample Response: `orchescala.domain.NoOutput`:\n\n```json\n{\n  \"respStatus\"\
-        \ : 204,\n  \"respBody\" : {\n    \n  },\n  \"respHeaders\" : [\n  ]\n}\n\
-        ```\n</p>\n</details>\n</p>\n\n---\n\n\nSee API Doc: [Worker: GetClientsClientKey](None/democompany-services/OpenApi.html#operation/Worker:%20GetClientsClientKey)\n"
-      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-services-clientsv1-getclientsclientkey--
+      summary: 'Worker: GetClientsClientId'
+      description: |2
+
+
+        ---
+
+
+
+        <details>
+        <summary><b>Wrapped Service:</b>
+
+        (Clients 1.0 - v1.0 - GET: clients/clientId)
+        </summary>
+        <p>
+        Input Body: `orchescala.domain.NoInput`:
+
+
+        Example Response: `democompany.services.domain.clients.v1.schema.Client`:
+
+        ```json
+        {
+          "respStatus" : 200,
+          "respBody" : {
+            "id" : 1,
+            "firstName" : "John",
+            "lastName" : "Doe",
+            "email" : "john.doe@example.com",
+            "address" : {
+              "street" : "Main Street",
+              "number" : "123",
+              "zip" : "12345",
+              "city" : "Anytown",
+              "country" : "Germany",
+              "additionalInfo" : "Additional Info"
+            }
+          },
+          "respHeaders" : [
+            [
+              "ETag",
+              "12345.234324234.2343423432"
+            ]
+          ]
+        }
+        ```
+        </p>
+        </details>
+        </p>
+
+        ---
+
+
+        See API Doc: [Worker: GetClientsClientId](None/democompany-services/OpenApi.html#operation/Worker:%20GetClientsClientId)
+      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-services-clientsv1-getclientsclientid--
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/StartProcessIn'
             examples:
-              democompany-services-clientsV1-GetClientsClientKey:
+              democompany-services-clientsV1-GetClientsClientId:
                 value:
-                  variables: {}
-                  businessKey: democompany-services-clientsV1-GetClientsClientKey
+                  variables:
+                    clientId:
+                      value: 1234
+                      type: Long
+                  businessKey: democompany-services-clientsV1-GetClientsClientId
                   withVariablesInReturn: true
         required: true
       responses:

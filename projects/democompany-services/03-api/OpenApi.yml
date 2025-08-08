@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: democompany-services
   version: 0.1.0-SNAPSHOT
-  summary: "\n\nMy services for the democompany\n\nCreated at 08.08.2025, 07:12\n\n\
+  summary: "\n\nMy services for the democompany\n\nCreated at 08.08.2025, 07:54\n\n\
     **See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n# Package Configuration\n**Check all dependency trees here: [democompany-services](../../dependencies/democompany-services.html)**\n\
     \n### Dependencies:\n\n\n\n\n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\
@@ -73,39 +73,57 @@ info:
     > - democompany-orchescala-api 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\
     \n"
 paths:
-  /Worker/Clients1.0/clientsV1-GetClientsClientKey/democompany-services-clientsV1-GetClientsClientKey:
+  /Worker/Clients1.0/clientsV1-GetClientsClientId/democompany-services-clientsV1-GetClientsClientId:
     head:
       tags:
       - Clients 1.0
-      summary: 'Worker: GetClientsClientKey'
-      description: "\n\n\n**Topic:** `democompany-services-clientsV1-GetClientsClientKey`\
+      summary: 'Worker: GetClientsClientId'
+      description: "\n\n\n**Topic:** `democompany-services-clientsV1-GetClientsClientId`\
         \ (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_\
         \ of type _External_)\n\n\n\n---\n\n\n\n<details>\n<summary><b>Wrapped Service:</b>\n\
-        \n(Clients 1.0 - v1.0 - GET: my/path/TODO)\n</summary>\n<p>\nInput Body: `orchescala.domain.NoInput`:\n\
-        \n\nExample Response: `orchescala.domain.NoOutput`:\n\n```json\n{\n  \"respStatus\"\
-        \ : 204,\n  \"respBody\" : {\n    \n  },\n  \"respHeaders\" : [\n  ]\n}\n\
-        ```\n</p>\n</details>\n</p>\n\n---\n\n\n- Input:  `democompany.services.domain.clients.v1.GetClientsClientKey\
-        \ > In`\n- Output: `democompany.services.domain.clients.v1.GetClientsClientKey\
+        \n(Clients 1.0 - v1.0 - GET: clients/clientId)\n</summary>\n<p>\nInput Body:\
+        \ `orchescala.domain.NoInput`:\n\n\nExample Response: `democompany.services.domain.clients.v1.schema.Client`:\n\
+        \n```json\n{\n  \"respStatus\" : 200,\n  \"respBody\" : {\n    \"id\" : 1,\n\
+        \    \"firstName\" : \"John\",\n    \"lastName\" : \"Doe\",\n    \"email\"\
+        \ : \"john.doe@example.com\",\n    \"address\" : {\n      \"street\" : \"\
+        Main Street\",\n      \"number\" : \"123\",\n      \"zip\" : \"12345\",\n\
+        \      \"city\" : \"Anytown\",\n      \"country\" : \"Germany\",\n      \"\
+        additionalInfo\" : \"Additional Info\"\n    }\n  },\n  \"respHeaders\" : [\n\
+        \    [\n      \"ETag\",\n      \"12345.234324234.2343423432\"\n    ]\n  ]\n\
+        }\n```\n</p>\n</details>\n</p>\n\n---\n\n\n- Input:  `democompany.services.domain.clients.v1.GetClientsClientId\
+        \ > In`\n- Output: `democompany.services.domain.clients.v1.GetClientsClientId\
         \ > Out`\n\nYou can test this worker using the generic process _**orchescala-externalTask-generic**_\
         \ (e.g. with Postman).\n\n- ServiceOut:  `orchescala.domain.MockedServiceResponse`\n\
         <p/>\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n</summary>\n\
         \n<p>\n\n**outputVariables**:\n\nJust take the variable you need in your process!\n\
-        ```json\n...\n\"outputVariables\": \"\",\n...\n```\n\n**outputMock**:\n\n\
-        ```json\n...\n\"outputMock\": {\n  \n},\n...\n```\n\n**outputServiceMock**:\n\
-        ```json\n...\n\"outputServiceMock\": {\n  \"respStatus\" : 200,\n  \"respBody\"\
-        \ : {\n    \"respStatus\" : 204,\n    \"respBody\" : {\n      \n    },\n \
-        \   \"respHeaders\" : [\n    ]\n  },\n  \"respHeaders\" : [\n  ]\n},\n...\n\
-        ```\n</p>\n</details>\n</p>\n      \n    \n\n\n**Used in no other Process.**\n\
-        \n**Uses no other Processes.**\n"
-      operationId: 'Worker: GetClientsClientKey'
+        ```json\n...\n\"outputVariables\": \"client,etag\",\n...\n```\n\n**outputMock**:\n\
+        \n```json\n...\n\"outputMock\": {\n  \"client\" : {\n    \"id\" : 1,\n   \
+        \ \"firstName\" : \"John\",\n    \"lastName\" : \"Doe\",\n    \"email\" :\
+        \ \"john.doe@example.com\",\n    \"address\" : {\n      \"street\" : \"Main\
+        \ Street\",\n      \"number\" : \"123\",\n      \"zip\" : \"12345\",\n   \
+        \   \"city\" : \"Anytown\",\n      \"country\" : \"Germany\",\n      \"additionalInfo\"\
+        \ : \"Additional Info\"\n    }\n  },\n  \"etag\" : \"12345.234324234.2343423432\"\
+        \n},\n...\n```\n\n**outputServiceMock**:\n```json\n...\n\"outputServiceMock\"\
+        : {\n  \"respStatus\" : 200,\n  \"respBody\" : {\n    \"respStatus\" : 200,\n\
+        \    \"respBody\" : {\n      \"id\" : 1,\n      \"firstName\" : \"John\",\n\
+        \      \"lastName\" : \"Doe\",\n      \"email\" : \"john.doe@example.com\"\
+        ,\n      \"address\" : {\n        \"street\" : \"Main Street\",\n        \"\
+        number\" : \"123\",\n        \"zip\" : \"12345\",\n        \"city\" : \"Anytown\"\
+        ,\n        \"country\" : \"Germany\",\n        \"additionalInfo\" : \"Additional\
+        \ Info\"\n      }\n    },\n    \"respHeaders\" : [\n      [\n        \"ETag\"\
+        ,\n        \"12345.234324234.2343423432\"\n      ]\n    ]\n  },\n  \"respHeaders\"\
+        \ : [\n  ]\n},\n...\n```\n</p>\n</details>\n</p>\n      \n    \n\n\n**Used\
+        \ in no other Process.**\n\n**Uses no other Processes.**\n"
+      operationId: 'Worker: GetClientsClientId'
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/In'
             examples:
-              democompany-services-clientsV1-GetClientsClientKey:
-                value: {}
+              democompany-services-clientsV1-GetClientsClientId:
+                value:
+                  clientId: 1234
         required: true
       responses:
         '200':
@@ -115,16 +133,85 @@ paths:
               schema:
                 $ref: '#/components/schemas/Out'
               examples:
-                democompany-services-clientsV1-GetClientsClientKey:
-                  value: {}
+                democompany-services-clientsV1-GetClientsClientId:
+                  value:
+                    client:
+                      id: 1
+                      firstName: John
+                      lastName: Doe
+                      email: john.doe@example.com
+                      address:
+                        street: Main Street
+                        number: '123'
+                        zip: '12345'
+                        city: Anytown
+                        country: Germany
+                        additionalInfo: Additional Info
+                    etag: 12345.234324234.2343423432
 components:
   schemas:
+    Address:
+      title: Address
+      type: object
+      required:
+      - street
+      - number
+      - zip
+      - city
+      - country
+      properties:
+        street:
+          type: string
+        number:
+          type: string
+        zip:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        additionalInfo:
+          type: string
+    Client:
+      title: Client
+      type: object
+      required:
+      - id
+      - firstName
+      - lastName
+      - address
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
     In:
       title: In
       type: object
+      required:
+      - clientId
+      properties:
+        clientId:
+          type: integer
+          format: int64
     Out:
       title: Out
       type: object
+      required:
+      - client
+      - etag
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        etag:
+          type: string
 tags:
 - name: Clients 1.0
   description: ''
