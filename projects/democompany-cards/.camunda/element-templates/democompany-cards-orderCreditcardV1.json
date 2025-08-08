@@ -1,0 +1,168 @@
+{
+  "name" : "democompany-cards-orderCreditcardV1",
+  "id" : "democompany-cards-orderCreditcardV1",
+  "description" : "\nDemo Process to order a credit card.\n\n",
+  "version" : 0,
+  "appliesTo" : [
+    "bpmn:Activity"
+  ],
+  "elementType" : {
+    "value" : "bpmn:CallActivity"
+  },
+  "properties" : [
+    {
+      "value" : "clientId",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "clientId",
+        "expression" : false
+      },
+      "label" : "clientId",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "creditCardAccount",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "creditCardAccount",
+        "expression" : false
+      },
+      "label" : "creditCardAccount",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "mainCardHolder",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "mainCardHolder",
+        "expression" : false
+      },
+      "label" : "mainCardHolder",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "processStatus",
+      "binding" : {
+        "type" : "camunda:out",
+        "source" : "processStatus",
+        "expression" : false
+      },
+      "label" : "processStatus",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "creditCardAccount",
+      "binding" : {
+        "type" : "camunda:out",
+        "source" : "creditCardAccount",
+        "expression" : false
+      },
+      "label" : "creditCardAccount",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "initCreditCardAccount",
+      "binding" : {
+        "type" : "camunda:out",
+        "source" : "initCreditCardAccount",
+        "expression" : false
+      },
+      "label" : "initCreditCardAccount",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "simpleValue",
+      "binding" : {
+        "type" : "camunda:out",
+        "source" : "simpleValue",
+        "expression" : false
+      },
+      "label" : "simpleValue",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "democompany-cards-orderCreditcardV1",
+      "binding" : {
+        "type" : "property",
+        "name" : "calledElement"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "servicesMocked",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "servicesMocked",
+        "expression" : false
+      },
+      "label" : "servicesMocked",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "mockedWorkers",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "mockedWorkers",
+        "expression" : false
+      },
+      "label" : "mockedWorkers",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "outputMock",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "outputMock",
+        "expression" : false
+      },
+      "label" : "outputMock",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "impersonateUserId",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "impersonateUserId",
+        "expression" : false
+      },
+      "label" : "impersonateUserId",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.processBusinessKey}",
+      "binding" : {
+        "type" : "camunda:in:businessKey"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "Order Creditcard V1",
+      "binding" : {
+        "type" : "property",
+        "name" : "name"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    }
+  ],
+  "$schema" : "https://unpkg.com/@camunda/element-templates-json-schema@0.16.0/resources/schema.json",
+  "groups" : [
+  ],
+  "entriesVisible" : true
+}

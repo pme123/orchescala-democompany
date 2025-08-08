@@ -12,13 +12,12 @@
         <zeebe:userTask />
         <zeebe:formDefinition externalReference="CheckOrderTask" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0ee6m7z</bpmn:incoming>
+      <bpmn:incoming>Flow_1i6wugq</bpmn:incoming>
       <bpmn:outgoing>Flow_15cq5k9</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_0ee6m7z" sourceRef="Activity_0gzdsv5" targetRef="CheckOrderTask" />
     <bpmn:sequenceFlow id="Flow_15cq5k9" sourceRef="CheckOrderTask" targetRef="SuccededEndEvent" />
     <bpmn:sequenceFlow id="Flow_1gt1qt5" sourceRef="StartStartEvent" targetRef="MockedGateway" />
-    <bpmn:sequenceFlow id="Flow_1xabbbn" sourceRef="MockedGateway" targetRef="Activity_0gzdsv5" />
+    <bpmn:sequenceFlow id="Flow_1xabbbn" sourceRef="MockedGateway" targetRef="Activity_1x584uu" />
     <bpmn:endEvent id="MockedEndEvent" name="mocked">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
@@ -51,16 +50,18 @@
     <bpmn:sequenceFlow id="YesSequenceFlow" name="yes" sourceRef="MockedGateway" targetRef="MockedEndEvent">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=isMocked = true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:task id="Activity_1x584uu" />
-    <bpmn:callActivity id="Activity_10fl1lk">
+    <bpmn:serviceTask id="Activity_1x584uu" name="Get Clients Client Id" zeebe:modelerTemplate="democompany-services-clientsV1-GetClientsClientId" zeebe:modelerTemplateVersion="0">
       <bpmn:extensionElements>
-        <zeebe:calledElement propagateAllChildVariables="false" />
+        <zeebe:taskDefinition type="democompany-services-clientsV1-GetClientsClientId" retries="0" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=clientId" target="clientId" />
+          <zeebe:input source="=[ &#34;client&#34; ]" target="outputVariables" />
+        </zeebe:ioMapping>
       </bpmn:extensionElements>
-    </bpmn:callActivity>
-    <bpmn:serviceTask id="Activity_0gzdsv5">
       <bpmn:incoming>Flow_1xabbbn</bpmn:incoming>
-      <bpmn:outgoing>Flow_0ee6m7z</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1i6wugq</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1i6wugq" sourceRef="Activity_1x584uu" targetRef="CheckOrderTask" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0bb63t1">
@@ -96,19 +97,10 @@
           <dc:Bounds x="816" y="285" width="48" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1x584uu_di" bpmnElement="Activity_1x584uu">
-        <dc:Bounds x="440" y="110" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1n1x3dr_di" bpmnElement="Activity_10fl1lk">
-        <dc:Bounds x="440" y="320" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1mgq1gj_di" bpmnElement="Activity_0gzdsv5">
+      <bpmndi:BPMNShape id="Activity_1vd0ndw_di" bpmnElement="Activity_1x584uu">
         <dc:Bounds x="440" y="220" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_0ee6m7z_di" bpmnElement="Flow_0ee6m7z">
-        <di:waypoint x="540" y="260" />
-        <di:waypoint x="650" y="260" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_15cq5k9_di" bpmnElement="Flow_15cq5k9">
         <di:waypoint x="750" y="260" />
         <di:waypoint x="822" y="260" />
@@ -127,6 +119,10 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="351" y="293" width="18" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i6wugq_di" bpmnElement="Flow_1i6wugq">
+        <di:waypoint x="540" y="260" />
+        <di:waypoint x="650" y="260" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

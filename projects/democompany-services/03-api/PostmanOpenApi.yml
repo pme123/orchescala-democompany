@@ -4,7 +4,7 @@ info:
   version: 0.1.0-SNAPSHOT
   summary: "\n         |**This is for Postman - to have example requests. Be aware\
     \ the Output is not provided!**\n         |\n         |\n\nMy services for the\
-    \ democompany\n\nCreated at 08.08.2025, 14:58\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ democompany\n\nCreated at 08.08.2025, 16:12\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n# Package Configuration\n**Check all dependency trees here: [democompany-services](../../dependencies/democompany-services.html)**\n\
     \n### Dependencies:\n\n\n\n\n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\
     \n```\n\n// Project configuration\n\nprojectName: democompany-services\nprojectVersion:\

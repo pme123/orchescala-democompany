@@ -1,0 +1,143 @@
+[
+  {
+    "name" : "democompany-cards-orderCreditcardV1",
+    "id" : "democompany-cards-orderCreditcardV1",
+    "description" : "\nDemo Process to order a credit card.\n\n",
+    "version" : 0,
+    "appliesTo" : [
+      "bpmn:Activity"
+    ],
+    "elementType" : {
+      "value" : "bpmn:CallActivity"
+    },
+    "properties" : [
+      {
+        "value" : "clientId",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "clientId"
+        },
+        "label" : "clientId",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "creditCardAccount",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "creditCardAccount"
+        },
+        "label" : "creditCardAccount",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "mainCardHolder",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "mainCardHolder"
+        },
+        "label" : "mainCardHolder",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "processStatus",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "processStatus"
+        },
+        "label" : "processStatus",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "creditCardAccount",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "creditCardAccount"
+        },
+        "label" : "creditCardAccount",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "initCreditCardAccount",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "initCreditCardAccount"
+        },
+        "label" : "initCreditCardAccount",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "simpleValue",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "simpleValue"
+        },
+        "label" : "simpleValue",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "servicesMocked",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "servicesMocked"
+        },
+        "label" : "servicesMocked",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "mockedWorkers",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "mockedWorkers"
+        },
+        "label" : "mockedWorkers",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "outputMock",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "outputMock"
+        },
+        "label" : "outputMock",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "impersonateUserId",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "impersonateUserId"
+        },
+        "label" : "impersonateUserId",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "Order Creditcard V1",
+        "binding" : {
+          "type" : "property",
+          "name" : "name"
+        },
+        "label" : "",
+        "description" : "",
+        "type" : "Hidden"
+      }
+    ],
+    "$schema" : "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
+    "groups" : [
+    ],
+    "entriesVisible" : true,
+    "engines" : {
+      "camunda" : "^8.6"
+    }
+  }
+]

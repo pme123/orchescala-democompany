@@ -8,7 +8,7 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
     scenario(`OrderCreditcard`)(
       //TODO remove or add process steps like UserTasks
     ),
-    scenario(`OrderCreditcard minimal`)(
+    only.scenario(`OrderCreditcard minimal`)(
       //TODO remove or add process steps like UserTasks
     ),
     scenario(`OrderCreditcard mocked`)(
@@ -18,7 +18,7 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
 
   override def config =
     super.config
-      //.withMaxCount(30)
+      .withMaxCount(5)
       //.withLogLevel(LogLevel.DEBUG)
 
   private lazy val `OrderCreditcard` =
