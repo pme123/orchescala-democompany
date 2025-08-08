@@ -1,138 +1,143 @@
-{
-  "name" : "democompany-services-clientsV1-GetClientsClientId",
-  "id" : "democompany-services-clientsV1-GetClientsClientId",
-  "description" : "Get the Client by Id\n\n",
-  "version" : 0,
-  "appliesTo" : [
-    "bpmn:Activity"
-  ],
-  "elementType" : {
-    "value" : "bpmn:ServiceTask"
-  },
-  "properties" : [
-    {
-      "value" : "#{clientId}",
-      "binding" : {
-        "type" : "camunda:inputParameter",
-        "name" : "clientId"
-      },
-      "label" : "clientId",
-      "description" : "",
-      "type" : "Hidden"
+[
+  {
+    "name" : "democompany-services-clientsV1-GetClientsClientId",
+    "id" : "democompany-services-clientsV1-GetClientsClientId",
+    "description" : "Get the Client by Id\n\n",
+    "version" : 0,
+    "appliesTo" : [
+      "bpmn:Activity"
+    ],
+    "elementType" : {
+      "value" : "bpmn:ServiceTask"
     },
-    {
-      "value" : "client",
-      "binding" : {
-        "type" : "camunda:outputParameter",
-        "source" : "#{client}"
+    "properties" : [
+      {
+        "value" : "clientId",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "clientId"
+        },
+        "label" : "clientId",
+        "description" : "",
+        "type" : "Hidden"
       },
-      "label" : "client",
-      "description" : "",
-      "type" : "Hidden"
-    },
-    {
-      "value" : "etag",
-      "binding" : {
-        "type" : "camunda:outputParameter",
-        "source" : "#{etag}"
+      {
+        "value" : "client",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "client"
+        },
+        "label" : "client",
+        "description" : "",
+        "type" : "Hidden"
       },
-      "label" : "etag",
-      "description" : "",
-      "type" : "Hidden"
-    },
-    {
-      "value" : "democompany-services-clientsV1-GetClientsClientId",
-      "binding" : {
-        "type" : "property",
-        "name" : "camunda:topic"
+      {
+        "value" : "etag",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "etag"
+        },
+        "label" : "etag",
+        "description" : "",
+        "type" : "Hidden"
       },
-      "label" : "",
-      "description" : "",
-      "type" : "Hidden"
-    },
-    {
-      "value" : "external",
-      "binding" : {
-        "type" : "property",
-        "name" : "camunda:type"
+      {
+        "value" : "democompany-services-clientsV1-GetClientsClientId",
+        "binding" : {
+          "type" : "zeebe:taskDefinition",
+          "property" : "type"
+        },
+        "label" : "",
+        "description" : "",
+        "type" : "Hidden"
       },
-      "label" : "",
-      "description" : "",
-      "type" : "Hidden"
-    },
-    {
-      "value" : "#{execution.getVariable('outputServiceMock')}",
-      "binding" : {
-        "type" : "camunda:inputParameter",
-        "name" : "outputServiceMock"
+      {
+        "value" : "0",
+        "binding" : {
+          "type" : "zeebe:taskDefinition",
+          "property" : "retries"
+        },
+        "label" : "",
+        "description" : "",
+        "type" : "Hidden"
       },
-      "label" : "outputServiceMock",
-      "description" : "",
-      "type" : "Hidden"
-    },
-    {
-      "value" : "#{true}",
-      "binding" : {
-        "type" : "camunda:inputParameter",
-        "name" : "manualOutMapping"
+      {
+        "value" : "outputServiceMock",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "outputServiceMock"
+        },
+        "label" : "outputServiceMock",
+        "description" : "",
+        "type" : "Hidden"
       },
-      "label" : "manualOutMapping",
-      "description" : "",
-      "type" : "Hidden"
-    },
-    {
-      "value" : "client, etag",
-      "binding" : {
-        "type" : "camunda:inputParameter",
-        "name" : "outputVariables"
+      {
+        "value" : "true",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "manualOutMapping"
+        },
+        "label" : "manualOutMapping",
+        "description" : "",
+        "type" : "Hidden"
       },
-      "label" : "outputVariables",
-      "description" : "",
-      "type" : "Hidden"
-    },
-    {
-      "value" : "#{execution.getVariable('outputMock')}",
-      "binding" : {
-        "type" : "camunda:inputParameter",
-        "name" : "outputMock"
+      {
+        "value" : "[ \"client\", \"etag\" ]",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "outputVariables"
+        },
+        "label" : "outputVariables",
+        "description" : "",
+        "type" : "Hidden"
       },
-      "label" : "outputMock",
-      "description" : "",
-      "type" : "Hidden"
-    },
-    {
-      "value" : "handledError1, handledError2",
-      "binding" : {
-        "type" : "camunda:inputParameter",
-        "name" : "handledErrors"
+      {
+        "value" : "outputMock",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "outputMock"
+        },
+        "label" : "outputMock",
+        "description" : "",
+        "type" : "Hidden"
       },
-      "label" : "handledErrors",
-      "description" : "",
-      "type" : "Hidden"
-    },
-    {
-      "value" : "errorRegex1, errorRegex2",
-      "binding" : {
-        "type" : "camunda:inputParameter",
-        "name" : "regexHandledErrors"
+      {
+        "value" : "[\"handledError1\", \"handledError2\"]",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "handledErrors"
+        },
+        "label" : "handledErrors",
+        "description" : "",
+        "type" : "Hidden"
       },
-      "label" : "regexHandledErrors",
-      "description" : "",
-      "type" : "Hidden"
-    },
-    {
-      "value" : "Get Clients Client Id",
-      "binding" : {
-        "type" : "property",
-        "name" : "name"
+      {
+        "value" : "[\"errorRegex1\", \"errorRegex2\"]",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "regexHandledErrors"
+        },
+        "label" : "regexHandledErrors",
+        "description" : "",
+        "type" : "Hidden"
       },
-      "label" : "",
-      "description" : "",
-      "type" : "Hidden"
+      {
+        "value" : "Get Clients Client Id",
+        "binding" : {
+          "type" : "property",
+          "name" : "name"
+        },
+        "label" : "",
+        "description" : "",
+        "type" : "Hidden"
+      }
+    ],
+    "$schema" : "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
+    "groups" : [
+    ],
+    "entriesVisible" : true,
+    "engines" : {
+      "camunda" : "^8.6"
     }
-  ],
-  "$schema" : "https://unpkg.com/@camunda/element-templates-json-schema@0.16.0/resources/schema.json",
-  "groups" : [
-  ],
-  "entriesVisible" : true
-}
+  }
+]

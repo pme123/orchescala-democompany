@@ -52,6 +52,11 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=isMocked = true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:task id="Activity_1x584uu" />
+    <bpmn:callActivity id="Activity_10fl1lk">
+      <bpmn:extensionElements>
+        <zeebe:calledElement propagateAllChildVariables="false" />
+      </bpmn:extensionElements>
+    </bpmn:callActivity>
     <bpmn:serviceTask id="Activity_0gzdsv5">
       <bpmn:incoming>Flow_1xabbbn</bpmn:incoming>
       <bpmn:outgoing>Flow_0ee6m7z</bpmn:outgoing>
@@ -94,7 +99,10 @@
       <bpmndi:BPMNShape id="Activity_1x584uu_di" bpmnElement="Activity_1x584uu">
         <dc:Bounds x="440" y="110" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0sc3hg2_di" bpmnElement="Activity_0gzdsv5">
+      <bpmndi:BPMNShape id="Activity_1n1x3dr_di" bpmnElement="Activity_10fl1lk">
+        <dc:Bounds x="440" y="320" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1mgq1gj_di" bpmnElement="Activity_0gzdsv5">
         <dc:Bounds x="440" y="220" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0ee6m7z_di" bpmnElement="Flow_0ee6m7z">
