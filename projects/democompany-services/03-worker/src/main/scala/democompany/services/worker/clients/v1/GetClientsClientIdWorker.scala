@@ -2,9 +2,9 @@ package democompany.services
 package worker.clients.v1
 
 import democompany.services.domain.clients.v1.GetClientsClientId.*
+import democompany.services.domain.etagHeaderName
 
 class GetClientsClientIdWorker extends CompanyServiceWorkerDsl[In, Out, ServiceIn, ServiceOut]:
-
 
   lazy val serviceTask = example
 
@@ -15,8 +15,7 @@ class GetClientsClientIdWorker extends CompanyServiceWorkerDsl[In, Out, ServiceI
   override def outputMapper(
       out: ServiceResponse[ServiceOut],
       in: In
-  ) = ???
-
-
+  ) =
+    Right(Out(out.outputBody, out.headers(etagHeaderName)))
 
 end GetClientsClientIdWorker

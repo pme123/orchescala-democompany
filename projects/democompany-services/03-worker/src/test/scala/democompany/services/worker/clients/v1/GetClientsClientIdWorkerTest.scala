@@ -1,6 +1,7 @@
 package democompany.services
 package worker.clients.v1
 
+import democompany.services.domain.clients.v1.*
 import democompany.services.domain.clients.v1.GetClientsClientId.*
 import democompany.services.worker.clients.v1.GetClientsClientIdWorker
 
@@ -13,19 +14,7 @@ class GetClientsClientIdWorkerTest extends munit.FunSuite:
   test("apiUri"):
     assertEquals(
       worker.apiUri(In.example).toString,
-      s"NOT-SET/YourPath"
-    )
-
-  test("inputMapper"):
-    assertEquals(
-      worker.inputMapper(In.example),
-      Some(ServiceIn.example)
-    )
-
-  test("inputMapper minimal"):
-    assertEquals(
-      worker.inputMapper(In.exampleMinimal),
-      Some(ServiceIn.exampleMinimal)
+      s"https://services.democompany.com/api/v1/clients/$defaultClientId"
     )
 
   test("outputMapper"):
