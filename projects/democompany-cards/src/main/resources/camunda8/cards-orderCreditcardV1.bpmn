@@ -27,8 +27,8 @@
     <bpmn:sequenceFlow id="Flow_1guvmo2" name="yes" sourceRef="Gateway_11ph763" targetRef="Event_0icvc39">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=isMocked = true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_1xabbbn" sourceRef="Gateway_11ph763" targetRef="Activity_0mt84jh" />
-    <bpmn:userTask id="Activity_0mt84jh" name="Check Order">
+    <bpmn:sequenceFlow id="Flow_1xabbbn" sourceRef="Gateway_11ph763" targetRef="CheckOrderTask" />
+    <bpmn:userTask id="CheckOrderTask" name="Check Order">
       <bpmn:extensionElements>
         <zeebe:userTask />
         <zeebe:formDefinition externalReference="wwerwer" />
@@ -36,7 +36,7 @@
       <bpmn:incoming>Flow_1xabbbn</bpmn:incoming>
       <bpmn:outgoing>Flow_15cq5k9</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_15cq5k9" sourceRef="Activity_0mt84jh" targetRef="Event_1p66wzz" />
+    <bpmn:sequenceFlow id="Flow_15cq5k9" sourceRef="CheckOrderTask" targetRef="Event_1p66wzz" />
     <bpmn:exclusiveGateway id="Gateway_11ph763" name="mocked?" default="Flow_1xabbbn">
       <bpmn:incoming>Flow_1gt1qt5</bpmn:incoming>
       <bpmn:outgoing>Flow_1guvmo2</bpmn:outgoing>
@@ -69,7 +69,7 @@
           <dc:Bounds x="646" y="205" width="48" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0n7hkke_di" bpmnElement="Activity_0mt84jh">
+      <bpmndi:BPMNShape id="Activity_0n7hkke_di" bpmnElement="CheckOrderTask">
         <dc:Bounds x="480" y="140" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
