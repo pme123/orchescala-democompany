@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: democompany-services
   version: 0.1.0-SNAPSHOT
-  summary: "\n\nMy services for the democompany\n\nCreated at 08.08.2025, 07:54\n\n\
+  summary: "\n\nMy services for the democompany\n\nCreated at 08.08.2025, 14:09\n\n\
     **See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n# Package Configuration\n**Check all dependency trees here: [democompany-services](../../dependencies/democompany-services.html)**\n\
     \n### Dependencies:\n\n\n\n\n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\
@@ -80,9 +80,9 @@ paths:
       summary: 'Worker: GetClientsClientId'
       description: "\n\n\n**Topic:** `democompany-services-clientsV1-GetClientsClientId`\
         \ (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_\
-        \ of type _External_)\n\n\n\n---\n\n\n\n<details>\n<summary><b>Wrapped Service:</b>\n\
-        \n(Clients 1.0 - v1.0 - GET: clients/clientId)\n</summary>\n<p>\nInput Body:\
-        \ `orchescala.domain.NoInput`:\n\n\nExample Response: `democompany.services.domain.clients.v1.schema.Client`:\n\
+        \ of type _External_)\n\nGet the Client by Id\n\n---\n\n\n\n<details>\n<summary><b>Wrapped\
+        \ Service:</b>\n\n(Clients 1.0 - v1.0 - GET: clients/clientId)\n</summary>\n\
+        <p>\nInput Body: `orchescala.domain.NoInput`:\n\n\nExample Response: `democompany.services.domain.clients.v1.schema.Client`:\n\
         \n```json\n{\n  \"respStatus\" : 200,\n  \"respBody\" : {\n    \"id\" : 1,\n\
         \    \"firstName\" : \"John\",\n    \"lastName\" : \"Doe\",\n    \"email\"\
         \ : \"john.doe@example.com\",\n    \"address\" : {\n      \"street\" : \"\

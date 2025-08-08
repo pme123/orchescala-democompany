@@ -4,20 +4,21 @@ info:
   version: 0.1.0-SNAPSHOT
   summary: "\n         |**This is for Postman - to have example requests. Be aware\
     \ the Output is not provided!**\n         |\n         |\n\nProcesses and Workers\
-    \ related to Card Management.\n\nCreated at 25.07.2025, 10:39\n\n**See the [Orchescala\
+    \ related to Card Management.\n\nCreated at 08.08.2025, 11:13\n\n**See the [Orchescala\
     \ Documentation](https://pme123.github.io/orchescala/)**\n\n# Package Configuration\n\
     **Check all dependency trees here: [democompany-cards](../../dependencies/democompany-cards.html)**\n\
-    \n### Dependencies:\n\n\n\n\n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\
-    \n```\n\n// Project configuration\n\nprojectName: democompany-cards\nprojectVersion:\
-    \ 0.1.0-SNAPSHOT\nsubProjects: [\n  // subProject1\n  // subProject2\n]\ndependencies:\
-    \ [\n  // mastercompany-services\n  // mycompany-commons\n]\n\n```\n\n</p>\n</details>\n\
-    \n\nThere is no README.md in the Project.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
-    <p>\n\n\nAll notable changes to this project will be documented in this file.\n\
-    \n* Types of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
-    \ functionality\n  * Deprecated: soon-to-be-removed features\n  * Removed: now\
-    \ removed features\n  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\
-    \n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\n\
-    and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
+    \n### Dependencies:\n\n- _**[democompany-services](NOT_SET/democompany-services/OpenApi.html)**_\n\
+    \n\n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\
+    \nprojectName: democompany-cards\nprojectVersion: 0.1.0-SNAPSHOT\nsubProjects:\
+    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n  democompany-services\n\
+    ]\n\n```\n\n</p>\n</details>\n\n\nThere is no README.md in the Project.\n\n\n\
+    <details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n<p>\n\n\nAll notable\
+    \ changes to this project will be documented in this file.\n\n* Types of Changes\
+    \ (L3):\n  * Added: new features\n  * Changed: changes in existing functionality\n\
+    \  * Deprecated: soon-to-be-removed features\n  * Removed: now removed features\n\
+    \  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\n\nThe format\
+    \ is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this\
+    \ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
     \n\n</p>\n</details>\n\n\n<p/>\n<details>\n<summary>\n<b><i>General Variables</i></b>\n\
     </summary>\n\n<p>\n\n### Mocking\n\n**servicesMocked**:\n\nMock all the _ServiceWorkers_\
     \ in your process with their default Mock:\n\n- DSL:\n```scala\nprocess(..)\n\
@@ -109,6 +110,9 @@ paths:
               democompany-cards-orderCreditcardV1:
                 value:
                   variables:
+                    clientId:
+                      value: 1000
+                      type: Long
                     creditCardAccount:
                       value: |-
                         {

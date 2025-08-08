@@ -7,7 +7,7 @@ import schema.*
 object GetClientsClientId extends ClientsV1:
 
   val topicName     = "democompany-services-clientsV1-GetClientsClientId"
-  val descr: String = ""
+  val descr: String = "Get the Client by Id"
 
   val path = "GET: clients/clientId"
 

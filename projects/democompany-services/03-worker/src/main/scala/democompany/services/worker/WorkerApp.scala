@@ -4,9 +4,12 @@ package democompany.services.worker
 // sbt worker/run
 object WorkerApp extends CompanyWorkerApp:
   workers(
-    //TODO add workers here
+    clientsV1Workers
   )
   dependencies(
-    
+  )
+
+  private lazy val clientsV1Workers = Seq(
+    clients.v1.GetClientsClientIdWorker()
   )
 end WorkerApp

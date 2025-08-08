@@ -2,20 +2,21 @@ openapi: 3.1.0
 info:
   title: Card Management
   version: 0.1.0-SNAPSHOT
-  summary: "\n\nProcesses and Workers related to Card Management.\n\nCreated at 25.07.2025,\
-    \ 10:39\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+  summary: "\n\nProcesses and Workers related to Card Management.\n\nCreated at 08.08.2025,\
+    \ 11:13\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n# Package Configuration\n**Check all dependency trees here: [democompany-cards](../../dependencies/democompany-cards.html)**\n\
-    \n### Dependencies:\n\n\n\n\n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\
-    \n```\n\n// Project configuration\n\nprojectName: democompany-cards\nprojectVersion:\
-    \ 0.1.0-SNAPSHOT\nsubProjects: [\n  // subProject1\n  // subProject2\n]\ndependencies:\
-    \ [\n  // mastercompany-services\n  // mycompany-commons\n]\n\n```\n\n</p>\n</details>\n\
-    \n\nThere is no README.md in the Project.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
-    <p>\n\n\nAll notable changes to this project will be documented in this file.\n\
-    \n* Types of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
-    \ functionality\n  * Deprecated: soon-to-be-removed features\n  * Removed: now\
-    \ removed features\n  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\
-    \n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\n\
-    and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
+    \n### Dependencies:\n\n- _**[democompany-services](NOT_SET/democompany-services/OpenApi.html)**_\n\
+    \n\n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\
+    \nprojectName: democompany-cards\nprojectVersion: 0.1.0-SNAPSHOT\nsubProjects:\
+    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n  democompany-services\n\
+    ]\n\n```\n\n</p>\n</details>\n\n\nThere is no README.md in the Project.\n\n\n\
+    <details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n<p>\n\n\nAll notable\
+    \ changes to this project will be documented in this file.\n\n* Types of Changes\
+    \ (L3):\n  * Added: new features\n  * Changed: changes in existing functionality\n\
+    \  * Deprecated: soon-to-be-removed features\n  * Removed: now removed features\n\
+    \  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\n\nThe format\
+    \ is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this\
+    \ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
     \n\n</p>\n</details>\n\n\n<p/>\n<details>\n<summary>\n<b><i>General Variables</i></b>\n\
     </summary>\n\n<p>\n\n### Mocking\n\n**servicesMocked**:\n\nMock all the _ServiceWorkers_\
     \ in your process with their default Mock:\n\n- DSL:\n```scala\nprocess(..)\n\
@@ -83,17 +84,21 @@ paths:
         \n\n\n---\n\n\n\n\n- Input:  `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
         \ > In`\n- Output: `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
         \ > Out`\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"\
-        cards-orderCreditcardV1-88227\">\n    <img onLoad=\"openFromUrl('cards-orderCreditcardV1.bpmn',\
-        \ new BpmnJS({ container: $('#cards-orderCreditcardV1-88227'), height: '95%',\
+        cards-orderCreditcardV1-7218\">\n    <img onLoad=\"openFromUrl('cards-orderCreditcardV1.bpmn',\
+        \ new BpmnJS({ container: $('#cards-orderCreditcardV1-7218'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [cards-orderCreditcardV1.bpmn](diagrams/cards-orderCreditcardV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('cards-orderCreditcardV1-88227')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('cards-orderCreditcardV1-7218')\"\
         >Download Diagram as SVG</button>\n</div>\n\n<p/>\n\n<details>\n<summary>\n\
         <b><i>General Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\
         \nJust take the variable you need in your process!\n```json\n...\n\"outputVariables\"\
-        : \"processStatus\",\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\"\
-        : {\n  \"processStatus\" : \"succeeded\"\n},\n...\n```\n\n</p>\n</details>\n\
-        </p>\n      \n\n\n**Used in no other Process.**\n\n**Uses no other Processes.**\n"
+        : \"processStatus,creditCardAccount,initCreditCardAccount,simpleValue\",\n\
+        ...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ : \"succeeded\",\n  \"creditCardAccount\" : {\n    \"clientId\" : 1213456,\n\
+        \    \"accountId\" : 5555555\n  },\n  \"initCreditCardAccount\" : {\n    \"\
+        clientId\" : 1213456\n  },\n  \"simpleValue\" : \"Hello World\"\n},\n...\n\
+        ```\n\n</p>\n</details>\n</p>\n      \n\n\n**Used in no other Process.**\n\
+        \n**Uses no other Processes.**\n"
       operationId: Process
       requestBody:
         content:
@@ -103,6 +108,7 @@ paths:
             examples:
               democompany-cards-orderCreditcardV1:
                 value:
+                  clientId: 1000
                   creditCardAccount:
                     clientId: 1213456
                     accountId: 5555555
@@ -128,6 +134,12 @@ paths:
                 democompany-cards-orderCreditcardV1:
                   value:
                     processStatus: succeeded
+                    creditCardAccount:
+                      clientId: 1213456
+                      accountId: 5555555
+                    initCreditCardAccount:
+                      clientId: 1213456
+                    simpleValue: Hello World
   /Bpmn/OrderCreditcardV1/orderCreditcardV1/democompany-cards-orderCreditcardV1/init:
     head:
       tags:
@@ -154,7 +166,10 @@ paths:
                 $ref: '#/components/schemas/InitIn'
               examples:
                 InitIn:
-                  value: {}
+                  value:
+                    initCreditCardAccount:
+                      clientId: 1213456
+                    simpleValue: Hello World
 components:
   schemas:
     CardAccount:
@@ -231,8 +246,12 @@ components:
       title: In
       type: object
       required:
+      - clientId
       - creditCardAccount
       properties:
+        clientId:
+          type: integer
+          format: int64
         creditCardAccount:
           $ref: '#/components/schemas/CardAccount'
         mainCardHolder:
@@ -249,6 +268,13 @@ components:
     InitIn:
       title: InitIn
       type: object
+      required:
+      - initCreditCardAccount
+      properties:
+        initCreditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        simpleValue:
+          type: string
     ModuleCard:
       title: ModuleCard
       type: object
@@ -270,9 +296,17 @@ components:
       type: object
       required:
       - processStatus
+      - creditCardAccount
+      - initCreditCardAccount
       properties:
         processStatus:
           $ref: '#/components/schemas/ProcessStatus'
+        creditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        initCreditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        simpleValue:
+          type: string
     ProcessStatus:
       title: ProcessStatus
       type: string

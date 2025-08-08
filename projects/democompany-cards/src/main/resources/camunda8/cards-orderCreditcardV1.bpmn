@@ -7,6 +7,31 @@
     <bpmn:extensionElements>
       <zeebe:versionTag value="1.0" />
     </bpmn:extensionElements>
+    <bpmn:userTask id="CheckOrderTask" name="Check Order">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition externalReference="CheckOrderTask" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0ee6m7z</bpmn:incoming>
+      <bpmn:outgoing>Flow_15cq5k9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0ee6m7z" sourceRef="Activity_0gzdsv5" targetRef="CheckOrderTask" />
+    <bpmn:sequenceFlow id="Flow_15cq5k9" sourceRef="CheckOrderTask" targetRef="SuccededEndEvent" />
+    <bpmn:sequenceFlow id="Flow_1gt1qt5" sourceRef="StartStartEvent" targetRef="MockedGateway" />
+    <bpmn:sequenceFlow id="Flow_1xabbbn" sourceRef="MockedGateway" targetRef="Activity_0gzdsv5" />
+    <bpmn:endEvent id="MockedEndEvent" name="mocked">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=&#34;output-mocked&#34;" target="processStatus" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>YesSequenceFlow</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="MockedGateway" name="mocked?" default="Flow_1xabbbn">
+      <bpmn:incoming>Flow_1gt1qt5</bpmn:incoming>
+      <bpmn:outgoing>YesSequenceFlow</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1xabbbn</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
     <bpmn:startEvent id="StartStartEvent" name="start">
       <bpmn:extensionElements>
         <zeebe:executionListeners>
@@ -23,39 +48,36 @@
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_15cq5k9</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="CheckOrderTask" name="Check Order">
-      <bpmn:extensionElements>
-        <zeebe:userTask />
-        <zeebe:formDefinition externalReference="CheckOrderTask" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1xabbbn</bpmn:incoming>
-      <bpmn:outgoing>Flow_15cq5k9</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:exclusiveGateway id="MockedGateway" name="mocked?" default="Flow_1xabbbn">
-      <bpmn:incoming>Flow_1gt1qt5</bpmn:incoming>
-      <bpmn:outgoing>YesSequenceFlow</bpmn:outgoing>
-      <bpmn:outgoing>Flow_1xabbbn</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="MockedEndEvent" name="mocked">
-      <bpmn:extensionElements>
-        <zeebe:ioMapping>
-          <zeebe:output source="=&#34;output-mocked&#34;" target="processStatus" />
-        </zeebe:ioMapping>
-      </bpmn:extensionElements>
-      <bpmn:incoming>YesSequenceFlow</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1gt1qt5" sourceRef="StartStartEvent" targetRef="MockedGateway" />
-    <bpmn:sequenceFlow id="Flow_15cq5k9" sourceRef="CheckOrderTask" targetRef="SuccededEndEvent" />
-    <bpmn:sequenceFlow id="Flow_1xabbbn" sourceRef="MockedGateway" targetRef="CheckOrderTask" />
     <bpmn:sequenceFlow id="YesSequenceFlow" name="yes" sourceRef="MockedGateway" targetRef="MockedEndEvent">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=isMocked = true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
+    <bpmn:task id="Activity_1x584uu" />
+    <bpmn:serviceTask id="Activity_0gzdsv5">
+      <bpmn:incoming>Flow_1xabbbn</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ee6m7z</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0bb63t1">
       <bpmndi:BPMNShape id="Participant_1byvi7a_di" bpmnElement="DemocompanycardsorderCreditcardV1Participant" isHorizontal="true">
-        <dc:Bounds x="160" y="80" width="600" height="340" />
+        <dc:Bounds x="160" y="80" width="770" height="340" />
         <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0n7hkke_di" bpmnElement="CheckOrderTask">
+        <dc:Bounds x="650" y="220" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0icvc39_di" bpmnElement="MockedEndEvent" color:background-color="#cccccc">
+        <dc:Bounds x="322" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="321" y="385" width="39" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_11ph763_di" bpmnElement="MockedGateway" isMarkerVisible="true" color:background-color="#cccccc">
+        <dc:Bounds x="315" y="235" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="317" y="213" width="45" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartStartEvent">
         <dc:Bounds x="242" y="242" width="36" height="36" />
@@ -64,30 +86,32 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1p66wzz_di" bpmnElement="SuccededEndEvent">
-        <dc:Bounds x="652" y="242" width="36" height="36" />
+        <dc:Bounds x="822" y="242" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="646" y="285" width="48" height="14" />
+          <dc:Bounds x="816" y="285" width="48" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0n7hkke_di" bpmnElement="CheckOrderTask">
-        <dc:Bounds x="480" y="220" width="100" height="80" />
-        <bpmndi:BPMNLabel />
+      <bpmndi:BPMNShape id="Activity_1x584uu_di" bpmnElement="Activity_1x584uu">
+        <dc:Bounds x="440" y="110" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_11ph763_di" bpmnElement="MockedGateway" isMarkerVisible="true" color:background-color="#cccccc">
-        <dc:Bounds x="315" y="235" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="317" y="213" width="45" height="14" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNShape id="Activity_0sc3hg2_di" bpmnElement="Activity_0gzdsv5">
+        <dc:Bounds x="440" y="220" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0icvc39_di" bpmnElement="MockedEndEvent" color:background-color="#cccccc">
-        <dc:Bounds x="322" y="342" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="321" y="385" width="39" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0ee6m7z_di" bpmnElement="Flow_0ee6m7z">
+        <di:waypoint x="540" y="260" />
+        <di:waypoint x="650" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15cq5k9_di" bpmnElement="Flow_15cq5k9">
+        <di:waypoint x="750" y="260" />
+        <di:waypoint x="822" y="260" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1gt1qt5_di" bpmnElement="Flow_1gt1qt5">
         <di:waypoint x="278" y="260" />
         <di:waypoint x="315" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1xabbbn_di" bpmnElement="Flow_1xabbbn">
+        <di:waypoint x="365" y="260" />
+        <di:waypoint x="440" y="260" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1guvmo2_di" bpmnElement="YesSequenceFlow">
         <di:waypoint x="340" y="285" />
@@ -95,14 +119,6 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="351" y="293" width="18" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1xabbbn_di" bpmnElement="Flow_1xabbbn">
-        <di:waypoint x="365" y="260" />
-        <di:waypoint x="480" y="260" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_15cq5k9_di" bpmnElement="Flow_15cq5k9">
-        <di:waypoint x="580" y="260" />
-        <di:waypoint x="652" y="260" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -31,10 +31,12 @@ object CompanyApiCreator:
     singleRepo = true
   )
 
+  lazy val `democompany-services` = generalProjectConfig("democompany-services", "#ffffcc")
   lazy val `democompany-cards` = generalProjectConfig("democompany-cards", "#c8feda")
 
   lazy val projects: Seq[ProjectConfig] = Seq(
-    `democompany-cards`
+    `democompany-cards`,
+    `democompany-services`
   )
 
   private lazy val general = ProjectGroup("general", color = "green")
