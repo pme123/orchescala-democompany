@@ -1,0 +1,138 @@
+{
+  "name" : "democompany-services-clientsV1-GetClientsClientId",
+  "id" : "democompany-services-clientsV1-GetClientsClientId",
+  "description" : "Get the Client by Id\n\n",
+  "version" : 0,
+  "appliesTo" : [
+    "bpmn:Activity"
+  ],
+  "elementType" : {
+    "value" : "bpmn:ServiceTask"
+  },
+  "properties" : [
+    {
+      "value" : "#{clientId}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "clientId"
+      },
+      "label" : "clientId",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "client",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{client}"
+      },
+      "label" : "client",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "etag",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{etag}"
+      },
+      "label" : "etag",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "democompany-services-clientsV1-GetClientsClientId",
+      "binding" : {
+        "type" : "property",
+        "name" : "camunda:topic"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "external",
+      "binding" : {
+        "type" : "property",
+        "name" : "camunda:type"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.getVariable('outputServiceMock')}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "outputServiceMock"
+      },
+      "label" : "outputServiceMock",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{true}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "manualOutMapping"
+      },
+      "label" : "manualOutMapping",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "client, etag",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "outputVariables"
+      },
+      "label" : "outputVariables",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.getVariable('outputMock')}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "outputMock"
+      },
+      "label" : "outputMock",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "handledError1, handledError2",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "handledErrors"
+      },
+      "label" : "handledErrors",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "errorRegex1, errorRegex2",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "regexHandledErrors"
+      },
+      "label" : "regexHandledErrors",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "Get Clients Client Id",
+      "binding" : {
+        "type" : "property",
+        "name" : "name"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    }
+  ],
+  "$schema" : "https://unpkg.com/@camunda/element-templates-json-schema@0.16.0/resources/schema.json",
+  "groups" : [
+  ],
+  "entriesVisible" : true
+}
