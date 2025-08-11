@@ -4,7 +4,7 @@ info:
   version: 0.1.0-SNAPSHOT
   summary: "\n         |**This is for Postman - to have example requests. Be aware\
     \ the Output is not provided!**\n         |\n         |\n\nProcesses and Workers\
-    \ related to Card Management.\n\nCreated at 08.08.2025, 16:13\n\n**See the [Orchescala\
+    \ related to Card Management.\n\nCreated at 11.08.2025, 07:49\n\n**See the [Orchescala\
     \ Documentation](https://pme123.github.io/orchescala/)**\n\n# Package Configuration\n\
     **Check all dependency trees here: [democompany-cards](../../dependencies/democompany-cards.html)**\n\
     \n### Dependencies:\n\n- _**[democompany-services](NOT_SET/democompany-services/OpenApi.html)**_\n\

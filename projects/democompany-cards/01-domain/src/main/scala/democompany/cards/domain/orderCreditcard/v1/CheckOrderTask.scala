@@ -1,19 +1,31 @@
 package democompany.cards
 package domain.orderCreditcard.v1
 
+import schema.*
+import democompany.services.domain.clients.v1.schema.Client
+
 object CheckOrderTask extends CompanyBpmnUserTaskDsl:
 
   val name          = "democompany-cards-orderCreditcardV1-CheckOrderTask"
   val descr: String = ""
 
   case class In(
-      // TODO input variables
+      client: Client,
+      creditCardAccount: CardAccount,
+      mainCardHolder: Option[CardHolder]
   )
   object In:
     given ApiSchema[In]     = deriveApiSchema
     given InOutCodec[In]    = deriveInOutCodec
-    lazy val example        = In()
-    lazy val exampleMinimal = example // .copy(..=None)
+    lazy val example        = In(
+      client = Client.example,
+      creditCardAccount = CardAccount.example,
+      mainCardHolder = Some(CardHolder.example)
+    )
+    lazy val exampleMinimal = example.copy(
+      creditCardAccount = CardAccount.exampleMinimal,
+      mainCardHolder = None
+    )
   end In
 
   case class Out(

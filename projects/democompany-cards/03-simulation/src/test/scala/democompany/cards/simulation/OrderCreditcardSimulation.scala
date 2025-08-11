@@ -1,15 +1,19 @@
 package democompany.cards.simulation
 
+import democompany.cards.domain.orderCreditcard.v1.CheckOrderTask
 import democompany.cards.domain.orderCreditcard.v1.OrderCreditcard.*
 
 abstract class OrderCreditcardSimulation extends CompanySimulation:
 
   simulate(
     scenario(`OrderCreditcard`)(
-      //TODO remove or add process steps like UserTasks
+      `Check Order approved UT`
     ),
-    only.scenario(`OrderCreditcard minimal`)(
-      //TODO remove or add process steps like UserTasks
+    scenario(`OrderCreditcard minimal`)(
+      `Check Order approved UT minimal`
+    ),
+    scenario(`OrderCreditcard not approved`)(
+      `Check Order NOT approved UT`
     ),
     scenario(`OrderCreditcard mocked`)(
       //TODO remove or add process steps like UserTasks
@@ -26,6 +30,12 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
       .mockServices
       .mockWorkers(workers*)
 
+  private lazy val `OrderCreditcard not approved` =
+    example
+      .withOut(outExample.copy(processStatus = ProcessStatus.notSucceeded))
+      .mockServices
+      .mockWorkers(workers*)
+
   private lazy val `OrderCreditcard minimal` =
     exampleMinimal
       .mockServices
@@ -35,7 +45,17 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
     example
       .withOut(outExample.copy(processStatus = ProcessStatus.`output-mocked`))
       .mockWorkers(OrderCreditcard.processName)
-      
+
+  private lazy val `Check Order approved UT` =
+    CheckOrderTask.example
+    
+  private lazy val `Check Order approved UT minimal` =
+    CheckOrderTask.exampleMinimal
+
+  private lazy val `Check Order NOT approved UT` =
+    CheckOrderTask.example
+      .withOut(CheckOrderTask.Out.example.copy(approved = false))
+
   private lazy val workers = Seq()
 
 end OrderCreditcardSimulation
