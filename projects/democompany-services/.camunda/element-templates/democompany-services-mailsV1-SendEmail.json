@@ -1,0 +1,158 @@
+{
+  "name" : "democompany-services-mailsV1-SendEmail",
+  "id" : "democompany-services-mailsV1-SendEmail",
+  "description" : "Send an Email\n\n",
+  "version" : 0,
+  "appliesTo" : [
+    "bpmn:Activity"
+  ],
+  "elementType" : {
+    "value" : "bpmn:ServiceTask"
+  },
+  "properties" : [
+    {
+      "value" : "#{subject}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "subject"
+      },
+      "label" : "subject",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{body}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "body"
+      },
+      "label" : "body",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{to}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "to"
+      },
+      "label" : "to",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.getVariable('cc')}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "cc"
+      },
+      "label" : "cc",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.getVariable('bcc')}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "bcc"
+      },
+      "label" : "bcc",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "democompany-services-mailsV1-SendEmail",
+      "binding" : {
+        "type" : "property",
+        "name" : "camunda:topic"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "external",
+      "binding" : {
+        "type" : "property",
+        "name" : "camunda:type"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.getVariable('outputServiceMock')}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "outputServiceMock"
+      },
+      "label" : "outputServiceMock",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{true}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "manualOutMapping"
+      },
+      "label" : "manualOutMapping",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "outputVariables"
+      },
+      "label" : "outputVariables",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.getVariable('outputMock')}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "outputMock"
+      },
+      "label" : "outputMock",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "handledError1, handledError2",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "handledErrors"
+      },
+      "label" : "handledErrors",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "errorRegex1, errorRegex2",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "regexHandledErrors"
+      },
+      "label" : "regexHandledErrors",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "Send Email",
+      "binding" : {
+        "type" : "property",
+        "name" : "name"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    }
+  ],
+  "$schema" : "https://unpkg.com/@camunda/element-templates-json-schema@0.16.0/resources/schema.json",
+  "groups" : [
+  ],
+  "entriesVisible" : true
+}

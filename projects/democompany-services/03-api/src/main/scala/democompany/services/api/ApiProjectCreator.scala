@@ -11,7 +11,8 @@ object ApiProjectCreator extends CompanyApiCreator:
   val version = "0.1.0-SNAPSHOT"
 
   document(
-    clientsApi
+    clientsApi,
+    mailsApi
   )
 
 
@@ -19,6 +20,11 @@ object ApiProjectCreator extends CompanyApiCreator:
     import domain.clients.v1.*
     group(ClientsV1.serviceLabel)(
       GetClientsClientId.example
+    )
+  private lazy val mailsApi =
+    import domain.mails.v1.*
+    group(MailsV1.serviceLabel)(
+      SendEmail.example
     )
 
 end ApiProjectCreator

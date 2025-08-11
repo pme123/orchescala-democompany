@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: democompany-services
   version: 0.1.0-SNAPSHOT
-  summary: "\n\nMy services for the democompany\n\nCreated at 08.08.2025, 16:12\n\n\
+  summary: "\n\nMy services for the democompany\n\nCreated at 11.08.2025, 13:07\n\n\
     **See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n# Package Configuration\n**Check all dependency trees here: [democompany-services](../../dependencies/democompany-services.html)**\n\
     \n### Dependencies:\n\n\n\n\n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\
@@ -148,6 +148,63 @@ paths:
                         country: Germany
                         additionalInfo: Additional Info
                     etag: 12345.234324234.2343423432
+  /Worker/Mails1.0/mailsV1-SendEmail/democompany-services-mailsV1-SendEmail:
+    head:
+      tags:
+      - Mails 1.0
+      summary: 'Worker: SendEmail'
+      description: "\n\n\n**Topic:** `democompany-services-mailsV1-SendEmail` (to\
+        \ define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of\
+        \ type _External_)\n\nSend an Email\n\n---\n\n\n\n<details>\n<summary><b>Wrapped\
+        \ Service:</b>\n\n(Mails 1.0 - v1.0 - PUT: mail)\n</summary>\n<p>\nInput Body:\
+        \ `democompany.services.domain.mails.v1.SendEmail$In`:\n\n```json\n{\n  \"\
+        subject\" : \"Request for Information\",\n  \"body\" : \"Dear John, how are\
+        \ you?</br>We need more information.</br> - Passport or Drivers License</br>\
+        \ - Proof of Address</br>Kind regards, Jane\",\n  \"to\" : \"john.doe@example.com\"\
+        ,\n  \"cc\" : \"jane.doe@example.com\"\n}\n```\n\n\nExample Response: `orchescala.domain.NoOutput`:\n\
+        \n```json\n{\n  \"respStatus\" : 204,\n  \"respBody\" : {\n    \n  },\n  \"\
+        respHeaders\" : [\n  ]\n}\n```\n</p>\n</details>\n</p>\n\n---\n\n\n- Input:\
+        \  `democompany.services.domain.mails.v1.SendEmail > In`\n- Output: `democompany.services.domain.mails.v1.SendEmail\
+        \ > Out`\n\nYou can test this worker using the generic process _**orchescala-externalTask-generic**_\
+        \ (e.g. with Postman).\n\n- ServiceOut:  `orchescala.domain.MockedServiceResponse`\n\
+        <p/>\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n</summary>\n\
+        \n<p>\n\n**outputVariables**:\n\nJust take the variable you need in your process!\n\
+        ```json\n...\n\"outputVariables\": \"\",\n...\n```\n\n**outputMock**:\n\n\
+        ```json\n...\n\"outputMock\": {\n  \n},\n...\n```\n\n**outputServiceMock**:\n\
+        ```json\n...\n\"outputServiceMock\": {\n  \"respStatus\" : 200,\n  \"respBody\"\
+        \ : {\n    \"respStatus\" : 204,\n    \"respBody\" : {\n      \n    },\n \
+        \   \"respHeaders\" : [\n    ]\n  },\n  \"respHeaders\" : [\n  ]\n},\n...\n\
+        ```\n</p>\n</details>\n</p>\n      \n    \n\n\n**Used in no other Process.**\n\
+        \n**Uses no other Processes.**\n"
+      operationId: 'Worker: SendEmail'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/In1'
+            examples:
+              democompany-services-mailsV1-SendEmail:
+                value:
+                  subject: Request for Information
+                  body: |-
+                    Dear John, how are you?
+                    We need more information.
+                     - Passport or Drivers License
+                     - Proof of Address
+                    Kind regards, Jane
+                  to: john.doe@example.com
+                  cc: jane.doe@example.com
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Out1'
+              examples:
+                democompany-services-mailsV1-SendEmail:
+                  value: {}
 components:
   schemas:
     Address:
@@ -201,6 +258,24 @@ components:
         clientId:
           type: integer
           format: int64
+    In1:
+      title: In
+      type: object
+      required:
+      - subject
+      - body
+      - to
+      properties:
+        subject:
+          type: string
+        body:
+          type: string
+        to:
+          type: string
+        cc:
+          type: string
+        bcc:
+          type: string
     Out:
       title: Out
       type: object
@@ -212,7 +287,13 @@ components:
           $ref: '#/components/schemas/Client'
         etag:
           type: string
+    Out1:
+      title: Out
+      type: object
 tags:
 - name: Clients 1.0
   description: ''
   x-displayName: Clients 1.0
+- name: Mails 1.0
+  description: ''
+  x-displayName: Mails 1.0
