@@ -1,6 +1,7 @@
 package democompany.cards
 package domain.orderCreditcard.v1
 
+import democompany.services.domain.clients.v1.GetClientsClientId
 import schema.*
 
 object OrderCreditcard extends CompanyBpmnProcessDsl:
@@ -32,8 +33,8 @@ object OrderCreditcard extends CompanyBpmnProcessDsl:
       // @description(serviceOrProcessMockDescr(GetRelationship.serviceMock))
       // getRelationshipMock: Option[MockedServiceResponse[GetRelationship.ServiceOut]] = None,
       // outputMock
-      // @description(serviceOrProcessMockDescr(GetContractContractKey.Out()))
-      // getContractMock: Option[GetContractContractKey.Out] = None
+      @description(serviceOrProcessMockDescr(GetClientsClientId.Out.example))
+      getClientMock: Option[GetClientsClientId.Out] = None
   )
   object InConfig:
     given ApiSchema[InConfig]  = deriveApiSchema

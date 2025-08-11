@@ -11,11 +11,11 @@ class GetClientsClientIdWorker extends CompanyServiceWorkerDsl[In, Out, ServiceI
   override lazy val method = Method.GET
 
   def apiUri(in: In) = uri"$servicePath/${in.clientId}"
-
+  
   override def outputMapper(
       out: ServiceResponse[ServiceOut],
       in: In
   ) =
-    Right(Out(out.outputBody, out.headers(etagHeaderName)))
+    Right(Out(out.outputBody, out.headers(etagHeaderName), email = out.outputBody.email))
 
 end GetClientsClientIdWorker

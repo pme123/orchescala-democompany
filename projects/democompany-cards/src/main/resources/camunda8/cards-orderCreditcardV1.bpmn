@@ -70,17 +70,31 @@
     <bpmn:sequenceFlow id="Flow_0e8srvd" name="yes" sourceRef="Gateway_0m9et3m" targetRef="SuccededEndEvent">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=approved</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1tot3tr" name="no" sourceRef="Gateway_0m9et3m" targetRef="Activity_0vqnakm">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=not(approved)</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1pjrvj7" sourceRef="Activity_0vqnakm" targetRef="Event_16vlioe" />
+    <bpmn:serviceTask id="Activity_0vqnakm" name="Send Email" zeebe:modelerTemplate="democompany-services-mailsV1-SendEmail" zeebe:modelerTemplateVersion="0">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="democompany-services-mailsV1-SendEmail" retries="0" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=&#34;Missing Information for ordering creditcard.&#34;" target="subject" />
+          <zeebe:input source="=&#34;Dear &#34; + client.salutation + &#34;\\n\\n&#34; + &#34;Regards Demo Company&#34;" target="body" />
+          <zeebe:input source="=client.email" target="to" />
+          <zeebe:input source="=&#34;customerservice@democompany.ch&#34;" target="cc" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1tot3tr</bpmn:incoming>
+      <bpmn:outgoing>Flow_1pjrvj7</bpmn:outgoing>
+    </bpmn:serviceTask>
     <bpmn:endEvent id="Event_16vlioe" name="not succeded">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
           <zeebe:output source="=&#34;notSucceeded&#34;" target="processStatus" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1tot3tr</bpmn:incoming>
+      <bpmn:incoming>Flow_1pjrvj7</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1tot3tr" name="no" sourceRef="Gateway_0m9et3m" targetRef="Event_16vlioe">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=not(approved)</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0bb63t1">
@@ -126,10 +140,14 @@
           <dc:Bounds x="764" y="211" width="52" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0984ck3_di" bpmnElement="Activity_0vqnakm">
+        <dc:Bounds x="740" y="360" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_16vlioe_di" bpmnElement="Event_16vlioe">
-        <dc:Bounds x="1022" y="352" width="36" height="36" />
+        <dc:Bounds x="1022" y="392" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1007" y="395" width="66" height="14" />
+          <dc:Bounds x="1007" y="435" width="66" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_15cq5k9_di" bpmnElement="Flow_15cq5k9">
@@ -164,11 +182,14 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1tot3tr_di" bpmnElement="Flow_1tot3tr">
         <di:waypoint x="790" y="285" />
-        <di:waypoint x="790" y="370" />
-        <di:waypoint x="1022" y="370" />
+        <di:waypoint x="790" y="360" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="799" y="325" width="13" height="14" />
+          <dc:Bounds x="799" y="293" width="13" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pjrvj7_di" bpmnElement="Flow_1pjrvj7">
+        <di:waypoint x="840" y="410" />
+        <di:waypoint x="1022" y="410" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

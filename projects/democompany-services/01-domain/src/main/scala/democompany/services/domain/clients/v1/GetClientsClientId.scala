@@ -25,16 +25,18 @@ object GetClientsClientId extends ClientsV1:
 
   case class Out(
       client: Client,
-      etag: String
+      etag: String,
+      email: Option[String]
   )
   object Out:
     given ApiSchema[Out]    = deriveApiSchema
     given InOutCodec[Out]   = deriveInOutCodec
     lazy val example        = Out(
       client = Client.example,
-      etag = defaultEtag
+      etag = defaultEtag,
+      email = Some("john.doe@example.com")
     )
-    lazy val exampleMinimal = example.copy(client = Client.exampleMinimal)
+    lazy val exampleMinimal = example.copy(client = Client.exampleMinimal, email = None)
   end Out
 
   type ServiceIn  = NoInput // if no input is needed

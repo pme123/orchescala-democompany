@@ -29,12 +29,13 @@ object CheckOrderTask extends CompanyBpmnUserTaskDsl:
   end In
 
   case class Out(
-      approved: Boolean
+      approved: Boolean,
+      approveComment: String
   )
   object Out:
     given ApiSchema[Out]    = deriveApiSchema
     given InOutCodec[Out]   = deriveInOutCodec
-    lazy val example        = Out(approved = true)
+    lazy val example        = Out(approved = true, approveComment = "Approved with no issues.")
     lazy val exampleMinimal = example // .copy(..=None)
   end Out
 
