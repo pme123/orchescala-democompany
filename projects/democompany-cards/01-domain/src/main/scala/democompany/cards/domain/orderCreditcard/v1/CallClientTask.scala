@@ -12,7 +12,7 @@ object CallClientTask extends CompanyBpmnUserTaskDsl:
 
   case class In(
     client: Client,
-    approveComment: String,
+   // approveComment: String,
     creditCardAccount: CardAccount,
     mainCardHolder: Option[CardHolder]
 
@@ -22,7 +22,7 @@ object CallClientTask extends CompanyBpmnUserTaskDsl:
     given InOutCodec[In] = deriveInOutCodec
     lazy val example = In(
       client = Client.example,
-      approveComment = "Approved with no issues.",
+   //   approveComment = "Approved with no issues.",
       creditCardAccount = CardAccount.example,
       mainCardHolder = Some(CardHolder.example)
     )

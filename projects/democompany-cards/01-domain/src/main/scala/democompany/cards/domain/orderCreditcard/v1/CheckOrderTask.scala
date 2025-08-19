@@ -6,8 +6,8 @@ import democompany.services.domain.clients.v1.schema.Client
 
 object CheckOrderTask extends CompanyBpmnUserTaskDsl:
 
-  val name          = "democompany-cards-orderCreditcardV1-CheckOrderTask"
-  val descr: String = ""
+  val name          = "CheckOrderTask"
+  val descr: String = "Check if the order can be done."
 
   case class In(
       client: Client,

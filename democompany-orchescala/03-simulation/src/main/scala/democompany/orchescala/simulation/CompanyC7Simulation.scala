@@ -2,14 +2,15 @@ package democompany.orchescala.simulation
 
 import democompany.orchescala.engine.CompanyEngineConfig.*
 import io.circe.parser.*
-import orchescala.engine.c7.C7ProcessEngine
+import orchescala.engine.c7.*
+import orchescala.engine.c8.{C8ProcessEngine, SharedC8ClientManager}
 import orchescala.engine.{EngineError, ProcessEngine}
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity
 import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.apache.hc.core5.http.io.support.ClassicRequestBuilder
 import org.apache.hc.core5.http.message.BasicNameValuePair
 import org.camunda.community.rest.client.invoker.ApiClient
-import zio.{IO, ZIO}
+import zio.{IO, ZIO, ZLayer}
 
 import scala.io.Source
 import scala.jdk.CollectionConverters.*
@@ -17,21 +18,26 @@ import scala.jdk.CollectionConverters.*
 
 /** Add here company specific stuff, to run the Simulations.
   */
-trait CompanyC7Simulation extends CompanySimulation:
+trait CompanyC7Simulation extends CompanySimulation, C7Client:
+  // Override this to provide the ZIO layers required by this simulation
+  lazy val requiredLayers: Seq[ZLayer[Any, Nothing, Any]] = Seq(
+    SharedC7ClientManager.layer
+  )
 
-  given IO[EngineError, ApiClient] =
-    (for
-      _      <- ZIO.logDebug("Creating API Client")
-      client <- ZIO.attempt(ApiClient())
-      _      <- ZIO.attempt:
-                  client.setBasePath(camundaRestUrl)
-      token  <- getOAuthTokenZIO()
-      _      <- ZIO.attempt:
-                  client.addDefaultHeader("Authorization", s"Bearer $token")
-    yield client)
-      .mapError: ex =>
-        EngineError.UnexpectedError(s"Problem creating API Client: $ex")
-  // OAuth configuration
+  lazy val client: ZIO[SharedC7ClientManager, EngineError, ApiClient] =
+    SharedC7ClientManager.getOrCreateClient:
+      (for
+        _      <- ZIO.logDebug("Creating API Client")
+        client <- ZIO.attempt(ApiClient())
+        _      <- ZIO.attempt:
+                    client.setBasePath(camundaRestUrl)
+        token  <- getOAuthTokenZIO()
+        _      <- ZIO.attempt:
+                    client.addDefaultHeader("Authorization", s"Bearer $token")
+      yield client)
+        .mapError: ex =>
+          EngineError.UnexpectedError(s"Problem creating API Client: $ex")
+    // OAuth configuration
 
   private def getOAuthTokenZIO() =
     ZIO.attempt:
@@ -82,7 +88,8 @@ trait CompanyC7Simulation extends CompanySimulation:
     accessToken
   end getOAuthToken
 
-  lazy val engine: ProcessEngine = C7ProcessEngine()
-  
-  
+  override def engineZIO: ZIO[Any, Nothing, ProcessEngine] =
+    C7ProcessEngine.withClient(this)
+      .provideLayer(SharedC7ClientManager.layer)
+
 end CompanyC7Simulation

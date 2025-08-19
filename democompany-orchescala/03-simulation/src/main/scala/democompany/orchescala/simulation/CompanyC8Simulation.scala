@@ -1,24 +1,28 @@
 package democompany.orchescala.simulation
 
 import democompany.orchescala.engine.CompanyEngineC8Config
-import democompany.orchescala.engine.CompanyEngineC8Config.*
-import io.camunda.client.CamundaClient
+import orchescala.engine.ProcessEngine
 import orchescala.engine.c8.*
-import orchescala.engine.{EngineError, ProcessEngine}
-import zio.{IO, ZIO}
+import zio.{ZIO, ZLayer}
 
-import java.net.URI
-
-/** Add here company specific stuff, to run the Simulations.
+/** Company-specific C8 Simulation trait that works with SharedC8ClientManager
   */
-trait CompanyC8Simulation extends CompanySimulation, CompanyEngineC8Config, C8SaasClient:
-  given IO[EngineError, CamundaClient] = client
+trait CompanyC8Simulation extends SimulationRunner, CompanySimulation, CompanyEngineC8Config,
+      C8SaasClient:
 
-  lazy val engine: ProcessEngine = C8ProcessEngine()
+  // Override engineZIO to create the engine within the SharedC8ClientManager environment
+  override def engineZIO: ZIO[Any, Nothing, ProcessEngine] =
+    C8ProcessEngine.withClient(this)
+      .provideLayer(SharedC8ClientManager.layer)
+
+  // Override this to provide the ZIO layers required by this simulation
+  lazy val requiredLayers: Seq[ZLayer[Any, Nothing, Any]] = Seq(
+    SharedC8ClientManager.layer
+  )
 
   override lazy val config: SimulationConfig =
     SimulationConfig(
       endpoint = zeebeRest
     )
-    
+
 end CompanyC8Simulation

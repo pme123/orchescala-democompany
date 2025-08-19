@@ -16,5 +16,8 @@ object ApiProjectCreator extends CompanyApiCreator:
 
   private lazy val orderCreditcardApi =
     import democompany.cards.domain.orderCreditcard.v1.*
-    api(OrderCreditcard.example)()
+    api(OrderCreditcard.example)(
+      CheckOrderTask.example,
+      CallClientTask.example
+    )
 end ApiProjectCreator

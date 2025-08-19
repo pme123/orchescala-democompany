@@ -1,6 +1,6 @@
 package democompany.cards.simulation
 
-import democompany.cards.domain.orderCreditcard.v1.CheckOrderTask
+import democompany.cards.domain.orderCreditcard.v1.{CallClientTask, CheckOrderTask}
 import democompany.cards.domain.orderCreditcard.v1.OrderCreditcard.*
 import democompany.services.domain.clients.v1.GetClientsClientId
 
@@ -17,7 +17,8 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
       `Check Order NOT approved UT`
     ),
     scenario(`OrderCreditcard not approved no email`)(
-      `Check Order NOT approved UT`
+      `Check Order NOT approved UT`,
+      `Call Client UT`
     ),
     scenario(`OrderCreditcard mocked`)(
       // TODO remove or add process steps like UserTasks
@@ -73,6 +74,9 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
   private lazy val `Check Order NOT approved UT` =
     CheckOrderTask.example
       .withOut(CheckOrderTask.Out.example.copy(approved = false))
+  private lazy val `Call Client UT` =
+    CallClientTask.example
+     // .withOut(CheckOrderTask.Out.example.copy(approved = false))
 
   private lazy val workers = Seq()
 
