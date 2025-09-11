@@ -3,14 +3,13 @@ package democompany.orchescala.simulation
 import democompany.orchescala.engine.CompanyEngineConfig.*
 import io.circe.parser.*
 import orchescala.engine.c7.*
-import orchescala.engine.c8.{C8ProcessEngine, SharedC8ClientManager}
 import orchescala.engine.{EngineError, ProcessEngine}
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity
 import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.apache.hc.core5.http.io.support.ClassicRequestBuilder
 import org.apache.hc.core5.http.message.BasicNameValuePair
 import org.camunda.community.rest.client.invoker.ApiClient
-import zio.{IO, ZIO, ZLayer}
+import zio.{ZIO, ZLayer}
 
 import scala.io.Source
 import scala.jdk.CollectionConverters.*
