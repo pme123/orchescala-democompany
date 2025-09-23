@@ -11,7 +11,7 @@ class OrderCreditcardWorker extends CompanyInitWorkerDsl[In, Out, InitIn, InConf
   override def customInit(in: In): InitIn =
     InitIn(
       initCreditCardAccount = in.creditCardAccount.copy(accountId = None),
-      simpleValue = if in.clientId > 100 then Some("Hello World") else None
+      simpleValue = in.mainCardHolder.map(_.cards.map(_.embossedLineOne).mkString(","))
     )
  
  

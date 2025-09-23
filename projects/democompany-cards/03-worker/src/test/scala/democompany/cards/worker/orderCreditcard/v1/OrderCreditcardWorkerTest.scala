@@ -11,14 +11,14 @@ class OrderCreditcardWorkerTest extends munit.FunSuite:
 
 
   test("customInit"):
-    val in = inExample
+    val in = In.example
     val out = InitIn.example
     assertEquals(
       worker.customInit(in),
       out
     )
   test("customInit minimal"):
-    val in = inExampleMinimal
+    val in = In.exampleMinimal
     val out = InitIn.exampleMinimal
     assertEquals(
       worker.customInit(in),

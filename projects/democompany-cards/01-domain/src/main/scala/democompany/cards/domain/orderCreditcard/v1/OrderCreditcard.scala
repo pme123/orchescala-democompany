@@ -23,16 +23,22 @@ object OrderCreditcard extends CompanyBpmnProcessDsl:
   object In:
     given ApiSchema[In]  = deriveApiSchema
     given InOutCodec[In] = deriveInOutCodec
-
+    lazy val example = In(
+      clientId = 1000,
+      creditCardAccount = CardAccount.example,
+      mainCardHolder = Some(CardHolder.example),
+      inConfig = None
+    )
+    lazy val exampleMinimal = example.copy(
+      creditCardAccount = CardAccount.exampleMinimal,
+      mainCardHolder = None
+    )
+    
   case class InConfig(
       // Process Configuration
-      // @description("To test cancel from other processes you need to set this flag.")
-      //  waitForCancel: Boolean = false,
+      @description("To test cancel from other processes you need to set this flag.")
+      timerNotReceivedEmail: String = "P3D",
       // Mocks
-      // outputServiceMock
-      // @description(serviceOrProcessMockDescr(GetRelationship.serviceMock))
-      // getRelationshipMock: Option[MockedServiceResponse[GetRelationship.ServiceOut]] = None,
-      // outputMock
       @description(serviceOrProcessMockDescr(GetClientsClientId.Out.example))
       getClientMock: Option[GetClientsClientId.Out] = None
   )
@@ -52,7 +58,7 @@ object OrderCreditcard extends CompanyBpmnProcessDsl:
 
     lazy val example = InitIn(
       initCreditCardAccount = CardAccount.example.copy(accountId = None),
-      simpleValue = Some("Hello World")
+      simpleValue = Some("PETER PAN")
     )
     lazy val exampleMinimal = example.copy(
       simpleValue = None
@@ -68,41 +74,26 @@ object OrderCreditcard extends CompanyBpmnProcessDsl:
   object Out:
     given ApiSchema[Out]  = deriveApiSchema
     given InOutCodec[Out] = deriveInOutCodec
-
-  lazy val inExample = In(
-    clientId = 1000,
-    creditCardAccount = CardAccount.example,
-    mainCardHolder = Some(CardHolder.example),
-    inConfig = None
-  )
-
-  lazy val inExampleMinimal = inExample.copy(
-    clientId = 1,
-    creditCardAccount = CardAccount.exampleMinimal,
-    mainCardHolder = None
-  )
-
-  lazy val outExample = Out(
-    processStatus = ProcessStatus.succeeded,
-    creditCardAccount = CardAccount.example,
-    initCreditCardAccount = CardAccount.example.copy(accountId = None),
-    simpleValue = Some("Hello World")
-  )
-
-  lazy val outExampleMinimal = outExample.copy(
-    simpleValue = None,
-    creditCardAccount = CardAccount.exampleMinimal,
-  )
+    lazy val example = Out(
+      processStatus = ProcessStatus.succeeded,
+      creditCardAccount = CardAccount.example,
+      initCreditCardAccount = CardAccount.example.copy(accountId = None),
+      simpleValue = Some("PETER PAN")
+    )
+    lazy val exampleMinimal = example.copy(
+      simpleValue = None,
+      creditCardAccount = CardAccount.exampleMinimal,
+    )
 
   lazy val example = process(
-    inExample,
-    outExample,
+    In.example,
+    Out.example,
     InitIn.example
   )
 
   lazy val exampleMinimal = process(
-    inExampleMinimal,
-    outExampleMinimal,
+    In.exampleMinimal,
+    Out.exampleMinimal,
     InitIn.example
   )
 end OrderCreditcard

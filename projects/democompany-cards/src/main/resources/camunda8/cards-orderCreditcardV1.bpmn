@@ -39,8 +39,12 @@
         <zeebe:taskDefinition type="democompany-services-clientsV1-GetClientsClientId" retries="0" />
         <zeebe:ioMapping>
           <zeebe:input source="=clientId" target="clientId" />
+          <zeebe:input source="=true" target="manualOutMapping" />
           <zeebe:input source="=[ &#34;client&#34;, &#34;email&#34; ]" target="outputVariables" />
           <zeebe:input source="=getClientMock" target="outputMock" />
+          <zeebe:output source="=email" target="email" />
+          <zeebe:output source="=client" target="client" />
+          <zeebe:output source="=true" target="readyToCheckOrder" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1xabbbn</bpmn:incoming>
@@ -66,7 +70,7 @@
     <bpmn:sequenceFlow id="NoSequenceFlow" name="no" sourceRef="ApprovedGateway" targetRef="HasEmailGateway">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=not(approved)</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_1pjrvj7" sourceRef="SendEmailTask" targetRef="Gateway_0wb6b1z" />
+    <bpmn:sequenceFlow id="Flow_1pjrvj7" sourceRef="SendEmailTask" targetRef="Gateway_0wzkr0r" />
     <bpmn:serviceTask id="SendEmailTask" name="Send Email" zeebe:modelerTemplate="democompany-services-mailsV1-SendEmail" zeebe:modelerTemplateVersion="0">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="democompany-services-mailsV1-SendEmail" retries="0" />
@@ -90,7 +94,7 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=email = null</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0pkzqho" sourceRef="CallClientTask" targetRef="Gateway_0wb6b1z" />
-    <bpmn:sequenceFlow id="Flow_1d8pt6p" sourceRef="Gateway_0wb6b1z" targetRef="NotSuccededEndEvent" />
+    <bpmn:sequenceFlow id="Flow_1d8pt6p" sourceRef="Gateway_0wb6b1z" targetRef="Activity_1gz31oe" />
     <bpmn:userTask id="CallClientTask" name="Call Client">
       <bpmn:extensionElements>
         <zeebe:userTask />
@@ -101,7 +105,8 @@
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="Gateway_0wb6b1z">
       <bpmn:incoming>Flow_0pkzqho</bpmn:incoming>
-      <bpmn:incoming>Flow_1pjrvj7</bpmn:incoming>
+      <bpmn:incoming>Flow_1ariouh</bpmn:incoming>
+      <bpmn:incoming>Flow_0s2610n</bpmn:incoming>
       <bpmn:outgoing>Flow_1d8pt6p</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:endEvent id="SuccededEndEvent" name="succeded">
@@ -118,13 +123,58 @@
           <zeebe:output source="=&#34;notSucceeded&#34;" target="processStatus" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1d8pt6p</bpmn:incoming>
+      <bpmn:incoming>Flow_1rdazoa</bpmn:incoming>
     </bpmn:endEvent>
+    <bpmn:eventBasedGateway id="Gateway_0wzkr0r">
+      <bpmn:incoming>Flow_1pjrvj7</bpmn:incoming>
+      <bpmn:outgoing>Flow_18zseoq</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0j3wxl2</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="Event_0crzz7s" name="Receive Email">
+      <bpmn:incoming>Flow_18zseoq</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ariouh</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0mvvxqu" messageRef="Message_0g4f55o" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_18zseoq" sourceRef="Gateway_0wzkr0r" targetRef="Event_0crzz7s" />
+    <bpmn:sequenceFlow id="Flow_1ariouh" sourceRef="Event_0crzz7s" targetRef="Gateway_0wb6b1z" />
+    <bpmn:sequenceFlow id="Flow_0j3wxl2" sourceRef="Gateway_0wzkr0r" targetRef="Event_1jr5ul7" />
+    <bpmn:sequenceFlow id="Flow_0s2610n" sourceRef="Event_1jr5ul7" targetRef="Gateway_0wb6b1z" />
+    <bpmn:intermediateCatchEvent id="Event_1jr5ul7" name="Email not received in 3 days">
+      <bpmn:incoming>Flow_0j3wxl2</bpmn:incoming>
+      <bpmn:outgoing>Flow_0s2610n</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1e13bbr">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">=timerNotReceivedEmail</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_1rdazoa" sourceRef="Activity_1gz31oe" targetRef="NotSuccededEndEvent" />
+    <bpmn:manualTask id="Activity_1gz31oe" name="Order Card">
+      <bpmn:incoming>Flow_1d8pt6p</bpmn:incoming>
+      <bpmn:outgoing>Flow_1rdazoa</bpmn:outgoing>
+    </bpmn:manualTask>
+    <bpmn:endEvent id="Event_1n6q6pl" name="succeded">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=&#34;canceled&#34;" target="processStatus" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_10vjr0a</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_10vjr0a" sourceRef="Event_0iv6tm6" targetRef="Event_1n6q6pl" />
+    <bpmn:boundaryEvent id="Event_0iv6tm6" name="cancel Order" attachedToRef="CheckOrderTask">
+      <bpmn:outgoing>Flow_10vjr0a</bpmn:outgoing>
+      <bpmn:signalEventDefinition id="SignalEventDefinition_00uwegi" signalRef="Signal_14pqrim" />
+    </bpmn:boundaryEvent>
   </bpmn:process>
+  <bpmn:message id="Message_0g4f55o" name="democompany-cards-orderCreditcardV1.ReceiveEmail">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=processInstanceKey" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:signal id="Signal_14pqrim" name="=&#34;democompany-cards-orderCreditcardV1-&#34; + string(processInstanceKey) + &#34;.CancelOrderSignal&#34;" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0bb63t1">
       <bpmndi:BPMNShape id="Participant_1byvi7a_di" bpmnElement="DemocompanycardsorderCreditcardV1Participant" isHorizontal="true">
-        <dc:Bounds x="160" y="80" width="1200" height="550" />
+        <dc:Bounds x="160" y="80" width="1430" height="550" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0icvc39_di" bpmnElement="MockedEndEvent" color:background-color="#cccccc">
@@ -170,21 +220,52 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1wue9mt_di" bpmnElement="CallClientTask">
-        <dc:Bounds x="930" y="320" width="100" height="80" />
+        <dc:Bounds x="1160" y="320" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0wb6b1z_di" bpmnElement="Gateway_0wb6b1z" isMarkerVisible="true">
-        <dc:Bounds x="955" y="485" width="50" height="50" />
+        <dc:Bounds x="1185" y="485" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1p66wzz_di" bpmnElement="SuccededEndEvent">
-        <dc:Bounds x="1252" y="242" width="36" height="36" />
+        <dc:Bounds x="1482" y="242" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1246" y="285" width="48" height="14" />
+          <dc:Bounds x="1476" y="285" width="48" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_16vlioe_di" bpmnElement="NotSuccededEndEvent">
-        <dc:Bounds x="1252" y="492" width="36" height="36" />
+        <dc:Bounds x="1482" y="492" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1237" y="535" width="66" height="14" />
+          <dc:Bounds x="1467" y="535" width="66" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_009xesi_di" bpmnElement="Gateway_0wzkr0r">
+        <dc:Bounds x="885" y="485" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ic5uud_di" bpmnElement="Event_0crzz7s">
+        <dc:Bounds x="1012" y="432" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="995" y="475" width="71" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1jr5ul7_di" bpmnElement="Event_1jr5ul7">
+        <dc:Bounds x="1012" y="532" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="986" y="575" width="89" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_080fabg_di" bpmnElement="Activity_1gz31oe">
+        <dc:Bounds x="1300" y="470" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1ijkh9s" bpmnElement="Event_1n6q6pl">
+        <dc:Bounds x="1482" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1476" y="185" width="48" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0xgluhz_di" bpmnElement="Event_0iv6tm6">
+        <dc:Bounds x="702" y="202" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="648" y="185" width="64" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_15cq5k9_di" bpmnElement="Flow_15cq5k9">
@@ -212,21 +293,21 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0e8srvd_di" bpmnElement="YesSequenceFlow1">
         <di:waypoint x="815" y="260" />
-        <di:waypoint x="1252" y="260" />
+        <di:waypoint x="1482" y="260" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="859" y="243" width="18" height="14" />
+          <dc:Bounds x="821" y="243" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1tot3tr_di" bpmnElement="NoSequenceFlow">
         <di:waypoint x="790" y="285" />
         <di:waypoint x="790" y="335" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="799" y="303" width="13" height="14" />
+          <dc:Bounds x="799" y="285" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1pjrvj7_di" bpmnElement="Flow_1pjrvj7">
         <di:waypoint x="840" y="510" />
-        <di:waypoint x="955" y="510" />
+        <di:waypoint x="885" y="510" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0bt58e6_di" bpmnElement="YesSequenceFlow2">
         <di:waypoint x="790" y="385" />
@@ -237,18 +318,47 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_193qfqy_di" bpmnElement="NoSequenceFlow1">
         <di:waypoint x="815" y="360" />
-        <di:waypoint x="930" y="360" />
+        <di:waypoint x="1160" y="360" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="867" y="342" width="13" height="14" />
+          <dc:Bounds x="823" y="342" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0pkzqho_di" bpmnElement="Flow_0pkzqho">
-        <di:waypoint x="980" y="400" />
-        <di:waypoint x="980" y="485" />
+        <di:waypoint x="1210" y="400" />
+        <di:waypoint x="1210" y="485" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1d8pt6p_di" bpmnElement="Flow_1d8pt6p">
-        <di:waypoint x="1005" y="510" />
-        <di:waypoint x="1252" y="510" />
+        <di:waypoint x="1235" y="510" />
+        <di:waypoint x="1300" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18zseoq_di" bpmnElement="Flow_18zseoq">
+        <di:waypoint x="910" y="485" />
+        <di:waypoint x="910" y="450" />
+        <di:waypoint x="1012" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ariouh_di" bpmnElement="Flow_1ariouh">
+        <di:waypoint x="1048" y="450" />
+        <di:waypoint x="1160" y="450" />
+        <di:waypoint x="1198" y="497" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0j3wxl2_di" bpmnElement="Flow_0j3wxl2">
+        <di:waypoint x="910" y="535" />
+        <di:waypoint x="910" y="550" />
+        <di:waypoint x="1012" y="550" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0s2610n_di" bpmnElement="Flow_0s2610n">
+        <di:waypoint x="1048" y="550" />
+        <di:waypoint x="1170" y="550" />
+        <di:waypoint x="1198" y="523" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1rdazoa_di" bpmnElement="Flow_1rdazoa">
+        <di:waypoint x="1400" y="510" />
+        <di:waypoint x="1482" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10vjr0a_di" bpmnElement="Flow_10vjr0a">
+        <di:waypoint x="720" y="202" />
+        <di:waypoint x="720" y="160" />
+        <di:waypoint x="1482" y="160" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
