@@ -1,18 +1,18 @@
 package democompany.orchescala.worker
 
-import democompany.orchescala.engine.CompanyEngineConfig
+import democompany.orchescala.engine.CompanyEngineC7Config
 import orchescala.worker.c7.OAuth2WorkerClient
 import scala.concurrent.duration.*
 
 trait CompanyC7Client extends OAuth2WorkerClient:
-  lazy val fssoRealm = CompanyEngineConfig.fssoRealm
-  lazy val fssoBaseUrl = CompanyEngineConfig.fssoBaseUrl
-  override lazy val camundaRestUrl = CompanyEngineConfig.camundaRestUrl
-  override lazy val client_id = CompanyEngineConfig.fssoClientName
-  override lazy val client_secret = CompanyEngineConfig.fssoClientSecret
-  override lazy val scope = CompanyEngineConfig.fssoScope
-  override lazy val username = CompanyEngineConfig.fssoTechuserName
-  override lazy val password = CompanyEngineConfig.fssoTechuserPassword
+  lazy val fssoRealm = CompanyEngineC7Config.fssoRealm
+  lazy val fssoBaseUrl = CompanyEngineC7Config.fssoBaseUrl
+  override lazy val camundaRestUrl = CompanyEngineC7Config.camundaRestUrl
+  override lazy val client_id = CompanyEngineC7Config.fssoClientName
+  override lazy val client_secret = CompanyEngineC7Config.fssoClientSecret
+  override lazy val scope = CompanyEngineC7Config.fssoScope
+  override lazy val username = CompanyEngineC7Config.fssoTechuserName
+  override lazy val password = CompanyEngineC7Config.fssoTechuserPassword
 
   override lazy val lockDuration: Long = 5.minutes.toMillis
 

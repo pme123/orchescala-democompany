@@ -1,6 +1,6 @@
 package democompany.orchescala.worker
 
-import democompany.orchescala.engine.CompanyEngineConfig.fssoRealm
+import democompany.orchescala.engine.CompanyEngineC7Config.fssoRealm
 
 lazy val testPrefix = s"$fssoRealm;"
 lazy val corrPrefix = "6300;"

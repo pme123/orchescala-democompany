@@ -7,7 +7,7 @@ import zio.{ZIO, ZLayer}
 
 /** Company-specific C8 Simulation trait that works with SharedC8ClientManager
   */
-trait CompanyC8Simulation extends SimulationRunner, CompanySimulation, CompanyEngineC8Config,
+trait CompanyC8Simulation extends CompanySimulation, CompanyEngineC8Config,
       C8SaasClient:
 
   // Override engineZIO to create the engine within the SharedC8ClientManager environment

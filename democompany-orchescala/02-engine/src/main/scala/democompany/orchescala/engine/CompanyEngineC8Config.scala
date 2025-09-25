@@ -6,6 +6,7 @@ trait CompanyEngineC8Config:
 
   lazy val zeebeGrpc    = sys.env.getOrElse("CAMUNDA8_CLOUD_GRPC_URL", s"NOT_SET")
   lazy val zeebeRest    = sys.env.getOrElse("CAMUNDA8_CLOUD_REST_URL", s"NOT_SET")
+  lazy val zeebeOperateUrl = sys.env.getOrElse("CAMUNDA8_CLOUD_OPERATE_URL", s"NOT_SET")
   lazy val audience     = sys.env.getOrElse("CAMUNDA8_CLOUD_AUDIENCE", "zeebe.camunda.io")
   lazy val clientId     = sys.env("CAMUNDA8_CLOUD_CLIENTID")
   lazy val clientSecret = sys.env("CAMUNDA8_CLOUD_CLIENTSECRET")

@@ -1,6 +1,6 @@
 package democompany.orchescala.worker
 
-import democompany.orchescala.engine.CompanyEngineConfig
+import democompany.orchescala.engine.CompanyEngineC7Config
 
 import scala.jdk.OptionConverters.*
 
@@ -28,7 +28,7 @@ case class IdentityCorrelation(
       .mkString:
         impersonateDiscriminator
 
-  lazy val isTechnicalUser: Boolean = key == CompanyEngineConfig.fssoTechuserName
+  lazy val isTechnicalUser: Boolean = key == CompanyEngineC7Config.fssoTechuserName
 
   lazy val identityAsString =
     s"""IdentityCorrelation:

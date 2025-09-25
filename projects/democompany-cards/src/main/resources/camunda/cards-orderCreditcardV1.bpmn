@@ -3,7 +3,7 @@
   <bpmn:collaboration id="Collaboration_1nchi5w">
     <bpmn:participant id="DemocompanycardsorderCreditcardV1Participant" name="democompany-cards-orderCreditcardV1" processRef="democompany-cards-orderCreditcardV1" />
   </bpmn:collaboration>
-  <bpmn:process id="democompany-cards-orderCreditcardV1" name="democompany-cards-orderCreditcardV1" isExecutable="true">
+  <bpmn:process id="democompany-cards-orderCreditcardV1" name="democompany-cards-orderCreditcardV1" isExecutable="true" camunda:historyTimeToLive="5">
     <bpmn:serviceTask id="InitProcessTask" name="Init Process" camunda:type="external" camunda:topic="democompany-cards-orderCreditcardV1">
       <bpmn:extensionElements>
         <camunda:inputOutput>
@@ -181,6 +181,7 @@
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1nchi5w">
       <bpmndi:BPMNShape id="Participant_1wuaud6_di" bpmnElement="DemocompanycardsorderCreditcardV1Participant" isHorizontal="true">
         <dc:Bounds x="160" y="80" width="1680" height="630" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1luk2dc_di" bpmnElement="InitProcessTask" color:background-color="#D5D5D5">
         <dc:Bounds x="310" y="257" width="100" height="80" />

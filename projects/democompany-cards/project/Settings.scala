@@ -81,8 +81,8 @@ object Settings {
   lazy val simulationDeps = 
     Seq(
       "ch.qos.logback" % "logback-classic" % logbackVersion % Test,
-      customer %% s"$customer-orchescala-simulation" % customerOrchescalaV,
-      "io.github.pme123" %% "orchescala-simulation" % orchescalaV
+      customer %% s"$customer-orchescala-simulation" % customerOrchescalaV % Test,
+      "io.github.pme123" %% "orchescala-simulation" % orchescalaV % Test
     )
 
   lazy val workerDeps = ProjectDef.workerDependencies ++
