@@ -2,6 +2,7 @@ package democompany.cards
 package domain.orderCreditcard.v1
 
 import democompany.services.domain.clients.v1.GetClientsClientId
+import democompany.services.domain.clients.v1.schema.Client
 import schema.*
 
 object OrderCreditcard extends CompanyBpmnProcessDsl:
@@ -39,8 +40,8 @@ object OrderCreditcard extends CompanyBpmnProcessDsl:
       @description("To test cancel from other processes you need to set this flag.")
       timerNotReceivedEmail: String = "P3D",
       // Mocks
-      @description(serviceOrProcessMockDescr(GetClientsClientId.Out.example))
-      getClientMock: Option[GetClientsClientId.Out] = None
+      @description(serviceOrProcessMockDescr(Client.example))
+      getClientMock: Option[MockedServiceResponse[Client]] = None
   )
   object InConfig:
     given ApiSchema[InConfig]  = deriveApiSchema

@@ -21,7 +21,7 @@ trait CompanyGSimulation extends CompanySimulation, C8SaasClient, CompanyEngineC
     (for
       c8Engine: ProcessEngine <- C8ProcessEngine.withClient(this)
       c7Engine: ProcessEngine <- CompanyC7Simulation.engineZIO
-      given Seq[ProcessEngine] = Seq(c8Engine,c7Engine)
+      given Seq[ProcessEngine] = Seq(c8Engine, c7Engine) // -> change order to change default engine
     yield GProcessEngine())
       .provideLayer(SharedC8ClientManager.layer)
       .provideLayer(SharedC7ClientManager.layer)

@@ -2,9 +2,12 @@ package democompany.cards.simulation
 
 import democompany.cards.domain.orderCreditcard.v1.*
 import democompany.cards.domain.orderCreditcard.v1.OrderCreditcard.*
-import democompany.services.domain.clients.v1.GetClientsClientId
+import democompany.services.domain.clients.v1.schema.Client
+import orchescala.engine.domain.EngineType
 
 abstract class OrderCreditcardSimulation extends CompanySimulation:
+  // only needed for an end event that throws an error. see documentation
+  protected def engineType: EngineType = EngineType.C8
 
   simulate(
     scenario(`OrderCreditcard`)(
@@ -18,18 +21,30 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
       `Receive Email with missing information ME`
     ),
     scenario(`OrderCreditcard not approved not received email`)(
-      `Check Order NOT approved UT`,
-    // `Email not received TE` //  not supported yet - you must do it with config timer 
+      `Check Order NOT approved UT`
+      // `Email not received TE` //  not supported yet - you must do it with config timer
     ),
     scenario(`OrderCreditcard not approved no email`)(
-      `Check Order NOT approved UT`,
+      `Check Order NOT approved UT no email`,
       `Call Client UT`
     ),
     scenario(`OrderCreditcard cancel Order`)(
       `Cancel Order Signal`
         .waitFor("readyToCheckOrder")
     ),
-    scenario(`OrderCreditcard mocked`)
+    scenario(`OrderCreditcard mocked`),
+    incidentScenario(
+      `OrderCreditcard NOT handled error`,
+      "444: Service Error: 444\nErrorMsg: Mocked Error:"
+    ),
+    // because handled differently
+    if engineType == EngineType.C8 then
+      incidentScenario( // thrown in the end event
+        `OrderCreditcard handled error`,
+        "Expected to throw an error event with the code 'client-not-found', but it was not caught."
+      )
+    else
+      scenario(`OrderCreditcard handled error`)
   )
 
   override def config =
@@ -41,7 +56,7 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
     example
       .mockServices
       .mockWorkers(workers*)
-  
+
   private lazy val `OrderCreditcard not approved` =
     example
       .withOut(Out.example.copy(processStatus = ProcessStatus.notSucceeded))
@@ -54,7 +69,9 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
         In.example.copy(inConfig =
           Some(in.inConfig.getOrElse(InConfig()).copy(
             getClientMock =
-              Some(GetClientsClientId.Out.example.copy(email = None))
+              Some(MockedServiceResponse.success200(Client.example.copy(email =
+                None
+              )).withHeader("ETag", "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIi....."))
           ))
         )
       )
@@ -62,17 +79,16 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
       .mockServices
       .mockWorkers(workers*)
 
-  private lazy val `OrderCreditcard not approved not received email` = 
+  private lazy val `OrderCreditcard not approved not received email` =
     `OrderCreditcard`
-    .withIn(in =>
+      .withIn(in =>
         In.example.copy(inConfig =
           Some(in.inConfig.getOrElse(InConfig()).copy(
             timerNotReceivedEmail = "PT0S"
           ))
         )
       )
-    .withOut(Out.example.copy(processStatus = ProcessStatus.notSucceeded))
-  
+      .withOut(Out.example.copy(processStatus = ProcessStatus.notSucceeded))
 
   private lazy val `OrderCreditcard minimal` =
     exampleMinimal
@@ -84,10 +100,30 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
       .withOut(Out.example.copy(processStatus = ProcessStatus.`output-mocked`))
       .mockWorkers(OrderCreditcard.processName)
 
-  private lazy val `OrderCreditcard cancel Order` =
+  private lazy val `OrderCreditcard handled error`     =
+    example
+      .withIn(In.example.copy(inConfig =
+        Some(InConfig(
+          getClientMock =
+            Some(MockedServiceResponse.error(404, Json.obj()))
+        ))
+      ))
+      .withOut(
+        Out.example.copy(processStatus = ProcessStatus.failed)
+      )
+  private lazy val `OrderCreditcard NOT handled error` =
+    example
+      .withIn(
+        In.example.copy(inConfig =
+          Some(InConfig(
+            getClientMock = Some(MockedServiceResponse.error(444))
+          ))
+        )
+      )
+  private lazy val `OrderCreditcard cancel Order`      =
     `OrderCreditcard`
       .withOut(Out.example.copy(processStatus = ProcessStatus.canceled))
-  
+
   private lazy val `Check Order approved UT` =
     CheckOrderTask.example
 
@@ -97,19 +133,24 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
   private lazy val `Check Order NOT approved UT` =
     CheckOrderTask.example
       .withOut(CheckOrderTask.Out.example.copy(approved = false))
-  private lazy val `Call Client UT` =
+
+  private lazy val `Check Order NOT approved UT no email` =
+    CheckOrderTask.example
+      .withIn(CheckOrderTask.In.example.copy(client = Client.example.copy(email = None)))
+      .withOut(CheckOrderTask.Out.example.copy(approved = false))
+  private lazy val `Call Client UT`                       =
     CallClientTask.example
-     // .withOut(CheckOrderTask.Out.example.copy(approved = false))
+      .withIn(CallClientTask.In.example.copy(client = Client.example.copy(email = None)))
 
   private lazy val `Receive Email with missing information ME` =
-    ReceiveEmailME.example//.withBusinessKey(SignalEvent.Dynamic_ProcessInstance)
-  
+    ReceiveEmailME.example // .withBusinessKey(SignalEvent.Dynamic_ProcessInstance)
+
   private lazy val `Cancel Order Signal` =
     CancelOrderSignal.example
-    
+
   private lazy val `Email not received TE` =
     ReceiveEmailTimer.example
-   
+
   private lazy val workers = Seq()
 
 end OrderCreditcardSimulation

@@ -22,7 +22,7 @@ trait CompanyC8Simulation extends CompanySimulation, CompanyEngineC8Config,
 
   override lazy val config: SimulationConfig =
     SimulationConfig(
-      endpoint = zeebeRest
+      cockpitUrl = zeebeOperateUrl
     )
 
 end CompanyC8Simulation

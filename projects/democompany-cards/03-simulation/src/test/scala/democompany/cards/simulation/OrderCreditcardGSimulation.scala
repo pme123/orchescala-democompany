@@ -6,7 +6,4 @@ import zio.ZLayer
 // ./helper.scala deploy OrderCreditcardGSimulation
 // simulation/test
 // simulation/testOnly *OrderCreditcardGSimulation
-class OrderCreditcardGSimulation extends OrderCreditcardSimulation, CompanyGSimulation:
-
-
-end OrderCreditcardGSimulation
+class OrderCreditcardGSimulation extends OrderCreditcardSimulation, CompanyGSimulation
