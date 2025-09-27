@@ -10,8 +10,8 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
   protected def engineType: EngineType = EngineType.C8
 
   simulate(
-    only.scenario(`OrderCreditcard`)(
-    //  `Check Order approved UT`
+    scenario(`OrderCreditcard`)(
+      `Check Order approved UT`
     ),
     scenario(`OrderCreditcard minimal`)(
       `Check Order approved UT minimal`

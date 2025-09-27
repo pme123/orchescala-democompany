@@ -62,7 +62,7 @@ object Client:
     address = Address.example,
     gender = Gender.Male,
     dateOfBirth = LocalDate.of(1970, 1, 1)
-  )
+  ).copy(createdAt = LocalDateTime.of(2021, 1, 1, 0, 0, 0))
 
   lazy val exampleMinimal = example.copy(email = None, tel = None, address = Address.exampleMinimal)
 end Client

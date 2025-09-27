@@ -1,7 +1,7 @@
 {
   "components": [
     {
-      "text": "# Check Order Task\n\nPlease review the client information and credit card account details below, then provide your approval decision.",
+      "text": "# Call Client Task\n\nThe Customer Service must call the client due to missing information. Please review the client information below and provide the telephone approval decision.",
       "type": "text",
       "id": "Field_header",
       "layout": {
@@ -25,8 +25,7 @@
       "layout": {
         "row": "Row_client_basic",
         "columns": null
-      },
-      "disabled": false
+      }
     },
     {
       "label": "First Name",
@@ -59,17 +58,23 @@
       "layout": {
         "row": "Row_client_name",
         "columns": null
+      },
+      "conditional": {
+        "hide": "=client.email = null"
       }
     },
     {
       "label": "Telephone",
       "type": "textfield",
-      "id": "Field_client_phone",
+      "id": "Field_client_tel",
       "key": "client.tel",
       "readonly": true,
       "layout": {
         "row": "Row_client_contact",
         "columns": null
+      },
+      "conditional": {
+        "hide": "=client.tel = null"
       }
     },
     {
@@ -81,6 +86,9 @@
       "layout": {
         "row": "Row_client_contact",
         "columns": null
+      },
+      "conditional": {
+        "hide": "=client.salutation = null"
       }
     },
     {
@@ -156,6 +164,9 @@
       "layout": {
         "row": "Row_account_info",
         "columns": null
+      },
+      "conditional": {
+        "hide": "=creditCardAccount.accountId = null"
       }
     },
     {
@@ -185,7 +196,7 @@
     },
     {
       "label": "Address Type",
-      "type": "textfield",
+      "type": "select",
       "id": "Field_cardholder_addressType",
       "key": "mainCardHolder.clientInformation.addressType",
       "readonly": true,
@@ -195,11 +206,21 @@
       },
       "conditional": {
         "hide": "=mainCardHolder = null"
-      }
+      },
+      "values": [
+        {
+          "label": "Domicile",
+          "value": "Domicile"
+        },
+        {
+          "label": "Additional",
+          "value": "Additional"
+        }
+      ]
     },
     {
       "label": "Residence Permit Code",
-      "type": "number",
+      "type": "select",
       "id": "Field_cardholder_residencePermit",
       "key": "mainCardHolder.clientInformation.residencePermitCode",
       "readonly": true,
@@ -209,21 +230,65 @@
       },
       "conditional": {
         "hide": "=mainCardHolder = null or mainCardHolder.clientInformation.residencePermitCode = null"
-      }
+      },
+      "values": [
+        {
+          "label": "1",
+          "value": 1
+        },
+        {
+          "label": "2",
+          "value": 2
+        },
+        {
+          "label": "3",
+          "value": 3
+        },
+        {
+          "label": "4",
+          "value": 4
+        },
+        {
+          "label": "5",
+          "value": 5
+        },
+        {
+          "label": "6",
+          "value": 6
+        },
+        {
+          "label": "7",
+          "value": 7
+        },
+        {
+          "label": "8",
+          "value": 8
+        }
+      ]
     },
     {
       "label": "Cards",
       "components": [
         {
           "label": "Card Category",
-          "type": "textfield",
+          "type": "select",
           "id": "Field_card_category",
           "key": "categoryType",
           "readonly": true,
           "layout": {
             "row": "Row_card_info",
             "columns": null
-          }
+          },
+          "values": [
+            {
+              "label": "Main Card",
+              "value": "MainCard"
+            },
+            {
+              "label": "Additional Card",
+              "value": "AdditionalCard"
+            }
+          ]
         },
         {
           "label": "Card Limit",
@@ -241,7 +306,7 @@
         },
         {
           "label": "Card Currency",
-          "type": "textfield",
+          "type": "select",
           "id": "Field_card_currency",
           "key": "cardCurrency",
           "readonly": true,
@@ -251,7 +316,21 @@
           },
           "conditional": {
             "hide": "=cardCurrency = null"
-          }
+          },
+          "values": [
+            {
+              "label": "CHF",
+              "value": "CHF"
+            },
+            {
+              "label": "EUR",
+              "value": "EUR"
+            },
+            {
+              "label": "USD",
+              "value": "USD"
+            }
+          ]
         },
         {
           "label": "Embossed Line",
@@ -282,7 +361,7 @@
       }
     },
     {
-      "text": "## Approval Decision",
+      "text": "## Telephone Approval Decision",
       "type": "text",
       "id": "Field_decision_header",
       "layout": {
@@ -290,20 +369,20 @@
       }
     },
     {
-      "label": "Approved",
+      "label": "Approved on Telephone",
       "type": "checkbox",
-      "id": "Field_approved",
-      "key": "approved",
+      "id": "Field_approvedOnTelephone",
+      "key": "approvedOnTelephone",
       "layout": {
         "row": "Row_decision",
         "columns": null
       }
     },
     {
-      "label": "Approval Comment",
+      "label": "Telephone Approval Comment",
       "type": "textarea",
-      "id": "Field_approve_comment",
-      "key": "approveComment",
+      "id": "Field_approveOnTelephoneComment",
+      "key": "approveOnTelephoneComment",
       "validate": {
         "required": true
       },
@@ -313,12 +392,12 @@
     }
   ],
   "type": "default",
-  "id": "CheckOrderTask",
+  "id": "CallClientTask",
   "executionPlatform": "Camunda Cloud",
   "executionPlatformVersion": "8.6.0",
   "exporter": {
     "name": "Camunda Modeler",
     "version": "5.34.0"
   },
-  "schemaVersion": 18
+  "schemaVersion": 16
 }

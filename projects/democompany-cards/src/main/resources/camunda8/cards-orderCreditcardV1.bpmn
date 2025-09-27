@@ -83,7 +83,7 @@
     <bpmn:userTask id="CallClientTask" name="Call Client">
       <bpmn:extensionElements>
         <zeebe:userTask />
-        <zeebe:formDefinition externalReference="CallClientTask" />
+        <zeebe:formDefinition formId="CallClientTask" />
       </bpmn:extensionElements>
       <bpmn:incoming>NoSequenceFlow1</bpmn:incoming>
       <bpmn:outgoing>Flow_0pkzqho</bpmn:outgoing>
