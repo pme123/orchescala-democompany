@@ -52,7 +52,7 @@
     <bpmn:userTask id="CheckOrderTask" name="Check Order">
       <bpmn:extensionElements>
         <zeebe:userTask />
-        <zeebe:formDefinition externalReference="CheckOrderTask" />
+        <zeebe:formDefinition formId="CheckOrderTask" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1i6wugq</bpmn:incoming>
       <bpmn:outgoing>Flow_15cq5k9</bpmn:outgoing>

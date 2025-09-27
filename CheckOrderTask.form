@@ -1,0 +1,275 @@
+{
+  "components": [
+    {
+      "text": "# Check Order Task\n\nPlease review the client information and credit card account details below, then provide your approval decision.",
+      "type": "text",
+      "id": "Field_header",
+      "layout": {
+        "row": "Row_header"
+      }
+    },
+    {
+      "text": "## Client Information",
+      "type": "text",
+      "id": "Field_client_header",
+      "layout": {
+        "row": "Row_client_header"
+      }
+    },
+    {
+      "label": "Client ID",
+      "type": "number",
+      "id": "Field_client_id",
+      "key": "client.id",
+      "readonly": true,
+      "layout": {
+        "row": "Row_client_basic",
+        "columns": 6
+      }
+    },
+    {
+      "label": "First Name",
+      "type": "textfield",
+      "id": "Field_client_firstName",
+      "key": "client.firstName",
+      "readonly": true,
+      "layout": {
+        "row": "Row_client_basic",
+        "columns": 6
+      }
+    },
+    {
+      "label": "Last Name",
+      "type": "textfield",
+      "id": "Field_client_lastName",
+      "key": "client.lastName",
+      "readonly": true,
+      "layout": {
+        "row": "Row_client_name",
+        "columns": 6
+      }
+    },
+    {
+      "label": "Email",
+      "type": "textfield",
+      "id": "Field_client_email",
+      "key": "client.email",
+      "readonly": true,
+      "layout": {
+        "row": "Row_client_name",
+        "columns": 6
+      }
+    },
+    {
+      "label": "Phone",
+      "type": "textfield",
+      "id": "Field_client_phone",
+      "key": "client.phone",
+      "readonly": true,
+      "layout": {
+        "row": "Row_client_contact",
+        "columns": 6
+      }
+    },
+    {
+      "label": "Salutation",
+      "type": "textfield",
+      "id": "Field_client_salutation",
+      "key": "client.salutation",
+      "readonly": true,
+      "layout": {
+        "row": "Row_client_contact",
+        "columns": 6
+      }
+    },
+    {
+      "text": "## Credit Card Account",
+      "type": "text",
+      "id": "Field_account_header",
+      "layout": {
+        "row": "Row_account_header"
+      }
+    },
+    {
+      "label": "Account Client ID",
+      "type": "number",
+      "id": "Field_account_clientId",
+      "key": "creditCardAccount.clientId",
+      "readonly": true,
+      "layout": {
+        "row": "Row_account_info",
+        "columns": 6
+      }
+    },
+    {
+      "label": "Account ID",
+      "type": "number",
+      "id": "Field_account_id",
+      "key": "creditCardAccount.accountId",
+      "readonly": true,
+      "layout": {
+        "row": "Row_account_info",
+        "columns": 6
+      }
+    },
+    {
+      "text": "## Main Card Holder",
+      "type": "text",
+      "id": "Field_cardholder_header",
+      "layout": {
+        "row": "Row_cardholder_header"
+      },
+      "conditional": {
+        "hide": "=mainCardHolder = null"
+      }
+    },
+    {
+      "label": "Card Holder Client ID",
+      "type": "number",
+      "id": "Field_cardholder_clientId",
+      "key": "mainCardHolder.clientInformation.clientId",
+      "readonly": true,
+      "layout": {
+        "row": "Row_cardholder_basic",
+        "columns": 6
+      },
+      "conditional": {
+        "hide": "=mainCardHolder = null"
+      }
+    },
+    {
+      "label": "Address Type",
+      "type": "textfield",
+      "id": "Field_cardholder_addressType",
+      "key": "mainCardHolder.clientInformation.addressType",
+      "readonly": true,
+      "layout": {
+        "row": "Row_cardholder_basic",
+        "columns": 6
+      },
+      "conditional": {
+        "hide": "=mainCardHolder = null"
+      }
+    },
+    {
+      "label": "Residence Permit Code",
+      "type": "number",
+      "id": "Field_cardholder_residencePermit",
+      "key": "mainCardHolder.clientInformation.residencePermitCode",
+      "readonly": true,
+      "layout": {
+        "row": "Row_cardholder_permit",
+        "columns": 6
+      },
+      "conditional": {
+        "hide": "=mainCardHolder = null or mainCardHolder.clientInformation.residencePermitCode = null"
+      }
+    },
+    {
+      "text": "### Cards",
+      "type": "text",
+      "id": "Field_cards_header",
+      "layout": {
+        "row": "Row_cards_header"
+      },
+      "conditional": {
+        "hide": "=mainCardHolder = null"
+      }
+    },
+    {
+      "label": "Card Category",
+      "type": "textfield",
+      "id": "Field_card_category",
+      "key": "mainCardHolder.cards[0].categoryType",
+      "readonly": true,
+      "layout": {
+        "row": "Row_card_info",
+        "columns": 6
+      },
+      "conditional": {
+        "hide": "=mainCardHolder = null or count(mainCardHolder.cards) = 0"
+      }
+    },
+    {
+      "label": "Card Limit",
+      "type": "number",
+      "id": "Field_card_limit",
+      "key": "mainCardHolder.cards[0].cardLimit",
+      "readonly": true,
+      "layout": {
+        "row": "Row_card_info",
+        "columns": 6
+      },
+      "conditional": {
+        "hide": "=mainCardHolder = null or count(mainCardHolder.cards) = 0 or mainCardHolder.cards[0].cardLimit = null"
+      }
+    },
+    {
+      "label": "Card Currency",
+      "type": "textfield",
+      "id": "Field_card_currency",
+      "key": "mainCardHolder.cards[0].cardCurrency",
+      "readonly": true,
+      "layout": {
+        "row": "Row_card_details",
+        "columns": 6
+      },
+      "conditional": {
+        "hide": "=mainCardHolder = null or count(mainCardHolder.cards) = 0 or mainCardHolder.cards[0].cardCurrency = null"
+      }
+    },
+    {
+      "label": "Embossed Line",
+      "type": "textfield",
+      "id": "Field_card_embossed",
+      "key": "mainCardHolder.cards[0].embossedLineOne",
+      "readonly": true,
+      "layout": {
+        "row": "Row_card_details",
+        "columns": 6
+      },
+      "conditional": {
+        "hide": "=mainCardHolder = null or count(mainCardHolder.cards) = 0"
+      }
+    },
+    {
+      "text": "## Approval Decision",
+      "type": "text",
+      "id": "Field_decision_header",
+      "layout": {
+        "row": "Row_decision_header"
+      }
+    },
+    {
+      "label": "Approved",
+      "type": "checkbox",
+      "id": "Field_approved",
+      "key": "approved",
+      "layout": {
+        "row": "Row_decision",
+        "columns": 6
+      }
+    },
+    {
+      "label": "Approval Comment",
+      "type": "textarea",
+      "id": "Field_approve_comment",
+      "key": "approveComment",
+      "validate": {
+        "required": true
+      },
+      "layout": {
+        "row": "Row_comment"
+      }
+    }
+  ],
+  "type": "default",
+  "id": "CheckOrderTask",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "exporter": {
+    "name": "Generated Form",
+    "version": "1.0.0"
+  },
+  "schemaVersion": 16
+}
