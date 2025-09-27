@@ -166,71 +166,71 @@
       }
     },
     {
-      "text": "### Cards",
-      "type": "text",
-      "id": "Field_cards_header",
+      "label": "Cards",
+      "type": "dynamiclist",
+      "id": "Field_cards_list",
+      "path": "mainCardHolder.cards",
+      "defaultNumberOfItems": 1,
+      "allowAddRemove": false,
+      "disableCollapse": true,
       "layout": {
-        "row": "Row_cards_header"
+        "row": "Row_cards_list"
       },
       "conditional": {
         "hide": "=mainCardHolder = null"
-      }
-    },
-    {
-      "label": "Card Category",
-      "type": "textfield",
-      "id": "Field_card_category",
-      "key": "mainCardHolder.cards[0].categoryType",
-      "readonly": true,
-      "layout": {
-        "row": "Row_card_info",
-        "columns": 6
       },
-      "conditional": {
-        "hide": "=mainCardHolder = null or count(mainCardHolder.cards) = 0"
-      }
-    },
-    {
-      "label": "Card Limit",
-      "type": "number",
-      "id": "Field_card_limit",
-      "key": "mainCardHolder.cards[0].cardLimit",
-      "readonly": true,
-      "layout": {
-        "row": "Row_card_info",
-        "columns": 6
-      },
-      "conditional": {
-        "hide": "=mainCardHolder = null or count(mainCardHolder.cards) = 0 or mainCardHolder.cards[0].cardLimit = null"
-      }
-    },
-    {
-      "label": "Card Currency",
-      "type": "textfield",
-      "id": "Field_card_currency",
-      "key": "mainCardHolder.cards[0].cardCurrency",
-      "readonly": true,
-      "layout": {
-        "row": "Row_card_details",
-        "columns": 6
-      },
-      "conditional": {
-        "hide": "=mainCardHolder = null or count(mainCardHolder.cards) = 0 or mainCardHolder.cards[0].cardCurrency = null"
-      }
-    },
-    {
-      "label": "Embossed Line",
-      "type": "textfield",
-      "id": "Field_card_embossed",
-      "key": "mainCardHolder.cards[0].embossedLineOne",
-      "readonly": true,
-      "layout": {
-        "row": "Row_card_details",
-        "columns": 6
-      },
-      "conditional": {
-        "hide": "=mainCardHolder = null or count(mainCardHolder.cards) = 0"
-      }
+      "components": [
+        {
+          "label": "Card Category",
+          "type": "textfield",
+          "id": "Field_card_category",
+          "key": "categoryType",
+          "readonly": true,
+          "layout": {
+            "row": "Row_card_info",
+            "columns": 6
+          }
+        },
+        {
+          "label": "Card Limit",
+          "type": "number",
+          "id": "Field_card_limit",
+          "key": "cardLimit",
+          "readonly": true,
+          "layout": {
+            "row": "Row_card_info",
+            "columns": 6
+          },
+          "conditional": {
+            "hide": "=cardLimit = null"
+          }
+        },
+        {
+          "label": "Card Currency",
+          "type": "textfield",
+          "id": "Field_card_currency",
+          "key": "cardCurrency",
+          "readonly": true,
+          "layout": {
+            "row": "Row_card_details",
+            "columns": 6
+          },
+          "conditional": {
+            "hide": "=cardCurrency = null"
+          }
+        },
+        {
+          "label": "Embossed Line",
+          "type": "textfield",
+          "id": "Field_card_embossed",
+          "key": "embossedLineOne",
+          "readonly": true,
+          "layout": {
+            "row": "Row_card_details",
+            "columns": 6
+          }
+        }
+      ]
     },
     {
       "text": "## Approval Decision",
