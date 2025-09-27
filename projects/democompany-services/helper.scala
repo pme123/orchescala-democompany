@@ -1,7 +1,7 @@
 #!/usr/bin/env -S scala shebang
 // DO NOT ADJUST. This file is replaced by `./helper.scala update`.
 
-//> using dep democompany::democompany-orchescala-helper:0.1.0-SNAPSHOT
+//> using dep democompany::democompany-orchescala-helper:0.0.0
 
 import democompany.orchescala.helper.*
 

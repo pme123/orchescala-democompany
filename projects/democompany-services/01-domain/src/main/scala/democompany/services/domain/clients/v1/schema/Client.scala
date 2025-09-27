@@ -15,7 +15,10 @@ case class Client(
     address: Address,
     gender: Gender,
     fullName: String,
-    salutation: String
+    salutation: String,
+    dateOfBirth: LocalDate,
+    createdAt: LocalDateTime,
+    updatedAt: Option[LocalDateTime]
 )
 
 object Client:
@@ -29,7 +32,8 @@ object Client:
       email: Option[String],
       tel: Option[String],
       address: Address,
-      gender: Gender
+      gender: Gender,
+      dateOfBirth: LocalDate
   ): Client = Client(
     id,
     firstName,
@@ -39,22 +43,26 @@ object Client:
     address,
     gender,
     s"$firstName $lastName",
-    gender match {
-      case Gender.Male   => "Mr."
-      case Gender.Female => "Ms."
-      case Gender.Unknown => ""
-    }
+    gender match
+    case Gender.Male    => "Mr."
+    case Gender.Female  => "Ms."
+    case Gender.Unknown => ""
+    ,
+    dateOfBirth = dateOfBirth,
+    LocalDateTime.now(),
+    None
   )
 
-  lazy val example         = Client(
+  lazy val example = Client(
     id = 1,
     firstName = "John",
     lastName = "Doe",
     email = Some("john.doe@example.com"),
     tel = Some("+411234567890"),
     address = Address.example,
-    gender = Gender.Male
+    gender = Gender.Male,
+    dateOfBirth = LocalDate.of(1970, 1, 1)
   )
 
-  lazy val exampleMinimal  = example.copy(email = None, tel = None, address = Address.exampleMinimal)
+  lazy val exampleMinimal = example.copy(email = None, tel = None, address = Address.exampleMinimal)
 end Client

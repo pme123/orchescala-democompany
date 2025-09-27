@@ -7,7 +7,7 @@ import sbt.Keys.*
 
 object Settings {
 
-  val scalaV = "3.7.1"
+  val scalaV = "3.7.2"
   val customer = ProjectDef.org
   val customerOrchescalaV = "0.1.0-SNAPSHOT"
   // to override the version defined in customerOrchescala
