@@ -15,7 +15,7 @@ import scala.io.Source
 import scala.jdk.CollectionConverters.*
 
 trait CompanyEngineC7Client extends C7Client:
-  
+
   lazy val client: ZIO[SharedC7ClientManager, EngineError, ApiClient] =
     SharedC7ClientManager.getOrCreateClient:
       (for
@@ -79,5 +79,5 @@ trait CompanyEngineC7Client extends C7Client:
 
     accessToken
   end getOAuthToken
-  
+
 end CompanyEngineC7Client

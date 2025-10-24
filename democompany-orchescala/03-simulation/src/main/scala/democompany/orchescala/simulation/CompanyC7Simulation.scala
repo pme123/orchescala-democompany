@@ -1,6 +1,6 @@
 package democompany.orchescala.simulation
 
-import democompany.orchescala.engine.CompanyEngineC7Client
+import democompany.orchescala.engine.{CompanyEngineC7App, CompanyEngineC7Client}
 import democompany.orchescala.engine.CompanyEngineC7Config.*
 import io.circe.parser.*
 import orchescala.engine.ProcessEngine
@@ -19,16 +19,4 @@ import scala.jdk.CollectionConverters.*
 
 /** Add here company specific stuff, to run the Simulations.
   */
-trait CompanyC7Simulation extends CompanySimulation, CompanyEngineC7Client:
-  // Override this to provide the ZIO layers required by this simulation
-  lazy val requiredLayers: Seq[ZLayer[Any, Nothing, Any]] = Seq(
-    SharedC7ClientManager.layer
-  )
-
-  override def engineZIO: ZIO[Any, Nothing, ProcessEngine] =
-    C7ProcessEngine.withClient(this)
-      .provideLayer(SharedC7ClientManager.layer)
-
-end CompanyC7Simulation
-
-object CompanyC7Simulation extends CompanyC7Simulation
+trait CompanyC7Simulation extends CompanySimulation, CompanyEngineC7App
