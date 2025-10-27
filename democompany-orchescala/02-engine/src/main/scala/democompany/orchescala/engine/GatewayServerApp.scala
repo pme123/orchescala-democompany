@@ -1,8 +1,7 @@
 package democompany.orchescala.engine
 
-import orchescala.engine.c7.{C7BearerTokenClient, C7ProcessEngine, SharedC7ClientManager}
-import orchescala.engine.c8.{C8BearerTokenClient, C8ProcessEngine, SharedC8ClientManager}
-import orchescala.engine.gateway.GProcessEngine
+import orchescala.engine.c7.C7BearerTokenClient
+import orchescala.engine.c8.C8BearerTokenClient
 import orchescala.engine.gateway.http.GatewayServer
 import zio.*
 

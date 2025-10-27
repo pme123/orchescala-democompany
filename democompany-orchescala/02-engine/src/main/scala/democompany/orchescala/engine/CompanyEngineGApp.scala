@@ -16,11 +16,11 @@ trait CompanyEngineGApp extends EngineApp:
   // Override engineZIO to create the engine within the SharedC8ClientManager environment
   override def engineZIO: ZIO[Any, Nothing, ProcessEngine] =
     (for
-      c8Engine: ProcessEngine <- CompanyEngineC7App.engineZIO
-      c7Engine: ProcessEngine <- CompanyEngineC8App.engineZIO
-      given Seq[ProcessEngine] = Seq(c8Engine, c7Engine) // -> change order to change default engine
+      c8Engine: ProcessEngine <- CompanyEngineC8App.engineZIO
+      c7Engine: ProcessEngine <- CompanyEngineC7App.engineZIO
+      given Seq[ProcessEngine] =
+        Seq(c8Engine) // , c7Engine) // -> change order to change default engine
     yield GProcessEngine())
-      .provideLayer(SharedC8ClientManager.layer)
-      .provideLayer(SharedC7ClientManager.layer)
-      
-end CompanyEngineGApp 
+      .provideLayer(SharedC7ClientManager.layer ++ SharedC8ClientManager.layer)
+
+end CompanyEngineGApp
