@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Console appender with colored output -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{36}) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Async appender for better performance -->
+    <appender name="ASYNC_CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="CONSOLE"/>
+        <queueSize>512</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+    </appender>
+
+    <!-- Logger configurations -->
+    
+    <!-- Reduce Netty verbosity -->
+    <logger name="io.netty" level="WARN"/>
+    <logger name="io.netty.util.internal" level="WARN"/>
+    <logger name="io.netty.channel" level="WARN"/>
+    <logger name="io.netty.buffer" level="WARN"/>
+    <logger name="io.netty.handler" level="WARN"/>
+    
+    <!-- ZIO logging -->
+    <logger name="zio" level="INFO"/>
+    <logger name="zio-slf4j-logger" level="WARN"/>
+    
+    <!-- Orchescala logging -->
+    <logger name="orchescala" level="INFO"/>
+    <logger name="orchescala.engine" level="INFO"/>
+    <logger name="orchescala.engine.gateway" level="INFO"/>
+    
+    <!-- Your application logging -->
+    <logger name="democompany" level="INFO"/>
+    <logger name="democompany.orchescala" level="INFO"/>
+    <logger name="democompany.orchescala.engine" level="INFO"/>
+    
+    <!-- Camunda logging -->
+    <logger name="org.camunda" level="INFO"/>
+    
+    <!-- HTTP client logging (STTP) -->
+    <logger name="sttp" level="INFO"/>
+    
+    <!-- Reduce SLF4J warnings -->
+    <logger name="org.slf4j" level="WARN"/>
+
+    <!-- Root logger -->
+    <root level="INFO">
+        <appender-ref ref="ASYNC_CONSOLE"/>
+    </root>
+</configuration>
+

@@ -1,7 +1,6 @@
 package democompany.orchescala.engine
 
 import orchescala.engine.c7.{C7ProcessEngine, SharedC7ClientManager}
-import orchescala.engine.c8.SharedC8ClientManager
 import zio.{ZIO, ZLayer}
 
 trait CompanyEngineC7App extends EngineApp, CompanyEngineC7Config, CompanyEngineC7Client:

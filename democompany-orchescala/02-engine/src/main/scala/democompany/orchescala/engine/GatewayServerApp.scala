@@ -1,24 +1,19 @@
 package democompany.orchescala.engine
 
-import orchescala.engine.c7.C7Client
-import orchescala.engine.c8.C8Client
+import orchescala.engine.c7.{C7BearerTokenClient, C7ProcessEngine, SharedC7ClientManager}
+import orchescala.engine.c8.{C8BearerTokenClient, C8ProcessEngine, SharedC8ClientManager}
+import orchescala.engine.gateway.GProcessEngine
+import orchescala.engine.gateway.http.GatewayServer
 import zio.*
 
-/** Example application that starts the Engine Gateway HTTP server.
-  *
-  * This demonstrates how to configure and start the Gateway with both C7 and C8 engines.
-  *
-  * To run this application:
-  *   1. Make sure you have Camunda 7 and/or Camunda 8 running
-  *   2. Adjust the client configurations below to match your setup
-  *   3. Run the application
-  *   4. Access the API at http://localhost:8080
-  *
-  */
-object GatewayServerApp extends ZIOAppDefault, CompanyEngineC7App:
+object GatewayServerApp extends GatewayServer, CompanyEngineGApp, ZIOAppDefault:
 
-  def run                                                  =
-    CompanyEngineGateway(engineZIO).start()
-      .forever
+  /** Example C7 client with Bearer token pass-through authentication */
+  object BearerPassThroughC7Client extends C7BearerTokenClient, CompanyEngineC7Config
 
+  object BearerPassThroughC8Client extends C8BearerTokenClient, CompanyEngineC8Config
+
+  override def port: Int = 8888
+
+  override def run: ZIO[Any, Any, Any] = start()
 end GatewayServerApp
