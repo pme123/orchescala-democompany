@@ -5,7 +5,8 @@ import orchescala.engine.c8.C8BearerTokenClient
 import orchescala.engine.gateway.http.GatewayServer
 import zio.*
 
-object GatewayServerApp extends GatewayServer, CompanyEngineGApp, ZIOAppDefault:
+// checking if use extra service app to gather all workers - see democompany-cards
+trait CompanyGatewayServerApp extends GatewayServer, CompanyEngineGApp, ZIOAppDefault:
 
   /** Example C7 client with Bearer token pass-through authentication */
   object BearerPassThroughC7Client extends C7BearerTokenClient, CompanyEngineC7Config
@@ -15,4 +16,4 @@ object GatewayServerApp extends GatewayServer, CompanyEngineGApp, ZIOAppDefault:
   override def port: Int = 8888
 
   override def run: ZIO[Any, Any, Any] = start()
-end GatewayServerApp
+end CompanyGatewayServerApp

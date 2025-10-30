@@ -2,8 +2,8 @@ openapi: 3.1.0
 info:
   title: Card Management
   version: 0.1.0-SNAPSHOT
-  summary: "\n\nProcesses and Workers related to Card Management.\n\nCreated at 11.08.2025,\
-    \ 15:04\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+  summary: "\n\nProcesses and Workers related to Card Management.\n\nCreated at 30.10.2025,\
+    \ 08:20\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n# Package Configuration\n**Check all dependency trees here: [democompany-cards](../../dependencies/democompany-cards.html)**\n\
     \n### Dependencies:\n\n- _**[democompany-services](NOT_SET/democompany-services/OpenApi.html)**_\n\
     \n\n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\
@@ -84,11 +84,11 @@ paths:
         \n\n\n---\n\n\n\n\n- Input:  `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
         \ > In`\n- Output: `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
         \ > Out`\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"\
-        cards-orderCreditcardV1-93037\">\n    <img onLoad=\"openFromUrl('cards-orderCreditcardV1.bpmn',\
-        \ new BpmnJS({ container: $('#cards-orderCreditcardV1-93037'), height: '95%',\
+        cards-orderCreditcardV1-99935\">\n    <img onLoad=\"openFromUrl('cards-orderCreditcardV1.bpmn',\
+        \ new BpmnJS({ container: $('#cards-orderCreditcardV1-99935'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [cards-orderCreditcardV1.bpmn](diagrams/cards-orderCreditcardV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('cards-orderCreditcardV1-93037')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('cards-orderCreditcardV1-99935')\"\
         >Download Diagram as SVG</button>\n</div>\n\n<p/>\n\n<details>\n<summary>\n\
         <b><i>General Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\
         \nJust take the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -96,9 +96,9 @@ paths:
         ...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
         \ : \"succeeded\",\n  \"creditCardAccount\" : {\n    \"clientId\" : 1213456,\n\
         \    \"accountId\" : 5555555\n  },\n  \"initCreditCardAccount\" : {\n    \"\
-        clientId\" : 1213456\n  },\n  \"simpleValue\" : \"Hello World\"\n},\n...\n\
-        ```\n\n</p>\n</details>\n</p>\n      \n\n\n**Used in no other Process.**\n\
-        \n**Uses no other Processes.**\n"
+        clientId\" : 1213456\n  },\n  \"simpleValue\" : \"PETER PAN\"\n},\n...\n```\n\
+        \n</p>\n</details>\n</p>\n      \n\n\n**Used in no other Process.**\n\n**Uses\
+        \ no other Processes.**\n"
       operationId: Process
       requestBody:
         content:
@@ -139,7 +139,7 @@ paths:
                       accountId: 5555555
                     initCreditCardAccount:
                       clientId: 1213456
-                    simpleValue: Hello World
+                    simpleValue: PETER PAN
   /Bpmn/OrderCreditcardV1/orderCreditcardV1/democompany-cards-orderCreditcardV1/init:
     head:
       tags:
@@ -169,9 +169,226 @@ paths:
                   value:
                     initCreditCardAccount:
                       clientId: 1213456
-                    simpleValue: Hello World
+                    simpleValue: PETER PAN
+  /UserTask/OrderCreditcardV1/CheckOrderTask:
+    head:
+      tags:
+      - Order Creditcard V1
+      summary: 'UserTask: CheckOrderTask'
+      description: |2-
+
+        Check if the order can be done.
+
+        - _taskDefinitionKey_: `CheckOrderTask`
+
+        ---
+
+
+
+
+        - Input:  `democompany.cards.domain.orderCreditcard.v1.CheckOrderTask > In`
+        - Output: `democompany.cards.domain.orderCreditcard.v1.CheckOrderTask > Out`
+      operationId: 'UserTask: CheckOrderTask'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/In1'
+            examples:
+              CheckOrderTask:
+                value:
+                  client:
+                    id: 1
+                    firstName: John
+                    lastName: Doe
+                    email: john.doe@example.com
+                    tel: '+411234567890'
+                    address:
+                      street: Main Street
+                      number: '123'
+                      zip: '12345'
+                      city: Anytown
+                      country: Germany
+                      additionalInfo: Additional Info
+                    gender:
+                      type: Male
+                    fullName: John Doe
+                    salutation: Mr.
+                    dateOfBirth: '1970-01-01'
+                    createdAt: '2021-01-01T00:00:00'
+                  creditCardAccount:
+                    clientId: 1213456
+                    accountId: 5555555
+                  mainCardHolder:
+                    clientInformation:
+                      clientId: 1213456
+                      addressType: Domicile
+                      residencePermitCode: 2
+                    cards:
+                    - categoryType: MainCard
+                      cardLimit: 10000.0
+                      cardCurrency: CHF
+                      embossedLineOne: PETER PAN
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Out1'
+              examples:
+                CheckOrderTask:
+                  value:
+                    approved: true
+                    approveComment: Approved with no issues.
+  /UserTask/OrderCreditcardV1/CallClientTask:
+    head:
+      tags:
+      - Order Creditcard V1
+      summary: 'UserTask: CallClientTask'
+      description: |2-
+
+        The Customer Service must call the client due to missing information.
+
+        - _taskDefinitionKey_: `CallClientTask`
+
+        ---
+
+
+
+
+        - Input:  `democompany.cards.domain.orderCreditcard.v1.CallClientTask > In`
+        - Output: `democompany.cards.domain.orderCreditcard.v1.CallClientTask > Out`
+      operationId: 'UserTask: CallClientTask'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/In2'
+            examples:
+              CallClientTask:
+                value:
+                  client:
+                    id: 1
+                    firstName: John
+                    lastName: Doe
+                    email: john.doe@example.com
+                    tel: '+411234567890'
+                    address:
+                      street: Main Street
+                      number: '123'
+                      zip: '12345'
+                      city: Anytown
+                      country: Germany
+                      additionalInfo: Additional Info
+                    gender:
+                      type: Male
+                    fullName: John Doe
+                    salutation: Mr.
+                    dateOfBirth: '1970-01-01'
+                    createdAt: '2021-01-01T00:00:00'
+                  creditCardAccount:
+                    clientId: 1213456
+                    accountId: 5555555
+                  mainCardHolder:
+                    clientInformation:
+                      clientId: 1213456
+                      addressType: Domicile
+                      residencePermitCode: 2
+                    cards:
+                    - categoryType: MainCard
+                      cardLimit: 10000.0
+                      cardCurrency: CHF
+                      embossedLineOne: PETER PAN
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Out2'
+              examples:
+                CallClientTask:
+                  value:
+                    approvedOnTelephone: true
+                    approveOnTelephoneComment: Approved on telephone. Everything could
+                      be clarified.
+  /Worker/OrderCreditcardV1/orderCreditcardV1-EvalResponse/democompany-cards-orderCreditcardV1-EvalResponse:
+    head:
+      tags:
+      - Order Creditcard V1
+      summary: 'Worker: EvalResponse'
+      description: |2
+
+        **Topic:** `democompany-cards-orderCreditcardV1-EvalResponse` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
+
+        Evaluates the different responses if not approved.
+
+        - Input:  `democompany.cards.domain.orderCreditcard.v1.EvalResponse > In > Email`
+        - Output: `democompany.cards.domain.orderCreditcard.v1.EvalResponse > Out`
+
+        You can test this worker using the generic process _**orchescala-externalTask-generic**_ (e.g. with Postman).
+
+
+
+        **Used in no other Process.**
+
+        **Uses no other Processes.**
+      operationId: 'Worker: EvalResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/In3'
+            examples:
+              EvalResponse > In > Email:
+                value:
+                  emailBody: Hello
+                  type: Email
+              EvalResponse > In > Telephone:
+                value:
+                  approvedOnTelephone: true
+                  approveOnTelephoneComment: Approved on telephone. Everything could
+                    be clarified.
+                  type: Telephone
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Out3'
+              examples:
+                democompany-cards-orderCreditcardV1-EvalResponse:
+                  value:
+                    orderCorrect: true
 components:
   schemas:
+    Address:
+      title: Address
+      type: object
+      required:
+      - street
+      - number
+      - zip
+      - city
+      - country
+      properties:
+        street:
+          type: string
+        number:
+          type: string
+        zip:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        additionalInfo:
+          type: string
     CardAccount:
       title: CardAccount
       type: object
@@ -218,6 +435,46 @@ components:
       enum:
       - AdditionalCard
       - MainCard
+    Client:
+      title: Client
+      type: object
+      required:
+      - id
+      - firstName
+      - lastName
+      - address
+      - gender
+      - fullName
+      - salutation
+      - dateOfBirth
+      - createdAt
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        tel:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+        gender:
+          $ref: '#/components/schemas/Gender'
+        fullName:
+          type: string
+        salutation:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
     ClientInfo:
       title: ClientInfo
       type: object
@@ -242,6 +499,23 @@ components:
           - 6
           - 8
           format: int32
+    Email:
+      title: Email
+      type: object
+      required:
+      - emailBody
+      properties:
+        emailBody:
+          type: string
+    Female:
+      title: Female
+      type: object
+    Gender:
+      title: Gender
+      oneOf:
+      - $ref: '#/components/schemas/Female'
+      - $ref: '#/components/schemas/Male'
+      - $ref: '#/components/schemas/Unknown'
     In:
       title: In
       type: object
@@ -258,6 +532,38 @@ components:
           $ref: '#/components/schemas/CardHolder'
         inConfig:
           $ref: '#/components/schemas/InConfig'
+    In1:
+      title: In
+      type: object
+      required:
+      - client
+      - creditCardAccount
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        creditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        mainCardHolder:
+          $ref: '#/components/schemas/CardHolder'
+    In2:
+      title: In
+      type: object
+      required:
+      - client
+      - creditCardAccount
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        creditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        mainCardHolder:
+          $ref: '#/components/schemas/CardHolder'
+    In3:
+      title: In
+      oneOf:
+      - $ref: '#/components/schemas/Email'
+      - $ref: '#/components/schemas/None'
+      - $ref: '#/components/schemas/Telephone'
     InConfig:
       title: InConfig
       description: |-
@@ -265,6 +571,14 @@ components:
 
         **SHOULD NOT BE USED on Production!**
       type: object
+      required:
+      - timerNotReceivedEmail
+      properties:
+        timerNotReceivedEmail:
+          description: To test cancel from other processes you need to set this flag.
+          type: string
+        getClientMock:
+          $ref: '#/components/schemas/MockedServiceResponse_ServiceOut'
     InitIn:
       title: InitIn
       type: object
@@ -275,6 +589,65 @@ components:
           $ref: '#/components/schemas/CardAccount'
         simpleValue:
           type: string
+    Male:
+      title: Male
+      type: object
+    MockedServiceResponse_ServiceOut:
+      title: MockedServiceResponse_ServiceOut
+      description: |
+        You can mock the response variables of this (sub)process.
+
+        Class: `democompany.services.domain.clients.v1.schema.Client`
+
+        Here an example:
+
+        ```scala
+        {
+          "id" : 1,
+          "firstName" : "John",
+          "lastName" : "Doe",
+          "email" : "john.doe@example.com",
+          "tel" : "+411234567890",
+          "address" : {
+            "street" : "Main Street",
+            "number" : "123",
+            "zip" : "12345",
+            "city" : "Anytown",
+            "country" : "Germany",
+            "additionalInfo" : "Additional Info"
+          },
+          "gender" : {
+            "type" : "Male"
+          },
+          "fullName" : "John Doe",
+          "salutation" : "Mr.",
+          "dateOfBirth" : "1970-01-01",
+          "createdAt" : "2021-01-01T00:00:00"
+        }
+        ```
+
+        General to mocking:
+
+        - `outputMock` mocks this process.
+        - `someSubProcessMock` mocks a sub process
+      type: object
+      required:
+      - respStatus
+      - respBody
+      properties:
+        respStatus:
+          type: integer
+          format: int32
+        respBody:
+          oneOf:
+          - $ref: '#/components/schemas/Client'
+          - {}
+        respHeaders:
+          type: array
+          items:
+            type: array
+            items:
+              type: string
     ModuleCard:
       title: ModuleCard
       type: object
@@ -291,6 +664,9 @@ components:
           $ref: '#/components/schemas/CardCurrency'
         embossedLineOne:
           type: string
+    None:
+      title: None
+      type: object
     Out:
       title: Out
       type: object
@@ -307,6 +683,36 @@ components:
           $ref: '#/components/schemas/CardAccount'
         simpleValue:
           type: string
+    Out1:
+      title: Out
+      type: object
+      required:
+      - approved
+      - approveComment
+      properties:
+        approved:
+          type: boolean
+        approveComment:
+          type: string
+    Out2:
+      title: Out
+      type: object
+      required:
+      - approvedOnTelephone
+      - approveOnTelephoneComment
+      properties:
+        approvedOnTelephone:
+          type: boolean
+        approveOnTelephoneComment:
+          type: string
+    Out3:
+      title: Out
+      type: object
+      required:
+      - orderCorrect
+      properties:
+        orderCorrect:
+          type: boolean
     ProcessStatus:
       title: ProcessStatus
       type: string
@@ -317,4 +723,18 @@ components:
       - notValid
       - output-mocked
       - succeeded
+    Telephone:
+      title: Telephone
+      type: object
+      required:
+      - approvedOnTelephone
+      - approveOnTelephoneComment
+      properties:
+        approvedOnTelephone:
+          type: boolean
+        approveOnTelephoneComment:
+          type: string
+    Unknown:
+      title: Unknown
+      type: object
 tags: []

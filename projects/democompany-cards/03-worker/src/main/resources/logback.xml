@@ -6,7 +6,7 @@
         </encoder>
     </appender>
 
-    <logger name="orchescala" level="DEBUG"/>
+    <logger name="orchescala" level="INFO"/>
     <logger name="democompany" level="INFO"/>
     <logger name="org.camunda.bpm.client" level="INFO"/>
     <logger name="org.glassfish.jaxb" level="WARN"/>

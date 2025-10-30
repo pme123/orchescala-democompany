@@ -1,0 +1,138 @@
+{
+  "name" : "democompany-cards-orderCreditcardV1-EvalResponse",
+  "id" : "democompany-cards-orderCreditcardV1-EvalResponse",
+  "description" : "Evaluates the different responses if not approved.",
+  "version" : 0,
+  "appliesTo" : [
+    "bpmn:Activity"
+  ],
+  "elementType" : {
+    "value" : "bpmn:ServiceTask"
+  },
+  "properties" : [
+    {
+      "value" : "#{emailBody}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "emailBody"
+      },
+      "label" : "emailBody",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{approvedOnTelephone}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "approvedOnTelephone"
+      },
+      "label" : "approvedOnTelephone",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{approveOnTelephoneComment}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "approveOnTelephoneComment"
+      },
+      "label" : "approveOnTelephoneComment",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "orderCorrect",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{orderCorrect}"
+      },
+      "label" : "orderCorrect",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "democompany-cards-orderCreditcardV1-EvalResponse",
+      "binding" : {
+        "type" : "property",
+        "name" : "camunda:topic"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "external",
+      "binding" : {
+        "type" : "property",
+        "name" : "camunda:type"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{true}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "manualOutMapping"
+      },
+      "label" : "manualOutMapping",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "orderCorrect",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "outputVariables"
+      },
+      "label" : "outputVariables",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.getVariable('outputMock')}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "outputMock"
+      },
+      "label" : "outputMock",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "handledError1, handledError2",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "handledErrors"
+      },
+      "label" : "handledErrors",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "errorRegex1, errorRegex2",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "regexHandledErrors"
+      },
+      "label" : "regexHandledErrors",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "Eval Response",
+      "binding" : {
+        "type" : "property",
+        "name" : "name"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    }
+  ],
+  "$schema" : "https://unpkg.com/@camunda/element-templates-json-schema@0.16.0/resources/schema.json",
+  "groups" : [
+  ],
+  "entriesVisible" : true
+}

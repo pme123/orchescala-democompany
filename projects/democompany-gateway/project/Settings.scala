@@ -53,58 +53,13 @@ object Settings {
     )
   )
 
-
-  lazy val domainDeps = ProjectDef.domainDependencies ++
-    Seq(
-      customer %% s"$customer-orchescala-domain" % customerOrchescalaV,
-      "io.github.pme123" %% "orchescala-domain" % orchescalaV
-    )
-
-  lazy val engineDeps = 
-    Seq(
-      customer %% s"$customer-orchescala-engine" % customerOrchescalaV,
-      "io.github.pme123" %% "orchescala-engine" % orchescalaV
-    )
-
-  lazy val apiDeps = 
-    Seq(
-      customer %% s"$customer-orchescala-api" % customerOrchescalaV,
-      "io.github.pme123" %% "orchescala-api" % orchescalaV
-    )
-
-  lazy val dmnDeps = 
-    Seq(
-      customer %% s"$customer-orchescala-dmn" % customerOrchescalaV,
-      "io.github.pme123" %% "orchescala-dmn" % orchescalaV
-    )
-
-  lazy val simulationDeps = 
-    Seq(
-      "ch.qos.logback" % "logback-classic" % logbackVersion % Test,
-      customer %% s"$customer-orchescala-simulation" % customerOrchescalaV,
-      "io.github.pme123" %% "orchescala-simulation" % orchescalaV
-    )
-
-  lazy val workerDeps = ProjectDef.workerDependencies ++
+  lazy val engineDeps = ProjectDef.workerDependencies ++
     Seq(
       "ch.qos.logback" % "logback-classic" % logbackVersion % Runtime,
       "jakarta.xml.bind" % "jakarta.xml.bind-api" % jaxbApiVersion,
-      customer %% s"$customer-orchescala-worker" % customerOrchescalaV,
-      "io.github.pme123" %% "orchescala-worker" % orchescalaV
+      customer %% s"$customer-orchescala-engine" % customerOrchescalaV,
+      "io.github.pme123" %% "orchescala-engine" % orchescalaV
     )
-
-  lazy val helperDeps = 
-    Seq(
-      customer %% s"$customer-orchescala-helper" % customerOrchescalaV,
-      "io.github.pme123" %% "orchescala-helper" % orchescalaV
-    )
-
-  lazy val preventPublication = Seq(
-    publish / skip := true,
-    publish := {},
-    publishArtifact := false,
-    publishLocal := {}
-  )
 
   lazy val publicationSettings = Seq(
     publishTo := Some(releaseRepo),
@@ -157,7 +112,7 @@ object Settings {
   - org: ${ProjectDef.org}
   - name: ${ProjectDef.name}
   - version: ${ProjectDef.version}
-  - dependencies: ${ProjectDef.domainDependencies.map(_.toString()).sorted.mkString("\n    - ", "\n    - ", "")}
+  - dependencies: ${ProjectDef.workerDependencies.map(_.toString()).sorted.mkString("\n    - ", "\n    - ", "")}
   """
   def autoImportSetting(customAutoSettings: Seq[String]) =
     scalacOptions +=

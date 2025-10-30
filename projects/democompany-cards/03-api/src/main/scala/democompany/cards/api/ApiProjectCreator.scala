@@ -18,6 +18,7 @@ object ApiProjectCreator extends CompanyApiCreator:
     import democompany.cards.domain.orderCreditcard.v1.*
     api(OrderCreditcard.example)(
       CheckOrderTask.example,
-      CallClientTask.example
+      CallClientTask.example,
+      EvalResponse.example,
     )
 end ApiProjectCreator

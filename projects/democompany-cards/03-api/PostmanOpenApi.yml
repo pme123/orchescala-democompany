@@ -4,7 +4,7 @@ info:
   version: 0.1.0-SNAPSHOT
   summary: "\n         |**This is for Postman - to have example requests. Be aware\
     \ the Output is not provided!**\n         |\n         |\n\nProcesses and Workers\
-    \ related to Card Management.\n\nCreated at 11.08.2025, 15:04\n\n**See the [Orchescala\
+    \ related to Card Management.\n\nCreated at 30.10.2025, 08:20\n\n**See the [Orchescala\
     \ Documentation](https://pme123.github.io/orchescala/)**\n\n# Package Configuration\n\
     **Check all dependency trees here: [democompany-cards](../../dependencies/democompany-cards.html)**\n\
     \n### Dependencies:\n\n- _**[democompany-services](NOT_SET/democompany-services/OpenApi.html)**_\n\
@@ -99,7 +99,7 @@ paths:
 
 
 
-        See API Doc: [Bpmn: orderCreditcardV1](None/democompany-cards/OpenApi.html#operation/Bpmn:%20orderCreditcardV1)
+        See API Doc: [Bpmn: orderCreditcardV1](/democompany/democompany-cards/OpenApi.html#operation/Bpmn:%20orderCreditcardV1)
       operationId: postProcess-definitionKeyDemocompany-cards-ordercreditcardv1Start
       requestBody:
         content:
@@ -139,6 +139,323 @@ paths:
                         }
                       type: Json
                   businessKey: democompany-cards-orderCreditcardV1
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /task/--REMOVE:CheckOrderTask--:
+    post:
+      tags:
+      - democompany-cards-orderCreditcardV1
+      summary: 'UserTask: CheckOrderTask'
+      description: |2
+
+        Check if the order can be done.
+
+        - _taskDefinitionKey_: `CheckOrderTask`
+
+        ---
+
+
+
+
+        See API Doc: [UserTask: CheckOrderTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask:%20CheckOrderTask)
+      operationId: postTask--remove:checkordertask--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetActiveTaskIn'
+            examples:
+              CheckOrderTask:
+                value:
+                  processInstanceId: '{{processInstanceId}}'
+                  active: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /task/{taskId}/form-variables/--REMOVE:CheckOrderTask--:
+    get:
+      tags:
+      - democompany-cards-orderCreditcardV1
+      summary: 'UserTask: CheckOrderTask'
+      description: |2
+
+        Check if the order can be done.
+
+        - _taskDefinitionKey_: `CheckOrderTask`
+
+        ---
+
+
+
+
+        See API Doc: [UserTask: CheckOrderTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask:%20CheckOrderTask)
+      operationId: getTaskTaskidForm-variables--remove:checkordertask--
+      parameters:
+      - name: taskId
+        in: path
+        description: |
+          The taskId of the Form.
+          > This is the result id of the `GetActiveTask`
+
+          Add in the _Tests_ panel of _Postman_:
+          ```
+          let result = pm.response.json()[0];
+          pm.collectionVariables.set("taskId", result.id)
+          ```
+        required: true
+        schema:
+          default: '{{taskId}}'
+          type: string
+      - name: variableNames
+        in: query
+        description: |-
+          A comma-separated list of variable names. Allows restricting the list of requested variables to the variable names in the list.
+          It is best practice to restrict the list of variables to the variables actually required by the form in order to minimize fetching of data. If the query parameter is ommitted all variables are fetched.
+          If the query parameter contains non-existent variable names, the variable names are ignored.
+        required: false
+        schema:
+          default: name,example
+          type: string
+      - name: deserializeValues
+        in: query
+        required: false
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          description: ''
+  /task/{taskId}/complete/--REMOVE:CheckOrderTask--:
+    post:
+      tags:
+      - democompany-cards-orderCreditcardV1
+      summary: 'UserTask: CheckOrderTask'
+      description: |2
+
+        Check if the order can be done.
+
+        - _taskDefinitionKey_: `CheckOrderTask`
+
+        ---
+
+
+
+
+        See API Doc: [UserTask: CheckOrderTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask:%20CheckOrderTask)
+      operationId: postTaskTaskidComplete--remove:checkordertask--
+      parameters:
+      - name: taskId
+        in: path
+        description: |
+          The taskId of the Form.
+          > This is the result id of the `GetActiveTask`
+
+          Add in the _Tests_ panel of _Postman_:
+          ```
+          let result = pm.response.json()[0];
+          pm.collectionVariables.set("taskId", result.id)
+          ```
+        required: true
+        schema:
+          default: '{{taskId}}'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteTaskIn'
+            examples:
+              CheckOrderTask:
+                value:
+                  variables:
+                    approved:
+                      value: true
+                      type: Boolean
+                    approveComment:
+                      value: Approved with no issues.
+                      type: String
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /task/--REMOVE:CallClientTask--:
+    post:
+      tags:
+      - democompany-cards-orderCreditcardV1
+      summary: 'UserTask: CallClientTask'
+      description: |2
+
+        The Customer Service must call the client due to missing information.
+
+        - _taskDefinitionKey_: `CallClientTask`
+
+        ---
+
+
+
+
+        See API Doc: [UserTask: CallClientTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask:%20CallClientTask)
+      operationId: postTask--remove:callclienttask--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetActiveTaskIn'
+            examples:
+              CallClientTask:
+                value:
+                  processInstanceId: '{{processInstanceId}}'
+                  active: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /task/{taskId}/form-variables/--REMOVE:CallClientTask--:
+    get:
+      tags:
+      - democompany-cards-orderCreditcardV1
+      summary: 'UserTask: CallClientTask'
+      description: |2
+
+        The Customer Service must call the client due to missing information.
+
+        - _taskDefinitionKey_: `CallClientTask`
+
+        ---
+
+
+
+
+        See API Doc: [UserTask: CallClientTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask:%20CallClientTask)
+      operationId: getTaskTaskidForm-variables--remove:callclienttask--
+      parameters:
+      - name: taskId
+        in: path
+        description: |
+          The taskId of the Form.
+          > This is the result id of the `GetActiveTask`
+
+          Add in the _Tests_ panel of _Postman_:
+          ```
+          let result = pm.response.json()[0];
+          pm.collectionVariables.set("taskId", result.id)
+          ```
+        required: true
+        schema:
+          default: '{{taskId}}'
+          type: string
+      - name: variableNames
+        in: query
+        description: |-
+          A comma-separated list of variable names. Allows restricting the list of requested variables to the variable names in the list.
+          It is best practice to restrict the list of variables to the variables actually required by the form in order to minimize fetching of data. If the query parameter is ommitted all variables are fetched.
+          If the query parameter contains non-existent variable names, the variable names are ignored.
+        required: false
+        schema:
+          default: name,example
+          type: string
+      - name: deserializeValues
+        in: query
+        required: false
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          description: ''
+  /task/{taskId}/complete/--REMOVE:CallClientTask--:
+    post:
+      tags:
+      - democompany-cards-orderCreditcardV1
+      summary: 'UserTask: CallClientTask'
+      description: |2
+
+        The Customer Service must call the client due to missing information.
+
+        - _taskDefinitionKey_: `CallClientTask`
+
+        ---
+
+
+
+
+        See API Doc: [UserTask: CallClientTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask:%20CallClientTask)
+      operationId: postTaskTaskidComplete--remove:callclienttask--
+      parameters:
+      - name: taskId
+        in: path
+        description: |
+          The taskId of the Form.
+          > This is the result id of the `GetActiveTask`
+
+          Add in the _Tests_ panel of _Postman_:
+          ```
+          let result = pm.response.json()[0];
+          pm.collectionVariables.set("taskId", result.id)
+          ```
+        required: true
+        schema:
+          default: '{{taskId}}'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteTaskIn'
+            examples:
+              CallClientTask:
+                value:
+                  variables:
+                    approvedOnTelephone:
+                      value: true
+                      type: Boolean
+                    approveOnTelephoneComment:
+                      value: Approved on telephone. Everything could be clarified.
+                      type: String
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-cards-orderCreditcardV1-EvalResponse--:
+    post:
+      tags:
+      - democompany-cards-orderCreditcardV1
+      summary: 'Worker: EvalResponse'
+      description: |
+        Evaluates the different responses if not approved.
+
+        See API Doc: [Worker: EvalResponse](/democompany/democompany-cards/OpenApi.html#operation/Worker:%20EvalResponse)
+      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-cards-ordercreditcardv1-evalresponse--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              EvalResponse > In > Email:
+                value:
+                  variables:
+                    emailBody:
+                      value: Hello
+                      type: String
+                  businessKey: democompany-cards-orderCreditcardV1-EvalResponse
+                  withVariablesInReturn: true
+              EvalResponse > In > Telephone:
+                value:
+                  variables:
+                    approvedOnTelephone:
+                      value: true
+                      type: Boolean
+                    approveOnTelephoneComment:
+                      value: Approved on telephone. Everything could be clarified.
+                      type: String
+                  businessKey: democompany-cards-orderCreditcardV1-EvalResponse
                   withVariablesInReturn: true
         required: true
       responses:
@@ -254,6 +571,44 @@ components:
       - $ref: '#/components/schemas/CLong'
       - $ref: '#/components/schemas/CNull'
       - $ref: '#/components/schemas/CString'
+    CompleteTaskIn:
+      title: CompleteTaskIn
+      description: 'A JSON object with the following properties: (at least an empty
+        JSON object {} or an empty request body)'
+      type: object
+      required:
+      - variables
+      - withVariablesInReturn
+      properties:
+        variables:
+          $ref: '#/components/schemas/Map_CamundaVariable'
+        withVariablesInReturn:
+          description: Set to false will not return the Process Variables and the
+            Result Status is 204.
+          type: boolean
+    GetActiveTaskIn:
+      title: GetActiveTaskIn
+      description: Same as GetActiveJobIn.
+      type: object
+      required:
+      - processInstanceId
+      - active
+      properties:
+        processInstanceId:
+          description: |2
+
+            The id of the process - you want to get the active tasks.
+            > This is the result id of the `StartProcessOut`
+
+            Add in the _Tests_ panel of _Postman_:
+            ```
+            let result = pm.response.json();
+            pm.collectionVariables.set("processInstanceId", result.id)
+            ```
+          type: string
+        active:
+          description: We are only interested in the active Task(s)
+          type: boolean
     Map_CamundaVariable:
       title: Map_CamundaVariable
       type: object
