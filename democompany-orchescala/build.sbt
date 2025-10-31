@@ -17,6 +17,7 @@ lazy val root = (project in file("."))
     dmn,
     simulation,
     worker,
+    gateway,
     helper,
     docs
   )
@@ -65,6 +66,14 @@ lazy val worker = project
   .settings(unitTestSettings)
   .settings(libraryDependencies ++= workerDeps)
   .dependsOn(engine)
+
+lazy val gateway = project
+  .in(file("./04-gateway"))
+  .settings(generalSettings(Some("gateway")))
+  .settings(publicationSettings)
+  .settings(unitTestSettings)
+  .settings(libraryDependencies ++= gatewayDeps)
+  .dependsOn(worker)
 
 lazy val helper = project
   .in(file("./04-helper"))

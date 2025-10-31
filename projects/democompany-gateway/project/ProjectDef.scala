@@ -9,7 +9,7 @@ object ProjectDef {
   lazy val democompanyCardsVersion = "0.1.0-SNAPSHOT"
   lazy val democompanyServicesVersion = "0.1.0-SNAPSHOT"
 
-  lazy val workerDependencies = Seq(
+  lazy val gatewayDependencies = Seq(
     "democompany" % "democompany-cards-worker" % democompanyCardsVersion,
     "democompany" % "democompany-services-worker" % democompanyServicesVersion
   )

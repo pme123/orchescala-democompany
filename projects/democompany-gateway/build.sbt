@@ -1,27 +1,33 @@
 // DO NOT ADJUST. This file is replaced by `./helper.scala update`.
 import Settings.*
 
-ThisBuild / onLoadMessage                                  := loadingMessage
-ThisBuild / versionScheme                                  := Some("semver-spec")
+ThisBuild / onLoadMessage := loadingMessage
+ThisBuild / versionScheme := Some("semver-spec")
 ThisBuild / libraryDependencySchemes += "io.github.pme123" %% "orchescala-api" % "early-semver"
-ThisBuild / evictionErrorLevel                             := Level.Warn
-ThisBuild / usePipelining                                  := true
+ThisBuild / evictionErrorLevel := Level.Warn
+ThisBuild / usePipelining := true
+
 
 lazy val root = project
   .in(file("."))
   .settings(
     sourcesInBase := false,
     projectSettings(),
-    publicationSettings // Camunda artifacts
-  ).aggregate(engine)
+    preventPublication,
+  ).aggregate(gateway)
 
-lazy val engine = project
-  .in(file("./02-engine"))
+
+lazy val gateway = project
+  .in(file("./04-gateway"))
   .settings(
-    projectSettings(Some("engine")),
+    projectSettings(Some("gateway")),
     publicationSettings,
+    libraryDependencies ++= gatewayDeps,
     dockerSettings,
-    libraryDependencies ++= engineDeps,
     testSettings,
     zioTestSettings
-  ).enablePlugins(DockerPlugin, JavaAppPackaging)
+  )
+  
+  .enablePlugins(DockerPlugin, JavaAppPackaging)
+
+

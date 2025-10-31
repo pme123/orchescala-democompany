@@ -1,8 +1,13 @@
-package democompany.orchescala.engine
+package democompany.orchescala.gateway
 
+import democompany.orchescala.engine.{
+  CompanyEngineC7Config,
+  CompanyEngineC8Config,
+  CompanyEngineGApp
+}
 import orchescala.engine.c7.C7BearerTokenClient
 import orchescala.engine.c8.C8BearerTokenClient
-import orchescala.engine.gateway.http.GatewayServer
+import orchescala.gateway.GatewayServer
 import zio.*
 
 // checking if use extra service app to gather all workers - see democompany-cards

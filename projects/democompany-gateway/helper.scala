@@ -8,4 +8,4 @@ import democompany.orchescala.helper.*
 
 @main
 def run(command: String, arguments: String*): Unit =
-  CompanyDevHelper.runGateway(command, arguments*)
+  CompanyDevHelper.runForGateway(command, arguments*)

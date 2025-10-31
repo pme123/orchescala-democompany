@@ -53,13 +53,21 @@ object Settings {
     )
   )
 
-  lazy val engineDeps = ProjectDef.workerDependencies ++
+
+  lazy val gatewayDeps = ProjectDef.gatewayDependencies ++
     Seq(
       "ch.qos.logback" % "logback-classic" % logbackVersion % Runtime,
       "jakarta.xml.bind" % "jakarta.xml.bind-api" % jaxbApiVersion,
-      customer %% s"$customer-orchescala-engine" % customerOrchescalaV,
-      "io.github.pme123" %% "orchescala-engine" % orchescalaV
+      customer %% s"$customer-orchescala-gateway" % customerOrchescalaV,
+      "io.github.pme123" %% "orchescala-gateway" % orchescalaV
     )
+
+  lazy val preventPublication = Seq(
+    publish / skip := true,
+    publish := {},
+    publishArtifact := false,
+    publishLocal := {}
+  )
 
   lazy val publicationSettings = Seq(
     publishTo := Some(releaseRepo),
@@ -112,7 +120,7 @@ object Settings {
   - org: ${ProjectDef.org}
   - name: ${ProjectDef.name}
   - version: ${ProjectDef.version}
-  - dependencies: ${ProjectDef.workerDependencies.map(_.toString()).sorted.mkString("\n    - ", "\n    - ", "")}
+  - dependencies: ${ProjectDef.gatewayDependencies.map(_.toString()).sorted.mkString("\n    - ", "\n    - ", "")}
   """
   def autoImportSetting(customAutoSettings: Seq[String]) =
     scalacOptions +=
