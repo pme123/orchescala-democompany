@@ -8,7 +8,10 @@ import zio.{ZIO, ZLayer}
 trait CompanyEngineGApp extends EngineApp:
   given EngineConfig = companyEngineConfig
 
-  // Override this to provide the ZIO layers required by this simulation
+  def c7Engine: ZIO[Any, Nothing, ProcessEngine] = CompanyEngineC7App.engineZIO
+  def c8Engine: ZIO[Any, Nothing, ProcessEngine] = CompanyEngineC8App.engineZIO
+
+  // Override this to provide the ZIO layers required by the simulation
   lazy val requiredLayers: Seq[ZLayer[Any, Nothing, Any]]  = Seq(
     SharedC8ClientManager.layer,
     SharedC7ClientManager.layer
@@ -16,11 +19,11 @@ trait CompanyEngineGApp extends EngineApp:
   // Override engineZIO to create the engine within the SharedC8ClientManager environment
   override def engineZIO: ZIO[Any, Nothing, ProcessEngine] =
     (for
-      c8Engine: ProcessEngine <- CompanyEngineC8App.engineZIO
-      c7Engine: ProcessEngine <- CompanyEngineC7App.engineZIO
+      c8Engine: ProcessEngine <- c8Engine
+      c7Engine: ProcessEngine <- c7Engine
       given Seq[ProcessEngine] =
         Seq(c8Engine) // , c7Engine) // -> change order to change default engine
     yield GProcessEngine())
-      .provideLayer(SharedC7ClientManager.layer ++ SharedC8ClientManager.layer)
+    // .provideLayer(requiredLayers.reduce(_ ++ _))
 
 end CompanyEngineGApp

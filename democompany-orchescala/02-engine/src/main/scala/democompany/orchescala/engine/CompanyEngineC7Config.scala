@@ -23,6 +23,6 @@ trait CompanyEngineC7Config:
   lazy val scope         = fssoScope
   lazy val username      = fssoTechuserName
   lazy val password      = fssoTechuserPassword
-
+  
 end CompanyEngineC7Config
 object CompanyEngineC7Config extends CompanyEngineC7Config
