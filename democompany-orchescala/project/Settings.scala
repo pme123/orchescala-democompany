@@ -123,10 +123,6 @@ object Settings {
     "io.github.pme123" %% "orchescala-worker-c8" % orchescalaV,
   )
 
-  lazy val gatewayDeps = Seq(
-    "io.github.pme123" %% "orchescala-gateway" % orchescalaV
-  )
-
   lazy val helperDeps = apiDeps ++ Seq(
     "io.github.pme123" %% "orchescala-helper" % orchescalaV
   )
