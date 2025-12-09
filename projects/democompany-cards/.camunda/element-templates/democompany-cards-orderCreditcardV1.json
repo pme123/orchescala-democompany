@@ -142,6 +142,17 @@
       "type" : "Hidden"
     },
     {
+      "value" : "identityCorrelation",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "identityCorrelation",
+        "expression" : false
+      },
+      "label" : "identityCorrelation",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
       "value" : "#{execution.processBusinessKey}",
       "binding" : {
         "type" : "camunda:in:businessKey"

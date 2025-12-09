@@ -122,6 +122,16 @@
         "type" : "Hidden"
       },
       {
+        "value" : "identityCorrelation",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "identityCorrelation"
+        },
+        "label" : "identityCorrelation",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
         "value" : "Order Creditcard V1",
         "binding" : {
           "type" : "property",

@@ -4,11 +4,44 @@ info:
   version: 0.1.0-SNAPSHOT
   summary: "\n         |**This is for Postman - to have example requests. Be aware\
     \ the Output is not provided!**\n         |\n         |\n\nProcesses and Workers\
-    \ related to Card Management.\n\nCreated at 30.10.2025, 08:20\n\n**See the [Orchescala\
-    \ Documentation](https://pme123.github.io/orchescala/)**\n\n# Package Configuration\n\
-    **Check all dependency trees here: [democompany-cards](../../dependencies/democompany-cards.html)**\n\
-    \n### Dependencies:\n\n- _**[democompany-services](NOT_SET/democompany-services/OpenApi.html)**_\n\
-    \n\n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\
+    \ related to Card Management.\n\nCreated at 09.12.2025, 08:59\n\n**See the [Orchescala\
+    \ Documentation](https://pme123.github.io/orchescala/)**\n\n<details>\n<summary><b><i>Postman\
+    \ Instructions</i></b></summary>\n<p>\nYou can directly import this OpenApi YAML\
+    \ to [Postman](https://www.postman.com/).\n\nOnly thing you need to adjust is\
+    \ in the Collection.\n- **Authorization**: `Bearer Token` with the `{{access_token}}`\
+    \ from the `GetToken` request.\n- **Variables**: `tenantId`: `{{bank}}`\n- **Scripts\
+    \ - Pre-Request**:\n\n```javascript\n// Refresh the OAuth token if necessary\n\
+    let tokenDate = new Date(2010, 1, 1);\nconst tokenTimestamp = pm.environment.get(\"\
+    OAuth_Timestamp\");\nif (tokenTimestamp) {\n  tokenDate = Date.parse(tokenTimestamp);\n\
+    }\nlet expiresInTime = pm.environment.get(\"ExpiresInTime\");\nif (!expiresInTime)\
+    \ {\n  expiresInTime = 300000; // Set default expiration time to 5 minutes\n}\n\
+    if (new Date() - tokenDate >= expiresInTime) {\npm.sendRequest(\n{\n  url: `${pm.environment.get(\n\
+    \      \"tokenService\"\n    )}/auth/realms/${pm.environment.get(\n      \"bank\"\
+    \n    )}/protocol/openid-connect/token`,\n  method: \"POST\",\n  header: {\n \
+    \   \"Content-Type\": \"application/x-www-form-urlencoded\",\n  },\n  body: {\n\
+    \    mode: \"urlencoded\",\n    urlencoded: [\n      { key: \"grant_type\", value:\
+    \ \"password\" },\n      { key: \"client_id\", value: pm.environment.get(\"clientId\"\
+    )},\n      { key: \"client_secret\", value: pm.environment.get(\"clientSecret\"\
+    )},\n      { key: \"username\", value: pm.environment.get(\"username\")},\n  \
+    \    { key: \"password\", value: pm.environment.get(\"pwd\") },\n      { key:\
+    \ \"scope\", value: pm.environment.get(\"scope\") },\n    ],\n  },\n},\n  (_,\
+    \ res) => {\n    pm.environment.set(\"access_token\", res.json().access_token);\n\
+    \    pm.environment.set(\"OAuth_Timestamp\", new Date());\n    // Set the ExpiresInTime\
+    \ variable to the time given in the response if it exists\n    if (res.json().expires_in)\
+    \ {\n      expiresInTime = res.json().expires_in * 1000;\n    }\n    pm.environment.set(\"\
+    ExpiresInTime\", expiresInTime);\n  });\n}\n  ```\n\n- **Scripts - Post-Response**:\n\
+    \n```javascript\n  // Collection-level test script\n  pm.test(\"Auto-set variables\"\
+    , function () {\n    const response = pm.response.json();\n\n    // Set processInstanceId\
+    \ if present\n    if (response.processInstanceId) {\n        const id = response.processInstanceId;\n\
+    \        pm.collectionVariables.set(\"processInstanceId\", id);\n        console.log(\"\
+    Set processInstanceId: \" + id);\n    }\n\n    // Set taskId for array responses\n\
+    \    if (pm.response.headers.get(\"userTaskId\")) {\n        const id = pm.response.headers.get(\"\
+    userTaskId\")\n        pm.collectionVariables.set(\"userTaskInstanceId\", id);\n\
+    \        console.log(\"userTaskInstanceId: \" + id)\n\n    }\n\n});\n  ```\n\n\
+    </p>\n</details>\n\n\n# Package Configuration\n**Check all dependency trees here:\
+    \ [democompany-cards](../../dependencies/democompany-cards.html)**\n\n### Dependencies:\n\
+    \n- _**[democompany-services](NOT_SET/democompany-services/OpenApi.html)**_\n\n\
+    \n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\
     \nprojectName: democompany-cards\nprojectVersion: 0.1.0-SNAPSHOT\nsubProjects:\
     \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n  democompany-services\n\
     ]\n\n```\n\n</p>\n</details>\n\n\nThere is no README.md in the Project.\n\n\n\
@@ -148,7 +181,7 @@ paths:
     post:
       tags:
       - democompany-cards-orderCreditcardV1
-      summary: 'UserTask: CheckOrderTask'
+      summary: 'UserTask variables: CheckOrderTask'
       description: |2
 
         Check if the order can be done.
@@ -160,7 +193,7 @@ paths:
 
 
 
-        See API Doc: [UserTask: CheckOrderTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask:%20CheckOrderTask)
+        See API Doc: [UserTask variables: CheckOrderTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask%20variables:%20CheckOrderTask)
       operationId: postTask--remove:checkordertask--
       requestBody:
         content:
@@ -180,7 +213,7 @@ paths:
     get:
       tags:
       - democompany-cards-orderCreditcardV1
-      summary: 'UserTask: CheckOrderTask'
+      summary: 'UserTask variables: CheckOrderTask'
       description: |2
 
         Check if the order can be done.
@@ -192,7 +225,7 @@ paths:
 
 
 
-        See API Doc: [UserTask: CheckOrderTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask:%20CheckOrderTask)
+        See API Doc: [UserTask variables: CheckOrderTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask%20variables:%20CheckOrderTask)
       operationId: getTaskTaskidForm-variables--remove:checkordertask--
       parameters:
       - name: taskId
@@ -233,7 +266,7 @@ paths:
     post:
       tags:
       - democompany-cards-orderCreditcardV1
-      summary: 'UserTask: CheckOrderTask'
+      summary: 'UserTask variables: CheckOrderTask'
       description: |2
 
         Check if the order can be done.
@@ -245,7 +278,7 @@ paths:
 
 
 
-        See API Doc: [UserTask: CheckOrderTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask:%20CheckOrderTask)
+        See API Doc: [UserTask variables: CheckOrderTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask%20variables:%20CheckOrderTask)
       operationId: postTaskTaskidComplete--remove:checkordertask--
       parameters:
       - name: taskId
@@ -287,7 +320,7 @@ paths:
     post:
       tags:
       - democompany-cards-orderCreditcardV1
-      summary: 'UserTask: CallClientTask'
+      summary: 'UserTask variables: CallClientTask'
       description: |2
 
         The Customer Service must call the client due to missing information.
@@ -299,7 +332,7 @@ paths:
 
 
 
-        See API Doc: [UserTask: CallClientTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask:%20CallClientTask)
+        See API Doc: [UserTask variables: CallClientTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask%20variables:%20CallClientTask)
       operationId: postTask--remove:callclienttask--
       requestBody:
         content:
@@ -319,7 +352,7 @@ paths:
     get:
       tags:
       - democompany-cards-orderCreditcardV1
-      summary: 'UserTask: CallClientTask'
+      summary: 'UserTask variables: CallClientTask'
       description: |2
 
         The Customer Service must call the client due to missing information.
@@ -331,7 +364,7 @@ paths:
 
 
 
-        See API Doc: [UserTask: CallClientTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask:%20CallClientTask)
+        See API Doc: [UserTask variables: CallClientTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask%20variables:%20CallClientTask)
       operationId: getTaskTaskidForm-variables--remove:callclienttask--
       parameters:
       - name: taskId
@@ -372,7 +405,7 @@ paths:
     post:
       tags:
       - democompany-cards-orderCreditcardV1
-      summary: 'UserTask: CallClientTask'
+      summary: 'UserTask variables: CallClientTask'
       description: |2
 
         The Customer Service must call the client due to missing information.
@@ -384,7 +417,7 @@ paths:
 
 
 
-        See API Doc: [UserTask: CallClientTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask:%20CallClientTask)
+        See API Doc: [UserTask variables: CallClientTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask%20variables:%20CallClientTask)
       operationId: postTaskTaskidComplete--remove:callclienttask--
       parameters:
       - name: taskId
