@@ -1,7 +1,7 @@
 package democompany.orchescala.worker
 
+import orchescala.engine.rest.SttpClientBackend
 import orchescala.worker.WorkerError.ServiceAuthError
-import orchescala.worker.oauth.TokenService
 import sttp.client3.*
 
 class CompanyRestApiC8Client extends RestApiClient, CompanyC8Client:
@@ -12,7 +12,7 @@ class CompanyRestApiC8Client extends RestApiClient, CompanyC8Client:
                                context: EngineRunContext
                              ): ZIO[SttpClientBackend, ServiceAuthError, Request[Either[String, String], Any]] =
 
-    ???
+    super.auth(request) // no auth for demo
 
   end auth
 

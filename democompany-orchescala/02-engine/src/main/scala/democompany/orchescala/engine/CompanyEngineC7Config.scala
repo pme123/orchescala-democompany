@@ -1,28 +1,47 @@
-package democompany.orchescala
-package engine
+package democompany.orchescala.engine
 
-/** Add here company specific stuff, to configure the Engine.
-  */
-trait CompanyEngineC7Config:
+import orchescala.engine.rest.OAuthConfig
 
-  lazy val fssoClientName   = sys.env.getOrElse("FSSO_CLIENT_NAME", "myClient")
-  lazy val fssoClientSecret =
-    sys.env.getOrElse("FSSO_CLIENT_SECRET", "mySecret")
-  lazy val fssoScope        = sys.env.getOrElse("FSSO_SCOPE", "myScope")
+object CompanyEngineC7Config:
 
-  lazy val fssoTechuserName     = sys.env.getOrElse("FSSO_TECHUSER_NAME", "admin")
-  lazy val fssoTechuserPassword = sys.env.getOrElse("FSSO_TECHUSER_PASSWORD", "admin")
+  lazy val ssoBaseUrl = {
+    (sys.env.getOrElse("SSO_BASE_URL", s"http://host.lima.internal:8090") + "/auth")
+      .replace("/auth/auth", "/auth")
+  }
 
-  lazy val fssoRealm: String = sys.env.getOrElse("FSSO_REALM", "MY_REALM")
-  lazy val fssoBaseUrl       = sys.env.getOrElse("FSSO_BASE_URL", s"http://host.lima.internal:8090")
-  lazy val camundaRestUrl    = sys.env.getOrElse("CAMUNDA_BASE_URL", ProcessEngine.c7Endpoint)
+  lazy val camundaRestUrl =
+    sys.env.getOrElse("CAMUNDA_BASE_URL", "http://localhost:8080/engine-rest")
+
   lazy val camundaCockpitUrl = sys.env.getOrElse("CAMUNDA_COCKPIT_URL", ProcessEngine.c7CockpitUrl)
-
-  lazy val client_id     = fssoClientName
-  lazy val client_secret = fssoClientSecret
-  lazy val scope         = fssoScope
-  lazy val username      = fssoTechuserName
-  lazy val password      = fssoTechuserPassword
   
+  lazy val adminPasswordGrant     =
+    OAuthConfig.PasswordGrant(
+      ssoRealm = ssoRealm,
+      ssoBaseUrl = ssoBaseUrl,
+      client_id = ssoClientName,
+      client_secret = ssoClientSecret,
+      scope = ssoScope,
+      username = ssoTechuserName,
+      password = ssoTechuserPassword
+    )
+  lazy val clientCredentials =
+    OAuthConfig.ClientCredentials(
+      ssoRealm = ssoRealm,
+      ssoBaseUrl = ssoBaseUrl,
+      client_id = ssoClientName,
+      client_secret = ssoClientSecret,
+      scope = ssoScope
+    )
+
+  lazy val ssoTechuserName = sys.env.getOrElse("SSO_TECHUSER_NAME", "admin")
+  lazy val ssoRealm: String = sys.env.getOrElse("SSO_REALM", "0949")
+
+  private lazy val ssoClientName   = sys.env.getOrElse("SSO_CLIENT_NAME", "bpf")
+  private lazy val ssoClientSecret =
+    sys.env.getOrElse("SSO_CLIENT_SECRET", "6ec0e8ce-eff1-456f-bc2f-907b6fcb5157")
+  private lazy val ssoScope        = sys.env.getOrElse("SSO_SCOPE", "bpf fcs")
+
+  private[engine] lazy val ssoTechuserPassword = sys.env.getOrElse("SSO_TECHUSER_PASSWORD", "admin")
+
+
 end CompanyEngineC7Config
-object CompanyEngineC7Config extends CompanyEngineC7Config

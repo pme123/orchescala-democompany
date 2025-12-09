@@ -1,3 +1,0 @@
-package democompany.orchescala.engine
-
-trait CompanyEngineGConfig extends CompanyEngineC8Config, CompanyEngineC7Config

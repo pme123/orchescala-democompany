@@ -28,7 +28,7 @@ case class IdentityCorrelation(
       .mkString:
         impersonateDiscriminator
 
-  lazy val isTechnicalUser: Boolean = key == CompanyEngineC7Config.fssoTechuserName
+  lazy val isTechnicalUser: Boolean = key == CompanyEngineC7Config.ssoTechuserName
 
   lazy val identityAsString =
     s"""IdentityCorrelation:

@@ -1,9 +1,9 @@
 package democompany.orchescala.worker
 
-import democompany.orchescala.engine.CompanyEngineC7Config.fssoRealm
+import democompany.orchescala.engine.CompanyEngineC7Config.ssoRealm
 
-lazy val testPrefix = s"$fssoRealm;"
+lazy val testPrefix = s"$ssoRealm;"
 lazy val corrPrefix = "6300;"
-lazy val userPrefix = s"FSSO_$fssoRealm--"
+lazy val userPrefix = s"SSO_$ssoRealm--"
 
 val impersonateDiscriminator = ":::"

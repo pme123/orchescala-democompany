@@ -1,7 +1,7 @@
 package democompany.orchescala.worker
 
+import orchescala.engine.rest.SttpClientBackend
 import orchescala.worker.WorkerError.ServiceAuthError
-import orchescala.worker.oauth.TokenService
 import sttp.client3.*
 
 class CompanyRestApiC7Client extends RestApiClient, CompanyC7Client:
@@ -12,17 +12,8 @@ class CompanyRestApiC7Client extends RestApiClient, CompanyC7Client:
                                context: EngineRunContext
                              ): ZIO[SttpClientBackend, ServiceAuthError, Request[Either[String, String], Any]] =
 
-    given TokenService = tokenService
+    super.auth(request) // no auth for demo
 
-    ZIO
-      .fromEither:
-        adminToken()
-      .mapError: err =>
-        ServiceAuthError(
-          s"Could not create Identity Correlation (fromCorrelationString) for ${context.generalVariables.impersonateUserId}.\n$err"
-        )
-      .map: token =>
-        request.addToken(token)
 
   end auth
 

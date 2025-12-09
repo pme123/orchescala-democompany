@@ -1,7 +1,7 @@
 package democompany.orchescala.simulation
 
-import democompany.orchescala.engine.{CompanyEngineC7App, CompanyEngineC7Client}
 import democompany.orchescala.engine.CompanyEngineC7Config.*
+import democompany.orchescala.engine.{CompanyEngineC7App, CompanyEngineGApp}
 import io.circe.parser.*
 import orchescala.engine.ProcessEngine
 import orchescala.engine.c7.*
@@ -19,4 +19,4 @@ import scala.jdk.CollectionConverters.*
 
 /** Add here company specific stuff, to run the Simulations.
   */
-trait CompanyC7Simulation extends CompanySimulation, CompanyEngineC7App
+trait CompanyC7Simulation extends CompanySimulation, CompanyEngineGApp
