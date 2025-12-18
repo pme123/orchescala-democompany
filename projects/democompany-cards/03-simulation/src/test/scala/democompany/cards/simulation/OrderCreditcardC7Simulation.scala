@@ -8,4 +8,4 @@ import orchescala.engine.domain.EngineType
 // simulation/test
 // simulation/testOnly *OrderCreditcardC7Simulation
 class OrderCreditcardC7Simulation extends OrderCreditcardSimulation, CompanyC7Simulation:
-  override def engineType: EngineType = EngineType.C7
+  def engineType: EngineType = EngineType.C7

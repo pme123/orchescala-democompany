@@ -7,7 +7,7 @@ import orchescala.engine.domain.EngineType
 
 abstract class OrderCreditcardSimulation extends CompanySimulation:
   // only needed for an end event that throws an error. see documentation
-  protected def engineType: EngineType = EngineType.C8
+  protected def engineType: EngineType
 
   simulate(
     scenario(`OrderCreditcard`)(
@@ -49,7 +49,7 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
 
   override def config =
     super.config
-      .withMaxCount(10)
+      .withMaxCount(15)
     // .withLogLevel(LogLevel.DEBUG)
 
   private lazy val `OrderCreditcard` =
