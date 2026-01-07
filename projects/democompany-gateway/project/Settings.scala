@@ -11,7 +11,7 @@ object Settings {
   val customer = ProjectDef.org
   val customerOrchescalaV = "0.1.0-SNAPSHOT"
   // to override the version defined in customerOrchescala
-  val orchescalaV = "0.3.0-SNAPSHOT"
+  val orchescalaV = "0.4.0-SNAPSHOT"
 
   // other dependencies
   // run worker
@@ -47,9 +47,10 @@ object Settings {
     credentials ++= Seq(),
     resolvers ++= Seq(releaseRepo),
     autoImportSetting(
-      (postfix orElse module).toSeq.flatMap(x =>
-         Seq(s"orchescala.$x", s"$customer.orchescala.$x")
-      )
+      (postfix orElse module).toSeq.flatMap{ x =>
+         val proj = "engine"
+         Seq(s"orchescala.$x", s"$customer.orchescala.$proj")
+      }
     )
   )
 
@@ -58,7 +59,7 @@ object Settings {
     Seq(
       "ch.qos.logback" % "logback-classic" % logbackVersion % Runtime,
       "jakarta.xml.bind" % "jakarta.xml.bind-api" % jaxbApiVersion,
-      customer %% s"$customer-orchescala-gateway" % customerOrchescalaV,
+      customer %% s"$customer-orchescala-engine" % customerOrchescalaV,
       "io.github.pme123" %% "orchescala-gateway" % orchescalaV
     )
 

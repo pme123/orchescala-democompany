@@ -4,7 +4,7 @@ import orchescala.worker.c8.C8Context
 
 import scala.reflect.ClassTag
 
-class CompanyEngineC8Context(restApiClient: CompanyRestApiC7Client) extends C8Context:
+class CompanyEngineC8Context(restApiClient: CompanyRestApiC8Client) extends C8Context:
 
 
   override def sendRequest[ServiceIn: Encoder, ServiceOut: {Decoder, ClassTag}](

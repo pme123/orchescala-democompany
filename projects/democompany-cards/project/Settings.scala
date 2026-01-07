@@ -11,7 +11,7 @@ object Settings {
   val customer = ProjectDef.org
   val customerOrchescalaV = "0.1.0-SNAPSHOT"
   // to override the version defined in customerOrchescala
-  val orchescalaV = "0.3.0-SNAPSHOT"
+  val orchescalaV = "0.4.0-SNAPSHOT"
 
   // other dependencies
   // run worker
