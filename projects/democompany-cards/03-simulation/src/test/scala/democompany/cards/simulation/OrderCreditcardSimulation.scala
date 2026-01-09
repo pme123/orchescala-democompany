@@ -13,6 +13,9 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
     scenario(`OrderCreditcard`)(
       `Check Order approved UT`
     ),
+    scenario(`OrderCreditcard by message`.startWithMsg)( // only works with C7!
+      `Check Order approved UT`
+    ),
     scenario(`OrderCreditcard minimal`)(
       `Check Order approved UT minimal`
     ),
@@ -56,6 +59,9 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
     example
       .mockServices
       .mockWorkers(workers*)
+
+  protected lazy val `OrderCreditcard by message` =
+    `OrderCreditcard`
 
   private lazy val `OrderCreditcard not approved` =
     example
@@ -124,7 +130,7 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
     `OrderCreditcard`
       .withOut(Out.example.copy(processStatus = ProcessStatus.canceled))
 
-  private lazy val `Check Order approved UT` =
+  protected lazy val `Check Order approved UT` =
     CheckOrderTask.example
 
   private lazy val `Check Order approved UT minimal` =

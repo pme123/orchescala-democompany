@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_169pkpp" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.34.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_169pkpp" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.34.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
   <bpmn:collaboration id="Collaboration_0bb63t1">
     <bpmn:participant id="DemocompanycardsorderCreditcardV1Participant" name="democompany-cards-orderCreditcardV1" processRef="democompany-cards-orderCreditcardV1" />
     <bpmn:textAnnotation id="TextAnnotation_1w58ouq">
       <bpmn:text>this throws an error except it is handled by a parent process</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_0e99bxl" associationDirection="None" sourceRef="Event_1tlf7nb" targetRef="TextAnnotation_1w58ouq" />
+    <bpmn:textAnnotation id="TextAnnotation_0bnjn8r">
+      <bpmn:text>it is not possible to have a start event and a message event in C8</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_14g7ur9" associationDirection="None" sourceRef="StartStartEvent" targetRef="TextAnnotation_0bnjn8r" />
   </bpmn:collaboration>
   <bpmn:process id="democompany-cards-orderCreditcardV1" name="democompany-cards-orderCreditcardV1" isExecutable="true">
     <bpmn:extensionElements>
@@ -24,14 +28,6 @@
       <bpmn:outgoing>YesSequenceFlow</bpmn:outgoing>
       <bpmn:outgoing>Flow_1xabbbn</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:startEvent id="StartStartEvent" name="start">
-      <bpmn:extensionElements>
-        <zeebe:executionListeners>
-          <zeebe:executionListener eventType="end" retries="0" type="democompany-cards-orderCreditcardV1" />
-        </zeebe:executionListeners>
-      </bpmn:extensionElements>
-      <bpmn:outgoing>Flow_1gt1qt5</bpmn:outgoing>
-    </bpmn:startEvent>
     <bpmn:serviceTask id="GetClientsClientIdTask" name="Get Clients Client Id" zeebe:modelerTemplate="democompany-services-clientsV1-GetClientsClientId" zeebe:modelerTemplateVersion="0">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="democompany-services-clientsV1-GetClientsClientId" retries="0" />
@@ -204,6 +200,14 @@
       <bpmn:incoming>Flow_0jq10on</bpmn:incoming>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_1da1wwr" errorRef="Error_1xfupdi" />
     </bpmn:endEvent>
+    <bpmn:startEvent id="StartStartEvent" name="start">
+      <bpmn:extensionElements>
+        <zeebe:executionListeners>
+          <zeebe:executionListener eventType="end" retries="0" type="democompany-cards-orderCreditcardV1" />
+        </zeebe:executionListeners>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_1gt1qt5</bpmn:outgoing>
+    </bpmn:startEvent>
   </bpmn:process>
   <bpmn:message id="Message_0g4f55o" name="democompany-cards-orderCreditcardV1.ReceiveEmail">
     <bpmn:extensionElements>
@@ -212,6 +216,7 @@
   </bpmn:message>
   <bpmn:signal id="Signal_14pqrim" name="=&#34;democompany-cards-orderCreditcardV1-&#34; + string(processInstanceKey) + &#34;.CancelOrderSignal&#34;" />
   <bpmn:error id="Error_1xfupdi" name="client-not-found" errorCode="client-not-found" />
+  <bpmn:message id="Message_2urmknp" name="democompany-cards-orderCreditcardV1" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0bb63t1">
       <bpmndi:BPMNShape id="Participant_1byvi7a_di" bpmnElement="DemocompanycardsorderCreditcardV1Participant" isHorizontal="true">
@@ -228,12 +233,6 @@
         <dc:Bounds x="315" y="285" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="317" y="263" width="45" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartStartEvent">
-        <dc:Bounds x="242" y="292" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="249" y="268" width="22" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1vd0ndw_di" bpmnElement="GetClientsClientIdTask">
@@ -322,16 +321,22 @@
           <dc:Bounds x="1687" y="155" width="27" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0xgluhz_di" bpmnElement="CancelOrderBoundaryEvent">
-        <dc:Bounds x="702" y="252" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_0qeraka_di" bpmnElement="StartStartEvent">
+        <dc:Bounds x="242" y="292" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="648" y="235" width="64" height="14" />
+          <dc:Bounds x="249" y="268" width="22" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_14eo5mt_di" bpmnElement="Event_1uynf19">
         <dc:Bounds x="502" y="252" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="434" y="235" width="71" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0xgluhz_di" bpmnElement="CancelOrderBoundaryEvent">
+        <dc:Bounds x="702" y="252" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="648" y="235" width="64" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1guvmo2_di" bpmnElement="YesSequenceFlow">
@@ -453,12 +458,20 @@
         <di:waypoint x="520" y="130" />
         <di:waypoint x="1682" y="130" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_14g7ur9_di" bpmnElement="Association_14g7ur9">
+        <di:waypoint x="264" y="293" />
+        <di:waypoint x="280" y="226" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_1w58ouq_di" bpmnElement="TextAnnotation_1w58ouq">
+        <dc:Bounds x="1480" y="80" width="180" height="40" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_0e99bxl_di" bpmnElement="Association_0e99bxl">
         <di:waypoint x="1684" y="121" />
         <di:waypoint x="1660" y="108" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="TextAnnotation_1w58ouq_di" bpmnElement="TextAnnotation_1w58ouq">
-        <dc:Bounds x="1480" y="80" width="180" height="40" />
+      <bpmndi:BPMNShape id="TextAnnotation_0bnjn8r_di" bpmnElement="TextAnnotation_0bnjn8r" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="240" y="170" width="172" height="56" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
