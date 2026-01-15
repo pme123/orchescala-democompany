@@ -2,8 +2,8 @@ openapi: 3.1.0
 info:
   title: Card Management
   version: 0.1.0-SNAPSHOT
-  summary: "\n\nProcesses and Workers related to Card Management.\n\nCreated at 09.12.2025,\
-    \ 08:59\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+  summary: "\n\nProcesses and Workers related to Card Management.\n\nCreated at 13.01.2026,\
+    \ 13:56\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/).\n\n\
     Only thing you need to adjust is in the Collection.\n- **Authorization**: `Bearer\
@@ -51,10 +51,10 @@ info:
     \ is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this\
     \ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
     \n\n</p>\n</details>\n\n\n<p/>\n<details>\n<summary>\n<b><i>General Variables</i></b>\n\
-    </summary>\n\n<p>\n\n### Mocking\n\n**servicesMocked**:\n\nMock all the _ServiceWorkers_\
+    </summary>\n\n<p>\n\n### Mocking\n\n**_servicesMocked**:\n\nMock all the _ServiceWorkers_\
     \ in your process with their default Mock:\n\n- DSL:\n```scala\nprocess(..)\n\
-    \  .mockServices\n```\n\n- Json\n```json\n...\n\"servicesMocked\": true,\n...\n\
-    ```\n\n\n**mockedWorkers**:\n\nMock any Process- and/or ExternalTask-Worker with\
+    \  .mockServices\n```\n\n- Json\n```json\n...\n\"_servicesMocked\": true,\n...\n\
+    ```\n\n\n**_mockedWorkers**:\n\nMock any Process- and/or ExternalTask-Worker with\
     \ their default Mocks.\nThis is a list of the _Worker topicNames or Process processNames_,\
     \ you want to mock.\nIt is also possible to use a _comma separated_ String,\n\
     like `\"mySubProcess,myOtherSubProcess,myService\"`\n\n_Be aware_: For Sub-Processes,\
@@ -62,48 +62,48 @@ info:
     \n\n- DSL:\n```scala\nprocess(..)\n  .mockedWorkers(\"mySubProcess1\", \"mySubProcess2\"\
     ) // creates a list with SubProcessess\n  .mockedWorker(\"myOtherSubProcess\"\
     ) // adds a SubProcess\n```\n\n- Json\n```json\n...\n\"mockedWorkers\": [\"mySubProcess\"\
-    , \"myOtherSubProcess, myService\"],\n...\n```\n\n\n**outputMock**:\n\nMock the\
+    , \"myOtherSubProcess, myService\"],\n...\n```\n\n\n**_outputMock**:\n\nMock the\
     \ Process or ExternalTask (`Out`)\n - You find an example in every _Process_ and\
     \ _ExternalTask_.\n\n\n- DSL:\n```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n\
     \  .mockWith(outputMock)\n```\n\n- Json\n```json\n...\n\"outputMock\": {..},\n\
-    ...\n```\n\n\n**outputServiceMock**:\n\nMock the Inner-Service (`MockedServiceResponse[ServiceOut]`)\n\
+    ...\n```\n\n\n**_outputServiceMock**:\n\nMock the Inner-Service (`MockedServiceResponse[ServiceOut]`)\n\
     \ - You find an example in every _ServiceTask_.\n\n\n- DSL:\n```scala\nserviceTask(..)\n\
     \  .mockServiceWith(MockedServiceResponse\n     .success200(inOut.defaultServiceOutMock))\n\
     ```\n\n- Json\n```json\n...\n\"outputServiceMock\": {\n  \"respStatus\" : 200,\n\
     \  \"respBody\" : \"Example String Body\",\n  \"respHeaders\" : [\n  ]\n},\n...\n\
-    ```\n\n### Mapping\n**outputVariables**:\n\nYou can filter the Output with a list\
-    \ of variable names you are interested in.\nThis list may include all variables\
+    ```\n\n### Mapping\n**_outputVariables**:\n\nYou can filter the Output with a\
+    \ list of variable names you are interested in.\nThis list may include all variables\
     \ from the output (`Out`). We included an example for each Process or ExternalTask.\n\
     It is also possible to use a _comma separated_ String,\nlike `\"name,firstName\"\
     `\n\n\n- DSL:\n```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n  .withOutputVariables(\"\
     name\", \"firstName\") // creates a list with outputVariables\n  .withOutputVariable(\"\
     nickname\") // adds a outputVariable\n```\n\n- Json\n```json\n...\n\"outputVariables\"\
-    : [\"name\", \"firstName\"],\n...\n```\n\n\n**manualOutMapping**:\n\nBy default\
+    : [\"name\", \"firstName\"],\n...\n```\n\n\n**_manualOutMapping**:\n\nBy default\
     \ all output Variables (`Out`) are on the Process for _External Tasks_.\nIf the\
-    \ filter _outputVariables_ is not enough,\nyou can set this variable - every output\
-    \ variable is then local.\n\n_Be aware_ that you must then manually have _output\
-    \ mappings_ for each output variable!\n\n\n- DSL:\n```scala\nserviceTask(..) //\
-    \ or customTask(..)\n  .manualOutMapping\n```\n\n- Json\n```json\n...\n\"manualOutMapping\"\
-    : true,\n...\n```\n\n### Mocking\n**handledErrors**:\n\nA list of error codes\
+    \ filter __outputVariables_ is not enough,\nyou can set this variable - every\
+    \ output variable is then local.\n\n_Be aware_ that you must then manually have\
+    \ _output mappings_ for each output variable!\n\n\n- DSL:\n```scala\nserviceTask(..)\
+    \ // or customTask(..)\n  .manualOutMapping\n```\n\n- Json\n```json\n...\n\"manualOutMapping\"\
+    : true,\n...\n```\n\n### Mocking\n**_handledErrors**:\n\nA list of error codes\
     \ that are handled (`BpmnError`)\nIt is also possible to use a _comma separated_\
     \ String,\nlike `\"validation-failed,404\"`\n\nAt the moment only _ServiceTasks_\
     \ supported.\n\n\n- DSL:\n```scala\nserviceTask(..)\n  .handleErrors(ErrorCodes.`validation-failed`,\
     \ \"404\") // create a list of handledErrors\n  .handleError(\"404\") // add a\
     \ handledError\n```\n\n- Json\n```json\n...\n\"handledErrors\": [\"validation-failed\"\
-    , \"404\"],\n...\n```\n\n\n**regexHandledErrors**:\n\nYou can further filter Handled\
-    \ Errors with a list of Regex expressions that the body error message must match.\n\
-    It is also possible to use a _comma separated_ String,\nlike `\"SQL exception,\"\
-    errorNr\":\"20000\"\"`\n\nAt the moment only _ServiceTasks_ supported.\n\n\n-\
-    \ DSL:\n```scala\nserviceTask(..)\n  .handleErrorWithRegex(\"SQL exception\")\n\
-    \  .handleErrorWithRegex(\"\\\"errorNr\\\":\\\"20000\\\"\")\n```\n\n- Json\n```json\n\
-    ...\n\"regexHandledErrors\": [\"SQL exception\", \"\"errorNr\":\"20000\"\"],\n\
-    ...\n```\n\n### Authorization\n**impersonateUserId**:\n\nUser-ID of a User that\
-    \ should be taken to authenticate to the services.\nThis must be supported by\
-    \ your implementation. *Be caution: this may be a security issue!*.\nIt is helpful\
-    \ if you have Tokens that expire, but long running Processes.\n\n- DSL:\n```scala\n\
-    process(..) // or serviceTask(..)/customTask(..)\n  .withImpersonateUserId(impersonateUserId)\n\
+    , \"404\"],\n...\n```\n\n\n**_regexHandledErrors**:\n\nYou can further filter\
+    \ Handled Errors with a list of Regex expressions that the body error message\
+    \ must match.\nIt is also possible to use a _comma separated_ String,\nlike `\"\
+    SQL exception,\"errorNr\":\"20000\"\"`\n\nAt the moment only _ServiceTasks_ supported.\n\
+    \n\n- DSL:\n```scala\nserviceTask(..)\n  .handleErrorWithRegex(\"SQL exception\"\
+    )\n  .handleErrorWithRegex(\"\\\"errorNr\\\":\\\"20000\\\"\")\n```\n\n- Json\n\
+    ```json\n...\n\"regexHandledErrors\": [\"SQL exception\", \"\"errorNr\":\"20000\"\
+    \"],\n...\n```\n\n### Authorization\n**impersonateUserId**:\n\nUser-ID of a User\
+    \ that should be taken to authenticate to the services.\nThis must be supported\
+    \ by your implementation. *Be caution: this may be a security issue!*.\nIt is\
+    \ helpful if you have Tokens that expire, but long running Processes.\n\n- DSL:\n\
+    ```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n  .withImpersonateUserId(impersonateUserId)\n\
     ```\n\n- Json\n```json\n...\n\"impersonateUserId\": \"myUserName\",\n...\n```\n\
-    \n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api v0.3.0-SNAPSHOT](https://github.com/pme123/orchescala)\n\
+    \n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api v0.4.0-SNAPSHOT](https://github.com/pme123/orchescala)\n\
     > - democompany-orchescala-api 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\
     \n"
 paths:
@@ -117,11 +117,11 @@ paths:
         \n\n\n---\n\n\n\n\n- Input:  `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
         \ > In`\n- Output: `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"cards-orderCreditcardV1-33288\">\n    <img onLoad=\"openFromUrl('cards-orderCreditcardV1.bpmn',\
-        \ new BpmnJS({ container: $('#cards-orderCreditcardV1-33288'), height: '95%',\
+        \ id=\"cards-orderCreditcardV1-80903\">\n    <img onLoad=\"openFromUrl('cards-orderCreditcardV1.bpmn',\
+        \ new BpmnJS({ container: $('#cards-orderCreditcardV1-80903'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [cards-orderCreditcardV1.bpmn](diagrams/cards-orderCreditcardV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('cards-orderCreditcardV1-33288')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('cards-orderCreditcardV1-80903')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -200,11 +200,11 @@ paths:
         \n\n\n---\n\n\n\n\n- Input:  `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
         \ > In`\n- Output: `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"cards-orderCreditcardV1-34632\">\n    <img onLoad=\"openFromUrl('cards-orderCreditcardV1.bpmn',\
-        \ new BpmnJS({ container: $('#cards-orderCreditcardV1-34632'), height: '95%',\
+        \ id=\"cards-orderCreditcardV1-75936\">\n    <img onLoad=\"openFromUrl('cards-orderCreditcardV1.bpmn',\
+        \ new BpmnJS({ container: $('#cards-orderCreditcardV1-75936'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [cards-orderCreditcardV1.bpmn](diagrams/cards-orderCreditcardV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('cards-orderCreditcardV1-34632')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('cards-orderCreditcardV1-75936')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -232,7 +232,7 @@ paths:
       - name: variableFilter
         in: query
         description: A comma-separated String of variable names. E.g. `name,firstName`
-        required: true
+        required: false
         schema:
           type: string
         example: processStatus,creditCardAccount,initCreditCardAccount,simpleValue
@@ -361,7 +361,7 @@ paths:
       - name: variableFilter
         in: query
         description: A comma-separated String of variable names. E.g. `name,firstName`
-        required: true
+        required: false
         schema:
           type: string
         example: client,creditCardAccount,mainCardHolder
@@ -369,7 +369,7 @@ paths:
         in: query
         description: The maximum number of seconds to wait for the user task to become
           active. If not provided, it will wait 10 seconds.
-        required: true
+        required: false
         schema:
           type: integer
           format: int32
@@ -454,10 +454,11 @@ paths:
       parameters:
       - name: userTaskInstanceId
         in: path
+        description: User task instance ID (obtained from getUserTaskVariables)
         required: true
         schema:
-          default: '{{userTaskInstanceId}}'
           type: string
+        example: '{{userTaskInstanceId}}'
       requestBody:
         content:
           application/json:
@@ -522,7 +523,7 @@ paths:
       - name: variableFilter
         in: query
         description: A comma-separated String of variable names. E.g. `name,firstName`
-        required: true
+        required: false
         schema:
           type: string
         example: client,creditCardAccount,mainCardHolder
@@ -530,7 +531,7 @@ paths:
         in: query
         description: The maximum number of seconds to wait for the user task to become
           active. If not provided, it will wait 10 seconds.
-        required: true
+        required: false
         schema:
           type: integer
           format: int32
@@ -615,10 +616,11 @@ paths:
       parameters:
       - name: userTaskInstanceId
         in: path
+        description: User task instance ID (obtained from getUserTaskVariables)
         required: true
         schema:
-          default: '{{userTaskInstanceId}}'
           type: string
+        example: '{{userTaskInstanceId}}'
       requestBody:
         content:
           application/json:
@@ -697,6 +699,140 @@ paths:
                 democompany-cards-orderCreditcardV1-EvalResponse:
                   value:
                     orderCorrect: true
+  /message/democompany-cards-orderCreditcardV1.ReceiveEmail:
+    post:
+      tags:
+      - Order Creditcard V1
+      summary: 'Message: ReceiveEmail'
+      description: |2-
+
+        Mail Service calls us after response is received.
+
+        - _messageName_: `democompany-cards-orderCreditcardV1.ReceiveEmail`
+
+        ---
+
+
+
+
+        - Input:  `democompany.cards.domain.orderCreditcard.v1.ReceiveEmailME > In`
+        - Output: `orchescala.domain.NoOutput`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+        Send a Message to the Process.
+        Process is waiting at a Message Event, or has the possibility to interact with a Message,
+        e.g. in a Boundary Event.
+
+        </p>
+        </details>
+      operationId: 'Message: ReceiveEmail'
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: timeToLiveInSec
+        in: query
+        description: 'The time in seconds the message is buffered, waiting for correlation.
+          The default value is 0 seconds (no buffering). Only supported in C8 - BE
+          AWARE that if set, it is fire and forget: Camunda will just try to correlate
+          for the configured time.'
+        required: false
+        schema:
+          type: integer
+          format: int32
+        example: 10
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      - name: processInstanceId
+        in: query
+        description: Process instance ID to correlate the message to a specific process
+          instance.
+        required: false
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/In4'
+            examples:
+              democompany-cards-orderCreditcardV1.ReceiveEmail:
+                value:
+                  sender: peter.pan@demoland.com
+                  receiver: customerservice@democompany.ch
+                  subject: 'RE: Missing Information for ordering creditcard.'
+                  body: |
+                    Hello
+
+                    Here the missing information:
+                     Birthday: 01.01.1990
+                     Gender: Male
+        required: true
+      responses:
+        '200':
+          description: ''
+  /signal/{orderCreditcardV1-processInstanceId_CancelOrderSignal}:
+    post:
+      tags:
+      - Order Creditcard V1
+      summary: 'Signal: {processInstanceId}.CancelOrderSignal'
+      description: |2-
+
+        Signal to cancel the order.
+
+        - _messageName_: `democompany-cards-orderCreditcardV1-{processInstanceId}.CancelOrderSignal`
+
+        ---
+
+
+
+
+        - Input:  `orchescala.domain.NoInput`
+        - Output: `orchescala.domain.NoOutput`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+        Send a Signal to the Process.
+        Process is waiting at a Signal Event, or has the possibility to interact with a Signal,
+        e.g. in a Boundary Event.
+        </p>
+        </details>
+      operationId: 'Signal: {processInstanceId}.CancelOrderSignal'
+      parameters:
+      - name: orderCreditcardV1-processInstanceId_CancelOrderSignal
+        in: path
+        required: true
+        schema:
+          type: string
+        example: democompany-cards-orderCreditcardV1-{{processInstanceId}}.CancelOrderSignal
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      responses:
+        '200':
+          description: ''
 components:
   schemas:
     Address:
@@ -904,6 +1040,23 @@ components:
       - $ref: '#/components/schemas/Email'
       - $ref: '#/components/schemas/None'
       - $ref: '#/components/schemas/Telephone'
+    In4:
+      title: In
+      type: object
+      required:
+      - sender
+      - receiver
+      - subject
+      - body
+      properties:
+        sender:
+          type: string
+        receiver:
+          type: string
+        subject:
+          type: string
+        body:
+          type: string
     InConfig:
       title: InConfig
       description: |-

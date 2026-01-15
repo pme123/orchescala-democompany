@@ -98,35 +98,35 @@
       "type" : "Hidden"
     },
     {
-      "value" : "servicesMocked",
+      "value" : "_servicesMocked",
       "binding" : {
         "type" : "camunda:in",
-        "target" : "servicesMocked",
+        "target" : "_servicesMocked",
         "expression" : false
       },
-      "label" : "servicesMocked",
+      "label" : "_servicesMocked",
       "description" : "",
       "type" : "Hidden"
     },
     {
-      "value" : "mockedWorkers",
+      "value" : "_mockedWorkers",
       "binding" : {
         "type" : "camunda:in",
-        "target" : "mockedWorkers",
+        "target" : "_mockedWorkers",
         "expression" : false
       },
-      "label" : "mockedWorkers",
+      "label" : "_mockedWorkers",
       "description" : "",
       "type" : "Hidden"
     },
     {
-      "value" : "outputMock",
+      "value" : "_outputMock",
       "binding" : {
         "type" : "camunda:in",
-        "target" : "outputMock",
+        "target" : "_outputMock",
         "expression" : false
       },
-      "label" : "outputMock",
+      "label" : "_outputMock",
       "description" : "",
       "type" : "Hidden"
     },
@@ -142,13 +142,13 @@
       "type" : "Hidden"
     },
     {
-      "value" : "identityCorrelation",
+      "value" : "_identityCorrelation",
       "binding" : {
         "type" : "camunda:in",
-        "target" : "identityCorrelation",
+        "target" : "_identityCorrelation",
         "expression" : false
       },
-      "label" : "identityCorrelation",
+      "label" : "_identityCorrelation",
       "description" : "",
       "type" : "Hidden"
     },

@@ -74,9 +74,9 @@
       "value" : "#{true}",
       "binding" : {
         "type" : "camunda:inputParameter",
-        "name" : "manualOutMapping"
+        "name" : "_manualOutMapping"
       },
-      "label" : "manualOutMapping",
+      "label" : "_manualOutMapping",
       "description" : "",
       "type" : "Hidden"
     },
@@ -84,19 +84,19 @@
       "value" : "orderCorrect",
       "binding" : {
         "type" : "camunda:inputParameter",
-        "name" : "outputVariables"
+        "name" : "_outputVariables"
       },
-      "label" : "outputVariables",
+      "label" : "_outputVariables",
       "description" : "",
       "type" : "Hidden"
     },
     {
-      "value" : "#{execution.getVariable('outputMock')}",
+      "value" : "#{execution.getVariable('_outputMock')}",
       "binding" : {
         "type" : "camunda:inputParameter",
-        "name" : "outputMock"
+        "name" : "_outputMock"
       },
-      "label" : "outputMock",
+      "label" : "_outputMock",
       "description" : "",
       "type" : "Hidden"
     },
@@ -104,9 +104,9 @@
       "value" : "handledError1, handledError2",
       "binding" : {
         "type" : "camunda:inputParameter",
-        "name" : "handledErrors"
+        "name" : "_handledErrors"
       },
-      "label" : "handledErrors",
+      "label" : "_handledErrors",
       "description" : "",
       "type" : "Hidden"
     },
@@ -114,9 +114,9 @@
       "value" : "errorRegex1, errorRegex2",
       "binding" : {
         "type" : "camunda:inputParameter",
-        "name" : "regexHandledErrors"
+        "name" : "_regexHandledErrors"
       },
-      "label" : "regexHandledErrors",
+      "label" : "_regexHandledErrors",
       "description" : "",
       "type" : "Hidden"
     },

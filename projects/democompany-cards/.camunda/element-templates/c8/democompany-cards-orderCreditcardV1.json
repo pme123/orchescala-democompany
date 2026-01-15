@@ -82,32 +82,32 @@
         "type" : "Hidden"
       },
       {
-        "value" : "servicesMocked",
+        "value" : "_servicesMocked",
         "binding" : {
           "type" : "zeebe:input",
-          "name" : "servicesMocked"
+          "name" : "_servicesMocked"
         },
-        "label" : "servicesMocked",
+        "label" : "_servicesMocked",
         "description" : "",
         "type" : "Hidden"
       },
       {
-        "value" : "mockedWorkers",
+        "value" : "_mockedWorkers",
         "binding" : {
           "type" : "zeebe:input",
-          "name" : "mockedWorkers"
+          "name" : "_mockedWorkers"
         },
-        "label" : "mockedWorkers",
+        "label" : "_mockedWorkers",
         "description" : "",
         "type" : "Hidden"
       },
       {
-        "value" : "outputMock",
+        "value" : "_outputMock",
         "binding" : {
           "type" : "zeebe:input",
-          "name" : "outputMock"
+          "name" : "_outputMock"
         },
-        "label" : "outputMock",
+        "label" : "_outputMock",
         "description" : "",
         "type" : "Hidden"
       },
@@ -122,12 +122,12 @@
         "type" : "Hidden"
       },
       {
-        "value" : "identityCorrelation",
+        "value" : "_identityCorrelation",
         "binding" : {
           "type" : "zeebe:input",
-          "name" : "identityCorrelation"
+          "name" : "_identityCorrelation"
         },
-        "label" : "identityCorrelation",
+        "label" : "_identityCorrelation",
         "description" : "",
         "type" : "Hidden"
       },
