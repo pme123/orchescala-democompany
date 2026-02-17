@@ -8,6 +8,6 @@ object WorkerTestApp extends CompanyWorkerApp:
   )
   dependencies(
     WorkerApp,
-  //  democompany.services.worker.WorkerApp
+    democompany.services.worker.WorkerApp
   )
 end WorkerTestApp

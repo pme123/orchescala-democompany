@@ -42,7 +42,7 @@ lazy val api = project
   .settings(publicationSettings)
   .settings(unitTestSettings)
   .settings(libraryDependencies ++= apiDeps)
-  .dependsOn(domain)
+  .dependsOn(engine)
 
 lazy val dmn = project
   .in(file("./03-dmn"))

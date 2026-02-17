@@ -14,11 +14,12 @@ import scala.jdk.CollectionConverters.asScalaBufferConverter
 
 object Settings {
 
-  val scalaV = "3.7.1"
-  val orchescalaV = "0.4.0-SNAPSHOT"
-  val camundaV = "7.23.0"
+  val scalaV       = "3.8.1"
+  val orchescalaV  = "0.5.0-SNAPSHOT"
+  val bpfV         = "8.35.5"
+  val camundaV     = "7.24-1-ee" // only needed to override Version of BPF or as info
   val mUnitVersion = "1.1.0"
-  val zioVersion = "2.1.17"
+  val zioVersion = "2.1.24"
   // project
   val projectOrg = ProjectDef.org
   val projectV = ProjectDef.version
