@@ -9,4 +9,7 @@ lazy val userPrefix = s"SSO_$ssoRealm--"
 
 val impersonateDiscriminator = ":::"
 
-lazy val companyWorkerConfig = DefaultWorkerConfig(engineConfig = companyEngineConfig)
+lazy val companyWorkerConfig = DefaultWorkerConfig(
+  engineConfig = companyEngineConfig,
+  identityVerification = false //TODO remove after change to gateway
+)

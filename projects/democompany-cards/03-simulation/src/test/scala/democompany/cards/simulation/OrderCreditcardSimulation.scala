@@ -10,7 +10,7 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
   protected def engineType: EngineType
 
   simulate(
-    scenario(`OrderCreditcard`)(
+    only.scenario(`OrderCreditcard`)(
       `Check Order approved UT`
     ),
     scenario(`OrderCreditcard by message`.startWithMsg)( // only works with C7!
@@ -49,11 +49,6 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
     else
       scenario(`OrderCreditcard handled error`)
   )
-
-  override def config =
-    super.config
-      .withMaxCount(15)
-    // .withLogLevel(LogLevel.DEBUG)
 
   private lazy val `OrderCreditcard` =
     example

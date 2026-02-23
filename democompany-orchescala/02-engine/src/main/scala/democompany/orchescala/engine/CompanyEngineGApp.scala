@@ -10,7 +10,7 @@ trait CompanyEngineGApp extends EngineApp:
 
   // Override this to provide the ZIO layers required by this simulation
   lazy val requiredLayers: Seq[ZLayer[Any, Nothing, Any]]  = Seq(
-    SharedC7ClientManager.layer
+    SharedC7ClientManager.layer()
   )
   // Override engineZIO to create the engine within the SharedC8ClientManager environment
   override def engineZIO: ZIO[Any, Nothing, ProcessEngine] =

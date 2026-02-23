@@ -2,6 +2,7 @@ package democompany.orchescala.engine
 
 import democompany.orchescala.engine.CompanyEngineC7Config.*
 import orchescala.engine.c7.{C7OAuth2Client, C7ProcessEngine, SharedC7ClientManager}
+import orchescala.engine.domain.EngineType
 import zio.{ZIO, ZLayer}
 
 object CompanyEngineC7App extends EngineApp:
@@ -10,5 +11,5 @@ object CompanyEngineC7App extends EngineApp:
 
   override lazy val engineZIO: ZIO[Any, Nothing, ProcessEngine] =
     C7ProcessEngine.withClient(client)(using companyEngineConfig)
-      .provideLayer(SharedC7ClientManager.layer)
+      .provideLayer(SharedC7ClientManager.layer(EngineType.C7))
 end CompanyEngineC7App

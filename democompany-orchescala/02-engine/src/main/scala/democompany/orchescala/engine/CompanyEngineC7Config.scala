@@ -1,5 +1,6 @@
 package democompany.orchescala.engine
 
+import orchescala.engine.c7.C7ProcessEngine
 import orchescala.engine.rest.OAuthConfig
 
 object CompanyEngineC7Config:
@@ -10,9 +11,9 @@ object CompanyEngineC7Config:
   }
 
   lazy val camundaRestUrl =
-    sys.env.getOrElse("CAMUNDA_BASE_URL", "http://localhost:8080/engine-rest")
+    sys.env.getOrElse("CAMUNDA_BASE_URL", C7ProcessEngine.restUrl)
 
-  lazy val camundaCockpitUrl = sys.env.getOrElse("CAMUNDA_COCKPIT_URL", ProcessEngine.c7CockpitUrl)
+  lazy val camundaCockpitUrl = sys.env.getOrElse("CAMUNDA_COCKPIT_URL", C7ProcessEngine.cockpitUrl)
   
   lazy val adminPasswordGrant     =
     OAuthConfig.PasswordGrant(
