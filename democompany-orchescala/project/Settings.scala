@@ -106,6 +106,7 @@ object Settings {
     "io.github.pme123" %% "orchescala-domain" % orchescalaV
   )
   lazy val engineDeps = Seq(
+    "io.github.pme123" %% "orchescala-engine" % orchescalaV,
     "io.github.pme123" %% "orchescala-engine-gateway" % orchescalaV
   )
   lazy val apiDeps = Seq(
