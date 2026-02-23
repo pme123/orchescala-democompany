@@ -13,9 +13,9 @@ object CompanyEngineOperatonConfig:
   }
 
   lazy val operatonRestUrl =
-    sys.env.getOrElse("OPERATON_BASE_URL", "http://localhost:8080/engine-rest")
+    sys.env.getOrElse("OPERATON_BASE_URL", "http://localhost:9999/engine-rest")
 
-  lazy val operatonCockpitUrl = sys.env.getOrElse("OPERATON_COCKPIT_URL", "http://localhost:8080/camunda")
+  lazy val operatonCockpitUrl = sys.env.getOrElse("OPERATON_COCKPIT_URL", "http://localhost:9999/camunda")
   
   lazy val adminPasswordGrant     =
     OAuthConfig.PasswordGrant(

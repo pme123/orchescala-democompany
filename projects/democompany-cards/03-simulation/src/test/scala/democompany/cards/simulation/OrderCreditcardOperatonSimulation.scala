@@ -8,5 +8,5 @@ import orchescala.engine.domain.EngineType
 // simulation/test
 // simulation/testOnly *OrderCreditcardOperatonSimulation
 class OrderCreditcardOperatonSimulation extends OrderCreditcardSimulation, CompanyOperatonSimulation:
-  def engineType: EngineType = EngineType.Op
+  def engineType: EngineType = EngineType.C7 // Operaton uses C7-compatible API
 

@@ -20,5 +20,7 @@ object ApiProjectCreator extends CompanyApiCreator:
       CheckOrderTask.example,
       CallClientTask.example,
       EvalResponse.example,
+      ReceiveEmailME.example,
+      CancelOrderSignal.example
     )
 end ApiProjectCreator
