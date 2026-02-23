@@ -1,13 +1,12 @@
 package democompany.orchescala.simulation
 
-import democompany.orchescala.engine.{CompanyEngineOperatonApp, CompanyEngineOperatonConfig, companyEngineConfig}
-import orchescala.engine.EngineApp
+import democompany.orchescala.engine.{CompanyEngineGApp, CompanyEngineOperatonApp, CompanyEngineOperatonConfig, companyEngineConfig}
 
 /** Company-specific Operaton Simulation trait
   *
   * Operaton is compatible with Camunda 7 API, so this follows a similar pattern to CompanyC7Simulation.
   */
-trait CompanyOperatonSimulation extends CompanySimulation, EngineApp:
+trait CompanyOperatonSimulation extends CompanySimulation, CompanyEngineGApp:
 
   override def engineZIO = CompanyEngineOperatonApp.engineZIO
 
