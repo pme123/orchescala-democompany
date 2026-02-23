@@ -2,6 +2,7 @@ package democompany.orchescala
 package api
 
 import democompany.orchescala.api.CompanyApiCreator.projectsConfig
+import _root_.democompany.orchescala.engine.companyEngineConfig
 
 /**
  * Add here company specific stuff, to create the Api documentation and the Postman collection.
@@ -17,7 +18,10 @@ trait CompanyApiCreator extends ApiCreator, ApiDsl, CamundaPostmanApiCreator:
   lazy val companyProjectVersion = BuildInfo.version
 
 object CompanyApiCreator:
-  lazy val apiConfig = ApiConfig(companyName = "democompany")
+  lazy val apiConfig = ApiConfig(
+    engineConfig = companyEngineConfig,
+    companyName = "democompany"
+  )
 
   lazy val projectsConfig = ProjectsConfig(
     perGitRepoConfigs = Seq(
