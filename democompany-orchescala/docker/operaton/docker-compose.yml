@@ -1,0 +1,26 @@
+services:
+  operaton-db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: operaton
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: operaton
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U operaton"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  operaton:
+    image: operaton/operaton:latest
+    ports:
+      - "9999:8080"
+    environment:
+      # Datenbank-Konfiguration
+      SPRING_DATASOURCE_URL: jdbc:postgresql://operaton-db:5432/operaton
+      SPRING_DATASOURCE_USERNAME: operaton
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+    depends_on:
+      operaton-db:
+        condition: service_healthy
