@@ -14,8 +14,8 @@ import scala.jdk.CollectionConverters.asScalaBufferConverter
 
 object Settings {
 
-  val scalaV = "3.7.1"
-  val orchescalaV = "0.4.0-SNAPSHOT"
+  val scalaV = "3.8.1"
+  val orchescalaV = "0.5.0-SNAPSHOT"
   val camundaV = "7.23.0"
   val mUnitVersion = "1.1.0"
   val zioVersion = "2.1.17"
@@ -96,7 +96,7 @@ object Settings {
                           |- Project: $projectOrg : $projectName : $projectV
                           |- Orchescala: $orchescalaV
                           |- Scala: $scalaV
-                          |- Camunda: $camundaV
+                          |- Camunda: $camundaV (C7, C8, Operaton)
                           |""".stripMargin
 
   // dependencies
@@ -121,6 +121,7 @@ object Settings {
   lazy val workerDeps = Seq(
     "io.github.pme123" %% "orchescala-worker-c7" % orchescalaV,
     "io.github.pme123" %% "orchescala-worker-c8" % orchescalaV,
+    "io.github.pme123" %% "orchescala-worker-op" % orchescalaV,
   )
 
   lazy val helperDeps = apiDeps ++ Seq(
