@@ -2,5 +2,5 @@
 addDependencyTreePlugin // sbt dependencyBrowseTreeHTML -> target/tree.html
 
 // docker image
-addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.10.0")
+addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.11.4")
 

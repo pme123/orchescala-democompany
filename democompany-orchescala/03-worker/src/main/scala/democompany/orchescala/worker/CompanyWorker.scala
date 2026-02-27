@@ -2,7 +2,7 @@ package democompany.orchescala.worker
 
 import orchescala.worker.c7.{C7Context, C7Worker}
 import orchescala.worker.c8.{C8Context, C8Worker}
-import orchescala.worker.operaton.{OperatonContext, OperatonWorker}
+import orchescala.worker.op.{OperatonContext, OperatonWorker}
 import democompany.orchescala.worker.*
 
 import scala.reflect.ClassTag

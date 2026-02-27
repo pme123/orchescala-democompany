@@ -2,7 +2,7 @@ package democompany.orchescala.worker
 
 import democompany.orchescala.engine.companyEngineConfig
 import orchescala.engine.EngineConfig
-import orchescala.worker.operaton.OperatonContext
+import orchescala.worker.op.OperatonContext
 import scala.reflect.ClassTag
 
 class CompanyEngineOpContext(restApiClient: CompanyRestApiOpClient) extends OperatonContext:

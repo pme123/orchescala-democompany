@@ -119,6 +119,7 @@ abstract class OrderCreditcardSimulation extends CompanySimulation:
       )
   private lazy val `OrderCreditcard NOT handled error` =
     example
+      .mockServices
       .withIn(
         In.example.copy(inConfig =
           Some(InConfig(

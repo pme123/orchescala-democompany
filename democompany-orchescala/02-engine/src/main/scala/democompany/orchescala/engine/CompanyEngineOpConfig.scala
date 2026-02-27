@@ -5,7 +5,7 @@ import orchescala.engine.rest.OAuthConfig
 /** Configuration for Operaton BPM engine.
   * Operaton is compatible with Camunda 7 API.
   */
-object CompanyEngineOperatonConfig:
+object CompanyEngineOpConfig:
 
   lazy val ssoBaseUrl = {
     (sys.env.getOrElse("SSO_BASE_URL", s"http://host.lima.internal:8090") + "/auth")
@@ -47,5 +47,5 @@ object CompanyEngineOperatonConfig:
   private[engine] lazy val ssoTechuserPassword = sys.env.getOrElse("SSO_TECHUSER_PASSWORD", "admin")
 
 
-end CompanyEngineOperatonConfig
+end CompanyEngineOpConfig
 

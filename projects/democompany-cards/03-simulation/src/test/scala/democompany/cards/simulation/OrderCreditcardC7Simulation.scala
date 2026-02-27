@@ -7,5 +7,4 @@ import orchescala.engine.domain.EngineType
 // ./helper.scala deploy OrderCreditcardC7Simulation
 // simulation/test
 // simulation/testOnly *OrderCreditcardC7Simulation
-class OrderCreditcardC7Simulation extends OrderCreditcardSimulation, CompanyC7Simulation:
-  def engineType: EngineType = EngineType.C7
+class OrderCreditcardC7Simulation extends OrderCreditcardSimulation, CompanyC7Simulation
