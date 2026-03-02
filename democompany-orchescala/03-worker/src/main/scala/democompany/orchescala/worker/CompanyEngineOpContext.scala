@@ -2,10 +2,10 @@ package democompany.orchescala.worker
 
 import democompany.orchescala.engine.companyEngineConfig
 import orchescala.engine.EngineConfig
-import orchescala.worker.op.OperatonContext
+import orchescala.worker.op.OpContext
 import scala.reflect.ClassTag
 
-class CompanyEngineOpContext(restApiClient: CompanyRestApiOpClient) extends OperatonContext:
+class CompanyEngineOpContext(restApiClient: CompanyRestApiOpClient) extends OpContext:
 
 
   override def sendRequest[ServiceIn: Encoder, ServiceOut: {Decoder, ClassTag}](

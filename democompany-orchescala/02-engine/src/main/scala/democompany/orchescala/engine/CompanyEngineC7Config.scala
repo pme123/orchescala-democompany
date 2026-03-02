@@ -2,7 +2,7 @@ package democompany.orchescala.engine
 
 import orchescala.engine.rest.OAuthConfig
 
-object CompanyEngineC7Config:
+trait CompanyEngineC7Config:
 
   lazy val ssoBaseUrl = {
     (sys.env.getOrElse("SSO_BASE_URL", s"http://host.lima.internal:8090") + "/auth")
@@ -45,3 +45,5 @@ object CompanyEngineC7Config:
 
 
 end CompanyEngineC7Config
+
+object CompanyEngineC7Config extends CompanyEngineC7Config

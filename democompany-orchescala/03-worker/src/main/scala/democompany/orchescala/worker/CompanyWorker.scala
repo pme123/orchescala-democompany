@@ -2,7 +2,7 @@ package democompany.orchescala.worker
 
 import orchescala.worker.c7.{C7Context, C7Worker}
 import orchescala.worker.c8.{C8Context, C8Worker}
-import orchescala.worker.op.{OperatonContext, OperatonWorker}
+import orchescala.worker.op.{OpContext, OpWorker}
 import democompany.orchescala.worker.*
 
 import scala.reflect.ClassTag
@@ -12,11 +12,11 @@ import scala.reflect.ClassTag
  * You also define the implementation of the Worker here.
  */
 trait CompanyWorker[In <: Product : InOutCodec, Out <: Product : InOutCodec]
-  extends C7Worker[In, Out], C8Worker[In, Out], OperatonWorker[In, Out]:
+  extends C7Worker[In, Out], C8Worker[In, Out], OpWorker[In, Out]:
   override lazy val logger: OrchescalaLogger = super[C7Worker].logger
   protected def c7Context: C7Context = CompanyEngineC7Context(CompanyRestApiC7Client())
   protected def c8Context: C8Context = CompanyEngineC8Context(CompanyRestApiC8Client())
-  protected def operatonContext: OperatonContext = CompanyEngineOpContext(CompanyRestApiOpClient())
+  protected def operatonContext: OpContext = CompanyEngineOpContext(CompanyRestApiOpClient())
 
 trait CompanyValidationWorkerDsl[
     In <: Product: InOutCodec

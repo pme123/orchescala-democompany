@@ -1,18 +1,19 @@
 package democompany.orchescala.engine
 
-import democompany.orchescala.engine.CompanyEngineOpConfig.*
-import orchescala.engine.c7.{C7OAuth2Client, C7ProcessEngine, SharedC7ClientManager}
+import orchescala.engine.op.{OpLocalClient, OpOAuth2Client, OpProcessEngine, SharedOpClientManager}
+import orchescala.engine.rest.OAuthConfig
 import zio.{ZIO, ZLayer}
 
-/** Operaton engine app using C7-compatible API.
-  * Operaton is a fork of Camunda 7 with full REST API compatibility.
-  */
-object CompanyEngineOpApp extends EngineApp:
-
-  lazy val client = C7OAuth2Client(operatonRestUrl, clientCredentials)
+trait CompanyEngineOpApp extends EngineApp, CompanyEngineOpConfig, OpLocalClient:
 
   override lazy val engineZIO: ZIO[Any, Nothing, ProcessEngine] =
-    C7ProcessEngine.withClient(client)(using companyEngineConfig)
-      .provideLayer(SharedC7ClientManager.layer)
+    OpProcessEngine.withClient(this)(using companyEngineConfig)
+      .provideLayer(SharedOpClientManager.layer)
+
+  // Override this to provide the ZIO layers required by this simulation
+  lazy val requiredLayers: Seq[ZLayer[Any, Nothing, Any]] = Seq(
+    SharedOpClientManager.layer
+  )
 end CompanyEngineOpApp
 
+object CompanyEngineOpApp extends CompanyEngineOpApp
