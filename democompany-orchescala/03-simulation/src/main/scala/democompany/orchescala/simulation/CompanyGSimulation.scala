@@ -1,6 +1,6 @@
 package democompany.orchescala.simulation
 
-import democompany.orchescala.engine.{CompanyEngineC7Config, CompanyEngineC8Config, CompanyEngineGApp, companyEngineConfig}
+import democompany.orchescala.engine.{CompanyEngineC7Config, CompanyEngineC8Config, CompanyEngineGApp, CompanyEngineOpConfig, companyEngineConfig}
 import orchescala.engine.domain.EngineType
 
 trait CompanyGSimulation extends CompanySimulation, CompanyEngineGApp:
@@ -10,7 +10,8 @@ trait CompanyGSimulation extends CompanySimulation, CompanyEngineGApp:
       engineConfig = companyEngineConfig,
       cockpitUrl = Map(
         EngineType.C7 -> CompanyEngineC7Config.camundaCockpitUrl,
-        EngineType.C8 -> CompanyEngineC8Config.zeebeOperateUrl
+        EngineType.C8 -> CompanyEngineC8Config.zeebeOperateUrl,
+        EngineType.Op -> CompanyEngineOpConfig.operatonCockpitUrl
       )
     )
 end CompanyGSimulation

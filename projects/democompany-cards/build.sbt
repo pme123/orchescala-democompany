@@ -14,7 +14,7 @@ lazy val root = project
     sourcesInBase := false,
     projectSettings(),
     publicationSettings, //Camunda artifacts
-  ).aggregate(domain, api, dmn, simulation, worker, helper)
+  ).aggregate(domain, api, dmn, simulation, worker)
 
 
 lazy val domain = project
@@ -78,16 +78,5 @@ lazy val worker = project
   ).dependsOn(domain)
   
   .enablePlugins(DockerPlugin, JavaAppPackaging)
-
-
-lazy val helper = project
-  .in(file("./04-helper"))
-  .settings(
-    projectSettings(Some("helper")),
-    publicationSettings,
-    libraryDependencies ++= helperDeps
-  ).dependsOn(api, dmn, simulation, worker)
-  
-  
 
 

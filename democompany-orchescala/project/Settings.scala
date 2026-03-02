@@ -15,7 +15,7 @@ import scala.jdk.CollectionConverters.asScalaBufferConverter
 object Settings {
 
   val scalaV       = "3.8.1"
-  val orchescalaV  = "0.5.0-SNAPSHOT"
+  val orchescalaV  = "0.6.0-SNAPSHOT"
   val bpfV         = "8.35.5"
   val camundaV     = "7.24-1-ee" // only needed to override Version of BPF or as info
   val mUnitVersion = "1.1.0"
@@ -97,7 +97,7 @@ object Settings {
                           |- Project: $projectOrg : $projectName : $projectV
                           |- Orchescala: $orchescalaV
                           |- Scala: $scalaV
-                          |- Camunda: $camundaV
+                          |- Camunda: $camundaV (C7, C8, Op)
                           |""".stripMargin
 
   // dependencies
@@ -107,6 +107,7 @@ object Settings {
     "io.github.pme123" %% "orchescala-domain" % orchescalaV
   )
   lazy val engineDeps = Seq(
+    "io.github.pme123" %% "orchescala-engine" % orchescalaV,
     "io.github.pme123" %% "orchescala-engine-gateway" % orchescalaV
   )
   lazy val apiDeps = Seq(
@@ -122,6 +123,7 @@ object Settings {
   lazy val workerDeps = Seq(
     "io.github.pme123" %% "orchescala-worker-c7" % orchescalaV,
     "io.github.pme123" %% "orchescala-worker-c8" % orchescalaV,
+    "io.github.pme123" %% "orchescala-worker-op" % orchescalaV,
   )
 
   lazy val helperDeps = apiDeps ++ Seq(

@@ -7,18 +7,18 @@ import sbt.Keys.*
 
 object Settings {
 
-  val scalaV = "3.7.2"
+  val scalaV = "3.8.1"
   val customer = ProjectDef.org
   val customerOrchescalaV = "0.1.0-SNAPSHOT"
   // to override the version defined in customerOrchescala
-  val orchescalaV = "0.4.0-SNAPSHOT"
+  val orchescalaV = "0.6.0-SNAPSHOT"
 
   // other dependencies
   // run worker
   val mUnitVersion = "1.1.0"
   val mUnit = "org.scalameta" %% "munit" % mUnitVersion % Test
-  val zioVersion = "2.1.22"
-  val logbackVersion = "1.4.14"
+  val zioVersion = "2.1.24"
+  val logbackVersion = "1.5.26"
   val jaxbApiVersion = "4.0.2"
   
   def projectSettings(
@@ -30,10 +30,11 @@ object Settings {
     version := ProjectDef.version,
     scalaVersion := scalaV,
     scalacOptions ++= Seq(
-      // "-deprecation", // Emit warning and location for usages of deprecated APIs.
-      // "-feature", // Emit warning and location for usages of features that should be imported explicitly.
+      "-deprecation", // Emit warning and location for usages of deprecated APIs.
+      "-feature", // Emit warning and location for usages of features that should be imported explicitly.
+      "-Xmax-inlines:200", // is declared as erased, but is in fact used
+      "-language:implicitConversions", // allow feature - as the DSLs use it - otherwise there are feature warnings
       // "-rewrite", "-source", "3.4-migration", // migrate automatically to scala 3.4
-      "-Xmax-inlines:200" // is declared as erased, but is in fact used
       // "-Vprofile",
     ),
     javaOptions ++= Seq(
@@ -47,9 +48,10 @@ object Settings {
     credentials ++= Seq(),
     resolvers ++= Seq(releaseRepo),
     autoImportSetting(
-      (postfix orElse module).toSeq.flatMap(x =>
-         Seq(s"orchescala.$x", s"$customer.orchescala.$x")
-      )
+      (postfix orElse module).toSeq.flatMap{ x =>
+         val proj = x
+         Seq(s"orchescala.$x", s"$customer.orchescala.$proj")
+      }
     )
   )
 
@@ -91,12 +93,6 @@ object Settings {
       "jakarta.xml.bind" % "jakarta.xml.bind-api" % jaxbApiVersion,
       customer %% s"$customer-orchescala-worker" % customerOrchescalaV,
       "io.github.pme123" %% "orchescala-worker" % orchescalaV
-    )
-
-  lazy val helperDeps = 
-    Seq(
-      customer %% s"$customer-orchescala-helper" % customerOrchescalaV,
-      "io.github.pme123" %% "orchescala-helper" % orchescalaV
     )
 
   lazy val preventPublication = Seq(
@@ -149,7 +145,7 @@ object Settings {
   lazy val loadingMessage = s"""Successfully started
 - Dependencies:
   - Orchescala: $orchescalaV
-  - Camunda: 7.23.0
+  - Camunda: 7.24.0
   - Customer-Orchescala: $customerOrchescalaV
   - Scala: $scalaV
 
