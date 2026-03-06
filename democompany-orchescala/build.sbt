@@ -33,7 +33,7 @@ lazy val engine = project
   .in(file("./02-engine"))
   .settings(generalSettings(Some("engine")))
   .settings(publicationSettings)
-  .settings(libraryDependencies ++= engineDeps)
+  .settings(libraryDependencies ++= engineDeps ++ engineW4SDeps)
   .dependsOn(domain)
 
 lazy val api = project

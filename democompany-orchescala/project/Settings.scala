@@ -110,6 +110,9 @@ object Settings {
     "io.github.pme123" %% "orchescala-engine" % orchescalaV,
     "io.github.pme123" %% "orchescala-engine-gateway" % orchescalaV
   )
+  lazy val engineW4SDeps = Seq(
+    "io.github.pme123" %% "orchescala-engine-w4s" % orchescalaV
+  )
   lazy val apiDeps = Seq(
     "io.github.pme123" %% "orchescala-api" % orchescalaV,
     typesafeConfigDep
@@ -124,6 +127,7 @@ object Settings {
     "io.github.pme123" %% "orchescala-worker-c7" % orchescalaV,
     "io.github.pme123" %% "orchescala-worker-c8" % orchescalaV,
     "io.github.pme123" %% "orchescala-worker-op" % orchescalaV,
+    "io.github.pme123" %% "orchescala-worker-w4s" % orchescalaV,
   )
 
   lazy val helperDeps = apiDeps ++ Seq(
