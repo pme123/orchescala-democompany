@@ -7,7 +7,7 @@ import sbt.Keys.*
 
 object Settings {
 
-  val scalaV = "3.8.1"
+  val scalaV = "3.8.2"
   val customer = ProjectDef.org
   val customerOrchescalaV = "0.1.0-SNAPSHOT"
   // to override the version defined in customerOrchescala
@@ -93,6 +93,12 @@ object Settings {
       "jakarta.xml.bind" % "jakarta.xml.bind-api" % jaxbApiVersion,
       customer %% s"$customer-orchescala-worker" % customerOrchescalaV,
       "io.github.pme123" %% "orchescala-worker" % orchescalaV
+    )
+
+  lazy val helperDeps = 
+    Seq(
+      customer %% s"$customer-orchescala-helper" % customerOrchescalaV,
+      "io.github.pme123" %% "orchescala-helper" % orchescalaV
     )
 
   lazy val preventPublication = Seq(

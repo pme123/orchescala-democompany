@@ -14,7 +14,7 @@ lazy val root = project
     sourcesInBase := false,
     projectSettings(),
     publicationSettings, //Camunda artifacts
-  ).aggregate(domain, api, dmn, simulation, worker)
+  ).aggregate(domain, engine, api, dmn, simulation, worker)
 
 
 lazy val domain = project
@@ -32,13 +32,25 @@ lazy val domain = project
   
 
 
+lazy val engine = project
+  .in(file("./02-engine"))
+  .settings(
+    projectSettings(Some("engine")),
+    publicationSettings,
+    libraryDependencies ++= engineDeps,
+    testSettings
+  ).dependsOn(domain)
+  
+  
+
+
 lazy val api = project
   .in(file("./03-api"))
   .settings(
     projectSettings(Some("api")),
     publicationSettings,
     libraryDependencies ++= apiDeps
-  ).dependsOn(domain)
+  ).dependsOn(engine)
   
   
 
@@ -49,7 +61,7 @@ lazy val dmn = project
     projectSettings(Some("dmn")),
     preventPublication,
     libraryDependencies ++= dmnDeps
-  ).dependsOn(domain)
+  ).dependsOn(engine)
   
   
 
@@ -61,7 +73,7 @@ lazy val simulation = project
     preventPublication,
     libraryDependencies ++= simulationDeps,
     simulationSettings
-  ).dependsOn(domain)
+  ).dependsOn(engine)
   
   
 
@@ -75,7 +87,7 @@ lazy val worker = project
     dockerSettings,
     testSettings,
     zioTestSettings
-  ).dependsOn(domain)
+  ).dependsOn(engine)
   
   .enablePlugins(DockerPlugin, JavaAppPackaging)
 

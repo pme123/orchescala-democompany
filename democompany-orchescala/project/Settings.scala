@@ -14,7 +14,7 @@ import scala.jdk.CollectionConverters.asScalaBufferConverter
 
 object Settings {
 
-  val scalaV       = "3.8.1"
+  val scalaV       = "3.8.2"
   val orchescalaV  = "0.6.0-SNAPSHOT"
   val bpfV         = "8.35.5"
   val camundaV     = "7.24-1-ee" // only needed to override Version of BPF or as info
@@ -97,7 +97,7 @@ object Settings {
                           |- Project: $projectOrg : $projectName : $projectV
                           |- Orchescala: $orchescalaV
                           |- Scala: $scalaV
-                          |- Camunda: $camundaV (C7, C8, Op)
+                          |- Camunda: $camundaV (C7, C8, Op, W4S)
                           |""".stripMargin
 
   // dependencies
