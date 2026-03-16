@@ -39,8 +39,8 @@ object Workflows:
         runtime = exampleRuntime,
         stateEncoder = summon[Encoder[PRState]],
         signalSupport = SignalSupport.builder
-          .add(Signals.createPR)
-          .add(Signals.reviewPR)
+          .add(PRSignals.createPR)
+          .add(PRSignals.reviewPR)
           .build
       ),
       WorkflowEntry(
@@ -50,8 +50,11 @@ object Workflows:
         runtime = orderCreditcardRuntime,
         stateEncoder = summon[Encoder[OrderCreditcardState]],
         signalSupport = SignalSupport.builder
-          .add(Signals.startProcess)
-          .add(Signals.checkOrder)
+          .add(OrderCreditcardSignals.startProcess)
+          .add(OrderCreditcardSignals.checkOrder)
+          .add(OrderCreditcardSignals.receiveEmail)
+          .add(OrderCreditcardSignals.callClient)
+          .add(OrderCreditcardSignals.cancelOrder)
           .build
       )
     )
@@ -62,13 +65,13 @@ object Workflows:
     val wfInstance = runtime.createInstance("test-instance-d1fc1fd2-b671-4ac3-9c2b-b53797bcf749")
 
     wfInstance.deliverSignal(
-      Signals.createPR,
-      Signals.CreateRequest("test-instance-d1fc1fd2-b671-4ac3-9c2b-b53797bcf749")
+          PRSignals.createPR,
+          PRSignals.CreateRequest("test-instance-d1fc1fd2-b671-4ac3-9c2b-b53797bcf749")
     )
     println(wfInstance.queryState())
     // Checked(some-sha,<Some tests results>)
   end main
 
-  //  wfInstance.deliverSignal(Signals.reviewPR, Signals.ReviewRequest(approve = false))
+  //  wfInstance.deliverSignal(PRSignals.reviewPR, PRSignals.ReviewRequest(approve = false))
   //  println(wfInstance.queryState())
 end Workflows

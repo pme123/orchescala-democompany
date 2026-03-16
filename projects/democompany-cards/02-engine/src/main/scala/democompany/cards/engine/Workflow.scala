@@ -28,7 +28,7 @@ object Workflow:
 
   lazy val createPR: WIO[Any, PRError.CommitNotFound.type, PRState.Initiated] =
     WIO
-      .handleSignal(Signals.createPR)
+      .handleSignal(PRSignals.createPR)
       .using[Any]
       .purely((in, req) => PREvent.Created(req.commit))
       .handleEventWithError((in, evt) =>
@@ -49,7 +49,7 @@ object Workflow:
 
   lazy val processReview: WIO[PRState.Checked, PRError.ReviewRejected.type, PRState.Reviewed] =
     WIO
-      .handleSignal(Signals.reviewPR)
+      .handleSignal(PRSignals.reviewPR)
       .using[PRState.Checked]
       .purely((in, req) => PREvent.Reviewed(req.approve))
       .handleEventWithError((in, evt) =>
@@ -91,7 +91,7 @@ object PREvent:
 
   case class Reviewed(approved: Boolean) extends PREvent
 
-object Signals {
+object PRSignals {
   val createPR: SignalDef[CreateRequest, Unit] = SignalDef()
   val reviewPR: SignalDef[ReviewRequest, Unit] = SignalDef()
 
@@ -114,5 +114,5 @@ object PRError {
 
   case object ReviewRejected extends PRError
 }
-  
+
   
