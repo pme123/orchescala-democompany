@@ -14,12 +14,14 @@ import scala.jdk.CollectionConverters.asScalaBufferConverter
 
 object Settings {
 
-  val scalaV       = "3.8.1"
-  val orchescalaV  = "0.6.0-SNAPSHOT"
-  val bpfV         = "8.35.5"
-  val camundaV     = "7.24-1-ee" // only needed to override Version of BPF or as info
-  val mUnitVersion = "1.1.0"
+  val scalaV       = "3.8.3"
+  val orchescalaV  = "0.7.0-SNAPSHOT"
+  val camundaV     = "7.24.0" // only as info
+  val mUnitVersion = "1.2.4"
   val zioVersion = "2.1.24"
+  val zioLoggingVersion = "2.5.3"
+  val logbackVersion = "1.5.32"
+  val jaxbApiVersion = "4.0.2"
   // project
   val projectOrg = ProjectDef.org
   val projectV = ProjectDef.version
@@ -107,7 +109,7 @@ object Settings {
     "io.github.pme123" %% "orchescala-domain" % orchescalaV
   )
   lazy val engineDeps = Seq(
-    "io.github.pme123" %% "orchescala-engine" % orchescalaV,
+    // brings orchescala-engine and the engine implementations (c7, c8, op) with it
     "io.github.pme123" %% "orchescala-engine-gateway" % orchescalaV
   )
   lazy val apiDeps = Seq(
@@ -115,7 +117,14 @@ object Settings {
     typesafeConfigDep
   )
   lazy val dmnDeps = Seq(
-    "io.github.pme123" %% "orchescala-dmn" % orchescalaV
+    // The DMN Tester - brings orchescala-dmn (the DSL) and
+    // orchescala-dmntester (the model) with it.
+    // The DMN engine is a Scala 2.13 jar whose FEEL parser drags in
+    // geny_2.13, while os-lib brings geny_3 - the same library in two
+    // cross versions, which sbt refuses. The engine works fine with
+    // geny_3, so the 2.13 one is excluded here as well as upstream.
+    ("io.github.pme123" %% "orchescala-dmntester-server" % orchescalaV)
+      .exclude("com.lihaoyi", "geny_2.13")
   )
   lazy val simulationDeps = Seq(
     "io.github.pme123" %% "orchescala-simulation" % orchescalaV,
@@ -124,6 +133,13 @@ object Settings {
     "io.github.pme123" %% "orchescala-worker-c7" % orchescalaV,
     "io.github.pme123" %% "orchescala-worker-c8" % orchescalaV,
     "io.github.pme123" %% "orchescala-worker-op" % orchescalaV,
+  )
+
+  lazy val gatewayDeps = Seq(
+    "ch.qos.logback"   % "logback-classic"      % logbackVersion % Runtime,
+    "dev.zio"         %% "zio-logging-slf4j2"   % zioLoggingVersion,
+    "jakarta.xml.bind" % "jakarta.xml.bind-api" % jaxbApiVersion,
+    "io.github.pme123" %% "orchescala-gateway" % orchescalaV
   )
 
   lazy val helperDeps = apiDeps ++ Seq(

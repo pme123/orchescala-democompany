@@ -7,18 +7,18 @@ import sbt.Keys.*
 
 object Settings {
 
-  val scalaV = "3.8.1"
+  val scalaV = "3.8.3"
   val customer = ProjectDef.org
   val customerOrchescalaV = "0.1.0-SNAPSHOT"
   // to override the version defined in customerOrchescala
-  val orchescalaV = "0.6.0-SNAPSHOT"
+  val orchescalaV = "0.7.0-SNAPSHOT"
 
   // other dependencies
   // run worker
-  val mUnitVersion = "1.1.0"
+  val mUnitVersion = "1.2.4"
   val mUnit = "org.scalameta" %% "munit" % mUnitVersion % Test
   val zioVersion = "2.1.24"
-  val logbackVersion = "1.5.26"
+  val logbackVersion = "1.5.32"
   val jaxbApiVersion = "4.0.2"
   
   def projectSettings(
@@ -62,12 +62,6 @@ object Settings {
       "io.github.pme123" %% "orchescala-domain" % orchescalaV
     )
 
-  lazy val engineDeps = 
-    Seq(
-      customer %% s"$customer-orchescala-engine" % customerOrchescalaV,
-      "io.github.pme123" %% "orchescala-engine" % orchescalaV
-    )
-
   lazy val apiDeps = 
     Seq(
       customer %% s"$customer-orchescala-api" % customerOrchescalaV,
@@ -77,7 +71,8 @@ object Settings {
   lazy val dmnDeps = 
     Seq(
       customer %% s"$customer-orchescala-dmn" % customerOrchescalaV,
-      "io.github.pme123" %% "orchescala-dmn" % orchescalaV
+      ("io.github.pme123" %% "orchescala-dmntester-server" % orchescalaV)
+        .exclude("com.lihaoyi", "geny_2.13")
     )
 
   lazy val simulationDeps = 

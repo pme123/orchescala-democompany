@@ -1,10 +1,12 @@
 package democompany.orchescala.helper
 
 import orchescala.api.ApiConfig
+import orchescala.engine.EngineConfig
 import orchescala.helper.dev.DevCompanyOrchescalaHelper
 import orchescala.helper.util.DevConfig
 import democompany.orchescala.BuildInfo
 import democompany.orchescala.api.CompanyApiCreator
+import democompany.orchescala.engine.companyEngineConfig
 
 object CompanyOrchescalaDevHelper
     extends DevCompanyOrchescalaHelper:
@@ -15,6 +17,7 @@ object CompanyOrchescalaDevHelper
       tempGitDir = os.pwd / os.up /  os.up / "git-temp"
     )
 
-  lazy val devConfig: DevConfig = CompanyDevConfig.companyConfig
+  lazy val engineConfig: EngineConfig = companyEngineConfig
+  lazy val devConfig: DevConfig       = CompanyDevConfig.companyConfig
 
 end CompanyOrchescalaDevHelper

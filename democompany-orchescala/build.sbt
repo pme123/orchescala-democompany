@@ -5,6 +5,7 @@ import Settings.*
 
 ThisBuild / version := projectV
 ThisBuild / organization := projectOrg
+ThisBuild / versionScheme := Some("early-semver")
 ThisBuild / onLoadMessage := loadingMessage
 
 lazy val root = (project in file("."))
@@ -17,6 +18,7 @@ lazy val root = (project in file("."))
     dmn,
     simulation,
     worker,
+    gateway,
     helper,
     docs
   )
@@ -65,6 +67,16 @@ lazy val worker = project
   .settings(unitTestSettings)
   .settings(libraryDependencies ++= workerDeps)
   .dependsOn(engine)
+
+lazy val gateway = project
+  .in(file("./04-gateway"))
+  .settings(generalSettings(Some("gateway")))
+  .settings(publicationSettings)
+  .settings(unitTestSettings)
+  .settings(zioTestSettings)
+  .settings(libraryDependencies ++= gatewayDeps)
+  .dependsOn(worker)
+  .enablePlugins(JavaAppPackaging)
 
 lazy val helper = project
   .in(file("./04-helper"))

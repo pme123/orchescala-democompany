@@ -1,4 +1,6 @@
 ## Create a Release
+General instructions on [Company Documentation](https://pme123.github.io/orchescala/company/development.html#company-documentation)
+
 This is a semi-automatic process. This should be done either to prepare a Release or after a Release.
 
 @:callout(info)

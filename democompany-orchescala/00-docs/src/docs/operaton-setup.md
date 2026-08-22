@@ -18,10 +18,10 @@ To connect to an Operaton instance, configure the following environment variable
 
 ```bash
 # Operaton REST API endpoint
-OPERATON_BASE_URL=http://localhost:8080/engine-rest
+OPERATON_BASE_URL=http://localhost:9999/engine-rest
 
 # Operaton Cockpit URL (for monitoring)
-OPERATON_COCKPIT_URL=http://localhost:8080/camunda/app/cockpit/default/
+OPERATON_COCKPIT_URL=http://localhost:9999/camunda/app/cockpit/default/
 ```
 
 ### Optional OAuth Variables (if using authentication)
@@ -45,31 +45,26 @@ The easiest way to run Operaton locally is with Docker:
 
 ```bash
 docker run -d --name operaton \
-  -p 8080:8080 \
+  -p 9999:8080 \
   operaton/operaton:latest
 ```
 
-Access the Cockpit at: `http://localhost:8080/camunda/app/cockpit/default/`
+Access the Cockpit at: `http://localhost:9999/camunda/app/cockpit/default/`
 
 Default credentials: `demo` / `demo`
 
 ### Using Docker Compose
 
-Create a `docker-compose.yml`:
+This project ships a Compose file with a Postgres database - _docker/operaton/docker-compose.yml_.
 
-```yaml
-version: '3.8'
-services:
-  operaton:
-    image: operaton/operaton:latest
-    ports:
-      - "8080:8080"
-    environment:
-      - DB_DRIVER=org.h2.Driver
-      - DB_URL=jdbc:h2:mem:operaton;DB_CLOSE_DELAY=-1
+Start it with:
+
+```bash
+cd democompany-orchescala/docker/operaton
+docker-compose up -d
 ```
 
-Start with: `docker-compose up -d`
+It maps the engine to port _9999_, as _8080_ is taken by Camunda 7.
 
 ## Using Operaton in Your Code
 
@@ -161,7 +156,7 @@ Processes are deployed using the simulation helper:
 
 ### Verify Deployment
 
-1. Open Operaton Cockpit: `http://localhost:8080/camunda/app/cockpit/default/`
+1. Open Operaton Cockpit: `http://localhost:9999/camunda/app/cockpit/default/`
 2. Navigate to "Processes"
 3. Verify your process definition appears
 
@@ -171,7 +166,7 @@ Processes are deployed using the simulation helper:
 
 If you can't connect to Operaton:
 
-1. Verify Operaton is running: `curl http://localhost:8080/engine-rest/engine`
+1. Verify Operaton is running: `curl http://localhost:9999/engine-rest/engine`
 2. Check environment variables are set correctly
 3. Verify the REST API endpoint is accessible
 
@@ -198,6 +193,6 @@ While Operaton is API-compatible with Camunda 7, there may be minor differences:
 ## Next Steps
 
 - [Process Patterns](pattern.html) - Learn about process design patterns
-- [Instructions](instructions.html) - Release and deployment instructions
+- [Instructions](development/instructions.html) - Release and deployment instructions
 - [Orchescala Documentation](https://pme123.github.io/orchescala/) - Full library documentation
 
