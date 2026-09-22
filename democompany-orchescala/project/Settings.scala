@@ -15,7 +15,7 @@ import scala.jdk.CollectionConverters.asScalaBufferConverter
 object Settings {
 
   val scalaV       = "3.8.3"
-  val orchescalaV  = "0.7.0-SNAPSHOT"
+  val orchescalaV  = "0.8.0-SNAPSHOT"
   val camundaV     = "7.24.0" // only as info
   val mUnitVersion = "1.2.4"
   val zioVersion = "2.1.24"
