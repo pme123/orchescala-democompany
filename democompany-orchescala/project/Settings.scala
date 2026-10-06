@@ -22,6 +22,7 @@ object Settings {
   val zioLoggingVersion = "2.5.3"
   val logbackVersion = "1.5.32"
   val jaxbApiVersion = "4.0.2"
+  val angusMailV = "2.0.3"
   // project
   val projectOrg = ProjectDef.org
   val projectV = ProjectDef.version
@@ -133,6 +134,9 @@ object Settings {
     "io.github.pme123" %% "orchescala-worker-c7" % orchescalaV,
     "io.github.pme123" %% "orchescala-worker-c8" % orchescalaV,
     "io.github.pme123" %% "orchescala-worker-op" % orchescalaV,
+    // own data of the projects (CompanyPersistenceWorkerDsl) and mails (CompanyMailWorkerDsl)
+    "io.github.pme123" %% "orchescala-persistence-postgres" % orchescalaV,
+    "org.eclipse.angus" % "angus-mail" % angusMailV,
   )
 
   lazy val gatewayDeps = Seq(
