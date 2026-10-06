@@ -20,6 +20,7 @@ object WorkerApp extends CompanyWorkerApp:
       BookReservationWorker(),
       SendInvitationWorker(),
       ReleaseReservationWorker(),
+      SendMailWorker(),
     )
   end bookAppointmentWorkers
 

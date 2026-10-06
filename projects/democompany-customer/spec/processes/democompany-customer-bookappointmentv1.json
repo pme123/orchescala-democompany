@@ -9,7 +9,7 @@
   "status": "implemented",
   "description": "",
   "createdAt": "2026-10-06",
-  "updatedAt": "2026-10-06T14:12:01+02:00",
+  "updatedAt": "2026-10-06T15:12:38+02:00",
   "variables": [],
   "timeToLive": "5",
   "steps": [
@@ -61,7 +61,7 @@
       "kind": "service",
       "name": "E-Mail-Bestätigung senden",
       "status": "implemented",
-      "topic": "democompany-services-mailsV1-SendEmail",
+      "topic": "democompany-customer-bookAppointmentV1-SendMail",
       "inputs": [
         {
           "name": "to",
@@ -132,7 +132,7 @@
                       "kind": "service",
                       "name": "Berater benachrichtigen",
                       "status": "implemented",
-                      "topic": "democompany-services-mailsV1-SendEmail",
+                      "topic": "democompany-customer-bookAppointmentV1-SendMail",
                       "inputs": [
                         {
                           "name": "to",
@@ -166,7 +166,7 @@
                               "kind": "service",
                               "name": "Erinnerung senden",
                               "status": "implemented",
-                              "topic": "democompany-services-mailsV1-SendEmail",
+                              "topic": "democompany-customer-bookAppointmentV1-SendMail",
                               "inputs": [
                                 {
                                   "name": "to",
@@ -247,7 +247,7 @@
                               "kind": "service",
                               "name": "Absage senden",
                               "status": "implemented",
-                              "topic": "democompany-services-mailsV1-SendEmail",
+                              "topic": "democompany-customer-bookAppointmentV1-SendMail",
                               "inputs": [
                                 {
                                   "name": "to",
@@ -334,26 +334,26 @@
       "status": "draft",
       "fields": [
         {
-          "id": "f-dm39",
+          "id": "f-dm43",
           "name": "reservationId",
           "type": "String",
           "description": "Reservierung `<advisor>-<start>` - entsteht vor dem Start (Service reserveSlot)",
           "example": "\"anna.berater-2026-10-20T09:00\""
         },
         {
-          "id": "f-dm40",
+          "id": "f-dm44",
           "name": "appointment",
           "type": "t-appointment",
           "description": "Der gewählte Termin"
         },
         {
-          "id": "f-dm41",
+          "id": "f-dm45",
           "name": "contact",
           "type": "t-contact",
           "description": "Kontaktdaten"
         },
         {
-          "id": "f-dm42",
+          "id": "f-dm46",
           "name": "remark",
           "type": "String",
           "description": "Bemerkung",
@@ -371,21 +371,21 @@
       "status": "draft",
       "fields": [
         {
-          "id": "f-dm43",
+          "id": "f-dm47",
           "name": "reservationId",
           "type": "String",
           "description": "Reservierung",
           "example": "\"anna.berater-2026-10-20T09:00\""
         },
         {
-          "id": "f-dm44",
+          "id": "f-dm48",
           "name": "booked",
           "type": "Boolean",
           "description": "Termin gebucht",
           "example": "true"
         },
         {
-          "id": "f-dm45",
+          "id": "f-dm49",
           "name": "customerStatus",
           "type": "t-customerStatus",
           "description": "Kunde oder Interessent",
@@ -465,46 +465,46 @@
       "status": "draft",
       "fields": [
         {
-          "id": "f-dm46",
+          "id": "f-dm50",
           "name": "advisorId",
           "type": "String",
           "description": "Berater (Benutzer-ID)",
           "example": "\"anna.berater\""
         },
         {
-          "id": "f-dm47",
+          "id": "f-dm51",
           "name": "advisorName",
           "type": "String",
           "description": "Name des Beraters",
           "example": "\"Anna Berater\""
         },
         {
-          "id": "f-dm48",
+          "id": "f-dm52",
           "name": "advisorEmail",
           "type": "String",
           "description": "E-Mail des Beraters",
           "example": "\"anna.berater@democompany.ch\""
         },
         {
-          "id": "f-dm49",
+          "id": "f-dm53",
           "name": "start",
           "type": "LocalDateTime",
           "description": "Beginn"
         },
         {
-          "id": "f-dm50",
+          "id": "f-dm54",
           "name": "end",
           "type": "LocalDateTime",
           "description": "Ende"
         },
         {
-          "id": "f-dm51",
+          "id": "f-dm55",
           "name": "topic",
           "type": "t-topic",
           "description": "Thema"
         },
         {
-          "id": "f-dm52",
+          "id": "f-dm56",
           "name": "channel",
           "type": "t-channel",
           "description": "Kanal"
@@ -519,28 +519,28 @@
       "status": "draft",
       "fields": [
         {
-          "id": "f-dm53",
+          "id": "f-dm57",
           "name": "firstName",
           "type": "String",
           "description": "Vorname",
           "example": "\"Peter\""
         },
         {
-          "id": "f-dm54",
+          "id": "f-dm58",
           "name": "lastName",
           "type": "String",
           "description": "Nachname",
           "example": "\"Muster\""
         },
         {
-          "id": "f-dm55",
+          "id": "f-dm59",
           "name": "email",
           "type": "String",
           "description": "E-Mail - für den Opt-in und die Einladung",
           "example": "\"peter.muster@example.ch\""
         },
         {
-          "id": "f-dm56",
+          "id": "f-dm60",
           "name": "phone",
           "type": "String",
           "description": "Telefon",
@@ -548,7 +548,7 @@
           "example": "\"+41 79 123 45 67\""
         },
         {
-          "id": "f-dm57",
+          "id": "f-dm61",
           "name": "customerNo",
           "type": "String",
           "description": "Kunden-Nr. - nur ein Hinweis, verbindlich ordnet der Berater zu",
@@ -558,10 +558,57 @@
       ]
     },
     {
-      "id": "t-0fa4646e6d",
+      "id": "t-7918c10be0",
+      "name": "SendMail.In",
+      "kind": "case",
+      "interactionId": "ia-f815fc738f",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm17",
+          "name": "to",
+          "type": "String",
+          "description": "Empfänger",
+          "example": "\"peter.muster@example.ch\""
+        },
+        {
+          "id": "f-dm18",
+          "name": "subject",
+          "type": "String",
+          "description": "Betreff",
+          "example": "\"Bitte bestätigen Sie Ihre Terminanfrage\""
+        },
+        {
+          "id": "f-dm19",
+          "name": "body",
+          "type": "String",
+          "description": "Text - `\\n` ist ein Zeilenumbruch",
+          "example": "\"Guten Tag\""
+        }
+      ],
+      "description": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
+    },
+    {
+      "id": "t-ae3eab0ee8",
+      "name": "SendMail.Out",
+      "kind": "case",
+      "interactionId": "ia-f815fc738f",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm20",
+          "name": "sentAt",
+          "type": "LocalDateTime",
+          "description": "Zeitpunkt des Versands"
+        }
+      ],
+      "description": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
+    },
+    {
+      "id": "t-ea1fc96295",
       "name": "EMailBestaetigtME.In",
       "kind": "case",
-      "interactionId": "ia-7d85d454ce",
+      "interactionId": "ia-0d6db64e26",
       "status": "draft",
       "fields": [
         {
@@ -575,10 +622,10 @@
       "description": "Der Kunde hat den Link in der Opt-in-Mail angeklickt."
     },
     {
-      "id": "t-e0a0b7f176",
+      "id": "t-df829ac6c7",
       "name": "AssignCustomer.In",
       "kind": "case",
-      "interactionId": "ia-828443a54e",
+      "interactionId": "ia-70a2ccf45e",
       "status": "draft",
       "fields": [
         {
@@ -591,10 +638,10 @@
       "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
     },
     {
-      "id": "t-01d1e5421b",
+      "id": "t-709e8ccdce",
       "name": "AssignCustomer.Out",
       "kind": "case",
-      "interactionId": "ia-828443a54e",
+      "interactionId": "ia-70a2ccf45e",
       "status": "draft",
       "fields": [
         {
@@ -622,28 +669,28 @@
       "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
     },
     {
-      "id": "t-e7b6d83923",
+      "id": "t-1e0d60ba8d",
       "name": "AppointmentRulesDmn.In",
       "kind": "case",
-      "interactionId": "ia-de532327d5",
+      "interactionId": "ia-0f63842a78",
       "status": "draft",
       "fields": [
         {
-          "id": "f-dm19",
+          "id": "f-dm23",
           "name": "topic",
           "type": "String",
           "description": "Thema (advice, mortgage, pension, investment)",
           "example": "\"mortgage\""
         },
         {
-          "id": "f-dm20",
+          "id": "f-dm24",
           "name": "channel",
           "type": "String",
           "description": "Kanal (branch, video, phone)",
           "example": "\"branch\""
         },
         {
-          "id": "f-dm21",
+          "id": "f-dm25",
           "name": "customerStatus",
           "type": "String",
           "description": "Kundenstatus (customer, prospect)",
@@ -653,56 +700,56 @@
       "description": "Eingaben der Terminregeln"
     },
     {
-      "id": "t-5fcace7b60",
+      "id": "t-3a3c43ae6e",
       "name": "AppointmentRulesDmn.Out",
       "kind": "case",
-      "interactionId": "ia-de532327d5",
+      "interactionId": "ia-0f63842a78",
       "status": "draft",
       "fields": [
         {
-          "id": "f-dm22",
+          "id": "f-dm26",
           "name": "durationMinutes",
           "type": "Int",
           "description": "Dauer in Minuten",
           "example": "90"
         },
         {
-          "id": "f-dm23",
+          "id": "f-dm27",
           "name": "leadTimeHours",
           "type": "Int",
           "description": "Vorlaufzeit in Stunden",
           "example": "48"
         },
         {
-          "id": "f-dm24",
+          "id": "f-dm28",
           "name": "windowStart",
           "type": "String",
           "description": "Zeitfenster von (HH:mm)",
           "example": "\"08:00\""
         },
         {
-          "id": "f-dm25",
+          "id": "f-dm29",
           "name": "windowEnd",
           "type": "String",
           "description": "Zeitfenster bis (HH:mm)",
           "example": "\"17:00\""
         },
         {
-          "id": "f-dm26",
+          "id": "f-dm30",
           "name": "bufferMinutes",
           "type": "Int",
           "description": "Puffer zwischen Terminen in Minuten",
           "example": "15"
         },
         {
-          "id": "f-dm27",
+          "id": "f-dm31",
           "name": "advisorPool",
           "type": "String",
           "description": "Berater-Pool",
           "example": "\"mortgage\""
         },
         {
-          "id": "f-dm28",
+          "id": "f-dm32",
           "name": "confirmationRequired",
           "type": "Boolean",
           "description": "Bestätigung durch den Berater nötig",
@@ -712,10 +759,10 @@
       "description": "Ergebnis der Terminregeln"
     },
     {
-      "id": "t-bbbbd12e35",
+      "id": "t-e9e31c3446",
       "name": "TerminBestaetigenUT.In",
       "kind": "case",
-      "interactionId": "ia-20840c8250",
+      "interactionId": "ia-e16919bb5e",
       "status": "draft",
       "fields": [
         {
@@ -747,10 +794,10 @@
       "description": "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab."
     },
     {
-      "id": "t-d80acac209",
+      "id": "t-fe34ef1c00",
       "name": "TerminBestaetigenUT.Out",
       "kind": "case",
-      "interactionId": "ia-20840c8250",
+      "interactionId": "ia-e16919bb5e",
       "status": "draft",
       "fields": [
         {
@@ -771,10 +818,10 @@
       "description": "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab."
     },
     {
-      "id": "t-38d5c8ee75",
+      "id": "t-a2c018d05e",
       "name": "BookReservation.In",
       "kind": "case",
-      "interactionId": "ia-162ce41ce0",
+      "interactionId": "ia-3aef28c1fe",
       "status": "draft",
       "fields": [
         {
@@ -788,10 +835,10 @@
       "description": "Setzt die Reservierung auf gebucht."
     },
     {
-      "id": "t-5ee9149491",
+      "id": "t-8168d7e855",
       "name": "BookReservation.Out",
       "kind": "case",
-      "interactionId": "ia-162ce41ce0",
+      "interactionId": "ia-3aef28c1fe",
       "status": "draft",
       "fields": [
         {
@@ -804,10 +851,10 @@
       "description": "Setzt die Reservierung auf gebucht."
     },
     {
-      "id": "t-61694d5fb7",
+      "id": "t-154e4fae98",
       "name": "SendInvitation.In",
       "kind": "case",
-      "interactionId": "ia-907d4a4af7",
+      "interactionId": "ia-514e23caae",
       "status": "draft",
       "fields": [
         {
@@ -826,10 +873,10 @@
       "description": "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook."
     },
     {
-      "id": "t-1d57a75ea2",
+      "id": "t-589022ed88",
       "name": "SendInvitation.Out",
       "kind": "case",
-      "interactionId": "ia-907d4a4af7",
+      "interactionId": "ia-514e23caae",
       "status": "draft",
       "fields": [
         {
@@ -842,14 +889,14 @@
       "description": "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook."
     },
     {
-      "id": "t-1935e5bbff",
+      "id": "t-64dc72a044",
       "name": "ReleaseReservation.In",
       "kind": "case",
-      "interactionId": "ia-15084bf307",
+      "interactionId": "ia-664b941a50",
       "status": "draft",
       "fields": [
         {
-          "id": "f-dm17",
+          "id": "f-dm21",
           "name": "reservationId",
           "type": "String",
           "description": "Reservierung",
@@ -859,14 +906,14 @@
       "description": "Löscht die Reservierung - der Termin ist wieder frei."
     },
     {
-      "id": "t-e2d4f6b7d7",
+      "id": "t-6402f678b7",
       "name": "ReleaseReservation.Out",
       "kind": "case",
-      "interactionId": "ia-15084bf307",
+      "interactionId": "ia-664b941a50",
       "status": "draft",
       "fields": [
         {
-          "id": "f-dm18",
+          "id": "f-dm22",
           "name": "releasedAt",
           "type": "LocalDateTime",
           "description": "Zeitpunkt der Freigabe"
@@ -882,56 +929,56 @@
       "status": "draft",
       "fields": [
         {
-          "id": "f-dm29",
+          "id": "f-dm33",
           "name": "email",
           "type": "String",
           "description": "E-Mail des Kunden (aus contact)",
           "example": "\"peter.muster@example.ch\""
         },
         {
-          "id": "f-dm30",
+          "id": "f-dm34",
           "name": "customerName",
           "type": "String",
           "description": "Vorname und Name (aus contact)",
           "example": "\"Peter Muster\""
         },
         {
-          "id": "f-dm31",
+          "id": "f-dm35",
           "name": "advisorEmail",
           "type": "String",
           "description": "E-Mail des Beraters (aus appointment)",
           "example": "\"anna.berater@democompany.ch\""
         },
         {
-          "id": "f-dm32",
+          "id": "f-dm36",
           "name": "topic",
           "type": "String",
           "description": "Thema - für die Terminregeln",
           "example": "\"mortgage\""
         },
         {
-          "id": "f-dm33",
+          "id": "f-dm37",
           "name": "channel",
           "type": "String",
           "description": "Kanal - für die Terminregeln",
           "example": "\"branch\""
         },
         {
-          "id": "f-dm34",
+          "id": "f-dm38",
           "name": "appointmentText",
           "type": "String",
           "description": "Der Termin als Text für die Mails",
           "example": "\"Mo 20.10.2026, 09:00-10:30, Hypothek, Filiale\""
         },
         {
-          "id": "f-dm35",
+          "id": "f-dm39",
           "name": "verificationLink",
           "type": "String",
           "description": "Link für den Opt-in",
           "example": "\"http://localhost:8888/app/democompany-customer/appointments/verified?reservation=anna.berater-2026-10-20T09:00\""
         },
         {
-          "id": "f-dm36",
+          "id": "f-dm40",
           "name": "confirmLink",
           "type": "String",
           "description": "Link auf den Task «Termin bestätigen»",
@@ -948,14 +995,14 @@
       "status": "draft",
       "fields": [
         {
-          "id": "f-dm37",
+          "id": "f-dm41",
           "name": "timerVerifyEmail",
           "type": "Iso8601Duration",
           "description": "So lange gilt die Reservierung ohne Opt-in",
           "default": "\"PT30M\""
         },
         {
-          "id": "f-dm38",
+          "id": "f-dm42",
           "name": "timerConfirmReminder",
           "type": "Iso8601Duration",
           "description": "Erinnerung an den Berater, wenn der Task offen ist",
@@ -967,92 +1014,136 @@
   ],
   "interactions": [
     {
-      "id": "ia-7d85d454ce",
+      "id": "ia-f815fc738f",
+      "stepId": "SendVerificationEmailTask",
+      "kind": "customTask",
+      "name": "SendMail",
+      "key": "democompany-customer-bookAppointmentV1-SendMail",
+      "status": "draft",
+      "inTypeId": "t-7918c10be0",
+      "outTypeId": "t-ae3eab0ee8",
+      "descr": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
+    },
+    {
+      "id": "ia-0d6db64e26",
       "stepId": "EmailVerifiedEvent",
       "kind": "message",
       "name": "EmailVerifiedME",
       "key": "democompany-customer-bookAppointmentV1-emailVerified",
       "status": "draft",
-      "inTypeId": "t-0fa4646e6d",
+      "inTypeId": "t-ea1fc96295",
       "descr": "Der Kunde hat den Link in der Opt-in-Mail angeklickt."
     },
     {
-      "id": "ia-828443a54e",
+      "id": "ia-70a2ccf45e",
       "stepId": "AssignCustomerTask",
       "kind": "customTask",
       "name": "AssignCustomer",
       "key": "democompany-customer-bookAppointmentV1-AssignCustomer",
       "status": "draft",
-      "inTypeId": "t-e0a0b7f176",
-      "outTypeId": "t-01d1e5421b",
+      "inTypeId": "t-df829ac6c7",
+      "outTypeId": "t-709e8ccdce",
       "descr": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
     },
     {
-      "id": "ia-de532327d5",
+      "id": "ia-0f63842a78",
       "stepId": "AppointmentRulesTask",
       "kind": "decision",
       "name": "AppointmentRulesDmn",
       "key": "democompany-customer-bookAppointmentV1-AppointmentRules",
       "decisionResult": "singleResult",
       "status": "draft",
-      "inTypeId": "t-e7b6d83923",
-      "outTypeId": "t-5fcace7b60",
+      "inTypeId": "t-1e0d60ba8d",
+      "outTypeId": "t-3a3c43ae6e",
       "dmnFile": "democompany-customer-bookAppointmentV1-AppointmentRules.dmn",
       "descr": "Terminregeln: Dauer, Vorlaufzeit, Zeitfenster, Puffer, Berater-Pool und ob der Berater bestätigt."
     },
     {
-      "id": "ia-20840c8250",
+      "id": "ia-34e425e4dd",
+      "stepId": "NotifyAdvisorTask",
+      "kind": "customTask",
+      "name": "SendMail",
+      "key": "democompany-customer-bookAppointmentV1-SendMail",
+      "status": "draft",
+      "inTypeId": "t-7918c10be0",
+      "outTypeId": "t-ae3eab0ee8",
+      "descr": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
+    },
+    {
+      "id": "ia-e16919bb5e",
       "stepId": "ConfirmAppointmentTask",
       "kind": "userTask",
       "name": "ConfirmAppointmentUT",
       "key": "ConfirmAppointmentTask",
       "status": "draft",
-      "inTypeId": "t-bbbbd12e35",
-      "outTypeId": "t-d80acac209",
+      "inTypeId": "t-e9e31c3446",
+      "outTypeId": "t-fe34ef1c00",
       "descr": "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab."
     },
     {
-      "id": "ia-162ce41ce0",
+      "id": "ia-6b60204eed",
+      "stepId": "SendReminderTask",
+      "kind": "customTask",
+      "name": "SendMail",
+      "key": "democompany-customer-bookAppointmentV1-SendMail",
+      "status": "draft",
+      "inTypeId": "t-7918c10be0",
+      "outTypeId": "t-ae3eab0ee8",
+      "descr": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
+    },
+    {
+      "id": "ia-3aef28c1fe",
       "stepId": "BookReservationTask",
       "kind": "customTask",
       "name": "BookReservation",
       "key": "democompany-customer-bookAppointmentV1-BookReservation",
       "status": "draft",
-      "inTypeId": "t-38d5c8ee75",
-      "outTypeId": "t-5ee9149491",
+      "inTypeId": "t-a2c018d05e",
+      "outTypeId": "t-8168d7e855",
       "descr": "Setzt die Reservierung auf gebucht."
     },
     {
-      "id": "ia-907d4a4af7",
+      "id": "ia-514e23caae",
       "stepId": "SendInvitationTask",
       "kind": "customTask",
       "name": "SendInvitation",
       "key": "democompany-customer-bookAppointmentV1-SendInvitation",
       "status": "draft",
-      "inTypeId": "t-61694d5fb7",
-      "outTypeId": "t-1d57a75ea2",
+      "inTypeId": "t-154e4fae98",
+      "outTypeId": "t-589022ed88",
       "descr": "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook."
     },
     {
-      "id": "ia-15084bf307",
+      "id": "ia-664b941a50",
       "stepId": "ReleaseDeclinedReservationTask",
       "kind": "customTask",
       "name": "ReleaseReservation",
       "key": "democompany-customer-bookAppointmentV1-ReleaseReservation",
       "status": "draft",
-      "inTypeId": "t-1935e5bbff",
-      "outTypeId": "t-e2d4f6b7d7",
+      "inTypeId": "t-64dc72a044",
+      "outTypeId": "t-6402f678b7",
       "descr": "Löscht die Reservierung - der Termin ist wieder frei."
     },
     {
-      "id": "ia-91bc23dbd0",
+      "id": "ia-0b6f6e56d2",
+      "stepId": "SendDeclinedEmailTask",
+      "kind": "customTask",
+      "name": "SendMail",
+      "key": "democompany-customer-bookAppointmentV1-SendMail",
+      "status": "draft",
+      "inTypeId": "t-7918c10be0",
+      "outTypeId": "t-ae3eab0ee8",
+      "descr": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
+    },
+    {
+      "id": "ia-a19bc47678",
       "stepId": "ReleaseExpiredReservationTask",
       "kind": "customTask",
       "name": "ReleaseReservation",
       "key": "democompany-customer-bookAppointmentV1-ReleaseReservation",
       "status": "draft",
-      "inTypeId": "t-1935e5bbff",
-      "outTypeId": "t-e2d4f6b7d7",
+      "inTypeId": "t-64dc72a044",
+      "outTypeId": "t-6402f678b7",
       "descr": "Löscht die Reservierung - der Termin ist wieder frei."
     }
   ],

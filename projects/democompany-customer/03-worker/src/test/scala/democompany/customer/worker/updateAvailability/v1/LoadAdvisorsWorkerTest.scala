@@ -2,29 +2,13 @@ package democompany.customer
 package worker.updateAvailability.v1
 
 import democompany.customer.domain.updateAvailability.v1.LoadAdvisors.*
-import democompany.customer.worker.updateAvailability.v1.LoadAdvisorsWorker
+import democompany.customer.worker.appointments.Advisors
 
 //sbt worker/testOnly *LoadAdvisorsWorkerTest
 class LoadAdvisorsWorkerTest extends munit.FunSuite:
 
-  lazy val worker = LoadAdvisorsWorker()
-
-
-  test("runWork"):
-    val in = In.example
-    val out = Right(Out.example)
-    assertEquals(
-      worker.runWork(in),
-      out
-    )
-  test("runWork minimal"):
-    val in = In.exampleMinimal
-    val out = Right(Out.exampleMinimal)
-    assertEquals(
-      worker.runWork(in),
-      out
-    )
-
-
+  test("the advisors of the configuration - without ADVISORS the demo ones"):
+    assume(sys.env.get("ADVISORS").isEmpty, "ADVISORS is set")
+    assertEquals(LoadAdvisorsWorker().runWork(In("kundenberater")), Right(Out(Advisors.demo)))
 
 end LoadAdvisorsWorkerTest

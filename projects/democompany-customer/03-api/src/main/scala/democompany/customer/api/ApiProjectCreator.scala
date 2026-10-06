@@ -36,6 +36,7 @@ object ApiProjectCreator extends CompanyApiCreator:
       BookReservation.example,
       SendInvitation.example,
       ReleaseReservation.example,
+      SendMail.example,
     )
   end bookAppointmentApi
 

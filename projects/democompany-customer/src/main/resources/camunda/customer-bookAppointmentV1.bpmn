@@ -24,7 +24,7 @@
       <bpmn:incoming>Flow_OutputmockedBoundaryEvent_OutputmockedEvent1</bpmn:incoming>
       <bpmn:linkEventDefinition id="LinkEventDefinition_throw" name="output-mocked" />
     </bpmn:intermediateThrowEvent>
-    <bpmn:serviceTask id="SendVerificationEmailTask" name="E-Mail-Bestätigung senden" camunda:type="external" camunda:topic="democompany-services-mailsV1-SendEmail">
+    <bpmn:serviceTask id="SendVerificationEmailTask" name="E-Mail-Bestätigung senden" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-SendMail">
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="to">#{email}</camunda:inputParameter>
@@ -77,7 +77,7 @@
       <bpmn:outgoing>ConfirmationFlow</bpmn:outgoing>
       <bpmn:outgoing>NoConfirmationFlow</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="NotifyAdvisorTask" name="Berater benachrichtigen" camunda:type="external" camunda:topic="democompany-services-mailsV1-SendEmail">
+    <bpmn:serviceTask id="NotifyAdvisorTask" name="Berater benachrichtigen" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-SendMail">
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="to">#{advisorEmail}</camunda:inputParameter>
@@ -98,7 +98,7 @@
         <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">${timerConfirmReminder}</bpmn:timeDuration>
       </bpmn:timerEventDefinition>
     </bpmn:boundaryEvent>
-    <bpmn:serviceTask id="SendReminderTask" name="Erinnerung senden" camunda:type="external" camunda:topic="democompany-services-mailsV1-SendEmail">
+    <bpmn:serviceTask id="SendReminderTask" name="Erinnerung senden" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-SendMail">
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="to">#{advisorEmail}</camunda:inputParameter>
@@ -122,7 +122,7 @@
       <bpmn:incoming>DeclinedFlow</bpmn:incoming>
       <bpmn:outgoing>Flow_ReleaseDeclinedReservationTask_SendDeclinedEmailTask</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="SendDeclinedEmailTask" name="Absage senden" camunda:type="external" camunda:topic="democompany-services-mailsV1-SendEmail">
+    <bpmn:serviceTask id="SendDeclinedEmailTask" name="Absage senden" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-SendMail">
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="to">#{email}</camunda:inputParameter>
