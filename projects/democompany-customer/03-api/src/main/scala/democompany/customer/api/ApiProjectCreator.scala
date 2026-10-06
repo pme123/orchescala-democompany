@@ -6,11 +6,12 @@ object ApiProjectCreator extends CompanyApiCreator:
   val title = "democompany-customer"
 
   lazy val projectDescr =
-    "TODO Your Project description."
+    "Kunden-PoCs der democompany - zuerst die Terminbuchung (appointments)."
 
   val version = "0.1.0-SNAPSHOT"
 
   document(
+    appointmentsApi,
     bookAppointmentApi,
     updateAvailabilityApi,
     //myProcessApi,
@@ -25,6 +26,15 @@ object ApiProjectCreator extends CompanyApiCreator:
       // userTasks / workers etc.
     )
   */
+
+  // the services of the area appointments - without process
+  private lazy val appointmentsApi =
+    import democompany.customer.domain.appointments.*
+    group("Termine")(
+      FreeSlots.example,
+      ReserveSlot.example,
+    )
+  end appointmentsApi
 
   private lazy val bookAppointmentApi =
     import democompany.customer.domain.bookAppointment.v1.*

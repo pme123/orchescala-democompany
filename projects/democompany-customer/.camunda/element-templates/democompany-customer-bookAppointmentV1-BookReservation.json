@@ -1,0 +1,118 @@
+{
+  "name" : "democompany-customer-bookAppointmentV1-BookReservation",
+  "id" : "democompany-customer-bookAppointmentV1-BookReservation",
+  "description" : "Setzt die Reservierung auf gebucht.",
+  "version" : 0,
+  "appliesTo" : [
+    "bpmn:Activity"
+  ],
+  "elementType" : {
+    "value" : "bpmn:ServiceTask"
+  },
+  "properties" : [
+    {
+      "value" : "#{reservationId}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "reservationId"
+      },
+      "label" : "reservationId",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "bookedAt",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{bookedAt}"
+      },
+      "label" : "bookedAt",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "democompany-customer-bookAppointmentV1-BookReservation",
+      "binding" : {
+        "type" : "property",
+        "name" : "camunda:topic"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "external",
+      "binding" : {
+        "type" : "property",
+        "name" : "camunda:type"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{true}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_manualOutMapping"
+      },
+      "label" : "_manualOutMapping",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "bookedAt",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_outputVariables"
+      },
+      "label" : "_outputVariables",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.getVariable('_outputMock')}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_outputMock"
+      },
+      "label" : "_outputMock",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "handledError1, handledError2",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_handledErrors"
+      },
+      "label" : "_handledErrors",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "errorRegex1, errorRegex2",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_regexHandledErrors"
+      },
+      "label" : "_regexHandledErrors",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "Book Reservation",
+      "binding" : {
+        "type" : "property",
+        "name" : "name"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    }
+  ],
+  "$schema" : "https://unpkg.com/@camunda/element-templates-json-schema@0.16.0/resources/schema.json",
+  "groups" : [
+  ],
+  "entriesVisible" : true
+}

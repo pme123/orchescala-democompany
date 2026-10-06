@@ -1,0 +1,2011 @@
+openapi: 3.1.0
+info:
+  title: democompany-customer
+  version: 0.1.0-SNAPSHOT
+  summary: "\n\nKunden-PoCs der democompany - zuerst die Terminbuchung (appointments).\n\
+    \nCreated at 10/6/26, 3:25 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
+    \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
+    **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
+    - **Authorization**: `Bearer Token` with the `{{access_token}}` from the `GetToken`\
+    \ request.\n- **Variables**: `tenantId`: `{{bank}}`\n- **Scripts - Pre-Request**:\n\
+    \n```javascript\n// Refresh the OAuth token if necessary\nlet tokenDate = new\
+    \ Date(2010, 1, 1);\nconst tokenTimestamp = pm.environment.get(\"OAuth_Timestamp\"\
+    );\nif (tokenTimestamp) {\n  tokenDate = Date.parse(tokenTimestamp);\n}\nlet expiresInTime\
+    \ = pm.environment.get(\"ExpiresInTime\");\nif (!expiresInTime) {\n  expiresInTime\
+    \ = 300000; // Set default expiration time to 5 minutes\n}\nif (new Date() - tokenDate\
+    \ >= expiresInTime) {\npm.sendRequest(\n{\n  url: `${pm.environment.get(\n   \
+    \   \"tokenService\"\n    )}/auth/realms/${pm.environment.get(\n      \"bank\"\
+    \n    )}/protocol/openid-connect/token`,\n  method: \"POST\",\n  header: {\n \
+    \   \"Content-Type\": \"application/x-www-form-urlencoded\",\n  },\n  body: {\n\
+    \    mode: \"urlencoded\",\n    urlencoded: [\n      { key: \"grant_type\", value:\
+    \ \"password\" },\n      { key: \"client_id\", value: pm.environment.get(\"clientId\"\
+    )},\n      { key: \"client_secret\", value: pm.environment.get(\"clientSecret\"\
+    )},\n      { key: \"username\", value: pm.environment.get(\"username\")},\n  \
+    \    { key: \"password\", value: pm.environment.get(\"pwd\") },\n      { key:\
+    \ \"scope\", value: pm.environment.get(\"scope\") },\n    ],\n  },\n},\n  (_,\
+    \ res) => {\n    pm.environment.set(\"access_token\", res.json().access_token);\n\
+    \    pm.environment.set(\"OAuth_Timestamp\", new Date());\n    // Set the ExpiresInTime\
+    \ variable to the time given in the response if it exists\n    if (res.json().expires_in)\
+    \ {\n      expiresInTime = res.json().expires_in * 1000;\n    }\n    pm.environment.set(\"\
+    ExpiresInTime\", expiresInTime);\n  });\n}\n  ```\n\n- **Scripts - Post-Response**:\n\
+    \n```javascript\n  // Collection-level test script\n  pm.test(\"Auto-set variables\"\
+    , function () {\n    const response = pm.response.json();\n\n    // Set processInstanceId\
+    \ if present\n    if (response.processInstanceId) {\n        const id = response.processInstanceId;\n\
+    \        pm.collectionVariables.set(\"processInstanceId\", id);\n        console.log(\"\
+    Set processInstanceId: \" + id);\n    }\n\n    // Set taskId for array responses\n\
+    \    if (pm.response.headers.get(\"userTaskId\")) {\n        const id = pm.response.headers.get(\"\
+    userTaskId\")\n        pm.collectionVariables.set(\"userTaskInstanceId\", id);\n\
+    \        console.log(\"userTaskInstanceId: \" + id)\n\n    }\n\n});\n  ```\n\n\
+    </p>\n</details>\n\n\n\n\n# Package Configuration\n**Check all dependency trees\
+    \ here: [democompany-customer](../../dependencies/democompany-customer.html)**\n\
+    \n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\
+    \nprojectName: democompany-customer\nprojectVersion: 0.1.0-SNAPSHOT\nsubProjects:\
+    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n  democompany-services\n\
+    ]\n// the engine of this project: C7 | C8 | Op - without it the company default\
+    \ (C8)\nengineType: Op\n\n```\n\n</p>\n</details>\n\n\nThere is no README.md in\
+    \ the Project.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
+    <p>\n\n\nAll notable changes to this project will be documented in this file.\n\
+    \n* Types of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
+    \ functionality\n  * Deprecated: soon-to-be-removed features\n  * Removed: now\
+    \ removed features\n  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\
+    \n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\n\
+    and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
+    \n\n</p>\n</details>\n\n\n<p/>\n<details>\n<summary>\n<b><i>General Variables</i></b>\n\
+    </summary>\n\n<p>\n\n### Mocking\n\n**_servicesMocked**:\n\nMock all the _ServiceWorkers_\
+    \ in your process with their default Mock:\n\n- DSL:\n```scala\nprocess(..)\n\
+    \  .mockServices\n```\n\n- Json\n```json\n...\n\"_servicesMocked\": true,\n...\n\
+    ```\n\n\n**_mockedWorkers**:\n\nMock any Process- and/or ExternalTask-Worker with\
+    \ their default Mocks.\nThis is a list of the _Worker topicNames or Process processNames_,\
+    \ you want to mock.\nIt is also possible to use a _comma separated_ String,\n\
+    like `\"mySubProcess,myOtherSubProcess,myService\"`\n\n_Be aware_: For Sub-Processes,\
+    \ this expects an _InitWorker_ where the _topicName_ is equal to the _processName_.\n\
+    \n\n- DSL:\n```scala\nprocess(..)\n  .mockedWorkers(\"mySubProcess1\", \"mySubProcess2\"\
+    ) // creates a list with SubProcessess\n  .mockedWorker(\"myOtherSubProcess\"\
+    ) // adds a SubProcess\n```\n\n- Json\n```json\n...\n\"mockedWorkers\": [\"mySubProcess\"\
+    , \"myOtherSubProcess, myService\"],\n...\n```\n\n\n**_outputMock**:\n\nMock the\
+    \ Process or ExternalTask (`Out`)\n - You find an example in every _Process_ and\
+    \ _ExternalTask_.\n\n\n- DSL:\n```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n\
+    \  .mockWith(outputMock)\n```\n\n- Json\n```json\n...\n\"outputMock\": {..},\n\
+    ...\n```\n\n\n**_outputServiceMock**:\n\nMock the Inner-Service (`MockedServiceResponse[ServiceOut]`)\n\
+    \ - You find an example in every _ServiceTask_.\n\n\n- DSL:\n```scala\nserviceTask(..)\n\
+    \  .mockServiceWith(MockedServiceResponse\n     .success200(inOut.defaultServiceOutMock))\n\
+    ```\n\n- Json\n```json\n...\n\"outputServiceMock\": {\n  \"respStatus\" : 200,\n\
+    \  \"respBody\" : \"Example String Body\",\n  \"respHeaders\" : [\n  ]\n},\n...\n\
+    ```\n\n### Mapping\n**_outputVariables**:\n\nYou can filter the Output with a\
+    \ list of variable names you are interested in.\nThis list may include all variables\
+    \ from the output (`Out`). We included an example for each Process or ExternalTask.\n\
+    It is also possible to use a _comma separated_ String,\nlike `\"name,firstName\"\
+    `\n\n\n- DSL:\n```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n  .withOutputVariables(\"\
+    name\", \"firstName\") // creates a list with outputVariables\n  .withOutputVariable(\"\
+    nickname\") // adds a outputVariable\n```\n\n- Json\n```json\n...\n\"_outputVariables\"\
+    : [\"name\", \"firstName\"],\n...\n```\n\n\n**_manualOutMapping**:\n\nBy default\
+    \ all output Variables (`Out`) are on the Process for _External Tasks_.\nIf the\
+    \ filter __outputVariables_ is not enough,\nyou can set this variable - every\
+    \ output variable is then local.\n\n_Be aware_ that you must then manually have\
+    \ _output mappings_ for each output variable!\n\n\n- DSL:\n```scala\nserviceTask(..)\
+    \ // or customTask(..)\n  .manualOutMapping\n```\n\n- Json\n```json\n...\n\"_manualOutMapping\"\
+    : true,\n...\n```\n\n### Mocking\n**_handledErrors**:\n\nA list of error codes\
+    \ that are handled (`BpmnError`)\nIt is also possible to use a _comma separated_\
+    \ String,\nlike `\"validation-failed,404\"`\n\nAt the moment only _ServiceTasks_\
+    \ supported.\n\n\n- DSL:\n```scala\nserviceTask(..)\n  .handleErrors(ErrorCodes.`validation-failed`,\
+    \ \"404\") // create a list of handledErrors\n  .handleError(\"404\") // add a\
+    \ handledError\n```\n\n- Json\n```json\n...\n\"_handledErrors\": [\"validation-failed\"\
+    , \"404\"],\n...\n```\n\n\n**_regexHandledErrors**:\n\nYou can further filter\
+    \ Handled Errors with a list of Regex expressions that the body error message\
+    \ must match.\nIt is also possible to use a _comma separated_ String,\nlike `\"\
+    SQL exception,\"errorNr\":\"20000\"\"`\n\nAt the moment only _ServiceTasks_ supported.\n\
+    \n\n- DSL:\n```scala\nserviceTask(..)\n  .handleErrorWithRegex(\"SQL exception\"\
+    )\n  .handleErrorWithRegex(\"\\\"errorNr\\\":\\\"20000\\\"\")\n```\n\n- Json\n\
+    ```json\n...\n\"_regexHandledErrors\": [\"SQL exception\", \"\"errorNr\":\"20000\"\
+    \"],\n...\n```\n\n### Authorization\n**_identityCorrelation**:\n\nIdentity correlation\
+    \ for binding user identity to the process instance using HMAC-SHA256 signatures.\n\
+    This prevents replay attacks and tampering by cryptographically binding the user\
+    \ identity to a specific process instance.\nThe correlation is automatically signed\
+    \ with the process instance ID when starting a process or completing a user task.\n\
+    Configure the signing key via environment variable `ORCHESCALA_IDENTITY_SIGNING_KEY`\
+    \ or in `EngineConfig`.\n\n- DSL:\n```scala\nval identity = IdentityCorrelation(\n\
+    \  username = \"alice@example.com\",\n  email = Some(\"alice@example.com\"),\n\
+    \  impersonateProcessValue = Some(\"department-123\")\n)\nprocess(..) // or serviceTask(..)/customTask(..)\n\
+    \  .withIdentityCorrelation(identity)\n```\n\n- Json\n```json\n...\n\"_identityCorrelation\"\
+    : {\n  \"username\": \"alice@example.com\",\n  \"email\": \"alice@example.com\"\
+    ,\n  \"impersonateProcessValue\": \"department-123\",\n  \"issuedAt\": 1706371200000,\n\
+    \  \"processInstanceId\": \"12345\",\n  \"signature\": \"abc123...\"\n},\n...\n\
+    ```\n\n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api\
+    \ v0.9.0-durchstich-SNAPSHOT](https://github.com/pme123/orchescala)\n> - democompany-orchescala-api\
+    \ 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\n"
+paths:
+  /worker/democompany-customer-freeSlots:
+    post:
+      tags:
+      - Termine
+      summary: 'Worker: freeSlots'
+      description: |2-
+
+        **Topic:** `democompany-customer-freeSlots` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
+
+        Freie Termine für Thema und Kanal - nach den Terminregeln, aus Outlook, ohne Reservierungen.
+
+        - Input:  `democompany.customer.domain.appointments.FreeSlots > In`
+        - Output: `democompany.customer.domain.appointments.FreeSlots > Out`
+
+
+
+        You can test this worker using the generic process _**orchescala-externalTask-generic**_ (e.g. with Postman).
+
+
+
+        **Used in no other Process.**
+
+        **Uses no other Processes.**
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        This describes the <b>Input</b> and the <b>Output</b> of the Worker.
+
+        Running this request with Postman, it will run the Worker directly, no Process will be started.
+
+        </p>
+        </details>
+      operationId: 'Worker: freeSlots'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FreeSlots.In'
+            examples:
+              democompany-customer-freeSlots:
+                value:
+                  topic: advice
+                  channel: branch
+                  days: 14
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FreeSlots.Out'
+              examples:
+                democompany-customer-freeSlots:
+                  value:
+                    slots:
+                    - advisorId: anna.berater
+                      advisorName: Anna Berater
+                      advisorEmail: anna.berater@democompany.ch
+                      start: '2026-10-06T15:25:25.654793'
+                      end: '2026-10-06T15:25:25.654801'
+                      topic: advice
+                      channel: branch
+  /worker/democompany-customer-reserveSlot:
+    post:
+      tags:
+      - Termine
+      summary: 'Worker: reserveSlot'
+      description: |2-
+
+        **Topic:** `democompany-customer-reserveSlot` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
+
+        Reserviert einen freien Termin - ist er schon vergeben, ein Fehler «leider vergeben».
+
+        - Input:  `democompany.customer.domain.appointments.ReserveSlot > In`
+        - Output: `democompany.customer.domain.appointments.ReserveSlot > Out`
+
+
+
+        You can test this worker using the generic process _**orchescala-externalTask-generic**_ (e.g. with Postman).
+
+
+
+        **Used in no other Process.**
+
+        **Uses no other Processes.**
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        This describes the <b>Input</b> and the <b>Output</b> of the Worker.
+
+        Running this request with Postman, it will run the Worker directly, no Process will be started.
+
+        </p>
+        </details>
+      operationId: 'Worker: reserveSlot'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReserveSlot.In'
+            examples:
+              democompany-customer-reserveSlot:
+                value:
+                  appointment:
+                    advisorId: anna.berater
+                    advisorName: Anna Berater
+                    advisorEmail: anna.berater@democompany.ch
+                    start: '2026-10-06T15:25:25.654793'
+                    end: '2026-10-06T15:25:25.654801'
+                    topic: advice
+                    channel: branch
+                  contact:
+                    firstName: Peter
+                    lastName: Muster
+                    email: peter.muster@example.ch
+                    phone: +41 79 123 45 67
+                    customerNo: '100200'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReserveSlot.Out'
+              examples:
+                democompany-customer-reserveSlot:
+                  value:
+                    reservationId: anna.berater-2026-10-20T09:00
+                    reservedUntil: '2026-10-06T12:30:00'
+  /process/democompany-customer-bookAppointmentV1/async:
+    post:
+      tags:
+      - Book Appointment V1
+      summary: Process start
+      description: "\n\n\n---\n\n- **Called Element**: `democompany-customer-bookAppointmentV1`\
+        \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.customer.domain.bookAppointment.v1.BookAppointment\
+        \ > In`\n- Output: `democompany.customer.domain.bookAppointment.v1.BookAppointment\
+        \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
+        \ id=\"customer-bookAppointmentV1-56124\">\n    <img onLoad=\"openFromUrl('customer-bookAppointmentV1.bpmn',\
+        \ new BpmnJS({ container: $('#customer-bookAppointmentV1-56124'), height:\
+        \ '95%', width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [customer-bookAppointmentV1.bpmn](diagrams/customer-bookAppointmentV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('customer-bookAppointmentV1-56124')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
+        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"reservationId,booked,customerStatus\",\n...\n```\n\n**outputMock**:\n\n\
+        ```json\n...\n\"outputMock\": {\n  \"reservationId\" : \"anna.berater-2026-10-20T09:00\"\
+        ,\n  \"booked\" : true,\n  \"customerStatus\" : \"customer\"\n},\n...\n```\n\
+        \n</p>\n</details>\n</p>\n      \n\n\n**Used in no other Process.**\n\n**Uses\
+        \ no other Processes.**\n<p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Input</b> to start the Process with.\n\nBe aware\
+        \ that running this request with Postman,\nyou will not get the <b>Output</b>\
+        \ but the <i>processInstanceId</i>, as starting a process is asynchronous.\n\
+        \nTo get the <b>Output</b> you need to use the `Process variables` request.\n\
+        \n</p>\n</details>"
+      operationId: Process start
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookAppointment.In'
+            examples:
+              democompany-customer-bookAppointmentV1:
+                value:
+                  reservationId: anna.berater-2026-10-20T09:00
+                  appointment:
+                    advisorId: anna.berater
+                    advisorName: Anna Berater
+                    advisorEmail: anna.berater@democompany.ch
+                    start: '2026-10-06T15:25:25.654793'
+                    end: '2026-10-06T15:25:25.654801'
+                    topic: advice
+                    channel: branch
+                  contact:
+                    firstName: Peter
+                    lastName: Muster
+                    email: peter.muster@example.ch
+                    phone: +41 79 123 45 67
+                    customerNo: '100200'
+                  remark: Bitte mit Parkplatz
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessInfo'
+              example:
+                processInstanceId: f150c3f1-13f5-11ec-936e-0242ac1d0007
+                businessKey: ORDER-2025-12345
+                status: Active
+                engineType: C7
+  /process/democompany-customer-bookAppointmentV1/{processInstanceId}/variables:
+    get:
+      tags:
+      - Book Appointment V1
+      summary: Process variables
+      description: "\n\n\n---\n\n- **Called Element**: `democompany-customer-bookAppointmentV1`\
+        \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.customer.domain.bookAppointment.v1.BookAppointment\
+        \ > In`\n- Output: `democompany.customer.domain.bookAppointment.v1.BookAppointment\
+        \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
+        </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"reservationId,booked,customerStatus\"\
+        ,\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"reservationId\"\
+        \ : \"anna.berater-2026-10-20T09:00\",\n  \"booked\" : true,\n  \"customerStatus\"\
+        \ : \"customer\"\n},\n...\n```\n\n</p>\n</details>\n</p>\n      <p/>\n<details>\n\
+        <summary><b><i>General Information</i></b></summary>\n<p>\n\nThis describes\
+        \ the <b>Output</b> of the Process you get. Be aware this does not check if\
+        \ the process is finished (TODO).\n\n  \n</p>\n</details>"
+      operationId: Process variables
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: reservationId,booked,customerStatus
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookAppointment.Out'
+              examples:
+                democompany-customer-bookAppointmentV1:
+                  value:
+                    reservationId: anna.berater-2026-10-20T09:00
+                    booked: true
+                    customerStatus: customer
+  /worker/democompany-customer-bookAppointmentV1:
+    post:
+      tags:
+      - Book Appointment V1
+      summary: Init Worker
+      description: |2
+
+        <details>
+        <summary><b>General Information</b></summary>
+
+        The Init Worker has the following responsibilities:
+
+          - Validates the Process Input (`In`). -> by Orchescala
+          - Maps the Configuration to Process Variables (`InConfig`). -> by Orchescala
+          - Custom validation the Process Input (`In`, e.g. combining 2 variables). -> Process Specific
+          - Initializes the default Variables with `In` as input (see _Process_ description) and `InitIn` as output. -> Process Specific
+
+        The Input is the same as the `In` object of the _Process_.
+
+        `NoInput` means there is no initialization needed.
+        </details>
+      operationId: Init Worker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookAppointment.In'
+            examples:
+              democompany-customer-bookAppointmentV1:
+                value:
+                  reservationId: anna.berater-2026-10-20T09:00
+                  appointment:
+                    advisorId: anna.berater
+                    advisorName: Anna Berater
+                    advisorEmail: anna.berater@democompany.ch
+                    start: '2026-10-06T15:25:25.654793'
+                    end: '2026-10-06T15:25:25.654801'
+                    topic: advice
+                    channel: branch
+                  contact:
+                    firstName: Peter
+                    lastName: Muster
+                    email: peter.muster@example.ch
+                    phone: +41 79 123 45 67
+                    customerNo: '100200'
+                  remark: Bitte mit Parkplatz
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookAppointment.InitIn'
+              examples:
+                InitIn:
+                  value:
+                    email: peter.muster@example.ch
+                    customerName: Peter Muster
+                    advisorEmail: anna.berater@democompany.ch
+                    topic: mortgage
+                    channel: branch
+                    appointmentText: Mo 20.10.2026, 09:00-10:30, Hypothek, Filiale
+                    verificationLink: http://localhost:8888/app/democompany-customer/appointments/verified?reservation=anna.berater-2026-10-20T09:00
+                    confirmLink: http://localhost:8888/app/democompany-customer/appointments/confirm?process=123
+  /message/democompany-customer-bookAppointmentV1-emailVerified:
+    post:
+      tags:
+      - Book Appointment V1
+      summary: 'Message: emailVerified'
+      description: |2-
+
+        Der Kunde hat den Link in der Opt-in-Mail angeklickt.
+
+        - _messageName_: `democompany-customer-bookAppointmentV1-emailVerified`
+
+        ---
+
+
+
+
+        - Input:  `democompany.customer.domain.bookAppointment.v1.EmailVerifiedME > In`
+        - Output: `orchescala.domain.NoOutput`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+        Send a Message to the Process.
+        Process is waiting at a Message Event, or has the possibility to interact with a Message,
+        e.g. in a Boundary Event.
+
+        </p>
+        </details>
+      operationId: 'Message: emailVerified'
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: timeToLiveInSec
+        in: query
+        description: 'The time in seconds the message is buffered, waiting for correlation.
+          The default value is 0 seconds (no buffering). Only supported in C8 - BE
+          AWARE that if set, it is fire and forget: Camunda will just try to correlate
+          for the configured time.'
+        required: false
+        schema:
+          type: integer
+          format: int32
+        example: 10
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      - name: processInstanceId
+        in: query
+        description: Process instance ID to correlate the message to a specific process
+          instance.
+        required: false
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailVerifiedME.In'
+            examples:
+              democompany-customer-bookAppointmentV1-emailVerified:
+                value:
+                  verifiedAt: '2026-10-06T15:25:25.676582'
+        required: true
+      responses:
+        '200':
+          description: ''
+  /worker/democompany-customer-bookAppointmentV1-AssignCustomer:
+    post:
+      tags:
+      - Book Appointment V1
+      summary: 'Worker: AssignCustomer'
+      description: |2-
+
+        **Topic:** `democompany-customer-bookAppointmentV1-AssignCustomer` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
+
+        Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent.
+
+        - Input:  `democompany.customer.domain.bookAppointment.v1.AssignCustomer > In`
+        - Output: `democompany.customer.domain.bookAppointment.v1.AssignCustomer > Out`
+
+
+
+        You can test this worker using the generic process _**orchescala-externalTask-generic**_ (e.g. with Postman).
+
+
+
+        **Used in no other Process.**
+
+        **Uses no other Processes.**
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        This describes the <b>Input</b> and the <b>Output</b> of the Worker.
+
+        Running this request with Postman, it will run the Worker directly, no Process will be started.
+
+        </p>
+        </details>
+      operationId: 'Worker: AssignCustomer'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignCustomer.In'
+            examples:
+              democompany-customer-bookAppointmentV1-AssignCustomer:
+                value:
+                  contact:
+                    firstName: Peter
+                    lastName: Muster
+                    email: peter.muster@example.ch
+                    phone: +41 79 123 45 67
+                    customerNo: '100200'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignCustomer.Out'
+              examples:
+                democompany-customer-bookAppointmentV1-AssignCustomer:
+                  value:
+                    customerStatus: customer
+                    clientId: '100200'
+                    customerName: Beispiel
+  /dmn/democompany-customer-bookAppointmentV1-AppointmentRules/NOT_IMPLEMENTED:
+    post:
+      tags:
+      - Book Appointment V1
+      summary: 'Dmn: AppointmentRules'
+      description: |2-
+
+        Terminregeln: Dauer, Vorlaufzeit, Zeitfenster, Puffer, Berater-Pool und ob der Berater bestätigt.
+
+        ---
+        Choose Type DMN in Business Rule Task:
+
+        - Decision Reference: `democompany-customer-bookAppointmentV1-AppointmentRules`
+
+
+
+
+        - Input:  `democompany.customer.domain.bookAppointment.v1.AppointmentRulesDmn > In`
+        - Output: `orchescala.domain.SingleResult`
+
+
+
+        <div class="diagramCanvas">
+          <div class="diagram" id="customer-bookAppointmentV1-AppointmentRules-71198">
+            <img onLoad="openFromUrl('customer-bookAppointmentV1-AppointmentRules.dmn', new DmnJS({ container: $('#customer-bookAppointmentV1-AppointmentRules-71198'), height: '95%', width: '95%' }));" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" />
+          </div>
+        </div>
+
+        Download: [customer-bookAppointmentV1-AppointmentRules.dmn](diagrams/customer-bookAppointmentV1-AppointmentRules.dmn)
+
+
+        <div>
+          <button onclick="downloadSVG('customer-bookAppointmentV1-AppointmentRules-71198')">Download Diagram as SVG</button>
+        </div>
+
+
+
+        **Used in no other Process.**
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+        You can emulate a DMN.
+
+        <b>NOT IMPLEMENTED in Gateway API!</b>
+
+        You can use the DMN Tester to test your DMNs.
+
+        This is done via the DMN API which is not part of Camunda 8!
+
+        </p>
+        </details>
+      operationId: 'Dmn: AppointmentRules'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentRulesDmn.In'
+            examples:
+              democompany-customer-bookAppointmentV1-AppointmentRules:
+                value:
+                  topic: mortgage
+                  channel: branch
+                  customerStatus: customer
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleResult_democompany.customer.domain.bookAppointment.v1.AppointmentRulesDmn.Out'
+              examples:
+                democompany-customer-bookAppointmentV1-AppointmentRules:
+                  value:
+                    durationMinutes: 90
+                    leadTimeHours: 48
+                    windowStart: 08:00
+                    windowEnd: '17:00'
+                    bufferMinutes: 15
+                    advisorPool: mortgage
+                    confirmationRequired: true
+  /process/{processInstanceId}/userTask/ConfirmAppointmentTask/variables:
+    get:
+      tags:
+      - Book Appointment V1
+      summary: 'UserTask variables: ConfirmAppointmentTask'
+      description: |2-
+
+        Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab.
+
+        - _taskDefinitionKey_: `ConfirmAppointmentTask`
+
+        ---
+
+
+
+
+        - Input:  `democompany.customer.domain.bookAppointment.v1.ConfirmAppointmentUT > In`
+        - Output: `democompany.customer.domain.bookAppointment.v1.ConfirmAppointmentUT > Out`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        A <b>UserTask</b> consists of two steps (variables and complete).
+        This is the <b>first step</b>:
+
+        1. Wait for the UserTask and get then the Variables.
+
+        The <b>Output</b> are the Variables you want for your UserTask Form.
+
+
+        </p>
+        </details>
+      operationId: 'UserTask variables: ConfirmAppointmentTask'
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: appointment,contact,customerStatus,remark
+      - name: timeoutInSec
+        in: query
+        description: The maximum number of seconds to wait for the user task to become
+          active (0 - 60). If not provided, it will wait 10 seconds.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 60
+        example: 10
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfirmAppointmentUT.In'
+              examples:
+                ConfirmAppointmentTask:
+                  value:
+                    appointment:
+                      advisorId: anna.berater
+                      advisorName: Anna Berater
+                      advisorEmail: anna.berater@democompany.ch
+                      start: '2026-10-06T15:25:25.654793'
+                      end: '2026-10-06T15:25:25.654801'
+                      topic: advice
+                      channel: branch
+                    contact:
+                      firstName: Peter
+                      lastName: Muster
+                      email: peter.muster@example.ch
+                      phone: +41 79 123 45 67
+                      customerNo: '100200'
+                    customerStatus: customer
+                    remark: Beispiel
+  /userTask/ConfirmAppointmentTask/{userTaskInstanceId}/complete:
+    post:
+      tags:
+      - Book Appointment V1
+      summary: 'UserTask complete: ConfirmAppointmentTask'
+      description: |2-
+
+        Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab.
+
+        - _taskDefinitionKey_: `ConfirmAppointmentTask`
+
+        ---
+
+
+
+
+        - Input:  `democompany.customer.domain.bookAppointment.v1.ConfirmAppointmentUT > In`
+        - Output: `democompany.customer.domain.bookAppointment.v1.ConfirmAppointmentUT > Out`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        A <b>UserTask</b> consists of two steps (variables and complete).
+        This is the <b>second step</b>:
+
+        2. Complete the UserTask
+
+        The <b>Input</b> are the Variables you want to set when completing the task.
+
+
+        </p>
+        </details>
+      operationId: 'UserTask complete: ConfirmAppointmentTask'
+      parameters:
+      - name: userTaskInstanceId
+        in: path
+        description: User task instance ID (obtained from getUserTaskVariables)
+        required: true
+        schema:
+          type: string
+        example: '{{userTaskInstanceId}}'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmAppointmentUT.Out'
+            examples:
+              ConfirmAppointmentTask:
+                value:
+                  accepted: true
+                  declineReason: Beispiel
+        required: true
+      responses:
+        '200':
+          description: ''
+  /worker/democompany-customer-bookAppointmentV1-BookReservation:
+    post:
+      tags:
+      - Book Appointment V1
+      summary: 'Worker: BookReservation'
+      description: |2-
+
+        **Topic:** `democompany-customer-bookAppointmentV1-BookReservation` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
+
+        Setzt die Reservierung auf gebucht.
+
+        - Input:  `democompany.customer.domain.bookAppointment.v1.BookReservation > In`
+        - Output: `democompany.customer.domain.bookAppointment.v1.BookReservation > Out`
+
+
+
+        You can test this worker using the generic process _**orchescala-externalTask-generic**_ (e.g. with Postman).
+
+
+
+        **Used in no other Process.**
+
+        **Uses no other Processes.**
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        This describes the <b>Input</b> and the <b>Output</b> of the Worker.
+
+        Running this request with Postman, it will run the Worker directly, no Process will be started.
+
+        </p>
+        </details>
+      operationId: 'Worker: BookReservation'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookReservation.In'
+            examples:
+              democompany-customer-bookAppointmentV1-BookReservation:
+                value:
+                  reservationId: anna.berater-2026-10-20T09:00
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookReservation.Out'
+              examples:
+                democompany-customer-bookAppointmentV1-BookReservation:
+                  value:
+                    bookedAt: '2026-10-06T15:25:25.693054'
+  /worker/democompany-customer-bookAppointmentV1-SendInvitation:
+    post:
+      tags:
+      - Book Appointment V1
+      summary: 'Worker: SendInvitation'
+      description: |2-
+
+        **Topic:** `democompany-customer-bookAppointmentV1-SendInvitation` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
+
+        Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook.
+
+        - Input:  `democompany.customer.domain.bookAppointment.v1.SendInvitation > In`
+        - Output: `democompany.customer.domain.bookAppointment.v1.SendInvitation > Out`
+
+
+
+        You can test this worker using the generic process _**orchescala-externalTask-generic**_ (e.g. with Postman).
+
+
+
+        **Used in no other Process.**
+
+        **Uses no other Processes.**
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        This describes the <b>Input</b> and the <b>Output</b> of the Worker.
+
+        Running this request with Postman, it will run the Worker directly, no Process will be started.
+
+        </p>
+        </details>
+      operationId: 'Worker: SendInvitation'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendInvitation.In'
+            examples:
+              democompany-customer-bookAppointmentV1-SendInvitation:
+                value:
+                  appointment:
+                    advisorId: anna.berater
+                    advisorName: Anna Berater
+                    advisorEmail: anna.berater@democompany.ch
+                    start: '2026-10-06T15:25:25.654793'
+                    end: '2026-10-06T15:25:25.654801'
+                    topic: advice
+                    channel: branch
+                  contact:
+                    firstName: Peter
+                    lastName: Muster
+                    email: peter.muster@example.ch
+                    phone: +41 79 123 45 67
+                    customerNo: '100200'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendInvitation.Out'
+              examples:
+                democompany-customer-bookAppointmentV1-SendInvitation:
+                  value:
+                    sentAt: '2026-10-06T15:25:25.695643'
+  /worker/democompany-customer-bookAppointmentV1-ReleaseReservation:
+    post:
+      tags:
+      - Book Appointment V1
+      summary: 'Worker: ReleaseReservation'
+      description: |2-
+
+        **Topic:** `democompany-customer-bookAppointmentV1-ReleaseReservation` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
+
+        Löscht die Reservierung - der Termin ist wieder frei.
+
+        - Input:  `democompany.customer.domain.bookAppointment.v1.ReleaseReservation > In`
+        - Output: `democompany.customer.domain.bookAppointment.v1.ReleaseReservation > Out`
+
+
+
+        You can test this worker using the generic process _**orchescala-externalTask-generic**_ (e.g. with Postman).
+
+
+
+        **Used in no other Process.**
+
+        **Uses no other Processes.**
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        This describes the <b>Input</b> and the <b>Output</b> of the Worker.
+
+        Running this request with Postman, it will run the Worker directly, no Process will be started.
+
+        </p>
+        </details>
+      operationId: 'Worker: ReleaseReservation'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseReservation.In'
+            examples:
+              democompany-customer-bookAppointmentV1-ReleaseReservation:
+                value:
+                  reservationId: anna.berater-2026-10-20T09:00
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseReservation.Out'
+              examples:
+                democompany-customer-bookAppointmentV1-ReleaseReservation:
+                  value:
+                    releasedAt: '2026-10-06T15:25:25.697861'
+  /worker/democompany-customer-bookAppointmentV1-SendMail:
+    post:
+      tags:
+      - Book Appointment V1
+      summary: 'Worker: SendMail'
+      description: |2-
+
+        **Topic:** `democompany-customer-bookAppointmentV1-SendMail` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
+
+        Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit).
+
+        - Input:  `democompany.customer.domain.bookAppointment.v1.SendMail > In`
+        - Output: `democompany.customer.domain.bookAppointment.v1.SendMail > Out`
+
+
+
+        You can test this worker using the generic process _**orchescala-externalTask-generic**_ (e.g. with Postman).
+
+
+
+        **Used in no other Process.**
+
+        **Uses no other Processes.**
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        This describes the <b>Input</b> and the <b>Output</b> of the Worker.
+
+        Running this request with Postman, it will run the Worker directly, no Process will be started.
+
+        </p>
+        </details>
+      operationId: 'Worker: SendMail'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMail.In'
+            examples:
+              democompany-customer-bookAppointmentV1-SendMail:
+                value:
+                  to: peter.muster@example.ch
+                  subject: Bitte bestätigen Sie Ihre Terminanfrage
+                  body: Guten Tag
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendMail.Out'
+              examples:
+                democompany-customer-bookAppointmentV1-SendMail:
+                  value:
+                    sentAt: '2026-10-06T15:25:25.700615'
+  /process/democompany-customer-updateAvailabilityV1/async:
+    post:
+      tags:
+      - Update Availability V1
+      summary: Process start
+      description: "\n\n\n---\n\n- **Called Element**: `democompany-customer-updateAvailabilityV1`\
+        \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.customer.domain.updateAvailability.v1.UpdateAvailability\
+        \ > In`\n- Output: `democompany.customer.domain.updateAvailability.v1.UpdateAvailability\
+        \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
+        \ id=\"customer-updateAvailabilityV1-40371\">\n    <img onLoad=\"openFromUrl('customer-updateAvailabilityV1.bpmn',\
+        \ new BpmnJS({ container: $('#customer-updateAvailabilityV1-40371'), height:\
+        \ '95%', width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [customer-updateAvailabilityV1.bpmn](diagrams/customer-updateAvailabilityV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('customer-updateAvailabilityV1-40371')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
+        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"advisorCount\",\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\"\
+        : {\n  \"advisorCount\" : 3\n},\n...\n```\n\n</p>\n</details>\n</p>\n    \
+        \  \n\n\n**Used in no other Process.**\n\n**Uses no other Processes.**\n<p/>\n\
+        <details>\n<summary><b><i>General Information</i></b></summary>\n<p>\n\nThis\
+        \ describes the <b>Input</b> to start the Process with.\n\nBe aware that running\
+        \ this request with Postman,\nyou will not get the <b>Output</b> but the <i>processInstanceId</i>,\
+        \ as starting a process is asynchronous.\n\nTo get the <b>Output</b> you need\
+        \ to use the `Process variables` request.\n\n</p>\n</details>"
+      operationId: Process start
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAvailability.In'
+            examples:
+              democompany-customer-updateAvailabilityV1:
+                value:
+                  daysAhead: 21
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessInfo'
+              example:
+                processInstanceId: f150c3f1-13f5-11ec-936e-0242ac1d0007
+                businessKey: ORDER-2025-12345
+                status: Active
+                engineType: C7
+  /process/democompany-customer-updateAvailabilityV1/{processInstanceId}/variables:
+    get:
+      tags:
+      - Update Availability V1
+      summary: Process variables
+      description: "\n\n\n---\n\n- **Called Element**: `democompany-customer-updateAvailabilityV1`\
+        \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.customer.domain.updateAvailability.v1.UpdateAvailability\
+        \ > In`\n- Output: `democompany.customer.domain.updateAvailability.v1.UpdateAvailability\
+        \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
+        </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"advisorCount\",\n\
+        ...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"advisorCount\"\
+        \ : 3\n},\n...\n```\n\n</p>\n</details>\n</p>\n      <p/>\n<details>\n<summary><b><i>General\
+        \ Information</i></b></summary>\n<p>\n\nThis describes the <b>Output</b> of\
+        \ the Process you get. Be aware this does not check if the process is finished\
+        \ (TODO).\n\n  \n</p>\n</details>"
+      operationId: Process variables
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: advisorCount
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateAvailability.Out'
+              examples:
+                democompany-customer-updateAvailabilityV1:
+                  value:
+                    advisorCount: 3
+  /worker/democompany-customer-updateAvailabilityV1:
+    post:
+      tags:
+      - Update Availability V1
+      summary: Init Worker
+      description: |2
+
+        <details>
+        <summary><b>General Information</b></summary>
+
+        The Init Worker has the following responsibilities:
+
+          - Validates the Process Input (`In`). -> by Orchescala
+          - Maps the Configuration to Process Variables (`InConfig`). -> by Orchescala
+          - Custom validation the Process Input (`In`, e.g. combining 2 variables). -> Process Specific
+          - Initializes the default Variables with `In` as input (see _Process_ description) and `InitIn` as output. -> Process Specific
+
+        The Input is the same as the `In` object of the _Process_.
+
+        `NoInput` means there is no initialization needed.
+        </details>
+      operationId: Init Worker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAvailability.In'
+            examples:
+              democompany-customer-updateAvailabilityV1:
+                value:
+                  daysAhead: 21
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateAvailability.InitIn'
+              examples:
+                InitIn:
+                  value:
+                    daysAhead: 21
+  /worker/democompany-customer-updateAvailabilityV1-LoadAdvisors:
+    post:
+      tags:
+      - Update Availability V1
+      summary: 'Worker: LoadAdvisors'
+      description: |2-
+
+        **Topic:** `democompany-customer-updateAvailabilityV1-LoadAdvisors` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
+
+        Lädt die Berater mit der Rolle kundenberater.
+
+        - Input:  `democompany.customer.domain.updateAvailability.v1.LoadAdvisors > In`
+        - Output: `democompany.customer.domain.updateAvailability.v1.LoadAdvisors > Out`
+
+
+
+        You can test this worker using the generic process _**orchescala-externalTask-generic**_ (e.g. with Postman).
+
+
+
+        **Used in no other Process.**
+
+        **Uses no other Processes.**
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        This describes the <b>Input</b> and the <b>Output</b> of the Worker.
+
+        Running this request with Postman, it will run the Worker directly, no Process will be started.
+
+        </p>
+        </details>
+      operationId: 'Worker: LoadAdvisors'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoadAdvisors.In'
+            examples:
+              democompany-customer-updateAvailabilityV1-LoadAdvisors:
+                value:
+                  role: kundenberater
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoadAdvisors.Out'
+              examples:
+                democompany-customer-updateAvailabilityV1-LoadAdvisors:
+                  value:
+                    advisors:
+                    - id: anna.berater
+                      name: Anna Berater
+                      email: anna.berater@democompany.ch
+  /worker/democompany-customer-updateAvailabilityV1-ReadCalendar:
+    post:
+      tags:
+      - Update Availability V1
+      summary: 'Worker: ReadCalendar'
+      description: |2-
+
+        **Topic:** `democompany-customer-updateAvailabilityV1-ReadCalendar` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
+
+        Liest die belegten Zeiten eines Beraters (Kalender-Mock, später Outlook über Graph).
+
+        - Input:  `democompany.customer.domain.updateAvailability.v1.ReadCalendar > In`
+        - Output: `democompany.customer.domain.updateAvailability.v1.ReadCalendar > Out`
+
+
+
+        You can test this worker using the generic process _**orchescala-externalTask-generic**_ (e.g. with Postman).
+
+
+
+        **Used in no other Process.**
+
+        **Uses no other Processes.**
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        This describes the <b>Input</b> and the <b>Output</b> of the Worker.
+
+        Running this request with Postman, it will run the Worker directly, no Process will be started.
+
+        </p>
+        </details>
+      operationId: 'Worker: ReadCalendar'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReadCalendar.In'
+            examples:
+              democompany-customer-updateAvailabilityV1-ReadCalendar:
+                value:
+                  advisor:
+                    id: anna.berater
+                    name: Anna Berater
+                    email: anna.berater@democompany.ch
+                  daysAhead: 21
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadCalendar.Out'
+              examples:
+                democompany-customer-updateAvailabilityV1-ReadCalendar:
+                  value:
+                    busy:
+                    - start: '2026-10-06T15:25:25.711866'
+                      end: '2026-10-06T15:25:25.711869'
+  /worker/democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot:
+    post:
+      tags:
+      - Update Availability V1
+      summary: 'Worker: SaveCalendarSnapshot'
+      description: |2-
+
+        **Topic:** `democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
+
+        Speichert die belegten Zeiten des Beraters (ersetzt den letzten Stand).
+
+        - Input:  `democompany.customer.domain.updateAvailability.v1.SaveCalendarSnapshot > In`
+        - Output: `democompany.customer.domain.updateAvailability.v1.SaveCalendarSnapshot > Out`
+
+
+
+        You can test this worker using the generic process _**orchescala-externalTask-generic**_ (e.g. with Postman).
+
+
+
+        **Used in no other Process.**
+
+        **Uses no other Processes.**
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        This describes the <b>Input</b> and the <b>Output</b> of the Worker.
+
+        Running this request with Postman, it will run the Worker directly, no Process will be started.
+
+        </p>
+        </details>
+      operationId: 'Worker: SaveCalendarSnapshot'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveCalendarSnapshot.In'
+            examples:
+              democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot:
+                value:
+                  advisor:
+                    id: anna.berater
+                    name: Anna Berater
+                    email: anna.berater@democompany.ch
+                  busy:
+                  - start: '2026-10-06T15:25:25.711866'
+                    end: '2026-10-06T15:25:25.711869'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaveCalendarSnapshot.Out'
+              examples:
+                democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot:
+                  value:
+                    savedAt: '2026-10-06T15:25:25.714576'
+components:
+  schemas:
+    Advisor:
+      title: Advisor
+      type: object
+      required:
+      - id
+      - name
+      - email
+      properties:
+        id:
+          description: Benutzer-ID im IdP
+          type: string
+        name:
+          description: Name
+          type: string
+        email:
+          description: E-Mail für Benachrichtigungen und Einladungen
+          type: string
+    Appointment:
+      title: Appointment
+      type: object
+      required:
+      - advisorId
+      - advisorName
+      - advisorEmail
+      - start
+      - end
+      - topic
+      - channel
+      properties:
+        advisorId:
+          description: Berater (Benutzer-ID)
+          type: string
+        advisorName:
+          description: Name des Beraters
+          type: string
+        advisorEmail:
+          description: E-Mail des Beraters
+          type: string
+        start:
+          description: Beginn
+          type: string
+        end:
+          description: Ende
+          type: string
+        topic:
+          $ref: '#/components/schemas/Topic'
+        channel:
+          $ref: '#/components/schemas/Channel'
+    AppointmentRulesDmn.In:
+      title: AppointmentRulesDmn.In
+      type: object
+      required:
+      - topic
+      - channel
+      - customerStatus
+      properties:
+        topic:
+          description: Thema (advice, mortgage, pension, investment)
+          type: string
+        channel:
+          description: Kanal (branch, video, phone)
+          type: string
+        customerStatus:
+          description: Kundenstatus (customer, prospect)
+          type: string
+    AppointmentRulesDmn.Out:
+      title: AppointmentRulesDmn.Out
+      type: object
+      required:
+      - durationMinutes
+      - leadTimeHours
+      - windowStart
+      - windowEnd
+      - bufferMinutes
+      - advisorPool
+      - confirmationRequired
+      properties:
+        durationMinutes:
+          description: Dauer in Minuten
+          type: integer
+          format: int32
+        leadTimeHours:
+          description: Vorlaufzeit in Stunden
+          type: integer
+          format: int32
+        windowStart:
+          description: Zeitfenster von (HH:mm)
+          type: string
+        windowEnd:
+          description: Zeitfenster bis (HH:mm)
+          type: string
+        bufferMinutes:
+          description: Puffer zwischen Terminen in Minuten
+          type: integer
+          format: int32
+        advisorPool:
+          description: Berater-Pool
+          type: string
+        confirmationRequired:
+          description: Bestätigung durch den Berater nötig
+          type: boolean
+    AssignCustomer.In:
+      title: AssignCustomer.In
+      type: object
+      required:
+      - contact
+      properties:
+        contact:
+          $ref: '#/components/schemas/Contact'
+          description: Kontaktdaten aus dem Formular
+    AssignCustomer.Out:
+      title: AssignCustomer.Out
+      type: object
+      required:
+      - customerStatus
+      properties:
+        customerStatus:
+          $ref: '#/components/schemas/CustomerStatus'
+        clientId:
+          description: Kunden-ID, wenn gefunden
+          type: string
+        customerName:
+          description: Name laut Kundenstamm, wenn gefunden
+          type: string
+    BookAppointment.In:
+      title: BookAppointment.In
+      type: object
+      required:
+      - reservationId
+      - appointment
+      - contact
+      properties:
+        reservationId:
+          description: Reservierung `<advisor>-<start>` - entsteht vor dem Start (Service
+            reserveSlot)
+          type: string
+        appointment:
+          $ref: '#/components/schemas/Appointment'
+          description: Der gewählte Termin
+        contact:
+          $ref: '#/components/schemas/Contact'
+          description: Kontaktdaten
+        remark:
+          description: Bemerkung
+          type: string
+        inConfig:
+          $ref: '#/components/schemas/BookAppointment.InConfig'
+    BookAppointment.InConfig:
+      title: BookAppointment.InConfig
+      description: |-
+        A way to override process configuration.
+
+        **SHOULD NOT BE USED on Production!**
+      type: object
+      required:
+      - timerVerifyEmail
+      - timerConfirmReminder
+      properties:
+        timerVerifyEmail:
+          description: So lange gilt die Reservierung ohne Opt-in
+          type: string
+          pattern: ^P(?!$)(?:(?<years>\d+(?:\.\d+)?)Y)?(?:(?<months>\d+(?:\.\d+)?)M)?(?:(?<weeks>\d+(?:\.\d+)?)W)?(?:(?<days>\d+(?:\.\d+)?)D)?(T(?=\d)(?:(?<hours>\d+(?:\.\d+)?)H)?(?:(?<minutes>\d+(?:\.\d+)?)M)?(?:(?<seconds>\d+(?:\.\d+)?)S)?)?$
+        timerConfirmReminder:
+          description: Erinnerung an den Berater, wenn der Task offen ist
+          type: string
+          pattern: ^P(?!$)(?:(?<years>\d+(?:\.\d+)?)Y)?(?:(?<months>\d+(?:\.\d+)?)M)?(?:(?<weeks>\d+(?:\.\d+)?)W)?(?:(?<days>\d+(?:\.\d+)?)D)?(T(?=\d)(?:(?<hours>\d+(?:\.\d+)?)H)?(?:(?<minutes>\d+(?:\.\d+)?)M)?(?:(?<seconds>\d+(?:\.\d+)?)S)?)?$
+    BookAppointment.InitIn:
+      title: BookAppointment.InitIn
+      type: object
+      required:
+      - email
+      - customerName
+      - advisorEmail
+      - topic
+      - channel
+      - appointmentText
+      - verificationLink
+      - confirmLink
+      properties:
+        email:
+          description: E-Mail des Kunden (aus contact)
+          type: string
+        customerName:
+          description: Vorname und Name (aus contact)
+          type: string
+        advisorEmail:
+          description: E-Mail des Beraters (aus appointment)
+          type: string
+        topic:
+          description: Thema - für die Terminregeln
+          type: string
+        channel:
+          description: Kanal - für die Terminregeln
+          type: string
+        appointmentText:
+          description: Der Termin als Text für die Mails
+          type: string
+        verificationLink:
+          description: Link für den Opt-in
+          type: string
+        confirmLink:
+          description: Link auf den Task «Termin bestätigen»
+          type: string
+    BookAppointment.Out:
+      title: BookAppointment.Out
+      type: object
+      required:
+      - reservationId
+      - booked
+      properties:
+        reservationId:
+          description: Reservierung
+          type: string
+        booked:
+          description: Termin gebucht
+          type: boolean
+        customerStatus:
+          $ref: '#/components/schemas/CustomerStatus'
+    BookReservation.In:
+      title: BookReservation.In
+      type: object
+      required:
+      - reservationId
+      properties:
+        reservationId:
+          description: Reservierung
+          type: string
+    BookReservation.Out:
+      title: BookReservation.Out
+      type: object
+      required:
+      - bookedAt
+      properties:
+        bookedAt:
+          description: Zeitpunkt der Buchung
+          type: string
+    BusyPeriod:
+      title: BusyPeriod
+      type: object
+      required:
+      - start
+      - end
+      properties:
+        start:
+          description: Beginn
+          type: string
+        end:
+          description: Ende
+          type: string
+    Channel:
+      title: Channel
+      description: Kanal
+      type: string
+      enum:
+      - branch
+      - phone
+      - video
+    ConfirmAppointmentUT.In:
+      title: ConfirmAppointmentUT.In
+      type: object
+      required:
+      - appointment
+      - contact
+      - customerStatus
+      properties:
+        appointment:
+          $ref: '#/components/schemas/Appointment'
+          description: Der reservierte Termin
+        contact:
+          $ref: '#/components/schemas/Contact'
+          description: Kontaktdaten
+        customerStatus:
+          $ref: '#/components/schemas/CustomerStatus'
+        remark:
+          description: Bemerkung des Kunden
+          type: string
+    ConfirmAppointmentUT.Out:
+      title: ConfirmAppointmentUT.Out
+      type: object
+      required:
+      - accepted
+      properties:
+        accepted:
+          description: Termin angenommen
+          type: boolean
+        declineReason:
+          description: Begründung - geht in die Absage an den Kunden
+          type: string
+    Contact:
+      title: Contact
+      type: object
+      required:
+      - firstName
+      - lastName
+      - email
+      properties:
+        firstName:
+          description: Vorname
+          type: string
+        lastName:
+          description: Nachname
+          type: string
+        email:
+          description: E-Mail - für den Opt-in und die Einladung
+          type: string
+        phone:
+          description: Telefon
+          type: string
+        customerNo:
+          description: Kunden-Nr. - nur ein Hinweis, verbindlich ordnet der Berater
+            zu
+          type: string
+    CustomerStatus:
+      title: CustomerStatus
+      description: Kunde oder Interessent
+      type: string
+      enum:
+      - customer
+      - prospect
+    EmailVerifiedME.In:
+      title: EmailVerifiedME.In
+      type: object
+      properties:
+        verifiedAt:
+          description: Zeitpunkt des Klicks
+          type: string
+    EngineType:
+      title: EngineType
+      description: Type of the engine
+      type: string
+      enum:
+      - C7
+      - C8
+      - Gateway
+      - Op
+    FreeSlots.In:
+      title: FreeSlots.In
+      type: object
+      required:
+      - topic
+      - channel
+      - days
+      properties:
+        topic:
+          $ref: '#/components/schemas/Topic'
+        channel:
+          $ref: '#/components/schemas/Channel'
+        from:
+          description: Ab welchem Tag - ohne Angabe heute
+          type: string
+          format: date
+        days:
+          description: Wie viele Tage
+          type: integer
+          format: int32
+    FreeSlots.Out:
+      title: FreeSlots.Out
+      type: object
+      required:
+      - slots
+      properties:
+        slots:
+          description: Die freien Termine, nach Beginn
+          type: array
+          items:
+            $ref: '#/components/schemas/Appointment'
+    LoadAdvisors.In:
+      title: LoadAdvisors.In
+      type: object
+      required:
+      - role
+      properties:
+        role:
+          description: Rolle der Berater im IdP
+          type: string
+    LoadAdvisors.Out:
+      title: LoadAdvisors.Out
+      type: object
+      required:
+      - advisors
+      properties:
+        advisors:
+          description: Die Berater
+          type: array
+          items:
+            $ref: '#/components/schemas/Advisor'
+    ProcessInfo:
+      title: ProcessInfo
+      description: Contains information about a process instance or execution
+      type: object
+      required:
+      - processInstanceId
+      - status
+      - engineType
+      properties:
+        processInstanceId:
+          description: ID of the process instance
+          type: string
+        businessKey:
+          description: Optional business key associated with the process
+          type: string
+        status:
+          $ref: '#/components/schemas/ProcessStatus'
+        engineType:
+          $ref: '#/components/schemas/EngineType'
+    ProcessStatus:
+      title: ProcessStatus
+      description: Current status of the process
+      type: string
+      enum:
+      - Active
+      - Completed
+      - Failed
+    ReadCalendar.In:
+      title: ReadCalendar.In
+      type: object
+      required:
+      - advisor
+      - daysAhead
+      properties:
+        advisor:
+          $ref: '#/components/schemas/Advisor'
+          description: Berater
+        daysAhead:
+          description: Wie viele Tage voraus
+          type: integer
+          format: int32
+    ReadCalendar.Out:
+      title: ReadCalendar.Out
+      type: object
+      required:
+      - busy
+      properties:
+        busy:
+          description: Belegte Zeiten
+          type: array
+          items:
+            $ref: '#/components/schemas/BusyPeriod'
+    ReleaseReservation.In:
+      title: ReleaseReservation.In
+      type: object
+      required:
+      - reservationId
+      properties:
+        reservationId:
+          description: Reservierung
+          type: string
+    ReleaseReservation.Out:
+      title: ReleaseReservation.Out
+      type: object
+      required:
+      - releasedAt
+      properties:
+        releasedAt:
+          description: Zeitpunkt der Freigabe
+          type: string
+    ReserveSlot.In:
+      title: ReserveSlot.In
+      type: object
+      required:
+      - appointment
+      - contact
+      properties:
+        appointment:
+          $ref: '#/components/schemas/Appointment'
+          description: Der gewählte Termin
+        contact:
+          $ref: '#/components/schemas/Contact'
+          description: Kontaktdaten
+        remark:
+          description: Bemerkung
+          type: string
+    ReserveSlot.Out:
+      title: ReserveSlot.Out
+      type: object
+      required:
+      - reservationId
+      - reservedUntil
+      properties:
+        reservationId:
+          description: Die Reservierung `<advisor>-<start>` - damit startet der Prozess
+            bookAppointment
+          type: string
+        reservedUntil:
+          description: Bis wann sie ohne Opt-in gilt
+          type: string
+    SaveCalendarSnapshot.In:
+      title: SaveCalendarSnapshot.In
+      type: object
+      required:
+      - advisor
+      - busy
+      properties:
+        advisor:
+          $ref: '#/components/schemas/Advisor'
+          description: Berater
+        busy:
+          description: Belegte Zeiten
+          type: array
+          items:
+            $ref: '#/components/schemas/BusyPeriod'
+    SaveCalendarSnapshot.Out:
+      title: SaveCalendarSnapshot.Out
+      type: object
+      required:
+      - savedAt
+      properties:
+        savedAt:
+          description: Stand
+          type: string
+    SendInvitation.In:
+      title: SendInvitation.In
+      type: object
+      required:
+      - appointment
+      - contact
+      properties:
+        appointment:
+          $ref: '#/components/schemas/Appointment'
+          description: Der gebuchte Termin
+        contact:
+          $ref: '#/components/schemas/Contact'
+          description: Kontaktdaten des Kunden
+    SendInvitation.Out:
+      title: SendInvitation.Out
+      type: object
+      required:
+      - sentAt
+      properties:
+        sentAt:
+          description: Zeitpunkt des Versands
+          type: string
+    SendMail.In:
+      title: SendMail.In
+      type: object
+      required:
+      - to
+      - subject
+      - body
+      properties:
+        to:
+          description: Empfänger
+          type: string
+        subject:
+          description: Betreff
+          type: string
+        body:
+          description: Text - `\n` ist ein Zeilenumbruch
+          type: string
+    SendMail.Out:
+      title: SendMail.Out
+      type: object
+      required:
+      - sentAt
+      properties:
+        sentAt:
+          description: Zeitpunkt des Versands
+          type: string
+    SingleResult_democompany.customer.domain.bookAppointment.v1.AppointmentRulesDmn.Out:
+      oneOf:
+      - $ref: '#/components/schemas/AppointmentRulesDmn.Out'
+    Topic:
+      title: Topic
+      description: Thema
+      type: string
+      enum:
+      - advice
+      - investment
+      - mortgage
+      - pension
+    UpdateAvailability.In:
+      title: UpdateAvailability.In
+      type: object
+      properties:
+        daysAhead:
+          description: Wie viele Tage voraus die Kalender gelesen werden
+          type: integer
+          format: int32
+        inConfig:
+          $ref: '#/components/schemas/UpdateAvailability.InConfig'
+    UpdateAvailability.InConfig:
+      title: UpdateAvailability.InConfig
+      description: |-
+        A way to override process configuration.
+
+        **SHOULD NOT BE USED on Production!**
+      type: object
+    UpdateAvailability.InitIn:
+      title: UpdateAvailability.InitIn
+      type: object
+      required:
+      - daysAhead
+      properties:
+        daysAhead:
+          description: Wie viele Tage voraus die Kalender gelesen werden
+          type: integer
+          format: int32
+    UpdateAvailability.Out:
+      title: UpdateAvailability.Out
+      type: object
+      required:
+      - advisorCount
+      properties:
+        advisorCount:
+          description: Anzahl aktualisierter Berater
+          type: integer
+          format: int32
+tags:
+- name: Termine
+  description: ''
+  x-displayName: Termine

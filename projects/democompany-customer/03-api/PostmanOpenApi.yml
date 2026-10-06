@@ -1,0 +1,1033 @@
+openapi: 3.1.0
+info:
+  title: democompany-customer
+  version: 0.1.0-SNAPSHOT
+  summary: "\n**This is for Postman - to have example requests. Be aware the Output\
+    \ is not provided!**\n\n\n\nKunden-PoCs der democompany - zuerst die Terminbuchung\
+    \ (appointments).\n\nCreated at 10/6/26, 3:25 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
+    \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
+    **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
+    - **Authorization**: `Bearer Token` with the `{{access_token}}` from the `GetToken`\
+    \ request.\n- **Variables**: `tenantId`: `{{bank}}`\n- **Scripts - Pre-Request**:\n\
+    \n```javascript\n// Refresh the OAuth token if necessary\nlet tokenDate = new\
+    \ Date(2010, 1, 1);\nconst tokenTimestamp = pm.environment.get(\"OAuth_Timestamp\"\
+    );\nif (tokenTimestamp) {\n  tokenDate = Date.parse(tokenTimestamp);\n}\nlet expiresInTime\
+    \ = pm.environment.get(\"ExpiresInTime\");\nif (!expiresInTime) {\n  expiresInTime\
+    \ = 300000; // Set default expiration time to 5 minutes\n}\nif (new Date() - tokenDate\
+    \ >= expiresInTime) {\npm.sendRequest(\n{\n  url: `${pm.environment.get(\n   \
+    \   \"tokenService\"\n    )}/auth/realms/${pm.environment.get(\n      \"bank\"\
+    \n    )}/protocol/openid-connect/token`,\n  method: \"POST\",\n  header: {\n \
+    \   \"Content-Type\": \"application/x-www-form-urlencoded\",\n  },\n  body: {\n\
+    \    mode: \"urlencoded\",\n    urlencoded: [\n      { key: \"grant_type\", value:\
+    \ \"password\" },\n      { key: \"client_id\", value: pm.environment.get(\"clientId\"\
+    )},\n      { key: \"client_secret\", value: pm.environment.get(\"clientSecret\"\
+    )},\n      { key: \"username\", value: pm.environment.get(\"username\")},\n  \
+    \    { key: \"password\", value: pm.environment.get(\"pwd\") },\n      { key:\
+    \ \"scope\", value: pm.environment.get(\"scope\") },\n    ],\n  },\n},\n  (_,\
+    \ res) => {\n    pm.environment.set(\"access_token\", res.json().access_token);\n\
+    \    pm.environment.set(\"OAuth_Timestamp\", new Date());\n    // Set the ExpiresInTime\
+    \ variable to the time given in the response if it exists\n    if (res.json().expires_in)\
+    \ {\n      expiresInTime = res.json().expires_in * 1000;\n    }\n    pm.environment.set(\"\
+    ExpiresInTime\", expiresInTime);\n  });\n}\n  ```\n\n- **Scripts - Post-Response**:\n\
+    \n```javascript\n  // Collection-level test script\n  pm.test(\"Auto-set variables\"\
+    , function () {\n    const response = pm.response.json();\n\n    // Set processInstanceId\
+    \ if present\n    if (response.processInstanceId) {\n        const id = response.processInstanceId;\n\
+    \        pm.collectionVariables.set(\"processInstanceId\", id);\n        console.log(\"\
+    Set processInstanceId: \" + id);\n    }\n\n    // Set taskId for array responses\n\
+    \    if (pm.response.headers.get(\"userTaskId\")) {\n        const id = pm.response.headers.get(\"\
+    userTaskId\")\n        pm.collectionVariables.set(\"userTaskInstanceId\", id);\n\
+    \        console.log(\"userTaskInstanceId: \" + id)\n\n    }\n\n});\n  ```\n\n\
+    </p>\n</details>\n\n\n\n\n# Package Configuration\n**Check all dependency trees\
+    \ here: [democompany-customer](../../dependencies/democompany-customer.html)**\n\
+    \n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\
+    \nprojectName: democompany-customer\nprojectVersion: 0.1.0-SNAPSHOT\nsubProjects:\
+    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n  democompany-services\n\
+    ]\n// the engine of this project: C7 | C8 | Op - without it the company default\
+    \ (C8)\nengineType: Op\n\n```\n\n</p>\n</details>\n\n\nThere is no README.md in\
+    \ the Project.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
+    <p>\n\n\nAll notable changes to this project will be documented in this file.\n\
+    \n* Types of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
+    \ functionality\n  * Deprecated: soon-to-be-removed features\n  * Removed: now\
+    \ removed features\n  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\
+    \n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\n\
+    and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
+    \n\n</p>\n</details>\n\n\n<p/>\n<details>\n<summary>\n<b><i>General Variables</i></b>\n\
+    </summary>\n\n<p>\n\n### Mocking\n\n**_servicesMocked**:\n\nMock all the _ServiceWorkers_\
+    \ in your process with their default Mock:\n\n- DSL:\n```scala\nprocess(..)\n\
+    \  .mockServices\n```\n\n- Json\n```json\n...\n\"_servicesMocked\": true,\n...\n\
+    ```\n\n\n**_mockedWorkers**:\n\nMock any Process- and/or ExternalTask-Worker with\
+    \ their default Mocks.\nThis is a list of the _Worker topicNames or Process processNames_,\
+    \ you want to mock.\nIt is also possible to use a _comma separated_ String,\n\
+    like `\"mySubProcess,myOtherSubProcess,myService\"`\n\n_Be aware_: For Sub-Processes,\
+    \ this expects an _InitWorker_ where the _topicName_ is equal to the _processName_.\n\
+    \n\n- DSL:\n```scala\nprocess(..)\n  .mockedWorkers(\"mySubProcess1\", \"mySubProcess2\"\
+    ) // creates a list with SubProcessess\n  .mockedWorker(\"myOtherSubProcess\"\
+    ) // adds a SubProcess\n```\n\n- Json\n```json\n...\n\"mockedWorkers\": [\"mySubProcess\"\
+    , \"myOtherSubProcess, myService\"],\n...\n```\n\n\n**_outputMock**:\n\nMock the\
+    \ Process or ExternalTask (`Out`)\n - You find an example in every _Process_ and\
+    \ _ExternalTask_.\n\n\n- DSL:\n```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n\
+    \  .mockWith(outputMock)\n```\n\n- Json\n```json\n...\n\"outputMock\": {..},\n\
+    ...\n```\n\n\n**_outputServiceMock**:\n\nMock the Inner-Service (`MockedServiceResponse[ServiceOut]`)\n\
+    \ - You find an example in every _ServiceTask_.\n\n\n- DSL:\n```scala\nserviceTask(..)\n\
+    \  .mockServiceWith(MockedServiceResponse\n     .success200(inOut.defaultServiceOutMock))\n\
+    ```\n\n- Json\n```json\n...\n\"outputServiceMock\": {\n  \"respStatus\" : 200,\n\
+    \  \"respBody\" : \"Example String Body\",\n  \"respHeaders\" : [\n  ]\n},\n...\n\
+    ```\n\n### Mapping\n**_outputVariables**:\n\nYou can filter the Output with a\
+    \ list of variable names you are interested in.\nThis list may include all variables\
+    \ from the output (`Out`). We included an example for each Process or ExternalTask.\n\
+    It is also possible to use a _comma separated_ String,\nlike `\"name,firstName\"\
+    `\n\n\n- DSL:\n```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n  .withOutputVariables(\"\
+    name\", \"firstName\") // creates a list with outputVariables\n  .withOutputVariable(\"\
+    nickname\") // adds a outputVariable\n```\n\n- Json\n```json\n...\n\"_outputVariables\"\
+    : [\"name\", \"firstName\"],\n...\n```\n\n\n**_manualOutMapping**:\n\nBy default\
+    \ all output Variables (`Out`) are on the Process for _External Tasks_.\nIf the\
+    \ filter __outputVariables_ is not enough,\nyou can set this variable - every\
+    \ output variable is then local.\n\n_Be aware_ that you must then manually have\
+    \ _output mappings_ for each output variable!\n\n\n- DSL:\n```scala\nserviceTask(..)\
+    \ // or customTask(..)\n  .manualOutMapping\n```\n\n- Json\n```json\n...\n\"_manualOutMapping\"\
+    : true,\n...\n```\n\n### Mocking\n**_handledErrors**:\n\nA list of error codes\
+    \ that are handled (`BpmnError`)\nIt is also possible to use a _comma separated_\
+    \ String,\nlike `\"validation-failed,404\"`\n\nAt the moment only _ServiceTasks_\
+    \ supported.\n\n\n- DSL:\n```scala\nserviceTask(..)\n  .handleErrors(ErrorCodes.`validation-failed`,\
+    \ \"404\") // create a list of handledErrors\n  .handleError(\"404\") // add a\
+    \ handledError\n```\n\n- Json\n```json\n...\n\"_handledErrors\": [\"validation-failed\"\
+    , \"404\"],\n...\n```\n\n\n**_regexHandledErrors**:\n\nYou can further filter\
+    \ Handled Errors with a list of Regex expressions that the body error message\
+    \ must match.\nIt is also possible to use a _comma separated_ String,\nlike `\"\
+    SQL exception,\"errorNr\":\"20000\"\"`\n\nAt the moment only _ServiceTasks_ supported.\n\
+    \n\n- DSL:\n```scala\nserviceTask(..)\n  .handleErrorWithRegex(\"SQL exception\"\
+    )\n  .handleErrorWithRegex(\"\\\"errorNr\\\":\\\"20000\\\"\")\n```\n\n- Json\n\
+    ```json\n...\n\"_regexHandledErrors\": [\"SQL exception\", \"\"errorNr\":\"20000\"\
+    \"],\n...\n```\n\n### Authorization\n**_identityCorrelation**:\n\nIdentity correlation\
+    \ for binding user identity to the process instance using HMAC-SHA256 signatures.\n\
+    This prevents replay attacks and tampering by cryptographically binding the user\
+    \ identity to a specific process instance.\nThe correlation is automatically signed\
+    \ with the process instance ID when starting a process or completing a user task.\n\
+    Configure the signing key via environment variable `ORCHESCALA_IDENTITY_SIGNING_KEY`\
+    \ or in `EngineConfig`.\n\n- DSL:\n```scala\nval identity = IdentityCorrelation(\n\
+    \  username = \"alice@example.com\",\n  email = Some(\"alice@example.com\"),\n\
+    \  impersonateProcessValue = Some(\"department-123\")\n)\nprocess(..) // or serviceTask(..)/customTask(..)\n\
+    \  .withIdentityCorrelation(identity)\n```\n\n- Json\n```json\n...\n\"_identityCorrelation\"\
+    : {\n  \"username\": \"alice@example.com\",\n  \"email\": \"alice@example.com\"\
+    ,\n  \"impersonateProcessValue\": \"department-123\",\n  \"issuedAt\": 1706371200000,\n\
+    \  \"processInstanceId\": \"12345\",\n  \"signature\": \"abc123...\"\n},\n...\n\
+    ```\n\n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api\
+    \ v0.9.0-durchstich-SNAPSHOT](https://github.com/pme123/orchescala)\n> - democompany-orchescala-api\
+    \ 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\n\n"
+servers:
+- url: http://localhost:8080/engine-rest
+  description: Local Developer Server
+paths:
+  /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-customer-freeSlots--:
+    post:
+      tags:
+      - Termine
+      summary: 'Worker: freeSlots'
+      description: |
+        Freie Termine für Thema und Kanal - nach den Terminregeln, aus Outlook, ohne Reservierungen.
+
+        See API Doc: [Worker: freeSlots](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20freeSlots)
+      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-customer-freeslots--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-customer-freeSlots:
+                value:
+                  variables:
+                    topic:
+                      value: advice
+                      type: String
+                    channel:
+                      value: branch
+                      type: String
+                    days:
+                      value: 14
+                      type: Integer
+                  businessKey: democompany-customer-freeSlots
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-customer-reserveSlot--:
+    post:
+      tags:
+      - Termine
+      summary: 'Worker: reserveSlot'
+      description: |
+        Reserviert einen freien Termin - ist er schon vergeben, ein Fehler «leider vergeben».
+
+        See API Doc: [Worker: reserveSlot](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20reserveSlot)
+      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-customer-reserveslot--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-customer-reserveSlot:
+                value:
+                  variables:
+                    appointment:
+                      value: |-
+                        {
+                          "advisorId" : "anna.berater",
+                          "advisorName" : "Anna Berater",
+                          "advisorEmail" : "anna.berater@democompany.ch",
+                          "start" : "2026-10-06T15:25:25.654793",
+                          "end" : "2026-10-06T15:25:25.654801",
+                          "topic" : "advice",
+                          "channel" : "branch"
+                        }
+                      type: Json
+                    contact:
+                      value: |-
+                        {
+                          "firstName" : "Peter",
+                          "lastName" : "Muster",
+                          "email" : "peter.muster@example.ch",
+                          "phone" : "+41 79 123 45 67",
+                          "customerNo" : "100200"
+                        }
+                      type: Json
+                  businessKey: democompany-customer-reserveSlot
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /process-definition/key/democompany-customer-bookAppointmentV1/start:
+    post:
+      tags:
+      - democompany-customer-bookAppointmentV1
+      summary: 'Bpmn: bookAppointmentV1'
+      description: |2
+
+
+
+        ---
+
+        - **Called Element**: `democompany-customer-bookAppointmentV1` (to define in the Call Activity)
+
+
+
+        ---
+
+
+
+
+        See API Doc: [Bpmn: bookAppointmentV1](/site/democompany/democompany-customer/OpenApi.html#operation/Bpmn:%20bookAppointmentV1)
+      operationId: postProcess-definitionKeyDemocompany-customer-bookappointmentv1Start
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-customer-bookAppointmentV1:
+                value:
+                  variables:
+                    reservationId:
+                      value: anna.berater-2026-10-20T09:00
+                      type: String
+                    contact:
+                      value: |-
+                        {
+                          "firstName" : "Peter",
+                          "lastName" : "Muster",
+                          "email" : "peter.muster@example.ch",
+                          "phone" : "+41 79 123 45 67",
+                          "customerNo" : "100200"
+                        }
+                      type: Json
+                    remark:
+                      value: Bitte mit Parkplatz
+                      type: String
+                    appointment:
+                      value: |-
+                        {
+                          "advisorId" : "anna.berater",
+                          "advisorName" : "Anna Berater",
+                          "advisorEmail" : "anna.berater@democompany.ch",
+                          "start" : "2026-10-06T15:25:25.654793",
+                          "end" : "2026-10-06T15:25:25.654801",
+                          "topic" : "advice",
+                          "channel" : "branch"
+                        }
+                      type: Json
+                  businessKey: democompany-customer-bookAppointmentV1
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /message/--REMOVE:democompany-customer-bookAppointmentV1-emailVerified--:
+    post:
+      tags:
+      - democompany-customer-bookAppointmentV1
+      summary: 'Message: emailVerified'
+      description: |2
+
+
+        Der Kunde hat den Link in der Opt-in-Mail angeklickt.
+
+        - _messageName_: `democompany-customer-bookAppointmentV1-emailVerified`
+
+        ---
+
+
+
+
+        Message:
+        - _messageName_: `democompany-customer-bookAppointmentV1-emailVerified`,
+
+
+        See API Doc: [Message: emailVerified](/site/democompany/democompany-customer/OpenApi.html#operation/Message:%20emailVerified)
+      operationId: postMessage--remove:democompany-customer-bookappointmentv1-emailverified--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CorrelateMessageIn'
+            examples:
+              democompany-customer-bookAppointmentV1-emailVerified:
+                value:
+                  messageName: democompany-customer-bookAppointmentV1-emailVerified
+                  businessKey: democompany-customer-bookAppointmentV1-emailVerified
+                  processVariables:
+                    verifiedAt:
+                      value: '2026-10-06T15:25:25.676582'
+                      type: String
+                  all: false
+                  resultEnabled: true
+                  variablesInResultEnabled: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  ? /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-customer-bookAppointmentV1-AssignCustomer--
+  : post:
+      tags:
+      - democompany-customer-bookAppointmentV1
+      summary: 'Worker: AssignCustomer'
+      description: |
+        Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent.
+
+        See API Doc: [Worker: AssignCustomer](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20AssignCustomer)
+      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-customer-bookappointmentv1-assigncustomer--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-customer-bookAppointmentV1-AssignCustomer:
+                value:
+                  variables:
+                    contact:
+                      value: |-
+                        {
+                          "firstName" : "Peter",
+                          "lastName" : "Muster",
+                          "email" : "peter.muster@example.ch",
+                          "phone" : "+41 79 123 45 67",
+                          "customerNo" : "100200"
+                        }
+                      type: Json
+                  businessKey: democompany-customer-bookAppointmentV1-AssignCustomer
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /decision-definition/key/{key}/--REMOVE:democompany-customer-bookAppointmentV1-AppointmentRules--/evaluate:
+    post:
+      tags:
+      - democompany-customer-bookAppointmentV1
+      summary: 'Dmn: AppointmentRules'
+      description: |2
+
+
+        Terminregeln: Dauer, Vorlaufzeit, Zeitfenster, Puffer, Berater-Pool und ob der Berater bestätigt.
+
+        ---
+        Choose Type DMN in Business Rule Task:
+
+        - Decision Reference: `democompany-customer-bookAppointmentV1-AppointmentRules`
+
+
+
+
+        Decision DMN:
+        - _decisionDefinitionKey_: `democompany-customer-bookAppointmentV1-AppointmentRules`,
+
+
+        See API Doc: [Dmn: AppointmentRules](/site/democompany/democompany-customer/OpenApi.html#operation/Dmn:%20AppointmentRules)
+      operationId: postDecision-definitionKeyKey--remove:democompany-customer-bookappointmentv1-appointmentrules--Evaluate
+      parameters:
+      - name: key
+        in: path
+        description: The Process- or Decision-DefinitionKey of the Process or Decision
+        required: true
+        schema:
+          default: democompany-customer-bookAppointmentV1-AppointmentRules
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvaluateDecisionIn'
+            examples:
+              democompany-customer-bookAppointmentV1-AppointmentRules:
+                value:
+                  variables:
+                    topic:
+                      value: mortgage
+                      type: String
+                    channel:
+                      value: branch
+                      type: String
+                    customerStatus:
+                      value: customer
+                      type: String
+        required: true
+      responses:
+        '200':
+          description: ''
+  /task/--REMOVE:ConfirmAppointmentTask--:
+    post:
+      tags:
+      - democompany-customer-bookAppointmentV1
+      summary: 'UserTask task: ConfirmAppointmentTask'
+      description: |2
+
+        Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab.
+
+        - _taskDefinitionKey_: `ConfirmAppointmentTask`
+
+        ---
+
+
+
+
+        See API Doc: [UserTask task: ConfirmAppointmentTask](/site/democompany/democompany-customer/OpenApi.html#operation/UserTask%20task:%20ConfirmAppointmentTask)
+      operationId: postTask--remove:confirmappointmenttask--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetActiveTaskIn'
+            examples:
+              ConfirmAppointmentTask:
+                value:
+                  processInstanceId: '{{processInstanceId}}'
+                  active: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /task/{taskId}/form-variables/--REMOVE:ConfirmAppointmentTask--:
+    get:
+      tags:
+      - democompany-customer-bookAppointmentV1
+      summary: 'UserTask variables: ConfirmAppointmentTask'
+      description: |2
+
+        Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab.
+
+        - _taskDefinitionKey_: `ConfirmAppointmentTask`
+
+        ---
+
+
+
+
+        See API Doc: [UserTask variables: ConfirmAppointmentTask](/site/democompany/democompany-customer/OpenApi.html#operation/UserTask%20variables:%20ConfirmAppointmentTask)
+      operationId: getTaskTaskidForm-variables--remove:confirmappointmenttask--
+      parameters:
+      - name: taskId
+        in: path
+        description: |
+          The taskId of the Form.
+          > This is the result id of the `GetActiveTask`
+
+          Add in the _Tests_ panel of _Postman_:
+          ```
+          let result = pm.response.json()[0];
+          pm.collectionVariables.set("taskId", result.id)
+          ```
+        required: true
+        schema:
+          default: '{{taskId}}'
+          type: string
+      - name: variableNames
+        in: query
+        description: |-
+          A comma-separated list of variable names. Allows restricting the list of requested variables to the variable names in the list.
+          It is best practice to restrict the list of variables to the variables actually required by the form in order to minimize fetching of data. If the query parameter is ommitted all variables are fetched.
+          If the query parameter contains non-existent variable names, the variable names are ignored.
+        required: false
+        schema:
+          default: name,example
+          type: string
+      - name: deserializeValues
+        in: query
+        required: false
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          description: ''
+  /task/{taskId}/complete/--REMOVE:ConfirmAppointmentTask--:
+    post:
+      tags:
+      - democompany-customer-bookAppointmentV1
+      summary: 'UserTask complete: ConfirmAppointmentTask'
+      description: |2
+
+        Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab.
+
+        - _taskDefinitionKey_: `ConfirmAppointmentTask`
+
+        ---
+
+
+
+
+        See API Doc: [UserTask complete: ConfirmAppointmentTask](/site/democompany/democompany-customer/OpenApi.html#operation/UserTask%20complete:%20ConfirmAppointmentTask)
+      operationId: postTaskTaskidComplete--remove:confirmappointmenttask--
+      parameters:
+      - name: taskId
+        in: path
+        description: |
+          The taskId of the Form.
+          > This is the result id of the `GetActiveTask`
+
+          Add in the _Tests_ panel of _Postman_:
+          ```
+          let result = pm.response.json()[0];
+          pm.collectionVariables.set("taskId", result.id)
+          ```
+        required: true
+        schema:
+          default: '{{taskId}}'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteTaskIn'
+            examples:
+              ConfirmAppointmentTask:
+                value:
+                  variables:
+                    accepted:
+                      value: true
+                      type: Boolean
+                    declineReason:
+                      value: Beispiel
+                      type: String
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  ? /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-customer-bookAppointmentV1-BookReservation--
+  : post:
+      tags:
+      - democompany-customer-bookAppointmentV1
+      summary: 'Worker: BookReservation'
+      description: |
+        Setzt die Reservierung auf gebucht.
+
+        See API Doc: [Worker: BookReservation](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20BookReservation)
+      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-customer-bookappointmentv1-bookreservation--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-customer-bookAppointmentV1-BookReservation:
+                value:
+                  variables:
+                    reservationId:
+                      value: anna.berater-2026-10-20T09:00
+                      type: String
+                  businessKey: democompany-customer-bookAppointmentV1-BookReservation
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  ? /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-customer-bookAppointmentV1-SendInvitation--
+  : post:
+      tags:
+      - democompany-customer-bookAppointmentV1
+      summary: 'Worker: SendInvitation'
+      description: |
+        Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook.
+
+        See API Doc: [Worker: SendInvitation](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20SendInvitation)
+      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-customer-bookappointmentv1-sendinvitation--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-customer-bookAppointmentV1-SendInvitation:
+                value:
+                  variables:
+                    appointment:
+                      value: |-
+                        {
+                          "advisorId" : "anna.berater",
+                          "advisorName" : "Anna Berater",
+                          "advisorEmail" : "anna.berater@democompany.ch",
+                          "start" : "2026-10-06T15:25:25.654793",
+                          "end" : "2026-10-06T15:25:25.654801",
+                          "topic" : "advice",
+                          "channel" : "branch"
+                        }
+                      type: Json
+                    contact:
+                      value: |-
+                        {
+                          "firstName" : "Peter",
+                          "lastName" : "Muster",
+                          "email" : "peter.muster@example.ch",
+                          "phone" : "+41 79 123 45 67",
+                          "customerNo" : "100200"
+                        }
+                      type: Json
+                  businessKey: democompany-customer-bookAppointmentV1-SendInvitation
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  ? /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-customer-bookAppointmentV1-ReleaseReservation--
+  : post:
+      tags:
+      - democompany-customer-bookAppointmentV1
+      summary: 'Worker: ReleaseReservation'
+      description: |
+        Löscht die Reservierung - der Termin ist wieder frei.
+
+        See API Doc: [Worker: ReleaseReservation](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20ReleaseReservation)
+      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-customer-bookappointmentv1-releasereservation--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-customer-bookAppointmentV1-ReleaseReservation:
+                value:
+                  variables:
+                    reservationId:
+                      value: anna.berater-2026-10-20T09:00
+                      type: String
+                  businessKey: democompany-customer-bookAppointmentV1-ReleaseReservation
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-customer-bookAppointmentV1-SendMail--:
+    post:
+      tags:
+      - democompany-customer-bookAppointmentV1
+      summary: 'Worker: SendMail'
+      description: |
+        Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit).
+
+        See API Doc: [Worker: SendMail](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20SendMail)
+      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-customer-bookappointmentv1-sendmail--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-customer-bookAppointmentV1-SendMail:
+                value:
+                  variables:
+                    to:
+                      value: peter.muster@example.ch
+                      type: String
+                    subject:
+                      value: Bitte bestätigen Sie Ihre Terminanfrage
+                      type: String
+                    body:
+                      value: Guten Tag
+                      type: String
+                  businessKey: democompany-customer-bookAppointmentV1-SendMail
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /process-definition/key/democompany-customer-updateAvailabilityV1/start:
+    post:
+      tags:
+      - democompany-customer-updateAvailabilityV1
+      summary: 'Bpmn: updateAvailabilityV1'
+      description: |2
+
+
+
+        ---
+
+        - **Called Element**: `democompany-customer-updateAvailabilityV1` (to define in the Call Activity)
+
+
+
+        ---
+
+
+
+
+        See API Doc: [Bpmn: updateAvailabilityV1](/site/democompany/democompany-customer/OpenApi.html#operation/Bpmn:%20updateAvailabilityV1)
+      operationId: postProcess-definitionKeyDemocompany-customer-updateavailabilityv1Start
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-customer-updateAvailabilityV1:
+                value:
+                  variables:
+                    daysAhead:
+                      value: 21
+                      type: Integer
+                  businessKey: democompany-customer-updateAvailabilityV1
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  ? /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-customer-updateAvailabilityV1-LoadAdvisors--
+  : post:
+      tags:
+      - democompany-customer-updateAvailabilityV1
+      summary: 'Worker: LoadAdvisors'
+      description: |
+        Lädt die Berater mit der Rolle kundenberater.
+
+        See API Doc: [Worker: LoadAdvisors](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20LoadAdvisors)
+      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-customer-updateavailabilityv1-loadadvisors--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-customer-updateAvailabilityV1-LoadAdvisors:
+                value:
+                  variables:
+                    role:
+                      value: kundenberater
+                      type: String
+                  businessKey: democompany-customer-updateAvailabilityV1-LoadAdvisors
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  ? /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-customer-updateAvailabilityV1-ReadCalendar--
+  : post:
+      tags:
+      - democompany-customer-updateAvailabilityV1
+      summary: 'Worker: ReadCalendar'
+      description: |
+        Liest die belegten Zeiten eines Beraters (Kalender-Mock, später Outlook über Graph).
+
+        See API Doc: [Worker: ReadCalendar](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20ReadCalendar)
+      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-customer-updateavailabilityv1-readcalendar--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-customer-updateAvailabilityV1-ReadCalendar:
+                value:
+                  variables:
+                    advisor:
+                      value: |-
+                        {
+                          "id" : "anna.berater",
+                          "name" : "Anna Berater",
+                          "email" : "anna.berater@democompany.ch"
+                        }
+                      type: Json
+                    daysAhead:
+                      value: 21
+                      type: Integer
+                  businessKey: democompany-customer-updateAvailabilityV1-ReadCalendar
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  ? /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot--
+  : post:
+      tags:
+      - democompany-customer-updateAvailabilityV1
+      summary: 'Worker: SaveCalendarSnapshot'
+      description: |
+        Speichert die belegten Zeiten des Beraters (ersetzt den letzten Stand).
+
+        See API Doc: [Worker: SaveCalendarSnapshot](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20SaveCalendarSnapshot)
+      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-customer-updateavailabilityv1-savecalendarsnapshot--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot:
+                value:
+                  variables:
+                    advisor:
+                      value: |-
+                        {
+                          "id" : "anna.berater",
+                          "name" : "Anna Berater",
+                          "email" : "anna.berater@democompany.ch"
+                        }
+                      type: Json
+                    busy:
+                      value: |-
+                        [
+                          {
+                            "start" : "2026-10-06T15:25:25.711866",
+                            "end" : "2026-10-06T15:25:25.711869"
+                          }
+                        ]
+                      type: Json
+                  businessKey: democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+components:
+  schemas:
+    CBoolean:
+      title: CBoolean
+      type: object
+      required:
+      - value
+      - type
+      properties:
+        value:
+          type: boolean
+        type:
+          type: string
+    CDouble:
+      title: CDouble
+      type: object
+      required:
+      - value
+      - type
+      properties:
+        value:
+          type: number
+          format: double
+        type:
+          type: string
+    CFile:
+      title: CFile
+      type: object
+      required:
+      - value
+      - valueInfo
+      - type
+      properties:
+        value:
+          description: The File's content as Base64 encoded String.
+          type: string
+        valueInfo:
+          $ref: '#/components/schemas/CFileValueInfo'
+        type:
+          type: string
+    CFileValueInfo:
+      title: CFileValueInfo
+      type: object
+      required:
+      - filename
+      properties:
+        filename:
+          type: string
+        mimetype:
+          type: string
+    CInteger:
+      title: CInteger
+      type: object
+      required:
+      - value
+      - type
+      properties:
+        value:
+          type: integer
+          format: int32
+        type:
+          type: string
+    CJson:
+      title: CJson
+      type: object
+      required:
+      - value
+      - type
+      properties:
+        value:
+          type: string
+        type:
+          type: string
+    CLong:
+      title: CLong
+      type: object
+      required:
+      - value
+      - type
+      properties:
+        value:
+          type: integer
+          format: int64
+        type:
+          type: string
+    CNull:
+      title: CNull
+      type: object
+    CString:
+      title: CString
+      type: object
+      required:
+      - value
+      - type
+      properties:
+        value:
+          type: string
+        type:
+          type: string
+    CamundaVariable:
+      oneOf:
+      - $ref: '#/components/schemas/CBoolean'
+      - $ref: '#/components/schemas/CDouble'
+      - $ref: '#/components/schemas/CFile'
+      - $ref: '#/components/schemas/CInteger'
+      - $ref: '#/components/schemas/CJson'
+      - $ref: '#/components/schemas/CLong'
+      - $ref: '#/components/schemas/CNull'
+      - $ref: '#/components/schemas/CString'
+    CompleteTaskIn:
+      title: CompleteTaskIn
+      description: 'A JSON object with the following properties: (at least an empty
+        JSON object {} or an empty request body)'
+      type: object
+      required:
+      - variables
+      - withVariablesInReturn
+      properties:
+        variables:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+        withVariablesInReturn:
+          description: Set to false will not return the Process Variables and the
+            Result Status is 204.
+          type: boolean
+    CorrelateMessageIn:
+      title: CorrelateMessageIn
+      type: object
+      required:
+      - messageName
+      - all
+      - resultEnabled
+      - variablesInResultEnabled
+      properties:
+        messageName:
+          type: string
+        businessKey:
+          type: string
+        tenantId:
+          type: string
+        withoutTenantId:
+          type: boolean
+        processInstanceId:
+          type: string
+        correlationKeys:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+        localCorrelationKeys:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+        processVariables:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+        processVariablesLocal:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+        all:
+          type: boolean
+        resultEnabled:
+          type: boolean
+        variablesInResultEnabled:
+          type: boolean
+    EvaluateDecisionIn:
+      title: EvaluateDecisionIn
+      description: 'A JSON object with the following properties:'
+      type: object
+      required:
+      - variables
+      properties:
+        variables:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+    GetActiveTaskIn:
+      title: GetActiveTaskIn
+      description: Same as GetActiveJobIn.
+      type: object
+      required:
+      - processInstanceId
+      - active
+      properties:
+        processInstanceId:
+          description: |2
+
+            The id of the process - you want to get the active tasks.
+            > This is the result id of the `StartProcessOut`
+
+            Add in the _Tests_ panel of _Postman_:
+            ```
+            let result = pm.response.json();
+            pm.collectionVariables.set("processInstanceId", result.id)
+            ```
+          type: string
+        active:
+          description: We are only interested in the active Task(s)
+          type: boolean
+    Map_orchescala.domain.CamundaVariable:
+      title: Map_orchescala.domain.CamundaVariable
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/CamundaVariable'
+    StartProcessIn:
+      title: StartProcessIn
+      description: 'A JSON object with the following properties: (at least an empty
+        JSON object {} or an empty request body)'
+      type: object
+      required:
+      - variables
+      - withVariablesInReturn
+      properties:
+        variables:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+        businessKey:
+          description: The business key of the process instance.
+          type: string
+        withVariablesInReturn:
+          description: Set to false will not return the Process Variables.
+          type: boolean

@@ -4,6 +4,7 @@ package democompany.customer.worker
 // sbt worker/run
 object WorkerApp extends CompanyWorkerApp:
   workers(
+    appointmentsWorkers,
     bookAppointmentWorkers,
     updateAvailabilityWorkers,
     //TODO add workers here
@@ -11,6 +12,15 @@ object WorkerApp extends CompanyWorkerApp:
   dependencies(
     
   )
+
+  // the services of the area appointments - without process, over the gateway
+  private lazy val appointmentsWorkers =
+    import democompany.customer.worker.appointments.*
+    Seq(
+      FreeSlotsWorker(),
+      ReserveSlotWorker(),
+    )
+  end appointmentsWorkers
 
   private lazy val bookAppointmentWorkers =
     import democompany.customer.worker.bookAppointment.v1.*
