@@ -9,8 +9,14 @@
   "status": "implemented",
   "description": "",
   "createdAt": "2026-10-06",
-  "updatedAt": "2026-10-06T11:30:14+02:00",
-  "variables": [],
+  "updatedAt": "2026-10-06T11:43:19+02:00",
+  "variables": [
+    {
+      "name": "rules",
+      "type": "AppointmentRulesDmn.Out",
+      "description": "Ergebnis der Terminregeln (resultVariable der DMN, singleResult)"
+    }
+  ],
   "timeToLive": "5",
   "steps": [
     {
@@ -73,7 +79,7 @@
         },
         {
           "name": "body",
-          "expression": "= verificationMailBody"
+          "expression": "= \"Guten Tag \" + string(customerName) + \"\\\\n\\\\nBitte bestätigen Sie Ihre Terminanfrage (\" + string(appointmentText) + \") mit diesem Link:\\\\n\" + string(verificationLink) + \"\\\\n\\\\nFreundliche Grüsse\\\\nDemo Company\""
         }
       ],
       "manualOutMapping": false
@@ -111,9 +117,23 @@
               "kind": "rule",
               "name": "Terminregeln",
               "status": "implemented",
-              "topic": "democompany-customer-appointmentRules",
+              "topic": "democompany-customer-bookAppointmentV1-AppointmentRules",
               "resultVariable": "rules",
-              "decisionResult": "singleResult"
+              "decisionResult": "singleResult",
+              "inputs": [
+                {
+                  "name": "topic",
+                  "expression": "= topic"
+                },
+                {
+                  "name": "channel",
+                  "expression": "= channel"
+                },
+                {
+                  "name": "customerStatus",
+                  "expression": "= customerStatus"
+                }
+              ]
             },
             {
               "id": "ConfirmationRequiredGateway",
@@ -144,7 +164,7 @@
                         },
                         {
                           "name": "body",
-                          "expression": "= advisorMailBody"
+                          "expression": "= \"Neue Terminanfrage von \" + string(customerName) + \": \" + string(appointmentText) + \"\\\\n\\\\nBitte bestätigen oder ablehnen:\\\\n\" + string(confirmLink)"
                         }
                       ],
                       "manualOutMapping": false
@@ -178,7 +198,7 @@
                                 },
                                 {
                                   "name": "body",
-                                  "expression": "= advisorMailBody"
+                                  "expression": "= \"Die Terminanfrage von \" + string(customerName) + \" (\" + string(appointmentText) + \") ist noch offen:\\\\n\" + string(confirmLink)"
                                 }
                               ],
                               "manualOutMapping": false
@@ -259,7 +279,7 @@
                                 },
                                 {
                                   "name": "body",
-                                  "expression": "= declinedMailBody"
+                                  "expression": "= \"Guten Tag \" + string(customerName) + \"\\\\n\\\\nLeider können wir den Termin (\" + string(appointmentText) + \") nicht wahrnehmen. Bitte wählen Sie auf unserer Homepage einen anderen Termin.\\\\n\\\\nFreundliche Grüsse\\\\nDemo Company\""
                                 }
                               ],
                               "manualOutMapping": false
@@ -323,6 +343,779 @@
           ]
         }
       ]
+    }
+  ],
+  "types": [
+    {
+      "id": "t-in",
+      "name": "In",
+      "kind": "case",
+      "description": "Die Anfrage von der Homepage - der Termin ist schon reserviert.",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm39",
+          "name": "reservationId",
+          "type": "String",
+          "description": "Reservierung `<advisor>-<start>` - entsteht vor dem Start (Service reserveSlot)",
+          "example": "\"anna.berater-2026-10-20T09:00\""
+        },
+        {
+          "id": "f-dm40",
+          "name": "appointment",
+          "type": "t-appointment",
+          "description": "Der gewählte Termin"
+        },
+        {
+          "id": "f-dm41",
+          "name": "contact",
+          "type": "t-contact",
+          "description": "Kontaktdaten"
+        },
+        {
+          "id": "f-dm42",
+          "name": "remark",
+          "type": "String",
+          "description": "Bemerkung",
+          "optional": true,
+          "example": "\"Bitte mit Parkplatz\""
+        }
+      ],
+      "root": true
+    },
+    {
+      "id": "t-out",
+      "name": "Out",
+      "kind": "case",
+      "description": "Ergebnis der Anfrage",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm43",
+          "name": "reservationId",
+          "type": "String",
+          "description": "Reservierung",
+          "example": "\"anna.berater-2026-10-20T09:00\""
+        },
+        {
+          "id": "f-dm44",
+          "name": "booked",
+          "type": "Boolean",
+          "description": "Termin gebucht",
+          "example": "true"
+        },
+        {
+          "id": "f-dm45",
+          "name": "customerStatus",
+          "type": "t-customerStatus",
+          "description": "Kunde oder Interessent",
+          "optional": true
+        }
+      ],
+      "processOut": true
+    },
+    {
+      "id": "t-topic",
+      "name": "Topic",
+      "kind": "enum",
+      "description": "Thema des Termins",
+      "status": "draft",
+      "values": [
+        {
+          "name": "advice",
+          "description": "Beratung"
+        },
+        {
+          "name": "mortgage",
+          "description": "Hypothek"
+        },
+        {
+          "name": "pension",
+          "description": "Vorsorge"
+        },
+        {
+          "name": "investment",
+          "description": "Anlage"
+        }
+      ]
+    },
+    {
+      "id": "t-channel",
+      "name": "Channel",
+      "kind": "enum",
+      "description": "Wie der Termin stattfindet",
+      "status": "draft",
+      "values": [
+        {
+          "name": "branch",
+          "description": "in der Filiale"
+        },
+        {
+          "name": "video",
+          "description": "per Video"
+        },
+        {
+          "name": "phone",
+          "description": "am Telefon"
+        }
+      ]
+    },
+    {
+      "id": "t-customerStatus",
+      "name": "CustomerStatus",
+      "kind": "enum",
+      "description": "Kunde der Bank oder Interessent",
+      "status": "draft",
+      "values": [
+        {
+          "name": "customer",
+          "description": "Kunde"
+        },
+        {
+          "name": "prospect",
+          "description": "Interessent"
+        }
+      ]
+    },
+    {
+      "id": "t-appointment",
+      "name": "Appointment",
+      "kind": "case",
+      "description": "Ein Termin bei einem Berater",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm46",
+          "name": "advisorId",
+          "type": "String",
+          "description": "Berater (Benutzer-ID)",
+          "example": "\"anna.berater\""
+        },
+        {
+          "id": "f-dm47",
+          "name": "advisorName",
+          "type": "String",
+          "description": "Name des Beraters",
+          "example": "\"Anna Berater\""
+        },
+        {
+          "id": "f-dm48",
+          "name": "advisorEmail",
+          "type": "String",
+          "description": "E-Mail des Beraters",
+          "example": "\"anna.berater@democompany.ch\""
+        },
+        {
+          "id": "f-dm49",
+          "name": "start",
+          "type": "LocalDateTime",
+          "description": "Beginn"
+        },
+        {
+          "id": "f-dm50",
+          "name": "end",
+          "type": "LocalDateTime",
+          "description": "Ende"
+        },
+        {
+          "id": "f-dm51",
+          "name": "topic",
+          "type": "t-topic",
+          "description": "Thema"
+        },
+        {
+          "id": "f-dm52",
+          "name": "channel",
+          "type": "t-channel",
+          "description": "Kanal"
+        }
+      ]
+    },
+    {
+      "id": "t-contact",
+      "name": "Contact",
+      "kind": "case",
+      "description": "Kontaktdaten aus dem Formular der Homepage",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm53",
+          "name": "firstName",
+          "type": "String",
+          "description": "Vorname",
+          "example": "\"Peter\""
+        },
+        {
+          "id": "f-dm54",
+          "name": "lastName",
+          "type": "String",
+          "description": "Nachname",
+          "example": "\"Muster\""
+        },
+        {
+          "id": "f-dm55",
+          "name": "email",
+          "type": "String",
+          "description": "E-Mail - für den Opt-in und die Einladung",
+          "example": "\"peter.muster@example.ch\""
+        },
+        {
+          "id": "f-dm56",
+          "name": "phone",
+          "type": "String",
+          "description": "Telefon",
+          "optional": true,
+          "example": "\"+41 79 123 45 67\""
+        },
+        {
+          "id": "f-dm57",
+          "name": "customerNo",
+          "type": "String",
+          "description": "Kunden-Nr. - nur ein Hinweis, verbindlich ordnet der Berater zu",
+          "optional": true,
+          "example": "\"100200\""
+        }
+      ]
+    },
+    {
+      "id": "t-d8c5a08883",
+      "name": "EMailBestaetigtME.In",
+      "kind": "case",
+      "interactionId": "ia-460036f34b",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm1",
+          "name": "verifiedAt",
+          "type": "LocalDateTime",
+          "description": "Zeitpunkt des Klicks",
+          "optional": true
+        }
+      ],
+      "description": "Der Kunde hat den Link in der Opt-in-Mail angeklickt."
+    },
+    {
+      "id": "t-24bd61607d",
+      "name": "AssignCustomer.In",
+      "kind": "case",
+      "interactionId": "ia-f915f4616e",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm2",
+          "name": "contact",
+          "type": "t-contact",
+          "description": "Kontaktdaten aus dem Formular"
+        }
+      ],
+      "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
+    },
+    {
+      "id": "t-3539c5dc63",
+      "name": "AssignCustomer.Out",
+      "kind": "case",
+      "interactionId": "ia-f915f4616e",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm3",
+          "name": "customerStatus",
+          "type": "t-customerStatus",
+          "description": "Kunde oder Interessent"
+        },
+        {
+          "id": "f-dm4",
+          "name": "clientId",
+          "type": "String",
+          "description": "Kunden-ID, wenn gefunden",
+          "optional": true,
+          "example": "\"100200\""
+        },
+        {
+          "id": "f-dm5",
+          "name": "customerName",
+          "type": "String",
+          "description": "Name laut Kundenstamm, wenn gefunden",
+          "optional": true
+        }
+      ],
+      "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
+    },
+    {
+      "id": "t-1feb9ddd1f",
+      "name": "AppointmentRulesDmn.In",
+      "kind": "case",
+      "interactionId": "ia-170766a949",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm19",
+          "name": "topic",
+          "type": "String",
+          "description": "Thema (advice, mortgage, pension, investment)",
+          "example": "\"mortgage\""
+        },
+        {
+          "id": "f-dm20",
+          "name": "channel",
+          "type": "String",
+          "description": "Kanal (branch, video, phone)",
+          "example": "\"branch\""
+        },
+        {
+          "id": "f-dm21",
+          "name": "customerStatus",
+          "type": "String",
+          "description": "Kundenstatus (customer, prospect)",
+          "example": "\"customer\""
+        }
+      ],
+      "description": "Eingaben der Terminregeln"
+    },
+    {
+      "id": "t-6c6a4ec080",
+      "name": "AppointmentRulesDmn.Out",
+      "kind": "case",
+      "interactionId": "ia-170766a949",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm22",
+          "name": "durationMinutes",
+          "type": "Int",
+          "description": "Dauer in Minuten",
+          "example": "90"
+        },
+        {
+          "id": "f-dm23",
+          "name": "leadTimeHours",
+          "type": "Int",
+          "description": "Vorlaufzeit in Stunden",
+          "example": "48"
+        },
+        {
+          "id": "f-dm24",
+          "name": "windowStart",
+          "type": "String",
+          "description": "Zeitfenster von (HH:mm)",
+          "example": "\"08:00\""
+        },
+        {
+          "id": "f-dm25",
+          "name": "windowEnd",
+          "type": "String",
+          "description": "Zeitfenster bis (HH:mm)",
+          "example": "\"17:00\""
+        },
+        {
+          "id": "f-dm26",
+          "name": "bufferMinutes",
+          "type": "Int",
+          "description": "Puffer zwischen Terminen in Minuten",
+          "example": "15"
+        },
+        {
+          "id": "f-dm27",
+          "name": "advisorPool",
+          "type": "String",
+          "description": "Berater-Pool",
+          "example": "\"mortgage\""
+        },
+        {
+          "id": "f-dm28",
+          "name": "confirmationRequired",
+          "type": "Boolean",
+          "description": "Bestätigung durch den Berater nötig",
+          "example": "true"
+        }
+      ],
+      "description": "Ergebnis der Terminregeln"
+    },
+    {
+      "id": "t-8826120cb3",
+      "name": "TerminBestaetigenUT.In",
+      "kind": "case",
+      "interactionId": "ia-e9329a4c44",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm6",
+          "name": "appointment",
+          "type": "t-appointment",
+          "description": "Der reservierte Termin"
+        },
+        {
+          "id": "f-dm7",
+          "name": "contact",
+          "type": "t-contact",
+          "description": "Kontaktdaten"
+        },
+        {
+          "id": "f-dm8",
+          "name": "customerStatus",
+          "type": "t-customerStatus",
+          "description": "Kunde oder Interessent"
+        },
+        {
+          "id": "f-dm9",
+          "name": "remark",
+          "type": "String",
+          "description": "Bemerkung des Kunden",
+          "optional": true
+        }
+      ],
+      "description": "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab."
+    },
+    {
+      "id": "t-a9ad3ea10c",
+      "name": "TerminBestaetigenUT.Out",
+      "kind": "case",
+      "interactionId": "ia-e9329a4c44",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm10",
+          "name": "accepted",
+          "type": "Boolean",
+          "description": "Termin angenommen",
+          "example": "true"
+        },
+        {
+          "id": "f-dm11",
+          "name": "declineReason",
+          "type": "String",
+          "description": "Begründung - geht in die Absage an den Kunden",
+          "optional": true
+        }
+      ],
+      "description": "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab."
+    },
+    {
+      "id": "t-23e93b458d",
+      "name": "BookReservation.In",
+      "kind": "case",
+      "interactionId": "ia-f5375cfefe",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm12",
+          "name": "reservationId",
+          "type": "String",
+          "description": "Reservierung",
+          "example": "\"anna.berater-2026-10-20T09:00\""
+        }
+      ],
+      "description": "Setzt die Reservierung auf gebucht."
+    },
+    {
+      "id": "t-621b1158cc",
+      "name": "BookReservation.Out",
+      "kind": "case",
+      "interactionId": "ia-f5375cfefe",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm13",
+          "name": "bookedAt",
+          "type": "LocalDateTime",
+          "description": "Zeitpunkt der Buchung"
+        }
+      ],
+      "description": "Setzt die Reservierung auf gebucht."
+    },
+    {
+      "id": "t-be6aea60ec",
+      "name": "SendInvitation.In",
+      "kind": "case",
+      "interactionId": "ia-73fcd77add",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm14",
+          "name": "appointment",
+          "type": "t-appointment",
+          "description": "Der gebuchte Termin"
+        },
+        {
+          "id": "f-dm15",
+          "name": "contact",
+          "type": "t-contact",
+          "description": "Kontaktdaten des Kunden"
+        }
+      ],
+      "description": "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook."
+    },
+    {
+      "id": "t-dfff89d39c",
+      "name": "SendInvitation.Out",
+      "kind": "case",
+      "interactionId": "ia-73fcd77add",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm16",
+          "name": "sentAt",
+          "type": "LocalDateTime",
+          "description": "Zeitpunkt des Versands"
+        }
+      ],
+      "description": "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook."
+    },
+    {
+      "id": "t-ee069f7e55",
+      "name": "ReleaseReservation.In",
+      "kind": "case",
+      "interactionId": "ia-66131d8378",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm17",
+          "name": "reservationId",
+          "type": "String",
+          "description": "Reservierung",
+          "example": "\"anna.berater-2026-10-20T09:00\""
+        }
+      ],
+      "description": "Löscht die Reservierung - der Termin ist wieder frei."
+    },
+    {
+      "id": "t-3300860f24",
+      "name": "ReleaseReservation.Out",
+      "kind": "case",
+      "interactionId": "ia-66131d8378",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm18",
+          "name": "releasedAt",
+          "type": "LocalDateTime",
+          "description": "Zeitpunkt der Freigabe"
+        }
+      ],
+      "description": "Löscht die Reservierung - der Termin ist wieder frei."
+    },
+    {
+      "id": "t-initIn",
+      "name": "InitIn",
+      "kind": "case",
+      "description": "Vom Init-Worker gesetzt",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm29",
+          "name": "email",
+          "type": "String",
+          "description": "E-Mail des Kunden (aus contact)",
+          "example": "\"peter.muster@example.ch\""
+        },
+        {
+          "id": "f-dm30",
+          "name": "customerName",
+          "type": "String",
+          "description": "Vorname und Name (aus contact)",
+          "example": "\"Peter Muster\""
+        },
+        {
+          "id": "f-dm31",
+          "name": "advisorEmail",
+          "type": "String",
+          "description": "E-Mail des Beraters (aus appointment)",
+          "example": "\"anna.berater@democompany.ch\""
+        },
+        {
+          "id": "f-dm32",
+          "name": "topic",
+          "type": "String",
+          "description": "Thema - für die Terminregeln",
+          "example": "\"mortgage\""
+        },
+        {
+          "id": "f-dm33",
+          "name": "channel",
+          "type": "String",
+          "description": "Kanal - für die Terminregeln",
+          "example": "\"branch\""
+        },
+        {
+          "id": "f-dm34",
+          "name": "appointmentText",
+          "type": "String",
+          "description": "Der Termin als Text für die Mails",
+          "example": "\"Mo 20.10.2026, 09:00-10:30, Hypothek, Filiale\""
+        },
+        {
+          "id": "f-dm35",
+          "name": "verificationLink",
+          "type": "String",
+          "description": "Link für den Opt-in",
+          "example": "\"http://localhost:8888/app/democompany-customer/appointments/verified?reservation=anna.berater-2026-10-20T09:00\""
+        },
+        {
+          "id": "f-dm36",
+          "name": "confirmLink",
+          "type": "String",
+          "description": "Link auf den Task «Termin bestätigen»",
+          "example": "\"http://localhost:8888/app/democompany-customer/appointments/confirm?process=123\""
+        }
+      ],
+      "initIn": true
+    },
+    {
+      "id": "t-inConfig",
+      "name": "InConfig",
+      "kind": "case",
+      "description": "Stellschrauben",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm37",
+          "name": "timerVerifyEmail",
+          "type": "Iso8601Duration",
+          "description": "So lange gilt die Reservierung ohne Opt-in",
+          "default": "\"PT30M\""
+        },
+        {
+          "id": "f-dm38",
+          "name": "timerConfirmReminder",
+          "type": "Iso8601Duration",
+          "description": "Erinnerung an den Berater, wenn der Task offen ist",
+          "default": "\"P1D\""
+        }
+      ],
+      "inConfig": true
+    }
+  ],
+  "interactions": [
+    {
+      "id": "ia-460036f34b",
+      "stepId": "EmailVerifiedEvent",
+      "kind": "message",
+      "name": "EmailVerifiedME",
+      "key": "democompany-customer-bookAppointmentV1-emailVerified",
+      "status": "draft",
+      "inTypeId": "t-d8c5a08883",
+      "descr": "Der Kunde hat den Link in der Opt-in-Mail angeklickt."
+    },
+    {
+      "id": "ia-f915f4616e",
+      "stepId": "AssignCustomerTask",
+      "kind": "customTask",
+      "name": "AssignCustomer",
+      "key": "democompany-customer-bookAppointmentV1-AssignCustomer",
+      "status": "draft",
+      "inTypeId": "t-24bd61607d",
+      "outTypeId": "t-3539c5dc63",
+      "descr": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
+    },
+    {
+      "id": "ia-170766a949",
+      "stepId": "AppointmentRulesTask",
+      "kind": "decision",
+      "name": "AppointmentRulesDmn",
+      "key": "democompany-customer-bookAppointmentV1-AppointmentRules",
+      "decisionResult": "singleResult",
+      "status": "draft",
+      "inTypeId": "t-1feb9ddd1f",
+      "outTypeId": "t-6c6a4ec080",
+      "dmnFile": "democompany-customer-bookAppointmentV1-AppointmentRules.dmn",
+      "descr": "Terminregeln: Dauer, Vorlaufzeit, Zeitfenster, Puffer, Berater-Pool und ob der Berater bestätigt."
+    },
+    {
+      "id": "ia-e9329a4c44",
+      "stepId": "ConfirmAppointmentTask",
+      "kind": "userTask",
+      "name": "ConfirmAppointmentUT",
+      "key": "ConfirmAppointmentTask",
+      "status": "draft",
+      "inTypeId": "t-8826120cb3",
+      "outTypeId": "t-a9ad3ea10c",
+      "descr": "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab."
+    },
+    {
+      "id": "ia-f5375cfefe",
+      "stepId": "BookReservationTask",
+      "kind": "customTask",
+      "name": "BookReservation",
+      "key": "democompany-customer-bookAppointmentV1-BookReservation",
+      "status": "draft",
+      "inTypeId": "t-23e93b458d",
+      "outTypeId": "t-621b1158cc",
+      "descr": "Setzt die Reservierung auf gebucht."
+    },
+    {
+      "id": "ia-73fcd77add",
+      "stepId": "SendInvitationTask",
+      "kind": "customTask",
+      "name": "SendInvitation",
+      "key": "democompany-customer-bookAppointmentV1-SendInvitation",
+      "status": "draft",
+      "inTypeId": "t-be6aea60ec",
+      "outTypeId": "t-dfff89d39c",
+      "descr": "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook."
+    },
+    {
+      "id": "ia-66131d8378",
+      "stepId": "ReleaseDeclinedReservationTask",
+      "kind": "customTask",
+      "name": "ReleaseReservation",
+      "key": "democompany-customer-bookAppointmentV1-ReleaseReservation",
+      "status": "draft",
+      "inTypeId": "t-ee069f7e55",
+      "outTypeId": "t-3300860f24",
+      "descr": "Löscht die Reservierung - der Termin ist wieder frei."
+    },
+    {
+      "id": "ia-bd2f9fbd10",
+      "stepId": "ReleaseExpiredReservationTask",
+      "kind": "customTask",
+      "name": "ReleaseReservation",
+      "key": "democompany-customer-bookAppointmentV1-ReleaseReservation",
+      "status": "draft",
+      "inTypeId": "t-ee069f7e55",
+      "outTypeId": "t-3300860f24",
+      "descr": "Löscht die Reservierung - der Termin ist wieder frei."
+    }
+  ],
+  "initOutputs": [
+    {
+      "name": "email",
+      "expression": "",
+      "description": "E-Mail des Kunden (aus contact)"
+    },
+    {
+      "name": "customerName",
+      "expression": "",
+      "description": "Vorname und Name (aus contact)"
+    },
+    {
+      "name": "advisorEmail",
+      "expression": "",
+      "description": "E-Mail des Beraters (aus appointment)"
+    },
+    {
+      "name": "topic",
+      "expression": "",
+      "description": "Thema - für die Terminregeln"
+    },
+    {
+      "name": "channel",
+      "expression": "",
+      "description": "Kanal - für die Terminregeln"
+    },
+    {
+      "name": "appointmentText",
+      "expression": "",
+      "description": "Der Termin als Text für die Mails"
+    },
+    {
+      "name": "verificationLink",
+      "expression": "",
+      "description": "Link für den Opt-in"
+    },
+    {
+      "name": "confirmLink",
+      "expression": "",
+      "description": "Link auf den Task «Termin bestätigen»"
     }
   ]
 }

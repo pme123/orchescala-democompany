@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="Definitions_appointmentRules" name="Terminregeln" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.46.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.24.0">
-  <decision id="democompany-customer-appointmentRules" name="Terminregeln" camunda:historyTimeToLive="5">
+  <decision id="democompany-customer-bookAppointmentV1-AppointmentRules" name="Terminregeln" camunda:historyTimeToLive="5">
     <decisionTable id="DecisionTable_appointmentRules" hitPolicy="FIRST">
       <input id="Input_topic" label="Thema">
         <inputExpression id="InputExpression_topic" typeRef="string">
@@ -226,7 +226,7 @@
   </decision>
   <dmndi:DMNDI>
     <dmndi:DMNDiagram id="DMNDiagram_appointmentRules">
-      <dmndi:DMNShape id="DMNShape_appointmentRules" dmnElementRef="democompany-customer-appointmentRules">
+      <dmndi:DMNShape id="DMNShape_appointmentRules" dmnElementRef="democompany-customer-bookAppointmentV1-AppointmentRules">
         <dc:Bounds height="80" width="180" x="160" y="100" />
       </dmndi:DMNShape>
     </dmndi:DMNDiagram>

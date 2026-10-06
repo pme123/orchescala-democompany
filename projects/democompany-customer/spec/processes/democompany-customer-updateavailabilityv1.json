@@ -9,7 +9,7 @@
   "status": "implemented",
   "description": "",
   "createdAt": "2026-10-06",
-  "updatedAt": "2026-10-06T11:30:14+02:00",
+  "updatedAt": "2026-10-06T11:43:19+02:00",
   "variables": [],
   "timeToLive": "5",
   "steps": [
@@ -122,6 +122,243 @@
       "kind": "end",
       "name": "aktualisiert",
       "status": "implemented"
+    }
+  ],
+  "types": [
+    {
+      "id": "t-in",
+      "name": "In",
+      "kind": "case",
+      "description": "Gestartet vom Timer - ohne Eingaben ausser der Reichweite.",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm66",
+          "name": "daysAhead",
+          "type": "Int",
+          "description": "Wie viele Tage voraus die Kalender gelesen werden",
+          "optional": true,
+          "example": "21",
+          "default": "21"
+        }
+      ],
+      "root": true
+    },
+    {
+      "id": "t-out",
+      "name": "Out",
+      "kind": "case",
+      "description": "Ergebnis des Laufs",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm67",
+          "name": "advisorCount",
+          "type": "Int",
+          "description": "Anzahl aktualisierter Berater",
+          "example": "3"
+        }
+      ],
+      "processOut": true
+    },
+    {
+      "id": "t-advisor",
+      "name": "Advisor",
+      "kind": "case",
+      "description": "Kundenberaterin oder Kundenberater",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm68",
+          "name": "id",
+          "type": "String",
+          "description": "Benutzer-ID im IdP",
+          "example": "\"anna.berater\""
+        },
+        {
+          "id": "f-dm69",
+          "name": "name",
+          "type": "String",
+          "description": "Name",
+          "example": "\"Anna Berater\""
+        },
+        {
+          "id": "f-dm70",
+          "name": "email",
+          "type": "String",
+          "description": "E-Mail für Benachrichtigungen und Einladungen",
+          "example": "\"anna.berater@democompany.ch\""
+        }
+      ]
+    },
+    {
+      "id": "t-busyPeriod",
+      "name": "BusyPeriod",
+      "kind": "case",
+      "description": "Eine belegte Zeit im Kalender",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm71",
+          "name": "start",
+          "type": "LocalDateTime",
+          "description": "Beginn"
+        },
+        {
+          "id": "f-dm72",
+          "name": "end",
+          "type": "LocalDateTime",
+          "description": "Ende"
+        }
+      ]
+    },
+    {
+      "id": "t-22f04057bf",
+      "name": "LoadAdvisors.In",
+      "kind": "case",
+      "interactionId": "ia-f29df2be69",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm58",
+          "name": "role",
+          "type": "String",
+          "description": "Rolle der Berater im IdP",
+          "example": "\"kundenberater\""
+        }
+      ],
+      "description": "Lädt die Berater mit der Rolle kundenberater."
+    },
+    {
+      "id": "t-2dff31e97c",
+      "name": "LoadAdvisors.Out",
+      "kind": "case",
+      "interactionId": "ia-f29df2be69",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm59",
+          "name": "advisors",
+          "type": "t-advisor",
+          "description": "Die Berater",
+          "collection": true
+        }
+      ],
+      "description": "Lädt die Berater mit der Rolle kundenberater."
+    },
+    {
+      "id": "t-04df08a27b",
+      "name": "ReadCalendar.In",
+      "kind": "case",
+      "interactionId": "ia-b0da5603a9",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm60",
+          "name": "advisor",
+          "type": "t-advisor",
+          "description": "Berater"
+        },
+        {
+          "id": "f-dm61",
+          "name": "daysAhead",
+          "type": "Int",
+          "description": "Wie viele Tage voraus",
+          "example": "21"
+        }
+      ],
+      "description": "Liest die belegten Zeiten eines Beraters (Kalender-Mock, später Outlook über Graph)."
+    },
+    {
+      "id": "t-c11e98bd61",
+      "name": "ReadCalendar.Out",
+      "kind": "case",
+      "interactionId": "ia-b0da5603a9",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm62",
+          "name": "busy",
+          "type": "t-busyPeriod",
+          "description": "Belegte Zeiten",
+          "collection": true
+        }
+      ],
+      "description": "Liest die belegten Zeiten eines Beraters (Kalender-Mock, später Outlook über Graph)."
+    },
+    {
+      "id": "t-7d0ff01446",
+      "name": "SaveCalendarSnapshot.In",
+      "kind": "case",
+      "interactionId": "ia-e2ae05f5ff",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm63",
+          "name": "advisor",
+          "type": "t-advisor",
+          "description": "Berater"
+        },
+        {
+          "id": "f-dm64",
+          "name": "busy",
+          "type": "t-busyPeriod",
+          "description": "Belegte Zeiten",
+          "collection": true
+        }
+      ],
+      "description": "Speichert die belegten Zeiten des Beraters (ersetzt den letzten Stand)."
+    },
+    {
+      "id": "t-b4ac9bd0fe",
+      "name": "SaveCalendarSnapshot.Out",
+      "kind": "case",
+      "interactionId": "ia-e2ae05f5ff",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm65",
+          "name": "savedAt",
+          "type": "LocalDateTime",
+          "description": "Stand"
+        }
+      ],
+      "description": "Speichert die belegten Zeiten des Beraters (ersetzt den letzten Stand)."
+    }
+  ],
+  "interactions": [
+    {
+      "id": "ia-f29df2be69",
+      "stepId": "LoadAdvisorsTask",
+      "kind": "customTask",
+      "name": "LoadAdvisors",
+      "key": "democompany-customer-updateAvailabilityV1-LoadAdvisors",
+      "status": "draft",
+      "inTypeId": "t-22f04057bf",
+      "outTypeId": "t-2dff31e97c",
+      "descr": "Lädt die Berater mit der Rolle kundenberater."
+    },
+    {
+      "id": "ia-b0da5603a9",
+      "stepId": "ReadCalendarTask",
+      "kind": "customTask",
+      "name": "ReadCalendar",
+      "key": "democompany-customer-updateAvailabilityV1-ReadCalendar",
+      "status": "draft",
+      "inTypeId": "t-04df08a27b",
+      "outTypeId": "t-c11e98bd61",
+      "descr": "Liest die belegten Zeiten eines Beraters (Kalender-Mock, später Outlook über Graph)."
+    },
+    {
+      "id": "ia-e2ae05f5ff",
+      "stepId": "SaveCalendarSnapshotTask",
+      "kind": "customTask",
+      "name": "SaveCalendarSnapshot",
+      "key": "democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot",
+      "status": "draft",
+      "inTypeId": "t-7d0ff01446",
+      "outTypeId": "t-b4ac9bd0fe",
+      "descr": "Speichert die belegten Zeiten des Beraters (ersetzt den letzten Stand)."
     }
   ]
 }

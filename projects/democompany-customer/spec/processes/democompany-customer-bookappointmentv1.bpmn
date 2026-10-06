@@ -29,7 +29,7 @@
         <camunda:inputOutput>
           <camunda:inputParameter name="to">#{email}</camunda:inputParameter>
           <camunda:inputParameter name="subject">Bitte bestätigen Sie Ihre Terminanfrage</camunda:inputParameter>
-          <camunda:inputParameter name="body">#{verificationMailBody}</camunda:inputParameter>
+          <camunda:inputParameter name="body">Guten Tag #{customerName}\n\nBitte bestätigen Sie Ihre Terminanfrage (#{appointmentText}) mit diesem Link:\n#{verificationLink}\n\nFreundliche Grüsse\nDemo Company</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_InitProcessTask_SendVerificationEmailTask</bpmn:incoming>
@@ -66,7 +66,14 @@
       <bpmn:incoming>Flow_EmailVerifiedEvent_AssignCustomerTask</bpmn:incoming>
       <bpmn:outgoing>Flow_AssignCustomerTask_AppointmentRulesTask</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:businessRuleTask id="AppointmentRulesTask" name="Terminregeln" camunda:decisionRef="democompany-customer-appointmentRules" camunda:resultVariable="rules" camunda:mapDecisionResult="singleResult">
+    <bpmn:businessRuleTask id="AppointmentRulesTask" name="Terminregeln" camunda:decisionRef="democompany-customer-bookAppointmentV1-AppointmentRules" camunda:resultVariable="rules" camunda:mapDecisionResult="singleResult">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="topic">${topic}</camunda:inputParameter>
+          <camunda:inputParameter name="channel">${channel}</camunda:inputParameter>
+          <camunda:inputParameter name="customerStatus">${customerStatus}</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_AssignCustomerTask_AppointmentRulesTask</bpmn:incoming>
       <bpmn:outgoing>Flow_AppointmentRulesTask_ConfirmationRequiredGateway</bpmn:outgoing>
     </bpmn:businessRuleTask>
@@ -80,7 +87,7 @@
         <camunda:inputOutput>
           <camunda:inputParameter name="to">#{advisorEmail}</camunda:inputParameter>
           <camunda:inputParameter name="subject">Neue Terminanfrage</camunda:inputParameter>
-          <camunda:inputParameter name="body">#{advisorMailBody}</camunda:inputParameter>
+          <camunda:inputParameter name="body">Neue Terminanfrage von #{customerName}: #{appointmentText}\n\nBitte bestätigen oder ablehnen:\n#{confirmLink}</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>ConfirmationFlow</bpmn:incoming>
@@ -101,7 +108,7 @@
         <camunda:inputOutput>
           <camunda:inputParameter name="to">#{advisorEmail}</camunda:inputParameter>
           <camunda:inputParameter name="subject">Erinnerung: Terminanfrage offen</camunda:inputParameter>
-          <camunda:inputParameter name="body">#{advisorMailBody}</camunda:inputParameter>
+          <camunda:inputParameter name="body">Die Terminanfrage von #{customerName} (#{appointmentText}) ist noch offen:\n#{confirmLink}</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_ConfirmReminderEvent_SendReminderTask</bpmn:incoming>
@@ -124,7 +131,7 @@
         <camunda:inputOutput>
           <camunda:inputParameter name="to">#{email}</camunda:inputParameter>
           <camunda:inputParameter name="subject">Ihre Terminanfrage</camunda:inputParameter>
-          <camunda:inputParameter name="body">#{declinedMailBody}</camunda:inputParameter>
+          <camunda:inputParameter name="body">Guten Tag #{customerName}\n\nLeider können wir den Termin (#{appointmentText}) nicht wahrnehmen. Bitte wählen Sie auf unserer Homepage einen anderen Termin.\n\nFreundliche Grüsse\nDemo Company</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_ReleaseDeclinedReservationTask_SendDeclinedEmailTask</bpmn:incoming>

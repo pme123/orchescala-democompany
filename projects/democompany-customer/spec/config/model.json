@@ -1,6 +1,72 @@
 {
   "version": 1,
-  "services": [],
+  "services": [
+    {
+      "id": "democompany-services-clientsV1-GetClientsClientId",
+      "name": "GetClientsClientId",
+      "group": "democompany-services",
+      "description": "Get the Client by Id",
+      "topic": "democompany-services-clientsV1-GetClientsClientId",
+      "kind": "service",
+      "inputs": [
+        {
+          "name": "clientId",
+          "expression": "= clientId",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "client",
+          "expression": "= client",
+          "required": true
+        },
+        {
+          "name": "etag",
+          "expression": "= etag",
+          "required": true
+        },
+        {
+          "name": "email",
+          "expression": "= email"
+        }
+      ]
+    },
+    {
+      "id": "democompany-services-mailsV1-SendEmail",
+      "name": "SendEmail",
+      "group": "democompany-services",
+      "description": "Send an Email",
+      "topic": "democompany-services-mailsV1-SendEmail",
+      "kind": "service",
+      "inputs": [
+        {
+          "name": "subject",
+          "expression": "= subject",
+          "required": true
+        },
+        {
+          "name": "body",
+          "expression": "= body",
+          "required": true
+        },
+        {
+          "name": "to",
+          "expression": "= to",
+          "required": true
+        },
+        {
+          "name": "cc",
+          "expression": "= cc"
+        },
+        {
+          "name": "bcc",
+          "expression": "= bcc"
+        }
+      ],
+      "outputs": []
+    }
+  ],
   "domainTypes": [
     {
       "id": "democompany.services.domain.clients.v1.GetClientsClientId.In",
@@ -297,5 +363,7 @@
       "types": 11
     }
   ],
-  "domainSources": []
+  "domainSources": [
+    "/Users/pme/dev/Github/pme123/orchescala-democompany/projects/democompany-customer/spec/catalog/democompany-services-OpenApi.yml"
+  ]
 }
