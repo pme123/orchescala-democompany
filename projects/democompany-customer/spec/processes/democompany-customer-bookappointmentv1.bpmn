@@ -67,13 +67,6 @@
       <bpmn:outgoing>Flow_AssignCustomerTask_AppointmentRulesTask</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:businessRuleTask id="AppointmentRulesTask" name="Terminregeln" camunda:decisionRef="democompany-customer-bookAppointmentV1-AppointmentRules" camunda:resultVariable="rules" camunda:mapDecisionResult="singleResult">
-      <bpmn:extensionElements>
-        <camunda:inputOutput>
-          <camunda:inputParameter name="topic">${topic}</camunda:inputParameter>
-          <camunda:inputParameter name="channel">${channel}</camunda:inputParameter>
-          <camunda:inputParameter name="customerStatus">${customerStatus}</camunda:inputParameter>
-        </camunda:inputOutput>
-      </bpmn:extensionElements>
       <bpmn:incoming>Flow_AssignCustomerTask_AppointmentRulesTask</bpmn:incoming>
       <bpmn:outgoing>Flow_AppointmentRulesTask_ConfirmationRequiredGateway</bpmn:outgoing>
     </bpmn:businessRuleTask>

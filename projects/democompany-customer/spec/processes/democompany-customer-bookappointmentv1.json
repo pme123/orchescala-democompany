@@ -9,14 +9,8 @@
   "status": "implemented",
   "description": "",
   "createdAt": "2026-10-06",
-  "updatedAt": "2026-10-06T11:43:19+02:00",
-  "variables": [
-    {
-      "name": "rules",
-      "type": "AppointmentRulesDmn.Out",
-      "description": "Ergebnis der Terminregeln (resultVariable der DMN, singleResult)"
-    }
-  ],
+  "updatedAt": "2026-10-06T14:12:01+02:00",
+  "variables": [],
   "timeToLive": "5",
   "steps": [
     {
@@ -119,21 +113,7 @@
               "status": "implemented",
               "topic": "democompany-customer-bookAppointmentV1-AppointmentRules",
               "resultVariable": "rules",
-              "decisionResult": "singleResult",
-              "inputs": [
-                {
-                  "name": "topic",
-                  "expression": "= topic"
-                },
-                {
-                  "name": "channel",
-                  "expression": "= channel"
-                },
-                {
-                  "name": "customerStatus",
-                  "expression": "= customerStatus"
-                }
-              ]
+              "decisionResult": "singleResult"
             },
             {
               "id": "ConfirmationRequiredGateway",
@@ -578,10 +558,10 @@
       ]
     },
     {
-      "id": "t-d8c5a08883",
+      "id": "t-0fa4646e6d",
       "name": "EMailBestaetigtME.In",
       "kind": "case",
-      "interactionId": "ia-460036f34b",
+      "interactionId": "ia-7d85d454ce",
       "status": "draft",
       "fields": [
         {
@@ -595,10 +575,10 @@
       "description": "Der Kunde hat den Link in der Opt-in-Mail angeklickt."
     },
     {
-      "id": "t-24bd61607d",
+      "id": "t-e0a0b7f176",
       "name": "AssignCustomer.In",
       "kind": "case",
-      "interactionId": "ia-f915f4616e",
+      "interactionId": "ia-828443a54e",
       "status": "draft",
       "fields": [
         {
@@ -611,10 +591,10 @@
       "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
     },
     {
-      "id": "t-3539c5dc63",
+      "id": "t-01d1e5421b",
       "name": "AssignCustomer.Out",
       "kind": "case",
-      "interactionId": "ia-f915f4616e",
+      "interactionId": "ia-828443a54e",
       "status": "draft",
       "fields": [
         {
@@ -642,10 +622,10 @@
       "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
     },
     {
-      "id": "t-1feb9ddd1f",
+      "id": "t-e7b6d83923",
       "name": "AppointmentRulesDmn.In",
       "kind": "case",
-      "interactionId": "ia-170766a949",
+      "interactionId": "ia-de532327d5",
       "status": "draft",
       "fields": [
         {
@@ -673,10 +653,10 @@
       "description": "Eingaben der Terminregeln"
     },
     {
-      "id": "t-6c6a4ec080",
+      "id": "t-5fcace7b60",
       "name": "AppointmentRulesDmn.Out",
       "kind": "case",
-      "interactionId": "ia-170766a949",
+      "interactionId": "ia-de532327d5",
       "status": "draft",
       "fields": [
         {
@@ -732,10 +712,10 @@
       "description": "Ergebnis der Terminregeln"
     },
     {
-      "id": "t-8826120cb3",
+      "id": "t-bbbbd12e35",
       "name": "TerminBestaetigenUT.In",
       "kind": "case",
-      "interactionId": "ia-e9329a4c44",
+      "interactionId": "ia-20840c8250",
       "status": "draft",
       "fields": [
         {
@@ -767,10 +747,10 @@
       "description": "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab."
     },
     {
-      "id": "t-a9ad3ea10c",
+      "id": "t-d80acac209",
       "name": "TerminBestaetigenUT.Out",
       "kind": "case",
-      "interactionId": "ia-e9329a4c44",
+      "interactionId": "ia-20840c8250",
       "status": "draft",
       "fields": [
         {
@@ -791,10 +771,10 @@
       "description": "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab."
     },
     {
-      "id": "t-23e93b458d",
+      "id": "t-38d5c8ee75",
       "name": "BookReservation.In",
       "kind": "case",
-      "interactionId": "ia-f5375cfefe",
+      "interactionId": "ia-162ce41ce0",
       "status": "draft",
       "fields": [
         {
@@ -808,10 +788,10 @@
       "description": "Setzt die Reservierung auf gebucht."
     },
     {
-      "id": "t-621b1158cc",
+      "id": "t-5ee9149491",
       "name": "BookReservation.Out",
       "kind": "case",
-      "interactionId": "ia-f5375cfefe",
+      "interactionId": "ia-162ce41ce0",
       "status": "draft",
       "fields": [
         {
@@ -824,10 +804,10 @@
       "description": "Setzt die Reservierung auf gebucht."
     },
     {
-      "id": "t-be6aea60ec",
+      "id": "t-61694d5fb7",
       "name": "SendInvitation.In",
       "kind": "case",
-      "interactionId": "ia-73fcd77add",
+      "interactionId": "ia-907d4a4af7",
       "status": "draft",
       "fields": [
         {
@@ -846,10 +826,10 @@
       "description": "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook."
     },
     {
-      "id": "t-dfff89d39c",
+      "id": "t-1d57a75ea2",
       "name": "SendInvitation.Out",
       "kind": "case",
-      "interactionId": "ia-73fcd77add",
+      "interactionId": "ia-907d4a4af7",
       "status": "draft",
       "fields": [
         {
@@ -862,10 +842,10 @@
       "description": "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook."
     },
     {
-      "id": "t-ee069f7e55",
+      "id": "t-1935e5bbff",
       "name": "ReleaseReservation.In",
       "kind": "case",
-      "interactionId": "ia-66131d8378",
+      "interactionId": "ia-15084bf307",
       "status": "draft",
       "fields": [
         {
@@ -879,10 +859,10 @@
       "description": "Löscht die Reservierung - der Termin ist wieder frei."
     },
     {
-      "id": "t-3300860f24",
+      "id": "t-e2d4f6b7d7",
       "name": "ReleaseReservation.Out",
       "kind": "case",
-      "interactionId": "ia-66131d8378",
+      "interactionId": "ia-15084bf307",
       "status": "draft",
       "fields": [
         {
@@ -987,92 +967,92 @@
   ],
   "interactions": [
     {
-      "id": "ia-460036f34b",
+      "id": "ia-7d85d454ce",
       "stepId": "EmailVerifiedEvent",
       "kind": "message",
       "name": "EmailVerifiedME",
       "key": "democompany-customer-bookAppointmentV1-emailVerified",
       "status": "draft",
-      "inTypeId": "t-d8c5a08883",
+      "inTypeId": "t-0fa4646e6d",
       "descr": "Der Kunde hat den Link in der Opt-in-Mail angeklickt."
     },
     {
-      "id": "ia-f915f4616e",
+      "id": "ia-828443a54e",
       "stepId": "AssignCustomerTask",
       "kind": "customTask",
       "name": "AssignCustomer",
       "key": "democompany-customer-bookAppointmentV1-AssignCustomer",
       "status": "draft",
-      "inTypeId": "t-24bd61607d",
-      "outTypeId": "t-3539c5dc63",
+      "inTypeId": "t-e0a0b7f176",
+      "outTypeId": "t-01d1e5421b",
       "descr": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
     },
     {
-      "id": "ia-170766a949",
+      "id": "ia-de532327d5",
       "stepId": "AppointmentRulesTask",
       "kind": "decision",
       "name": "AppointmentRulesDmn",
       "key": "democompany-customer-bookAppointmentV1-AppointmentRules",
       "decisionResult": "singleResult",
       "status": "draft",
-      "inTypeId": "t-1feb9ddd1f",
-      "outTypeId": "t-6c6a4ec080",
+      "inTypeId": "t-e7b6d83923",
+      "outTypeId": "t-5fcace7b60",
       "dmnFile": "democompany-customer-bookAppointmentV1-AppointmentRules.dmn",
       "descr": "Terminregeln: Dauer, Vorlaufzeit, Zeitfenster, Puffer, Berater-Pool und ob der Berater bestätigt."
     },
     {
-      "id": "ia-e9329a4c44",
+      "id": "ia-20840c8250",
       "stepId": "ConfirmAppointmentTask",
       "kind": "userTask",
       "name": "ConfirmAppointmentUT",
       "key": "ConfirmAppointmentTask",
       "status": "draft",
-      "inTypeId": "t-8826120cb3",
-      "outTypeId": "t-a9ad3ea10c",
+      "inTypeId": "t-bbbbd12e35",
+      "outTypeId": "t-d80acac209",
       "descr": "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab."
     },
     {
-      "id": "ia-f5375cfefe",
+      "id": "ia-162ce41ce0",
       "stepId": "BookReservationTask",
       "kind": "customTask",
       "name": "BookReservation",
       "key": "democompany-customer-bookAppointmentV1-BookReservation",
       "status": "draft",
-      "inTypeId": "t-23e93b458d",
-      "outTypeId": "t-621b1158cc",
+      "inTypeId": "t-38d5c8ee75",
+      "outTypeId": "t-5ee9149491",
       "descr": "Setzt die Reservierung auf gebucht."
     },
     {
-      "id": "ia-73fcd77add",
+      "id": "ia-907d4a4af7",
       "stepId": "SendInvitationTask",
       "kind": "customTask",
       "name": "SendInvitation",
       "key": "democompany-customer-bookAppointmentV1-SendInvitation",
       "status": "draft",
-      "inTypeId": "t-be6aea60ec",
-      "outTypeId": "t-dfff89d39c",
+      "inTypeId": "t-61694d5fb7",
+      "outTypeId": "t-1d57a75ea2",
       "descr": "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook."
     },
     {
-      "id": "ia-66131d8378",
+      "id": "ia-15084bf307",
       "stepId": "ReleaseDeclinedReservationTask",
       "kind": "customTask",
       "name": "ReleaseReservation",
       "key": "democompany-customer-bookAppointmentV1-ReleaseReservation",
       "status": "draft",
-      "inTypeId": "t-ee069f7e55",
-      "outTypeId": "t-3300860f24",
+      "inTypeId": "t-1935e5bbff",
+      "outTypeId": "t-e2d4f6b7d7",
       "descr": "Löscht die Reservierung - der Termin ist wieder frei."
     },
     {
-      "id": "ia-bd2f9fbd10",
+      "id": "ia-91bc23dbd0",
       "stepId": "ReleaseExpiredReservationTask",
       "kind": "customTask",
       "name": "ReleaseReservation",
       "key": "democompany-customer-bookAppointmentV1-ReleaseReservation",
       "status": "draft",
-      "inTypeId": "t-ee069f7e55",
-      "outTypeId": "t-3300860f24",
+      "inTypeId": "t-1935e5bbff",
+      "outTypeId": "t-e2d4f6b7d7",
       "descr": "Löscht die Reservierung - der Termin ist wieder frei."
     }
   ],
