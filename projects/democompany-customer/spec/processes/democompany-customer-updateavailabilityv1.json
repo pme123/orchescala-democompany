@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "slug": "democompany-customer-updateavailabilityv1",
+  "name": "updateAvailabilityV1",
+  "title": "Verfügbarkeit aktualisieren",
+  "processId": "democompany-customer-updateAvailabilityV1",
+  "project": "democompany-customer",
+  "engine": "c7",
+  "status": "implemented",
+  "description": "",
+  "createdAt": "2026-10-06",
+  "updatedAt": "2026-10-06T11:30:14+02:00",
+  "variables": [],
+  "timeToLive": "5",
+  "steps": [
+    {
+      "id": "StartProcessStartEvent",
+      "kind": "start",
+      "name": "alle 15 Minuten",
+      "status": "implemented",
+      "eventKind": "timer"
+    },
+    {
+      "id": "InitProcessTask",
+      "kind": "service",
+      "name": "Init Process",
+      "status": "implemented",
+      "topic": "democompany-customer-updateAvailabilityV1",
+      "inputs": [
+        {
+          "name": "handledErrors",
+          "expression": "output-mocked"
+        }
+      ],
+      "manualOutMapping": false,
+      "errors": [
+        {
+          "code": "output-mocked",
+          "interrupting": true,
+          "boundary": true,
+          "steps": [
+            {
+              "id": "OutputmockedEvent1",
+              "kind": "event",
+              "name": "output-mocked",
+              "status": "implemented",
+              "eventKind": "none",
+              "eventDirection": "throw"
+            },
+            {
+              "id": "OutputmockedEndEvent",
+              "kind": "end",
+              "name": "output-mocked",
+              "status": "implemented"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LoadAdvisorsTask",
+      "kind": "service",
+      "name": "Berater laden",
+      "status": "implemented",
+      "topic": "democompany-customer-updateAvailabilityV1-LoadAdvisors",
+      "manualOutMapping": false
+    },
+    {
+      "id": "PerAdvisorSubProcess",
+      "kind": "subprocess",
+      "name": "pro Berater",
+      "status": "implemented",
+      "multiInstance": {
+        "collection": "advisors",
+        "element": "advisor"
+      },
+      "children": [
+        {
+          "id": "PerAdvisorStartEvent",
+          "kind": "start",
+          "name": "Start",
+          "status": "implemented"
+        },
+        {
+          "id": "ReadCalendarTask",
+          "kind": "service",
+          "name": "Kalender lesen",
+          "status": "implemented",
+          "topic": "democompany-customer-updateAvailabilityV1-ReadCalendar",
+          "inputs": [
+            {
+              "name": "advisor",
+              "expression": "= advisor"
+            }
+          ],
+          "manualOutMapping": false
+        },
+        {
+          "id": "SaveCalendarSnapshotTask",
+          "kind": "service",
+          "name": "Kalender-Snapshot speichern",
+          "status": "implemented",
+          "topic": "democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot",
+          "inputs": [
+            {
+              "name": "advisor",
+              "expression": "= advisor"
+            }
+          ],
+          "manualOutMapping": false
+        },
+        {
+          "id": "PerAdvisorEndEvent",
+          "kind": "end",
+          "name": "Ende",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "SucceededEndEvent",
+      "kind": "end",
+      "name": "aktualisiert",
+      "status": "implemented"
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_democompany-customer-updateAvailabilityV1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.46.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.24.0">
+  <bpmn:collaboration id="Collaboration_democompany-customer-updateAvailabilityV1">
+    <bpmn:participant id="democompany-customer-updateAvailabilityV1-participant" name="Verfügbarkeit aktualisieren" processRef="democompany-customer-updateAvailabilityV1" />
+  </bpmn:collaboration>
+  <bpmn:process id="democompany-customer-updateAvailabilityV1" name="Verfügbarkeit aktualisieren" isExecutable="true" camunda:historyTimeToLive="5">
+    <bpmn:startEvent id="StartProcessStartEvent" name="alle 15 Minuten" camunda:asyncAfter="true">
+      <bpmn:outgoing>Flow_StartProcessStartEvent_InitProcessTask</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_every15min">
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R/PT15M</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="InitProcessTask" name="Init Process" camunda:type="external" camunda:topic="democompany-customer-updateAvailabilityV1">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="handledErrors">output-mocked</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_StartProcessStartEvent_InitProcessTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_InitProcessTask_LoadAdvisorsTask</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="OutputmockedBoundaryEvent" name="output-mocked" cancelActivity="true" attachedToRef="InitProcessTask">
+      <bpmn:outgoing>Flow_OutputmockedBoundaryEvent_OutputmockedEvent1</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_output-mocked" errorRef="Error_output-mocked" />
+    </bpmn:boundaryEvent>
+    <bpmn:intermediateThrowEvent id="OutputmockedEvent1" name="output-mocked">
+      <bpmn:incoming>Flow_OutputmockedBoundaryEvent_OutputmockedEvent1</bpmn:incoming>
+      <bpmn:linkEventDefinition id="LinkEventDefinition_throw" name="output-mocked" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:serviceTask id="LoadAdvisorsTask" name="Berater laden" camunda:type="external" camunda:topic="democompany-customer-updateAvailabilityV1-LoadAdvisors">
+      <bpmn:incoming>Flow_InitProcessTask_LoadAdvisorsTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_LoadAdvisorsTask_PerAdvisorSubProcess</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:subProcess id="PerAdvisorSubProcess" name="pro Berater" camunda:asyncBefore="true">
+      <bpmn:incoming>Flow_LoadAdvisorsTask_PerAdvisorSubProcess</bpmn:incoming>
+      <bpmn:outgoing>Flow_PerAdvisorSubProcess_SucceededEndEvent</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${advisors}" camunda:elementVariable="advisor" />
+      <bpmn:startEvent id="PerAdvisorStartEvent">
+        <bpmn:outgoing>Flow_PerAdvisorStartEvent_ReadCalendarTask</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:serviceTask id="ReadCalendarTask" name="Kalender lesen" camunda:type="external" camunda:topic="democompany-customer-updateAvailabilityV1-ReadCalendar">
+        <bpmn:extensionElements>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="advisor">${advisor}</camunda:inputParameter>
+          </camunda:inputOutput>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_PerAdvisorStartEvent_ReadCalendarTask</bpmn:incoming>
+        <bpmn:outgoing>Flow_ReadCalendarTask_SaveCalendarSnapshotTask</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:serviceTask id="SaveCalendarSnapshotTask" name="Kalender-Snapshot speichern" camunda:type="external" camunda:topic="democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot">
+        <bpmn:extensionElements>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="advisor">${advisor}</camunda:inputParameter>
+          </camunda:inputOutput>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_ReadCalendarTask_SaveCalendarSnapshotTask</bpmn:incoming>
+        <bpmn:outgoing>Flow_SaveCalendarSnapshotTask_PerAdvisorEndEvent</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:endEvent id="PerAdvisorEndEvent">
+        <bpmn:incoming>Flow_SaveCalendarSnapshotTask_PerAdvisorEndEvent</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_PerAdvisorStartEvent_ReadCalendarTask" sourceRef="PerAdvisorStartEvent" targetRef="ReadCalendarTask" />
+      <bpmn:sequenceFlow id="Flow_ReadCalendarTask_SaveCalendarSnapshotTask" sourceRef="ReadCalendarTask" targetRef="SaveCalendarSnapshotTask" />
+      <bpmn:sequenceFlow id="Flow_SaveCalendarSnapshotTask_PerAdvisorEndEvent" sourceRef="SaveCalendarSnapshotTask" targetRef="PerAdvisorEndEvent" />
+    </bpmn:subProcess>
+    <bpmn:endEvent id="SucceededEndEvent" name="aktualisiert">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="#{execution.setVariable(&#34;processStatus&#34;, &#34;succeeded&#34;)}" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PerAdvisorSubProcess_SucceededEndEvent</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="OutputmockedEvent" name="output-mocked">
+      <bpmn:outgoing>Flow_OutputmockedEvent_OutputmockedEndEvent</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="LinkEventDefinition_catch" name="output-mocked" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="OutputmockedEndEvent" name="output-mocked">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="#{execution.setVariable(&#34;processStatus&#34;, &#34;output-mocked&#34;)}" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_OutputmockedEvent_OutputmockedEndEvent</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_OutputmockedBoundaryEvent_OutputmockedEvent1" sourceRef="OutputmockedBoundaryEvent" targetRef="OutputmockedEvent1" />
+    <bpmn:sequenceFlow id="Flow_StartProcessStartEvent_InitProcessTask" sourceRef="StartProcessStartEvent" targetRef="InitProcessTask" />
+    <bpmn:sequenceFlow id="Flow_InitProcessTask_LoadAdvisorsTask" sourceRef="InitProcessTask" targetRef="LoadAdvisorsTask" />
+    <bpmn:sequenceFlow id="Flow_LoadAdvisorsTask_PerAdvisorSubProcess" sourceRef="LoadAdvisorsTask" targetRef="PerAdvisorSubProcess" />
+    <bpmn:sequenceFlow id="Flow_PerAdvisorSubProcess_SucceededEndEvent" sourceRef="PerAdvisorSubProcess" targetRef="SucceededEndEvent" />
+    <bpmn:sequenceFlow id="Flow_OutputmockedEvent_OutputmockedEndEvent" sourceRef="OutputmockedEvent" targetRef="OutputmockedEndEvent" />
+  </bpmn:process>
+
+  <bpmn:error id="Error_validation-failed" name="validation-failed" errorCode="validation-failed" camunda:errorMessage="${validationErrors.toString()}" />
+  <bpmn:error id="Error_output-mocked" name="output-mocked" errorCode="output-mocked" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_democompany-customer-updateAvailabilityV1">
+    <bpmndi:BPMNPlane id="BPMNPlane_democompany-customer-updateAvailabilityV1" bpmnElement="Collaboration_democompany-customer-updateAvailabilityV1">
+      <bpmndi:BPMNShape id="democompany-customer-updateAvailabilityV1-participant_di" bpmnElement="democompany-customer-updateAvailabilityV1-participant" isHorizontal="true">
+        <dc:Bounds x="160" y="60" width="1068" height="416" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartProcessStartEvent_di" bpmnElement="StartProcessStartEvent">
+        <dc:Bounds x="232" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="202" y="182" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="InitProcessTask_di" bpmnElement="InitProcessTask">
+        <dc:Bounds x="360" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedBoundaryEvent_di" bpmnElement="OutputmockedBoundaryEvent">
+        <dc:Bounds x="430" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="400" y="222" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedEvent1_di" bpmnElement="OutputmockedEvent1">
+        <dc:Bounds x="552" y="272" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="522" y="312" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="LoadAdvisorsTask_di" bpmnElement="LoadAdvisorsTask">
+        <dc:Bounds x="520" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PerAdvisorSubProcess_di" bpmnElement="PerAdvisorSubProcess" isExpanded="true">
+        <dc:Bounds x="630" y="75" width="440" height="170" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PerAdvisorStartEvent_di" bpmnElement="PerAdvisorStartEvent">
+        <dc:Bounds x="648" y="142" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ReadCalendarTask_di" bpmnElement="ReadCalendarTask">
+        <dc:Bounds x="728" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SaveCalendarSnapshotTask_di" bpmnElement="SaveCalendarSnapshotTask">
+        <dc:Bounds x="872" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PerAdvisorEndEvent_di" bpmnElement="PerAdvisorEndEvent">
+        <dc:Bounds x="1016" y="142" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SucceededEndEvent_di" bpmnElement="SucceededEndEvent">
+        <dc:Bounds x="1112" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1082" y="182" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedEvent_di" bpmnElement="OutputmockedEvent">
+        <dc:Bounds x="952" y="350" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="922" y="390" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedEndEvent_di" bpmnElement="OutputmockedEndEvent">
+        <dc:Bounds x="1112" y="350" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1082" y="390" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_OutputmockedBoundaryEvent_OutputmockedEvent1_di" bpmnElement="Flow_OutputmockedBoundaryEvent_OutputmockedEvent1">
+        <di:waypoint x="448" y="218" />
+        <di:waypoint x="448" y="290" />
+        <di:waypoint x="552" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PerAdvisorStartEvent_ReadCalendarTask_di" bpmnElement="Flow_PerAdvisorStartEvent_ReadCalendarTask">
+        <di:waypoint x="684" y="160" />
+        <di:waypoint x="728" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ReadCalendarTask_SaveCalendarSnapshotTask_di" bpmnElement="Flow_ReadCalendarTask_SaveCalendarSnapshotTask">
+        <di:waypoint x="828" y="160" />
+        <di:waypoint x="872" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SaveCalendarSnapshotTask_PerAdvisorEndEvent_di" bpmnElement="Flow_SaveCalendarSnapshotTask_PerAdvisorEndEvent">
+        <di:waypoint x="972" y="160" />
+        <di:waypoint x="1016" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_StartProcessStartEvent_InitProcessTask_di" bpmnElement="Flow_StartProcessStartEvent_InitProcessTask">
+        <di:waypoint x="268" y="160" />
+        <di:waypoint x="360" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_InitProcessTask_LoadAdvisorsTask_di" bpmnElement="Flow_InitProcessTask_LoadAdvisorsTask">
+        <di:waypoint x="460" y="160" />
+        <di:waypoint x="520" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_LoadAdvisorsTask_PerAdvisorSubProcess_di" bpmnElement="Flow_LoadAdvisorsTask_PerAdvisorSubProcess">
+        <di:waypoint x="620" y="160" />
+        <di:waypoint x="630" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PerAdvisorSubProcess_SucceededEndEvent_di" bpmnElement="Flow_PerAdvisorSubProcess_SucceededEndEvent">
+        <di:waypoint x="1070" y="160" />
+        <di:waypoint x="1112" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_OutputmockedEvent_OutputmockedEndEvent_di" bpmnElement="Flow_OutputmockedEvent_OutputmockedEndEvent">
+        <di:waypoint x="988" y="368" />
+        <di:waypoint x="1112" y="368" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

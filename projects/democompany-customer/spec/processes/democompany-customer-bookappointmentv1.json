@@ -1,0 +1,328 @@
+{
+  "version": 1,
+  "slug": "democompany-customer-bookappointmentv1",
+  "name": "bookAppointmentV1",
+  "title": "Termin vereinbaren",
+  "processId": "democompany-customer-bookAppointmentV1",
+  "project": "democompany-customer",
+  "engine": "c7",
+  "status": "implemented",
+  "description": "",
+  "createdAt": "2026-10-06",
+  "updatedAt": "2026-10-06T11:30:14+02:00",
+  "variables": [],
+  "timeToLive": "5",
+  "steps": [
+    {
+      "id": "StartProcessStartEvent",
+      "kind": "start",
+      "name": "Termin reserviert",
+      "status": "implemented"
+    },
+    {
+      "id": "InitProcessTask",
+      "kind": "service",
+      "name": "Init Process",
+      "status": "implemented",
+      "topic": "democompany-customer-bookAppointmentV1",
+      "inputs": [
+        {
+          "name": "handledErrors",
+          "expression": "output-mocked"
+        }
+      ],
+      "manualOutMapping": false,
+      "errors": [
+        {
+          "code": "output-mocked",
+          "interrupting": true,
+          "boundary": true,
+          "steps": [
+            {
+              "id": "OutputmockedEvent1",
+              "kind": "event",
+              "name": "output-mocked",
+              "status": "implemented",
+              "eventKind": "none",
+              "eventDirection": "throw"
+            },
+            {
+              "id": "OutputmockedEndEvent",
+              "kind": "end",
+              "name": "output-mocked",
+              "status": "implemented"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SendVerificationEmailTask",
+      "kind": "service",
+      "name": "E-Mail-Bestätigung senden",
+      "status": "implemented",
+      "topic": "democompany-services-mailsV1-SendEmail",
+      "inputs": [
+        {
+          "name": "to",
+          "expression": "= email"
+        },
+        {
+          "name": "subject",
+          "expression": "Bitte bestätigen Sie Ihre Terminanfrage"
+        },
+        {
+          "name": "body",
+          "expression": "= verificationMailBody"
+        }
+      ],
+      "manualOutMapping": false
+    },
+    {
+      "id": "VerifyEmailGateway",
+      "kind": "gateway",
+      "name": "Verzweigung",
+      "status": "implemented",
+      "gatewayType": "eventBased",
+      "branches": [
+        {
+          "id": "Flow_VerifyEmailGateway_EmailVerifiedEvent",
+          "label": "Pfad 1",
+          "steps": [
+            {
+              "id": "EmailVerifiedEvent",
+              "kind": "event",
+              "name": "E-Mail bestätigt",
+              "status": "implemented",
+              "eventKind": "message",
+              "eventDirection": "catch",
+              "messageName": "democompany-customer-bookAppointmentV1-emailVerified"
+            },
+            {
+              "id": "AssignCustomerTask",
+              "kind": "service",
+              "name": "Kunde zuordnen",
+              "status": "implemented",
+              "topic": "democompany-customer-bookAppointmentV1-AssignCustomer",
+              "manualOutMapping": false
+            },
+            {
+              "id": "AppointmentRulesTask",
+              "kind": "rule",
+              "name": "Terminregeln",
+              "status": "implemented",
+              "topic": "democompany-customer-appointmentRules",
+              "resultVariable": "rules",
+              "decisionResult": "singleResult"
+            },
+            {
+              "id": "ConfirmationRequiredGateway",
+              "kind": "gateway",
+              "name": "Bestätigung nötig?",
+              "status": "implemented",
+              "gatewayType": "exclusive",
+              "branches": [
+                {
+                  "id": "ConfirmationFlow",
+                  "label": "ja",
+                  "condition": "= rules.confirmationRequired",
+                  "steps": [
+                    {
+                      "id": "NotifyAdvisorTask",
+                      "kind": "service",
+                      "name": "Berater benachrichtigen",
+                      "status": "implemented",
+                      "topic": "democompany-services-mailsV1-SendEmail",
+                      "inputs": [
+                        {
+                          "name": "to",
+                          "expression": "= advisorEmail"
+                        },
+                        {
+                          "name": "subject",
+                          "expression": "Neue Terminanfrage"
+                        },
+                        {
+                          "name": "body",
+                          "expression": "= advisorMailBody"
+                        }
+                      ],
+                      "manualOutMapping": false
+                    },
+                    {
+                      "id": "ConfirmAppointmentTask",
+                      "kind": "user",
+                      "name": "Termin bestätigen",
+                      "status": "implemented",
+                      "candidateGroups": "kundenberater",
+                      "errors": [
+                        {
+                          "code": "nach 1 Arbeitstag",
+                          "interrupting": false,
+                          "boundary": true,
+                          "steps": [
+                            {
+                              "id": "SendReminderTask",
+                              "kind": "service",
+                              "name": "Erinnerung senden",
+                              "status": "implemented",
+                              "topic": "democompany-services-mailsV1-SendEmail",
+                              "inputs": [
+                                {
+                                  "name": "to",
+                                  "expression": "= advisorEmail"
+                                },
+                                {
+                                  "name": "subject",
+                                  "expression": "Erinnerung: Terminanfrage offen"
+                                },
+                                {
+                                  "name": "body",
+                                  "expression": "= advisorMailBody"
+                                }
+                              ],
+                              "manualOutMapping": false
+                            },
+                            {
+                              "id": "ReminderSentEndEvent",
+                              "kind": "end",
+                              "name": "erinnert",
+                              "status": "implemented"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "AcceptedGateway",
+                      "kind": "gateway",
+                      "name": "angenommen?",
+                      "status": "implemented",
+                      "gatewayType": "exclusive",
+                      "branches": [
+                        {
+                          "id": "AcceptedFlow",
+                          "label": "ja",
+                          "condition": "= accepted",
+                          "steps": [
+                            {
+                              "id": "BookReservationTask",
+                              "kind": "service",
+                              "name": "Termin buchen",
+                              "status": "implemented",
+                              "topic": "democompany-customer-bookAppointmentV1-BookReservation",
+                              "manualOutMapping": false
+                            },
+                            {
+                              "id": "SendInvitationTask",
+                              "kind": "service",
+                              "name": "Einladung senden",
+                              "status": "implemented",
+                              "topic": "democompany-customer-bookAppointmentV1-SendInvitation",
+                              "manualOutMapping": false
+                            },
+                            {
+                              "id": "SucceededEndEvent",
+                              "kind": "end",
+                              "name": "gebucht",
+                              "status": "implemented"
+                            }
+                          ]
+                        },
+                        {
+                          "id": "DeclinedFlow",
+                          "label": "nein",
+                          "condition": "= not(accepted)",
+                          "steps": [
+                            {
+                              "id": "ReleaseDeclinedReservationTask",
+                              "kind": "service",
+                              "name": "Reservierung freigeben",
+                              "status": "implemented",
+                              "topic": "democompany-customer-bookAppointmentV1-ReleaseReservation",
+                              "manualOutMapping": false
+                            },
+                            {
+                              "id": "SendDeclinedEmailTask",
+                              "kind": "service",
+                              "name": "Absage senden",
+                              "status": "implemented",
+                              "topic": "democompany-services-mailsV1-SendEmail",
+                              "inputs": [
+                                {
+                                  "name": "to",
+                                  "expression": "= email"
+                                },
+                                {
+                                  "name": "subject",
+                                  "expression": "Ihre Terminanfrage"
+                                },
+                                {
+                                  "name": "body",
+                                  "expression": "= declinedMailBody"
+                                }
+                              ],
+                              "manualOutMapping": false
+                            },
+                            {
+                              "id": "DeclinedEndEvent",
+                              "kind": "end",
+                              "name": "abgelehnt",
+                              "status": "implemented"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "NoConfirmationFlow",
+                  "label": "nein",
+                  "isDefault": true,
+                  "steps": [
+                    {
+                      "id": "BookJoinGateway__join__0",
+                      "kind": "goto",
+                      "name": "Termin buchen",
+                      "status": "implemented",
+                      "gotoId": "BookReservationTask"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "Flow_VerifyEmailGateway_VerificationExpiredEvent",
+          "label": "Pfad 2",
+          "steps": [
+            {
+              "id": "VerificationExpiredEvent",
+              "kind": "event",
+              "name": "nicht bestätigt",
+              "status": "implemented",
+              "eventKind": "timer",
+              "eventDirection": "catch"
+            },
+            {
+              "id": "ReleaseExpiredReservationTask",
+              "kind": "service",
+              "name": "Reservierung freigeben",
+              "status": "implemented",
+              "topic": "democompany-customer-bookAppointmentV1-ReleaseReservation",
+              "manualOutMapping": false
+            },
+            {
+              "id": "NotVerifiedEndEvent",
+              "kind": "end",
+              "name": "nicht bestätigt",
+              "status": "implemented"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

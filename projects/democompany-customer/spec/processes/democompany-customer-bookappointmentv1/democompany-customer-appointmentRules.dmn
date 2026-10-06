@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="Definitions_appointmentRules" name="Terminregeln" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.46.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.24.0">
+  <decision id="democompany-customer-appointmentRules" name="Terminregeln" camunda:historyTimeToLive="5">
+    <decisionTable id="DecisionTable_appointmentRules" hitPolicy="FIRST">
+      <input id="Input_topic" label="Thema">
+        <inputExpression id="InputExpression_topic" typeRef="string">
+          <text>topic</text>
+        </inputExpression>
+      </input>
+      <input id="Input_channel" label="Kanal">
+        <inputExpression id="InputExpression_channel" typeRef="string">
+          <text>channel</text>
+        </inputExpression>
+      </input>
+      <input id="Input_customerStatus" label="Kundenstatus">
+        <inputExpression id="InputExpression_customerStatus" typeRef="string">
+          <text>customerStatus</text>
+        </inputExpression>
+      </input>
+      <output id="Output_durationMinutes" label="Dauer (Min.)" name="durationMinutes" typeRef="integer" />
+      <output id="Output_leadTimeHours" label="Vorlaufzeit (Std.)" name="leadTimeHours" typeRef="integer" />
+      <output id="Output_windowStart" label="Zeitfenster von" name="windowStart" typeRef="string" />
+      <output id="Output_windowEnd" label="Zeitfenster bis" name="windowEnd" typeRef="string" />
+      <output id="Output_bufferMinutes" label="Puffer (Min.)" name="bufferMinutes" typeRef="integer" />
+      <output id="Output_advisorPool" label="Berater-Pool" name="advisorPool" typeRef="string" />
+      <output id="Output_confirmationRequired" label="Bestätigung nötig" name="confirmationRequired" typeRef="boolean" />
+      <rule id="Rule_1">
+        <description>Hypothek: lang, mit Bestätigung</description>
+        <inputEntry id="Rule_1_in0">
+          <text>&quot;mortgage&quot;</text>
+        </inputEntry>
+        <inputEntry id="Rule_1_in1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="Rule_1_in2">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="Rule_1_out0">
+          <text>90</text>
+        </outputEntry>
+        <outputEntry id="Rule_1_out1">
+          <text>48</text>
+        </outputEntry>
+        <outputEntry id="Rule_1_out2">
+          <text>&quot;08:00&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_1_out3">
+          <text>&quot;17:00&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_1_out4">
+          <text>15</text>
+        </outputEntry>
+        <outputEntry id="Rule_1_out5">
+          <text>&quot;mortgage&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_1_out6">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_2">
+        <description>Interessent: Berater bestätigt</description>
+        <inputEntry id="Rule_2_in0">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="Rule_2_in1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="Rule_2_in2">
+          <text>&quot;prospect&quot;</text>
+        </inputEntry>
+        <outputEntry id="Rule_2_out0">
+          <text>60</text>
+        </outputEntry>
+        <outputEntry id="Rule_2_out1">
+          <text>24</text>
+        </outputEntry>
+        <outputEntry id="Rule_2_out2">
+          <text>&quot;08:00&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_2_out3">
+          <text>&quot;17:00&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_2_out4">
+          <text>15</text>
+        </outputEntry>
+        <outputEntry id="Rule_2_out5">
+          <text>&quot;advisor&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_2_out6">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_3">
+        <description>Vorsorge/Anlage am Telefon: kurz</description>
+        <inputEntry id="Rule_3_in0">
+          <text>&quot;pension&quot;,&quot;investment&quot;</text>
+        </inputEntry>
+        <inputEntry id="Rule_3_in1">
+          <text>&quot;phone&quot;</text>
+        </inputEntry>
+        <inputEntry id="Rule_3_in2">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="Rule_3_out0">
+          <text>30</text>
+        </outputEntry>
+        <outputEntry id="Rule_3_out1">
+          <text>24</text>
+        </outputEntry>
+        <outputEntry id="Rule_3_out2">
+          <text>&quot;08:00&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_3_out3">
+          <text>&quot;18:00&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_3_out4">
+          <text>10</text>
+        </outputEntry>
+        <outputEntry id="Rule_3_out5">
+          <text>&quot;advisor&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_3_out6">
+          <text>false</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_4">
+        <description>Vorsorge/Anlage</description>
+        <inputEntry id="Rule_4_in0">
+          <text>&quot;pension&quot;,&quot;investment&quot;</text>
+        </inputEntry>
+        <inputEntry id="Rule_4_in1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="Rule_4_in2">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="Rule_4_out0">
+          <text>60</text>
+        </outputEntry>
+        <outputEntry id="Rule_4_out1">
+          <text>24</text>
+        </outputEntry>
+        <outputEntry id="Rule_4_out2">
+          <text>&quot;08:00&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_4_out3">
+          <text>&quot;17:00&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_4_out4">
+          <text>15</text>
+        </outputEntry>
+        <outputEntry id="Rule_4_out5">
+          <text>&quot;advisor&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_4_out6">
+          <text>false</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_5">
+        <description>Telefon: kurzfristig</description>
+        <inputEntry id="Rule_5_in0">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="Rule_5_in1">
+          <text>&quot;phone&quot;</text>
+        </inputEntry>
+        <inputEntry id="Rule_5_in2">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="Rule_5_out0">
+          <text>30</text>
+        </outputEntry>
+        <outputEntry id="Rule_5_out1">
+          <text>4</text>
+        </outputEntry>
+        <outputEntry id="Rule_5_out2">
+          <text>&quot;08:00&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_5_out3">
+          <text>&quot;18:00&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_5_out4">
+          <text>10</text>
+        </outputEntry>
+        <outputEntry id="Rule_5_out5">
+          <text>&quot;advisor&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_5_out6">
+          <text>false</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_6">
+        <description>Beratung (Standard)</description>
+        <inputEntry id="Rule_6_in0">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="Rule_6_in1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="Rule_6_in2">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="Rule_6_out0">
+          <text>45</text>
+        </outputEntry>
+        <outputEntry id="Rule_6_out1">
+          <text>24</text>
+        </outputEntry>
+        <outputEntry id="Rule_6_out2">
+          <text>&quot;08:00&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_6_out3">
+          <text>&quot;17:00&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_6_out4">
+          <text>15</text>
+        </outputEntry>
+        <outputEntry id="Rule_6_out5">
+          <text>&quot;advisor&quot;</text>
+        </outputEntry>
+        <outputEntry id="Rule_6_out6">
+          <text>false</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_appointmentRules">
+      <dmndi:DMNShape id="DMNShape_appointmentRules" dmnElementRef="democompany-customer-appointmentRules">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
