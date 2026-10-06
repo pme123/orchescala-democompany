@@ -5,6 +5,7 @@
   </bpmn:collaboration>
   <bpmn:process id="democompany-customer-updateAvailabilityV1" name="Verfügbarkeit aktualisieren" isExecutable="true" camunda:historyTimeToLive="5">
     <bpmn:startEvent id="StartProcessStartEvent" name="alle 15 Minuten" camunda:asyncAfter="true">
+      <bpmn:extensionElements />
       <bpmn:outgoing>Flow_StartProcessStartEvent_InitProcessTask</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_every15min">
         <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R/PT15M</bpmn:timeCycle>
@@ -20,22 +21,31 @@
       <bpmn:outgoing>Flow_InitProcessTask_LoadAdvisorsTask</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:boundaryEvent id="OutputmockedBoundaryEvent" name="output-mocked" cancelActivity="true" attachedToRef="InitProcessTask">
+      <bpmn:extensionElements />
       <bpmn:outgoing>Flow_OutputmockedBoundaryEvent_OutputmockedEvent1</bpmn:outgoing>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_output-mocked" errorRef="Error_output-mocked" />
     </bpmn:boundaryEvent>
     <bpmn:intermediateThrowEvent id="OutputmockedEvent1" name="output-mocked">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_OutputmockedBoundaryEvent_OutputmockedEvent1</bpmn:incoming>
       <bpmn:linkEventDefinition id="LinkEventDefinition_throw" name="output-mocked" />
     </bpmn:intermediateThrowEvent>
     <bpmn:serviceTask id="LoadAdvisorsTask" name="Berater laden" camunda:type="external" camunda:topic="democompany-customer-updateAvailabilityV1-LoadAdvisors">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_InitProcessTask_LoadAdvisorsTask</bpmn:incoming>
       <bpmn:outgoing>Flow_LoadAdvisorsTask_PerAdvisorSubProcess</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:subProcess id="PerAdvisorSubProcess" name="pro Berater" camunda:asyncBefore="true">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="busy">${null}</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_LoadAdvisorsTask_PerAdvisorSubProcess</bpmn:incoming>
       <bpmn:outgoing>Flow_PerAdvisorSubProcess_SucceededEndEvent</bpmn:outgoing>
-      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${advisors}" camunda:elementVariable="advisor" />
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${advisors.elements()}" camunda:elementVariable="advisor" />
       <bpmn:startEvent id="PerAdvisorStartEvent">
+        <bpmn:extensionElements />
         <bpmn:outgoing>Flow_PerAdvisorStartEvent_ReadCalendarTask</bpmn:outgoing>
       </bpmn:startEvent>
       <bpmn:serviceTask id="ReadCalendarTask" name="Kalender lesen" camunda:type="external" camunda:topic="democompany-customer-updateAvailabilityV1-ReadCalendar">
@@ -57,6 +67,7 @@
         <bpmn:outgoing>Flow_SaveCalendarSnapshotTask_PerAdvisorEndEvent</bpmn:outgoing>
       </bpmn:serviceTask>
       <bpmn:endEvent id="PerAdvisorEndEvent">
+        <bpmn:extensionElements />
         <bpmn:incoming>Flow_SaveCalendarSnapshotTask_PerAdvisorEndEvent</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_PerAdvisorStartEvent_ReadCalendarTask" sourceRef="PerAdvisorStartEvent" targetRef="ReadCalendarTask" />
@@ -70,6 +81,7 @@
       <bpmn:incoming>Flow_PerAdvisorSubProcess_SucceededEndEvent</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:intermediateCatchEvent id="OutputmockedEvent" name="output-mocked">
+      <bpmn:extensionElements />
       <bpmn:outgoing>Flow_OutputmockedEvent_OutputmockedEndEvent</bpmn:outgoing>
       <bpmn:linkEventDefinition id="LinkEventDefinition_catch" name="output-mocked" />
     </bpmn:intermediateCatchEvent>

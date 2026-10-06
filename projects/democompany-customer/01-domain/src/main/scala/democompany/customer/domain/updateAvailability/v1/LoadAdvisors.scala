@@ -10,8 +10,8 @@ object LoadAdvisors extends CompanyBpmnCustomTaskDsl:
 
   /** Lädt die Berater mit der Rolle kundenberater. */
   case class In(
-      @description("Rolle der Berater im IdP")
-      role: String
+      @description("Rolle der Berater im IdP - ohne Angabe kundenberater")
+      role: Option[String]
   )
 
   object In:
@@ -19,9 +19,11 @@ object LoadAdvisors extends CompanyBpmnCustomTaskDsl:
     given InOutCodec[In] = deriveInOutCodec
 
     lazy val example = In(
-      role = "kundenberater"
+      role = Some("kundenberater")
     )
-    lazy val exampleMinimal = example
+    lazy val exampleMinimal = example.copy(
+      role = None
+    )
   end In
 
   /** Lädt die Berater mit der Rolle kundenberater. */

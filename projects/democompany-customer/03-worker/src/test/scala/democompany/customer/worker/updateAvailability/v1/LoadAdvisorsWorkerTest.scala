@@ -9,6 +9,6 @@ class LoadAdvisorsWorkerTest extends munit.FunSuite:
 
   test("the advisors of the configuration - without ADVISORS the demo ones"):
     assume(sys.env.get("ADVISORS").isEmpty, "ADVISORS is set")
-    assertEquals(LoadAdvisorsWorker().runWork(In("kundenberater")), Right(Out(Advisors.demo)))
+    assertEquals(LoadAdvisorsWorker().runWork(In(None)), Right(Out(Advisors.demo)))
 
 end LoadAdvisorsWorkerTest

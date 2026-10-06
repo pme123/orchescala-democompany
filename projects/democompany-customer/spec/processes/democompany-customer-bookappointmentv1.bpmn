@@ -5,6 +5,7 @@
   </bpmn:collaboration>
   <bpmn:process id="democompany-customer-bookAppointmentV1" name="Termin vereinbaren" isExecutable="true" camunda:historyTimeToLive="5">
     <bpmn:startEvent id="StartProcessStartEvent" name="Termin reserviert" camunda:asyncAfter="true">
+      <bpmn:extensionElements />
       <bpmn:outgoing>Flow_StartProcessStartEvent_InitProcessTask</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:serviceTask id="InitProcessTask" name="Init Process" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1">
@@ -17,10 +18,12 @@
       <bpmn:outgoing>Flow_InitProcessTask_SendVerificationEmailTask</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:boundaryEvent id="OutputmockedBoundaryEvent" name="output-mocked" cancelActivity="true" attachedToRef="InitProcessTask">
+      <bpmn:extensionElements />
       <bpmn:outgoing>Flow_OutputmockedBoundaryEvent_OutputmockedEvent1</bpmn:outgoing>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_output-mocked" errorRef="Error_output-mocked" />
     </bpmn:boundaryEvent>
     <bpmn:intermediateThrowEvent id="OutputmockedEvent1" name="output-mocked">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_OutputmockedBoundaryEvent_OutputmockedEvent1</bpmn:incoming>
       <bpmn:linkEventDefinition id="LinkEventDefinition_throw" name="output-mocked" />
     </bpmn:intermediateThrowEvent>
@@ -36,16 +39,19 @@
       <bpmn:outgoing>Flow_SendVerificationEmailTask_VerifyEmailGateway</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:eventBasedGateway id="VerifyEmailGateway">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_SendVerificationEmailTask_VerifyEmailGateway</bpmn:incoming>
       <bpmn:outgoing>Flow_VerifyEmailGateway_EmailVerifiedEvent</bpmn:outgoing>
       <bpmn:outgoing>Flow_VerifyEmailGateway_VerificationExpiredEvent</bpmn:outgoing>
     </bpmn:eventBasedGateway>
     <bpmn:intermediateCatchEvent id="EmailVerifiedEvent" name="E-Mail bestätigt">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_VerifyEmailGateway_EmailVerifiedEvent</bpmn:incoming>
       <bpmn:outgoing>Flow_EmailVerifiedEvent_AssignCustomerTask</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_emailVerified" messageRef="Message_emailVerified" />
     </bpmn:intermediateCatchEvent>
     <bpmn:intermediateCatchEvent id="VerificationExpiredEvent" name="nicht bestätigt">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_VerifyEmailGateway_VerificationExpiredEvent</bpmn:incoming>
       <bpmn:outgoing>Flow_VerificationExpiredEvent_ReleaseExpiredReservationTask</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_verify">
@@ -53,6 +59,7 @@
       </bpmn:timerEventDefinition>
     </bpmn:intermediateCatchEvent>
     <bpmn:serviceTask id="ReleaseExpiredReservationTask" name="Reservierung freigeben" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-ReleaseReservation">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_VerificationExpiredEvent_ReleaseExpiredReservationTask</bpmn:incoming>
       <bpmn:outgoing>Flow_ReleaseExpiredReservationTask_NotVerifiedEndEvent</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -63,14 +70,17 @@
       <bpmn:incoming>Flow_ReleaseExpiredReservationTask_NotVerifiedEndEvent</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:serviceTask id="AssignCustomerTask" name="Kunde zuordnen" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-AssignCustomer">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_EmailVerifiedEvent_AssignCustomerTask</bpmn:incoming>
       <bpmn:outgoing>Flow_AssignCustomerTask_AppointmentRulesTask</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:businessRuleTask id="AppointmentRulesTask" name="Terminregeln" camunda:decisionRef="democompany-customer-bookAppointmentV1-AppointmentRules" camunda:resultVariable="rules" camunda:mapDecisionResult="singleResult">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_AssignCustomerTask_AppointmentRulesTask</bpmn:incoming>
       <bpmn:outgoing>Flow_AppointmentRulesTask_ConfirmationRequiredGateway</bpmn:outgoing>
     </bpmn:businessRuleTask>
     <bpmn:exclusiveGateway id="ConfirmationRequiredGateway" name="Bestätigung nötig?" default="NoConfirmationFlow">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_AppointmentRulesTask_ConfirmationRequiredGateway</bpmn:incoming>
       <bpmn:outgoing>ConfirmationFlow</bpmn:outgoing>
       <bpmn:outgoing>NoConfirmationFlow</bpmn:outgoing>
@@ -87,10 +97,12 @@
       <bpmn:outgoing>Flow_NotifyAdvisorTask_ConfirmAppointmentTask</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:userTask id="ConfirmAppointmentTask" name="Termin bestätigen" camunda:candidateGroups="kundenberater">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_NotifyAdvisorTask_ConfirmAppointmentTask</bpmn:incoming>
       <bpmn:outgoing>Flow_ConfirmAppointmentTask_AcceptedGateway</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:boundaryEvent id="ConfirmReminderEvent" name="nach 1 Arbeitstag" cancelActivity="false" attachedToRef="ConfirmAppointmentTask">
+      <bpmn:extensionElements />
       <bpmn:outgoing>Flow_ConfirmReminderEvent_SendReminderTask</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_reminder">
         <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">${timerConfirmReminder}</bpmn:timeDuration>
@@ -108,14 +120,17 @@
       <bpmn:outgoing>Flow_SendReminderTask_ReminderSentEndEvent</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:endEvent id="ReminderSentEndEvent" name="erinnert">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_SendReminderTask_ReminderSentEndEvent</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="AcceptedGateway" name="angenommen?">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_ConfirmAppointmentTask_AcceptedGateway</bpmn:incoming>
       <bpmn:outgoing>AcceptedFlow</bpmn:outgoing>
       <bpmn:outgoing>DeclinedFlow</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:serviceTask id="ReleaseDeclinedReservationTask" name="Reservierung freigeben" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-ReleaseReservation">
+      <bpmn:extensionElements />
       <bpmn:incoming>DeclinedFlow</bpmn:incoming>
       <bpmn:outgoing>Flow_ReleaseDeclinedReservationTask_SendDeclinedEmailTask</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -137,15 +152,18 @@
       <bpmn:incoming>Flow_SendDeclinedEmailTask_DeclinedEndEvent</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="BookJoinGateway">
+      <bpmn:extensionElements />
       <bpmn:incoming>NoConfirmationFlow</bpmn:incoming>
       <bpmn:incoming>AcceptedFlow</bpmn:incoming>
       <bpmn:outgoing>Flow_BookJoinGateway_BookReservationTask</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:serviceTask id="BookReservationTask" name="Termin buchen" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-BookReservation">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_BookJoinGateway_BookReservationTask</bpmn:incoming>
       <bpmn:outgoing>Flow_BookReservationTask_SendInvitationTask</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="SendInvitationTask" name="Einladung senden" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-SendInvitation">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_BookReservationTask_SendInvitationTask</bpmn:incoming>
       <bpmn:outgoing>Flow_SendInvitationTask_SucceededEndEvent</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -156,6 +174,7 @@
       <bpmn:incoming>Flow_SendInvitationTask_SucceededEndEvent</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:intermediateCatchEvent id="OutputmockedEvent" name="output-mocked">
+      <bpmn:extensionElements />
       <bpmn:outgoing>Flow_OutputmockedEvent_OutputmockedEndEvent</bpmn:outgoing>
       <bpmn:linkEventDefinition id="LinkEventDefinition_catch" name="output-mocked" />
     </bpmn:intermediateCatchEvent>

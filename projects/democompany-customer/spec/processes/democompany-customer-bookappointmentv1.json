@@ -9,7 +9,7 @@
   "status": "implemented",
   "description": "",
   "createdAt": "2026-10-06",
-  "updatedAt": "2026-10-06T15:12:38+02:00",
+  "updatedAt": "2026-10-06T15:45:13+02:00",
   "variables": [],
   "timeToLive": "5",
   "steps": [
@@ -558,10 +558,10 @@
       ]
     },
     {
-      "id": "t-7918c10be0",
+      "id": "t-79c079b97e",
       "name": "SendMail.In",
       "kind": "case",
-      "interactionId": "ia-f815fc738f",
+      "interactionId": "ia-c16489381c",
       "status": "draft",
       "fields": [
         {
@@ -589,10 +589,10 @@
       "description": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
     },
     {
-      "id": "t-ae3eab0ee8",
+      "id": "t-b24047fe98",
       "name": "SendMail.Out",
       "kind": "case",
-      "interactionId": "ia-f815fc738f",
+      "interactionId": "ia-c16489381c",
       "status": "draft",
       "fields": [
         {
@@ -605,10 +605,10 @@
       "description": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
     },
     {
-      "id": "t-ea1fc96295",
+      "id": "t-7ac6b5e76c",
       "name": "EMailBestaetigtME.In",
       "kind": "case",
-      "interactionId": "ia-0d6db64e26",
+      "interactionId": "ia-f9fef0deae",
       "status": "draft",
       "fields": [
         {
@@ -622,10 +622,10 @@
       "description": "Der Kunde hat den Link in der Opt-in-Mail angeklickt."
     },
     {
-      "id": "t-df829ac6c7",
+      "id": "t-828ea31ba0",
       "name": "AssignCustomer.In",
       "kind": "case",
-      "interactionId": "ia-70a2ccf45e",
+      "interactionId": "ia-304cdcbb9b",
       "status": "draft",
       "fields": [
         {
@@ -638,10 +638,10 @@
       "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
     },
     {
-      "id": "t-709e8ccdce",
+      "id": "t-2e07e7889c",
       "name": "AssignCustomer.Out",
       "kind": "case",
-      "interactionId": "ia-70a2ccf45e",
+      "interactionId": "ia-304cdcbb9b",
       "status": "draft",
       "fields": [
         {
@@ -669,10 +669,10 @@
       "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
     },
     {
-      "id": "t-1e0d60ba8d",
+      "id": "t-64410ae9f8",
       "name": "AppointmentRulesDmn.In",
       "kind": "case",
-      "interactionId": "ia-0f63842a78",
+      "interactionId": "ia-0d7ee084dc",
       "status": "draft",
       "fields": [
         {
@@ -700,10 +700,10 @@
       "description": "Eingaben der Terminregeln"
     },
     {
-      "id": "t-3a3c43ae6e",
+      "id": "t-67d75006ee",
       "name": "AppointmentRulesDmn.Out",
       "kind": "case",
-      "interactionId": "ia-0f63842a78",
+      "interactionId": "ia-0d7ee084dc",
       "status": "draft",
       "fields": [
         {
@@ -759,10 +759,10 @@
       "description": "Ergebnis der Terminregeln"
     },
     {
-      "id": "t-e9e31c3446",
+      "id": "t-8aad175755",
       "name": "TerminBestaetigenUT.In",
       "kind": "case",
-      "interactionId": "ia-e16919bb5e",
+      "interactionId": "ia-4d6d17cee6",
       "status": "draft",
       "fields": [
         {
@@ -794,10 +794,10 @@
       "description": "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab."
     },
     {
-      "id": "t-fe34ef1c00",
+      "id": "t-cdfe08d474",
       "name": "TerminBestaetigenUT.Out",
       "kind": "case",
-      "interactionId": "ia-e16919bb5e",
+      "interactionId": "ia-4d6d17cee6",
       "status": "draft",
       "fields": [
         {
@@ -818,10 +818,10 @@
       "description": "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab."
     },
     {
-      "id": "t-a2c018d05e",
+      "id": "t-63b4561b20",
       "name": "BookReservation.In",
       "kind": "case",
-      "interactionId": "ia-3aef28c1fe",
+      "interactionId": "ia-210e68d666",
       "status": "draft",
       "fields": [
         {
@@ -835,10 +835,10 @@
       "description": "Setzt die Reservierung auf gebucht."
     },
     {
-      "id": "t-8168d7e855",
+      "id": "t-d9d0518507",
       "name": "BookReservation.Out",
       "kind": "case",
-      "interactionId": "ia-3aef28c1fe",
+      "interactionId": "ia-210e68d666",
       "status": "draft",
       "fields": [
         {
@@ -851,10 +851,10 @@
       "description": "Setzt die Reservierung auf gebucht."
     },
     {
-      "id": "t-154e4fae98",
+      "id": "t-9c365bdc29",
       "name": "SendInvitation.In",
       "kind": "case",
-      "interactionId": "ia-514e23caae",
+      "interactionId": "ia-285bc213ff",
       "status": "draft",
       "fields": [
         {
@@ -873,10 +873,10 @@
       "description": "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook."
     },
     {
-      "id": "t-589022ed88",
+      "id": "t-87feb7d9a6",
       "name": "SendInvitation.Out",
       "kind": "case",
-      "interactionId": "ia-514e23caae",
+      "interactionId": "ia-285bc213ff",
       "status": "draft",
       "fields": [
         {
@@ -889,10 +889,10 @@
       "description": "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook."
     },
     {
-      "id": "t-64dc72a044",
+      "id": "t-efa265e3e0",
       "name": "ReleaseReservation.In",
       "kind": "case",
-      "interactionId": "ia-664b941a50",
+      "interactionId": "ia-49a378d359",
       "status": "draft",
       "fields": [
         {
@@ -906,10 +906,10 @@
       "description": "Löscht die Reservierung - der Termin ist wieder frei."
     },
     {
-      "id": "t-6402f678b7",
+      "id": "t-999c8b92e5",
       "name": "ReleaseReservation.Out",
       "kind": "case",
-      "interactionId": "ia-664b941a50",
+      "interactionId": "ia-49a378d359",
       "status": "draft",
       "fields": [
         {
@@ -1014,136 +1014,136 @@
   ],
   "interactions": [
     {
-      "id": "ia-f815fc738f",
+      "id": "ia-c16489381c",
       "stepId": "SendVerificationEmailTask",
       "kind": "customTask",
       "name": "SendMail",
       "key": "democompany-customer-bookAppointmentV1-SendMail",
       "status": "draft",
-      "inTypeId": "t-7918c10be0",
-      "outTypeId": "t-ae3eab0ee8",
+      "inTypeId": "t-79c079b97e",
+      "outTypeId": "t-b24047fe98",
       "descr": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
     },
     {
-      "id": "ia-0d6db64e26",
+      "id": "ia-f9fef0deae",
       "stepId": "EmailVerifiedEvent",
       "kind": "message",
       "name": "EmailVerifiedME",
       "key": "democompany-customer-bookAppointmentV1-emailVerified",
       "status": "draft",
-      "inTypeId": "t-ea1fc96295",
+      "inTypeId": "t-7ac6b5e76c",
       "descr": "Der Kunde hat den Link in der Opt-in-Mail angeklickt."
     },
     {
-      "id": "ia-70a2ccf45e",
+      "id": "ia-304cdcbb9b",
       "stepId": "AssignCustomerTask",
       "kind": "customTask",
       "name": "AssignCustomer",
       "key": "democompany-customer-bookAppointmentV1-AssignCustomer",
       "status": "draft",
-      "inTypeId": "t-df829ac6c7",
-      "outTypeId": "t-709e8ccdce",
+      "inTypeId": "t-828ea31ba0",
+      "outTypeId": "t-2e07e7889c",
       "descr": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
     },
     {
-      "id": "ia-0f63842a78",
+      "id": "ia-0d7ee084dc",
       "stepId": "AppointmentRulesTask",
       "kind": "decision",
       "name": "AppointmentRulesDmn",
       "key": "democompany-customer-bookAppointmentV1-AppointmentRules",
       "decisionResult": "singleResult",
       "status": "draft",
-      "inTypeId": "t-1e0d60ba8d",
-      "outTypeId": "t-3a3c43ae6e",
+      "inTypeId": "t-64410ae9f8",
+      "outTypeId": "t-67d75006ee",
       "dmnFile": "democompany-customer-bookAppointmentV1-AppointmentRules.dmn",
       "descr": "Terminregeln: Dauer, Vorlaufzeit, Zeitfenster, Puffer, Berater-Pool und ob der Berater bestätigt."
     },
     {
-      "id": "ia-34e425e4dd",
+      "id": "ia-b9941e1711",
       "stepId": "NotifyAdvisorTask",
       "kind": "customTask",
       "name": "SendMail",
       "key": "democompany-customer-bookAppointmentV1-SendMail",
       "status": "draft",
-      "inTypeId": "t-7918c10be0",
-      "outTypeId": "t-ae3eab0ee8",
+      "inTypeId": "t-79c079b97e",
+      "outTypeId": "t-b24047fe98",
       "descr": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
     },
     {
-      "id": "ia-e16919bb5e",
+      "id": "ia-4d6d17cee6",
       "stepId": "ConfirmAppointmentTask",
       "kind": "userTask",
       "name": "ConfirmAppointmentUT",
       "key": "ConfirmAppointmentTask",
       "status": "draft",
-      "inTypeId": "t-e9e31c3446",
-      "outTypeId": "t-fe34ef1c00",
+      "inTypeId": "t-8aad175755",
+      "outTypeId": "t-cdfe08d474",
       "descr": "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab."
     },
     {
-      "id": "ia-6b60204eed",
+      "id": "ia-f6df717b57",
       "stepId": "SendReminderTask",
       "kind": "customTask",
       "name": "SendMail",
       "key": "democompany-customer-bookAppointmentV1-SendMail",
       "status": "draft",
-      "inTypeId": "t-7918c10be0",
-      "outTypeId": "t-ae3eab0ee8",
+      "inTypeId": "t-79c079b97e",
+      "outTypeId": "t-b24047fe98",
       "descr": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
     },
     {
-      "id": "ia-3aef28c1fe",
+      "id": "ia-210e68d666",
       "stepId": "BookReservationTask",
       "kind": "customTask",
       "name": "BookReservation",
       "key": "democompany-customer-bookAppointmentV1-BookReservation",
       "status": "draft",
-      "inTypeId": "t-a2c018d05e",
-      "outTypeId": "t-8168d7e855",
+      "inTypeId": "t-63b4561b20",
+      "outTypeId": "t-d9d0518507",
       "descr": "Setzt die Reservierung auf gebucht."
     },
     {
-      "id": "ia-514e23caae",
+      "id": "ia-285bc213ff",
       "stepId": "SendInvitationTask",
       "kind": "customTask",
       "name": "SendInvitation",
       "key": "democompany-customer-bookAppointmentV1-SendInvitation",
       "status": "draft",
-      "inTypeId": "t-154e4fae98",
-      "outTypeId": "t-589022ed88",
+      "inTypeId": "t-9c365bdc29",
+      "outTypeId": "t-87feb7d9a6",
       "descr": "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook."
     },
     {
-      "id": "ia-664b941a50",
+      "id": "ia-49a378d359",
       "stepId": "ReleaseDeclinedReservationTask",
       "kind": "customTask",
       "name": "ReleaseReservation",
       "key": "democompany-customer-bookAppointmentV1-ReleaseReservation",
       "status": "draft",
-      "inTypeId": "t-64dc72a044",
-      "outTypeId": "t-6402f678b7",
+      "inTypeId": "t-efa265e3e0",
+      "outTypeId": "t-999c8b92e5",
       "descr": "Löscht die Reservierung - der Termin ist wieder frei."
     },
     {
-      "id": "ia-0b6f6e56d2",
+      "id": "ia-a8722010a4",
       "stepId": "SendDeclinedEmailTask",
       "kind": "customTask",
       "name": "SendMail",
       "key": "democompany-customer-bookAppointmentV1-SendMail",
       "status": "draft",
-      "inTypeId": "t-7918c10be0",
-      "outTypeId": "t-ae3eab0ee8",
+      "inTypeId": "t-79c079b97e",
+      "outTypeId": "t-b24047fe98",
       "descr": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
     },
     {
-      "id": "ia-a19bc47678",
+      "id": "ia-803e2e92cd",
       "stepId": "ReleaseExpiredReservationTask",
       "kind": "customTask",
       "name": "ReleaseReservation",
       "key": "democompany-customer-bookAppointmentV1-ReleaseReservation",
       "status": "draft",
-      "inTypeId": "t-64dc72a044",
-      "outTypeId": "t-6402f678b7",
+      "inTypeId": "t-efa265e3e0",
+      "outTypeId": "t-999c8b92e5",
       "descr": "Löscht die Reservierung - der Termin ist wieder frei."
     }
   ],
