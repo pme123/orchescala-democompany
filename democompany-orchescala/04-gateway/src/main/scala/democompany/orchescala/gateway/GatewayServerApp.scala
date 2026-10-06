@@ -10,7 +10,9 @@ object GatewayServerApp extends GatewayServer, CompanyEngineGApp:
   override lazy val config: GatewayConfig =
     DefaultGatewayConfig(
       engineConfig = companyEngineConfig,
-      workerConfig = companyWorkerConfig
+      workerConfig = companyWorkerConfig,
+      tokenValidation = CompanyGatewayConfig.tokenValidation,
+      publicAccess = CompanyGatewayConfig.publicAccess
     )
 
 end GatewayServerApp
