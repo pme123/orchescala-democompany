@@ -29,7 +29,9 @@ object LoadAdvisors extends CompanyBpmnCustomTaskDsl:
   /** Lädt die Berater mit der Rolle kundenberater. */
   case class Out(
       @description("Die Berater")
-      advisors: Seq[Advisor]
+      advisors: Seq[Advisor],
+      @description("Wie viele - das Ergebnis des Prozesses")
+      advisorCount: Int
   )
 
   object Out:
@@ -37,7 +39,8 @@ object LoadAdvisors extends CompanyBpmnCustomTaskDsl:
     given InOutCodec[Out] = deriveInOutCodec
 
     lazy val example = Out(
-      advisors = Seq(Advisor.example)
+      advisors = Seq(Advisor.example),
+      advisorCount = 1
     )
     lazy val exampleMinimal = example
   end Out

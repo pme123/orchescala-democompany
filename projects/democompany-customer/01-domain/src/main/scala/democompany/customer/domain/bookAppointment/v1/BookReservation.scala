@@ -27,7 +27,9 @@ object BookReservation extends CompanyBpmnCustomTaskDsl:
   /** Setzt die Reservierung auf gebucht. */
   case class Out(
       @description("Zeitpunkt der Buchung")
-      bookedAt: LocalDateTime
+      bookedAt: LocalDateTime,
+      @description("Termin gebucht - das Ergebnis des Prozesses")
+      booked: Boolean = true
   )
 
   object Out:

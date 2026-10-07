@@ -10,6 +10,6 @@ class LoadAdvisorsWorker extends CompanyCustomWorkerDsl[In, Out]:
   lazy val customTask = example
 
   override def runWork(in: In): Either[WorkerError.CustomError, Out] =
-    Right(Out(Advisors.all))
+    Right(Out(Advisors.all, Advisors.all.size))
 
 end LoadAdvisorsWorker

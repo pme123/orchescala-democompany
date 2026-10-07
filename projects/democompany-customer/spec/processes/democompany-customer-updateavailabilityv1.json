@@ -249,6 +249,13 @@
           "type": "t-advisor",
           "description": "Die Berater",
           "collection": true
+        },
+        {
+          "id": "f-dm63c",
+          "name": "advisorCount",
+          "type": "Int",
+          "description": "Wie viele - das Ergebnis des Prozesses",
+          "example": "1"
         }
       ],
       "description": "Lädt die Berater mit der Rolle kundenberater."

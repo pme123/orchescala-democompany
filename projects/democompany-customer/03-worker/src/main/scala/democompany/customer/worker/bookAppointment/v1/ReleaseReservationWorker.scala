@@ -13,6 +13,6 @@ class ReleaseReservationWorker extends CompanyPersistenceWorkerDsl[In, Out]:
     for
       stored <- get(reservations, in.reservationId)
       _      <- ZIO.foreachDiscard(stored)(_ => delete(reservations, in.reservationId))
-    yield Out(LocalDateTime.now())
+    yield Out(LocalDateTime.now(), booked = false)
 
 end ReleaseReservationWorker

@@ -27,7 +27,9 @@ object ReleaseReservation extends CompanyBpmnCustomTaskDsl:
   /** Löscht die Reservierung - der Termin ist wieder frei. */
   case class Out(
       @description("Zeitpunkt der Freigabe")
-      releasedAt: LocalDateTime
+      releasedAt: LocalDateTime,
+      @description("Termin nicht gebucht - das Ergebnis des Prozesses")
+      booked: Boolean = false
   )
 
   object Out:

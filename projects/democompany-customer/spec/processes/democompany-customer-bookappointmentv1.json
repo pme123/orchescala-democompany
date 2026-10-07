@@ -853,6 +853,13 @@
           "name": "bookedAt",
           "type": "LocalDateTime",
           "description": "Zeitpunkt der Buchung"
+        },
+        {
+          "id": "f-bookreservation-booked",
+          "name": "booked",
+          "type": "Boolean",
+          "description": "Termin gebucht - das Ergebnis des Prozesses",
+          "example": "true"
         }
       ],
       "description": "Setzt die Reservierung auf gebucht."
@@ -924,6 +931,13 @@
           "name": "releasedAt",
           "type": "LocalDateTime",
           "description": "Zeitpunkt der Freigabe"
+        },
+        {
+          "id": "f-releasereservation-booked",
+          "name": "booked",
+          "type": "Boolean",
+          "description": "Termin nicht gebucht - das Ergebnis des Prozesses",
+          "example": "false"
         }
       ],
       "description": "Löscht die Reservierung - der Termin ist wieder frei."

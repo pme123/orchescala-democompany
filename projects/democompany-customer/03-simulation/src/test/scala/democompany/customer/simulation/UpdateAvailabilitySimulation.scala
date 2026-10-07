@@ -19,7 +19,7 @@ class UpdateAvailabilitySimulation extends CompanyOpSimulation:
 
   override def config =
     super.config
-      //.withMaxCount(30)
+      .withMaxCount(30) // the worker app polls its tasks - a step can take some seconds
       //.withLogLevel(LogLevel.DEBUG)
 
   private lazy val `UpdateAvailability` =

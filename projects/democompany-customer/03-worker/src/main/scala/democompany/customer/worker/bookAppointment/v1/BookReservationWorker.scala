@@ -14,6 +14,6 @@ class BookReservationWorker extends CompanyPersistenceWorkerDsl[In, Out]:
     for
       stored <- getExisting(reservations, in.reservationId)
       _      <- save(reservations, stored.entity.copy(status = ReservationStatus.booked), Some(stored.version))
-    yield Out(LocalDateTime.now())
+    yield Out(LocalDateTime.now(), booked = true)
 
 end BookReservationWorker

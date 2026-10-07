@@ -62,7 +62,7 @@ object UpdateAvailability extends CompanyBpmnProcessDsl:
     given InOutCodec[Out] = deriveInOutCodec
 
     lazy val example = Out(
-      advisorCount = 3
+      advisorCount = 2
     )
     lazy val exampleMinimal = example
   end Out
