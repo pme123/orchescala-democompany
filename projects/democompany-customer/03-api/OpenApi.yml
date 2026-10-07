@@ -3,7 +3,7 @@ info:
   title: democompany-customer
   version: 0.1.0-SNAPSHOT
   summary: "\n\nKunden-PoCs der democompany - zuerst die Terminbuchung (appointments).\n\
-    \nCreated at 10/6/26, 3:25 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \nCreated at 10/7/26, 5:23 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -176,8 +176,8 @@ paths:
                     - advisorId: anna.berater
                       advisorName: Anna Berater
                       advisorEmail: anna.berater@democompany.ch
-                      start: '2026-10-06T15:25:25.654793'
-                      end: '2026-10-06T15:25:25.654801'
+                      start: '2026-10-07T17:23:31.189311'
+                      end: '2026-10-07T17:23:31.189335'
                       topic: advice
                       channel: branch
   /worker/democompany-customer-reserveSlot:
@@ -189,7 +189,7 @@ paths:
 
         **Topic:** `democompany-customer-reserveSlot` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
 
-        Reserviert einen freien Termin - ist er schon vergeben, ein Fehler «leider vergeben».
+        Reserviert einen freien Termin - ist er schon vergeben, ein Fehler 409 «leider vergeben».
 
         - Input:  `democompany.customer.domain.appointments.ReserveSlot > In`
         - Output: `democompany.customer.domain.appointments.ReserveSlot > Out`
@@ -227,8 +227,8 @@ paths:
                     advisorId: anna.berater
                     advisorName: Anna Berater
                     advisorEmail: anna.berater@democompany.ch
-                    start: '2026-10-06T15:25:25.654793'
-                    end: '2026-10-06T15:25:25.654801'
+                    start: '2026-10-07T17:23:31.189311'
+                    end: '2026-10-07T17:23:31.189335'
                     topic: advice
                     channel: branch
                   contact:
@@ -249,7 +249,80 @@ paths:
                 democompany-customer-reserveSlot:
                   value:
                     reservationId: anna.berater-2026-10-20T09:00
+                    token: 0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11
                     reservedUntil: '2026-10-06T12:30:00'
+  /worker/democompany-customer-appointmentToConfirm:
+    post:
+      tags:
+      - Termine
+      summary: 'Worker: appointmentToConfirm'
+      description: |2-
+
+        **Topic:** `democompany-customer-appointmentToConfirm` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
+
+        Die Reservierung zum Link in der Mail an den Berater - mit dem offenen Task «Termin bestätigen».
+
+        - Input:  `democompany.customer.domain.appointments.AppointmentToConfirm > In`
+        - Output: `democompany.customer.domain.appointments.AppointmentToConfirm > Out`
+
+
+
+        You can test this worker using the generic process _**orchescala-externalTask-generic**_ (e.g. with Postman).
+
+
+
+        **Used in no other Process.**
+
+        **Uses no other Processes.**
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        This describes the <b>Input</b> and the <b>Output</b> of the Worker.
+
+        Running this request with Postman, it will run the Worker directly, no Process will be started.
+
+        </p>
+        </details>
+      operationId: 'Worker: appointmentToConfirm'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentToConfirm.In'
+            examples:
+              democompany-customer-appointmentToConfirm:
+                value:
+                  token: 0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentToConfirm.Out'
+              examples:
+                democompany-customer-appointmentToConfirm:
+                  value:
+                    appointment:
+                      advisorId: anna.berater
+                      advisorName: Anna Berater
+                      advisorEmail: anna.berater@democompany.ch
+                      start: '2026-10-07T17:23:31.189311'
+                      end: '2026-10-07T17:23:31.189335'
+                      topic: advice
+                      channel: branch
+                    contact:
+                      firstName: Peter
+                      lastName: Muster
+                      email: peter.muster@example.ch
+                      phone: +41 79 123 45 67
+                      customerNo: '100200'
+                    remark: Bitte mit Parkplatz
+                    status: reserved
+                    taskId: 6a1e2f3c-0000-0000-0000-000000000001
   /process/democompany-customer-bookAppointmentV1/async:
     post:
       tags:
@@ -259,11 +332,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.customer.domain.bookAppointment.v1.BookAppointment\
         \ > In`\n- Output: `democompany.customer.domain.bookAppointment.v1.BookAppointment\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"customer-bookAppointmentV1-56124\">\n    <img onLoad=\"openFromUrl('customer-bookAppointmentV1.bpmn',\
-        \ new BpmnJS({ container: $('#customer-bookAppointmentV1-56124'), height:\
+        \ id=\"customer-bookAppointmentV1-35703\">\n    <img onLoad=\"openFromUrl('customer-bookAppointmentV1.bpmn',\
+        \ new BpmnJS({ container: $('#customer-bookAppointmentV1-35703'), height:\
         \ '95%', width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [customer-bookAppointmentV1.bpmn](diagrams/customer-bookAppointmentV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('customer-bookAppointmentV1-56124')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('customer-bookAppointmentV1-35703')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -304,12 +377,13 @@ paths:
               democompany-customer-bookAppointmentV1:
                 value:
                   reservationId: anna.berater-2026-10-20T09:00
+                  token: 0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11
                   appointment:
                     advisorId: anna.berater
                     advisorName: Anna Berater
                     advisorEmail: anna.berater@democompany.ch
-                    start: '2026-10-06T15:25:25.654793'
-                    end: '2026-10-06T15:25:25.654801'
+                    start: '2026-10-07T17:23:31.189311'
+                    end: '2026-10-07T17:23:31.189335'
                     topic: advice
                     channel: branch
                   contact:
@@ -413,12 +487,13 @@ paths:
               democompany-customer-bookAppointmentV1:
                 value:
                   reservationId: anna.berater-2026-10-20T09:00
+                  token: 0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11
                   appointment:
                     advisorId: anna.berater
                     advisorName: Anna Berater
                     advisorEmail: anna.berater@democompany.ch
-                    start: '2026-10-06T15:25:25.654793'
-                    end: '2026-10-06T15:25:25.654801'
+                    start: '2026-10-07T17:23:31.189311'
+                    end: '2026-10-07T17:23:31.189335'
                     topic: advice
                     channel: branch
                   contact:
@@ -445,8 +520,8 @@ paths:
                     topic: mortgage
                     channel: branch
                     appointmentText: Mo 20.10.2026, 09:00-10:30, Hypothek, Filiale
-                    verificationLink: http://localhost:8888/app/democompany-customer/appointments/verified?reservation=anna.berater-2026-10-20T09:00
-                    confirmLink: http://localhost:8888/app/democompany-customer/appointments/confirm?process=123
+                    verificationLink: http://localhost:8889/app/democompany-customer/appointments/verified?token=0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11
+                    confirmLink: http://localhost:8889/app/democompany-customer/appointments/confirm?token=0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11
   /message/democompany-customer-bookAppointmentV1-emailVerified:
     post:
       tags:
@@ -521,7 +596,7 @@ paths:
             examples:
               democompany-customer-bookAppointmentV1-emailVerified:
                 value:
-                  verifiedAt: '2026-10-06T15:25:25.676582'
+                  verifiedAt: '2026-10-07T17:23:31.2207'
         required: true
       responses:
         '200':
@@ -612,8 +687,8 @@ paths:
 
 
         <div class="diagramCanvas">
-          <div class="diagram" id="customer-bookAppointmentV1-AppointmentRules-71198">
-            <img onLoad="openFromUrl('customer-bookAppointmentV1-AppointmentRules.dmn', new DmnJS({ container: $('#customer-bookAppointmentV1-AppointmentRules-71198'), height: '95%', width: '95%' }));" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" />
+          <div class="diagram" id="customer-bookAppointmentV1-AppointmentRules-50910">
+            <img onLoad="openFromUrl('customer-bookAppointmentV1-AppointmentRules.dmn', new DmnJS({ container: $('#customer-bookAppointmentV1-AppointmentRules-50910'), height: '95%', width: '95%' }));" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" />
           </div>
         </div>
 
@@ -621,7 +696,7 @@ paths:
 
 
         <div>
-          <button onclick="downloadSVG('customer-bookAppointmentV1-AppointmentRules-71198')">Download Diagram as SVG</button>
+          <button onclick="downloadSVG('customer-bookAppointmentV1-AppointmentRules-50910')">Download Diagram as SVG</button>
         </div>
 
 
@@ -750,8 +825,8 @@ paths:
                       advisorId: anna.berater
                       advisorName: Anna Berater
                       advisorEmail: anna.berater@democompany.ch
-                      start: '2026-10-06T15:25:25.654793'
-                      end: '2026-10-06T15:25:25.654801'
+                      start: '2026-10-07T17:23:31.189311'
+                      end: '2026-10-07T17:23:31.189335'
                       topic: advice
                       channel: branch
                     contact:
@@ -874,7 +949,8 @@ paths:
               examples:
                 democompany-customer-bookAppointmentV1-BookReservation:
                   value:
-                    bookedAt: '2026-10-06T15:25:25.693054'
+                    bookedAt: '2026-10-07T17:23:31.241328'
+                    booked: true
   /worker/democompany-customer-bookAppointmentV1-SendInvitation:
     post:
       tags:
@@ -922,8 +998,8 @@ paths:
                     advisorId: anna.berater
                     advisorName: Anna Berater
                     advisorEmail: anna.berater@democompany.ch
-                    start: '2026-10-06T15:25:25.654793'
-                    end: '2026-10-06T15:25:25.654801'
+                    start: '2026-10-07T17:23:31.189311'
+                    end: '2026-10-07T17:23:31.189335'
                     topic: advice
                     channel: branch
                   contact:
@@ -943,7 +1019,7 @@ paths:
               examples:
                 democompany-customer-bookAppointmentV1-SendInvitation:
                   value:
-                    sentAt: '2026-10-06T15:25:25.695643'
+                    sentAt: '2026-10-07T17:23:31.24449'
   /worker/democompany-customer-bookAppointmentV1-ReleaseReservation:
     post:
       tags:
@@ -999,7 +1075,8 @@ paths:
               examples:
                 democompany-customer-bookAppointmentV1-ReleaseReservation:
                   value:
-                    releasedAt: '2026-10-06T15:25:25.697861'
+                    releasedAt: '2026-10-07T17:23:31.248152'
+                    booked: false
   /worker/democompany-customer-bookAppointmentV1-SendMail:
     post:
       tags:
@@ -1057,7 +1134,7 @@ paths:
               examples:
                 democompany-customer-bookAppointmentV1-SendMail:
                   value:
-                    sentAt: '2026-10-06T15:25:25.700615'
+                    sentAt: '2026-10-07T17:23:31.251589'
   /process/democompany-customer-updateAvailabilityV1/async:
     post:
       tags:
@@ -1067,16 +1144,16 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.customer.domain.updateAvailability.v1.UpdateAvailability\
         \ > In`\n- Output: `democompany.customer.domain.updateAvailability.v1.UpdateAvailability\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"customer-updateAvailabilityV1-40371\">\n    <img onLoad=\"openFromUrl('customer-updateAvailabilityV1.bpmn',\
-        \ new BpmnJS({ container: $('#customer-updateAvailabilityV1-40371'), height:\
+        \ id=\"customer-updateAvailabilityV1-28980\">\n    <img onLoad=\"openFromUrl('customer-updateAvailabilityV1.bpmn',\
+        \ new BpmnJS({ container: $('#customer-updateAvailabilityV1-28980'), height:\
         \ '95%', width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [customer-updateAvailabilityV1.bpmn](diagrams/customer-updateAvailabilityV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('customer-updateAvailabilityV1-40371')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('customer-updateAvailabilityV1-28980')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
         : \"advisorCount\",\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\"\
-        : {\n  \"advisorCount\" : 3\n},\n...\n```\n\n</p>\n</details>\n</p>\n    \
+        : {\n  \"advisorCount\" : 2\n},\n...\n```\n\n</p>\n</details>\n</p>\n    \
         \  \n\n\n**Used in no other Process.**\n\n**Uses no other Processes.**\n<p/>\n\
         <details>\n<summary><b><i>General Information</i></b></summary>\n<p>\n\nThis\
         \ describes the <b>Input</b> to start the Process with.\n\nBe aware that running\
@@ -1135,7 +1212,7 @@ paths:
         </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
         \ in your process!\n```json\n...\n\"outputVariables\": \"advisorCount\",\n\
         ...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"advisorCount\"\
-        \ : 3\n},\n...\n```\n\n</p>\n</details>\n</p>\n      <p/>\n<details>\n<summary><b><i>General\
+        \ : 2\n},\n...\n```\n\n</p>\n</details>\n</p>\n      <p/>\n<details>\n<summary><b><i>General\
         \ Information</i></b></summary>\n<p>\n\nThis describes the <b>Output</b> of\
         \ the Process you get. Be aware this does not check if the process is finished\
         \ (TODO).\n\n  \n</p>\n</details>"
@@ -1169,7 +1246,7 @@ paths:
               examples:
                 democompany-customer-updateAvailabilityV1:
                   value:
-                    advisorCount: 3
+                    advisorCount: 2
   /worker/democompany-customer-updateAvailabilityV1:
     post:
       tags:
@@ -1272,6 +1349,7 @@ paths:
                     - id: anna.berater
                       name: Anna Berater
                       email: anna.berater@democompany.ch
+                    advisorCount: 1
   /worker/democompany-customer-updateAvailabilityV1-ReadCalendar:
     post:
       tags:
@@ -1332,8 +1410,8 @@ paths:
                 democompany-customer-updateAvailabilityV1-ReadCalendar:
                   value:
                     busy:
-                    - start: '2026-10-06T15:25:25.711866'
-                      end: '2026-10-06T15:25:25.711869'
+                    - start: '2026-10-07T17:23:31.26704'
+                      end: '2026-10-07T17:23:31.267048'
   /worker/democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot:
     post:
       tags:
@@ -1382,8 +1460,8 @@ paths:
                     name: Anna Berater
                     email: anna.berater@democompany.ch
                   busy:
-                  - start: '2026-10-06T15:25:25.711866'
-                    end: '2026-10-06T15:25:25.711869'
+                  - start: '2026-10-07T17:23:31.26704'
+                    end: '2026-10-07T17:23:31.267048'
         required: true
       responses:
         '200':
@@ -1395,7 +1473,7 @@ paths:
               examples:
                 democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot:
                   value:
-                    savedAt: '2026-10-06T15:25:25.714576'
+                    savedAt: '2026-10-07T17:23:31.269919'
 components:
   schemas:
     Advisor:
@@ -1499,6 +1577,39 @@ components:
         confirmationRequired:
           description: Bestätigung durch den Berater nötig
           type: boolean
+    AppointmentToConfirm.In:
+      title: AppointmentToConfirm.In
+      type: object
+      required:
+      - token
+      properties:
+        token:
+          description: Das Token aus dem Link
+          type: string
+    AppointmentToConfirm.Out:
+      title: AppointmentToConfirm.Out
+      type: object
+      required:
+      - appointment
+      - contact
+      - status
+      properties:
+        appointment:
+          $ref: '#/components/schemas/Appointment'
+          description: Der Termin
+        contact:
+          $ref: '#/components/schemas/Contact'
+          description: Kontaktdaten
+        remark:
+          description: Bemerkung
+          type: string
+        status:
+          description: reserved oder booked
+          type: string
+        taskId:
+          description: Der offene Task «Termin bestätigen» - ohne, wenn er schon erledigt
+            ist
+          type: string
     AssignCustomer.In:
       title: AssignCustomer.In
       type: object
@@ -1527,12 +1638,17 @@ components:
       type: object
       required:
       - reservationId
+      - token
       - appointment
       - contact
       properties:
         reservationId:
           description: Reservierung `<advisor>-<start>` - entsteht vor dem Start (Service
             reserveSlot)
+          type: string
+        token:
+          description: Das Geheimnis der Reservierung (aus reserveSlot) - auch der
+            Business Key
           type: string
         appointment:
           $ref: '#/components/schemas/Appointment'
@@ -1630,10 +1746,14 @@ components:
       type: object
       required:
       - bookedAt
+      - booked
       properties:
         bookedAt:
           description: Zeitpunkt der Buchung
           type: string
+        booked:
+          description: Termin gebucht - das Ergebnis des Prozesses
+          type: boolean
     BusyPeriod:
       title: BusyPeriod
       type: object
@@ -1767,23 +1887,26 @@ components:
     LoadAdvisors.In:
       title: LoadAdvisors.In
       type: object
-      required:
-      - role
       properties:
         role:
-          description: Rolle der Berater im IdP
+          description: Rolle der Berater im IdP - ohne Angabe kundenberater
           type: string
     LoadAdvisors.Out:
       title: LoadAdvisors.Out
       type: object
       required:
       - advisors
+      - advisorCount
       properties:
         advisors:
           description: Die Berater
           type: array
           items:
             $ref: '#/components/schemas/Advisor'
+        advisorCount:
+          description: Wie viele - das Ergebnis des Prozesses
+          type: integer
+          format: int32
     ProcessInfo:
       title: ProcessInfo
       description: Contains information about a process instance or execution
@@ -1850,10 +1973,14 @@ components:
       type: object
       required:
       - releasedAt
+      - booked
       properties:
         releasedAt:
           description: Zeitpunkt der Freigabe
           type: string
+        booked:
+          description: Termin nicht gebucht - das Ergebnis des Prozesses
+          type: boolean
     ReserveSlot.In:
       title: ReserveSlot.In
       type: object
@@ -1875,11 +2002,15 @@ components:
       type: object
       required:
       - reservationId
+      - token
       - reservedUntil
       properties:
         reservationId:
           description: Die Reservierung `<advisor>-<start>` - damit startet der Prozess
             bookAppointment
+          type: string
+        token:
+          description: Das Geheimnis der Reservierung (UUID) - Business Key des Prozesses
           type: string
         reservedUntil:
           description: Bis wann sie ohne Opt-in gilt

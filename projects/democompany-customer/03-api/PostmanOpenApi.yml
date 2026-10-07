@@ -4,7 +4,7 @@ info:
   version: 0.1.0-SNAPSHOT
   summary: "\n**This is for Postman - to have example requests. Be aware the Output\
     \ is not provided!**\n\n\n\nKunden-PoCs der democompany - zuerst die Terminbuchung\
-    \ (appointments).\n\nCreated at 10/6/26, 3:25 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ (appointments).\n\nCreated at 10/7/26, 5:23 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -159,7 +159,7 @@ paths:
       - Termine
       summary: 'Worker: reserveSlot'
       description: |
-        Reserviert einen freien Termin - ist er schon vergeben, ein Fehler «leider vergeben».
+        Reserviert einen freien Termin - ist er schon vergeben, ein Fehler 409 «leider vergeben».
 
         See API Doc: [Worker: reserveSlot](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20reserveSlot)
       operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-customer-reserveslot--
@@ -178,8 +178,8 @@ paths:
                           "advisorId" : "anna.berater",
                           "advisorName" : "Anna Berater",
                           "advisorEmail" : "anna.berater@democompany.ch",
-                          "start" : "2026-10-06T15:25:25.654793",
-                          "end" : "2026-10-06T15:25:25.654801",
+                          "start" : "2026-10-07T17:23:31.189311",
+                          "end" : "2026-10-07T17:23:31.189335",
                           "topic" : "advice",
                           "channel" : "branch"
                         }
@@ -195,6 +195,34 @@ paths:
                         }
                       type: Json
                   businessKey: democompany-customer-reserveSlot
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-customer-appointmentToConfirm--:
+    post:
+      tags:
+      - Termine
+      summary: 'Worker: appointmentToConfirm'
+      description: |
+        Die Reservierung zum Link in der Mail an den Berater - mit dem offenen Task «Termin bestätigen».
+
+        See API Doc: [Worker: appointmentToConfirm](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20appointmentToConfirm)
+      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-customer-appointmenttoconfirm--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-customer-appointmentToConfirm:
+                value:
+                  variables:
+                    token:
+                      value: 0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11
+                      type: String
+                  businessKey: democompany-customer-appointmentToConfirm
                   withVariablesInReturn: true
         required: true
       responses:
@@ -247,14 +275,17 @@ paths:
                     remark:
                       value: Bitte mit Parkplatz
                       type: String
+                    token:
+                      value: 0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11
+                      type: String
                     appointment:
                       value: |-
                         {
                           "advisorId" : "anna.berater",
                           "advisorName" : "Anna Berater",
                           "advisorEmail" : "anna.berater@democompany.ch",
-                          "start" : "2026-10-06T15:25:25.654793",
-                          "end" : "2026-10-06T15:25:25.654801",
+                          "start" : "2026-10-07T17:23:31.189311",
+                          "end" : "2026-10-07T17:23:31.189335",
                           "topic" : "advice",
                           "channel" : "branch"
                         }
@@ -300,7 +331,7 @@ paths:
                   businessKey: democompany-customer-bookAppointmentV1-emailVerified
                   processVariables:
                     verifiedAt:
-                      value: '2026-10-06T15:25:25.676582'
+                      value: '2026-10-07T17:23:31.220700'
                       type: String
                   all: false
                   resultEnabled: true
@@ -590,8 +621,8 @@ paths:
                           "advisorId" : "anna.berater",
                           "advisorName" : "Anna Berater",
                           "advisorEmail" : "anna.berater@democompany.ch",
-                          "start" : "2026-10-06T15:25:25.654793",
-                          "end" : "2026-10-06T15:25:25.654801",
+                          "start" : "2026-10-07T17:23:31.189311",
+                          "end" : "2026-10-07T17:23:31.189335",
                           "topic" : "advice",
                           "channel" : "branch"
                         }
@@ -809,8 +840,8 @@ paths:
                       value: |-
                         [
                           {
-                            "start" : "2026-10-06T15:25:25.711866",
-                            "end" : "2026-10-06T15:25:25.711869"
+                            "start" : "2026-10-07T17:23:31.26704",
+                            "end" : "2026-10-07T17:23:31.267048"
                           }
                         ]
                       type: Json

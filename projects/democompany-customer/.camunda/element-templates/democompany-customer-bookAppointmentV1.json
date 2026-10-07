@@ -22,6 +22,17 @@
       "type" : "Hidden"
     },
     {
+      "value" : "token",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "token",
+        "expression" : false
+      },
+      "label" : "token",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
       "value" : "appointment",
       "binding" : {
         "type" : "camunda:in",

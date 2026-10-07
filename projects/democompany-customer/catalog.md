@@ -12,5 +12,6 @@
 - [Worker: SaveCalendarSnapshot](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20SaveCalendarSnapshot)
 - [Worker: SendInvitation](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20SendInvitation)
 - [Worker: SendMail](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20SendMail)
+- [Worker: appointmentToConfirm](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20appointmentToConfirm)
 - [Worker: freeSlots](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20freeSlots)
 - [Worker: reserveSlot](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20reserveSlot)

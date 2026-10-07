@@ -31,6 +31,16 @@
       "type" : "Hidden"
     },
     {
+      "value" : "booked",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{booked}"
+      },
+      "label" : "booked",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
       "value" : "democompany-customer-bookAppointmentV1-BookReservation",
       "binding" : {
         "type" : "property",
@@ -61,7 +71,7 @@
       "type" : "Hidden"
     },
     {
-      "value" : "bookedAt",
+      "value" : "bookedAt, booked",
       "binding" : {
         "type" : "camunda:inputParameter",
         "name" : "_outputVariables"

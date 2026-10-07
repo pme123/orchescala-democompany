@@ -1,7 +1,7 @@
 {
-  "name" : "democompany-customer-updateAvailabilityV1-LoadAdvisors",
-  "id" : "democompany-customer-updateAvailabilityV1-LoadAdvisors",
-  "description" : "Lädt die Berater mit der Rolle kundenberater.",
+  "name" : "democompany-customer-appointmentToConfirm",
+  "id" : "democompany-customer-appointmentToConfirm",
+  "description" : "Die Reservierung zum Link in der Mail an den Berater - mit dem offenen Task «Termin bestätigen».",
   "version" : 0,
   "appliesTo" : [
     "bpmn:Activity"
@@ -11,37 +11,67 @@
   },
   "properties" : [
     {
-      "value" : "#{execution.getVariable('role')}",
+      "value" : "#{token}",
       "binding" : {
         "type" : "camunda:inputParameter",
-        "name" : "role"
+        "name" : "token"
       },
-      "label" : "role",
+      "label" : "token",
       "description" : "",
       "type" : "Hidden"
     },
     {
-      "value" : "advisors",
+      "value" : "appointment",
       "binding" : {
         "type" : "camunda:outputParameter",
-        "source" : "#{advisors}"
+        "source" : "#{appointment}"
       },
-      "label" : "advisors",
+      "label" : "appointment",
       "description" : "",
       "type" : "Hidden"
     },
     {
-      "value" : "advisorCount",
+      "value" : "contact",
       "binding" : {
         "type" : "camunda:outputParameter",
-        "source" : "#{advisorCount}"
+        "source" : "#{contact}"
       },
-      "label" : "advisorCount",
+      "label" : "contact",
       "description" : "",
       "type" : "Hidden"
     },
     {
-      "value" : "democompany-customer-updateAvailabilityV1-LoadAdvisors",
+      "value" : "remark",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{execution.getVariable('remark')}"
+      },
+      "label" : "remark",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "status",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{status}"
+      },
+      "label" : "status",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "taskId",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{execution.getVariable('taskId')}"
+      },
+      "label" : "taskId",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "democompany-customer-appointmentToConfirm",
       "binding" : {
         "type" : "property",
         "name" : "camunda:topic"
@@ -71,7 +101,7 @@
       "type" : "Hidden"
     },
     {
-      "value" : "advisors, advisorCount",
+      "value" : "appointment, contact, remark, status, taskId",
       "binding" : {
         "type" : "camunda:inputParameter",
         "name" : "_outputVariables"
@@ -111,7 +141,7 @@
       "type" : "Hidden"
     },
     {
-      "value" : "Load Advisors",
+      "value" : "Appointment To Confirm",
       "binding" : {
         "type" : "property",
         "name" : "name"

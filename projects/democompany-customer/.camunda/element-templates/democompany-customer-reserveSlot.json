@@ -1,7 +1,7 @@
 {
   "name" : "democompany-customer-reserveSlot",
   "id" : "democompany-customer-reserveSlot",
-  "description" : "Reserviert einen freien Termin - ist er schon vergeben, ein Fehler «leider vergeben».",
+  "description" : "Reserviert einen freien Termin - ist er schon vergeben, ein Fehler 409 «leider vergeben».",
   "version" : 0,
   "appliesTo" : [
     "bpmn:Activity"
@@ -51,6 +51,16 @@
       "type" : "Hidden"
     },
     {
+      "value" : "token",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{token}"
+      },
+      "label" : "token",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
       "value" : "reservedUntil",
       "binding" : {
         "type" : "camunda:outputParameter",
@@ -91,7 +101,7 @@
       "type" : "Hidden"
     },
     {
-      "value" : "reservationId, reservedUntil",
+      "value" : "reservationId, token, reservedUntil",
       "binding" : {
         "type" : "camunda:inputParameter",
         "name" : "_outputVariables"
