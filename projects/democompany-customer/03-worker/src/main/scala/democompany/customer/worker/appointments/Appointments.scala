@@ -17,15 +17,16 @@ object AppointmentsConfig:
     sys.env.getOrElse("APP_BASE_URL", "http://localhost:8888/app/democompany-customer").stripSuffix("/")
   lazy val zone: ZoneId = ZoneId.of(sys.env.getOrElse("APP_TIME_ZONE", "Europe/Zurich"))
 
-  def verificationLink(reservationId: String): String =
-    s"$appBaseUrl/appointments/verified?reservation=$reservationId"
-  def confirmLink(reservationId: String): String =
-    s"$appBaseUrl/appointments/confirm?reservation=$reservationId"
+  /** With the token of the reservation - unguessable, so only who got the mail can use the link. */
+  def verificationLink(token: String): String =
+    s"$appBaseUrl/appointments/verified?token=$token"
+  def confirmLink(token: String): String =
+    s"$appBaseUrl/appointments/confirm?token=$token"
 end AppointmentsConfig
 
 /** The tables of the area (PersistenceWorker). */
 object AppointmentsStore:
-  /** By advisor, day and status - what `freeSlots` needs. */
+  /** By advisor, day and status - what `freeSlots` needs; by token - for the page «Termin bestätigen». */
   val reservations: EntityDef[Reservation] = EntityDef[Reservation](
     "reservation",
     _.id,
@@ -33,7 +34,8 @@ object AppointmentsStore:
       Map(
         "advisorId" -> r.appointment.advisorId,
         "date"      -> r.appointment.start.toLocalDate.toString,
-        "status"    -> r.status.toString
+        "status"    -> r.status.toString,
+        "token"     -> r.token
       )
   )
   /** One per advisor - the last state of his calendar. */

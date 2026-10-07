@@ -1,0 +1,27 @@
+{
+  "path": "appointments/verified",
+  "title": "E-Mail bestätigt",
+  "access": "public",
+  "state": { "step": "checking" },
+  "load": [
+    {
+      "do": "message",
+      "name": "democompany-customer-bookAppointmentV1-emailVerified",
+      "public": true,
+      "businessKey": "{{query.token}}",
+      "input": {},
+      "errors": { "default": "Dieser Link gilt nicht (mehr) – er ist abgelaufen oder schon bestätigt. Einen neuen Termin können Sie jederzeit buchen." }
+    },
+    { "do": "set", "path": "step", "value": "done" }
+  ],
+  "body": [
+    { "type": "heading", "text": "E-Mail bestätigen" },
+    { "type": "loading", "text": "Wir bestätigen Ihre Adresse …" },
+    {
+      "type": "text",
+      "tone": "success",
+      "visible": "step == 'done'",
+      "text": "Danke – Ihre E-Mail-Adresse ist bestätigt und der Termin angefragt. Die Einladung kommt per E-Mail; bei einigen Themen, sobald Ihre Beraterin oder Ihr Berater den Termin bestätigt hat."
+    }
+  ]
+}

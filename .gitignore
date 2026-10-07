@@ -7,3 +7,6 @@
 /.idea/
 /.scala-build/
 **/target/
+
+# the pages bundle - built by orch-platform/demo/build.sh (ui-runtime + spec/pages)
+projects/democompany-customer/03-worker/src/main/resources/ui/

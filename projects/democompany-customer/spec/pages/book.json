@@ -1,0 +1,185 @@
+{
+  "path": "appointments/book",
+  "title": "Termin buchen",
+  "access": "public",
+  "state": { "step": "choose", "topic": "advice", "channel": "branch", "contact": {} },
+  "load": [
+    {
+      "do": "call",
+      "service": "democompany-customer-freeSlots",
+      "public": true,
+      "input": { "topic": "{{topic}}", "channel": "{{channel}}", "days": 14 },
+      "result": "slots",
+      "errors": { "default": "Die freien Termine lassen sich gerade nicht laden – bitte später noch einmal versuchen." }
+    }
+  ],
+  "body": [
+    { "type": "heading", "text": "Termin vereinbaren" },
+    {
+      "type": "text",
+      "visible": "step == 'choose'",
+      "text": "Wählen Sie Thema, Kanal und einen freien Termin. Wir schicken Ihnen danach eine E-Mail – mit Ihrer Bestätigung ist der Termin angefragt."
+    },
+    {
+      "type": "section",
+      "label": "1 · Worum geht es?",
+      "visible": "step == 'choose'",
+      "body": [
+        {
+          "type": "choice",
+          "bind": "topic",
+          "label": "Thema",
+          "options": [
+            { "value": "advice", "label": "Beratung", "hint": "allgemein" },
+            { "value": "mortgage", "label": "Hypothek", "hint": "kaufen, verlängern" },
+            { "value": "pension", "label": "Vorsorge", "hint": "3a, Pensionierung" },
+            { "value": "investment", "label": "Anlegen", "hint": "Wertschriften" }
+          ],
+          "onChange": [
+            { "do": "set", "path": "appointment", "value": null },
+            { "do": "set", "path": "slots", "value": null },
+            {
+              "do": "call",
+              "service": "democompany-customer-freeSlots",
+              "public": true,
+              "input": { "topic": "{{topic}}", "channel": "{{channel}}", "days": 14 },
+              "result": "slots"
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "bind": "channel",
+          "label": "Kanal",
+          "options": [
+            { "value": "branch", "label": "Filiale" },
+            { "value": "video", "label": "Video" },
+            { "value": "phone", "label": "Telefon" }
+          ],
+          "onChange": [
+            { "do": "set", "path": "appointment", "value": null },
+            { "do": "set", "path": "slots", "value": null },
+            {
+              "do": "call",
+              "service": "democompany-customer-freeSlots",
+              "public": true,
+              "input": { "topic": "{{topic}}", "channel": "{{channel}}", "days": 14 },
+              "result": "slots"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "label": "2 · Freie Termine",
+      "visible": "step == 'choose'",
+      "body": [
+        {
+          "type": "pick",
+          "bind": "appointment",
+          "label": "Termin",
+          "required": true,
+          "items": "slots.slots",
+          "groupBy": { "path": "start", "format": "day" },
+          "itemLabel": "{{start|time}}–{{end|time}}",
+          "itemHint": "{{advisorName}}",
+          "empty": "In den nächsten zwei Wochen ist leider nichts frei – bitte ein anderes Thema oder einen anderen Kanal wählen."
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "label": "3 · Ihre Angaben",
+      "visible": "step == 'choose'",
+      "body": [
+        {
+          "type": "fields",
+          "fields": [
+            { "bind": "contact.firstName", "label": "Vorname", "required": true },
+            { "bind": "contact.lastName", "label": "Nachname", "required": true },
+            { "bind": "contact.email", "label": "E-Mail", "input": "email", "required": true },
+            { "bind": "contact.phone", "label": "Telefon", "input": "tel" },
+            { "bind": "contact.customerNo", "label": "Kunden-Nr. (falls zur Hand)" },
+            { "bind": "remark", "label": "Bemerkung", "input": "textarea", "placeholder": "z.B. Thema genauer, Parkplatz, Begleitung" }
+          ]
+        },
+        {
+          "type": "summary",
+          "label": "Ihr Termin",
+          "visible": "appointment",
+          "items": [
+            { "label": "Wann", "value": "{{appointment.start|datetime}}–{{appointment.end|time}}" },
+            { "label": "Mit", "value": "{{appointment.advisorName}}" },
+            { "label": "Thema", "value": "{{appointment.topic|label:topic}}, {{appointment.channel|label:channel}}" }
+          ]
+        },
+        {
+          "type": "button",
+          "label": "Termin anfragen",
+          "validate": true,
+          "actions": [
+            {
+              "do": "call",
+              "service": "democompany-customer-reserveSlot",
+              "public": true,
+              "input": { "appointment": "{{appointment}}", "contact": "{{contact}}", "remark": "{{remark}}" },
+              "result": "reservation",
+              "errors": {
+                "409": "Dieser Termin ist eben vergeben worden – bitte einen anderen wählen.",
+                "400": "Dieser Termin geht leider nicht mehr – bitte einen anderen wählen."
+              },
+              "onError": [
+                { "do": "set", "path": "appointment", "value": null },
+                {
+                  "do": "call",
+                  "service": "democompany-customer-freeSlots",
+                  "public": true,
+                  "input": { "topic": "{{topic}}", "channel": "{{channel}}", "days": 14 },
+                  "result": "slots"
+                }
+              ]
+            },
+            {
+              "do": "start",
+              "process": "democompany-customer-bookAppointmentV1",
+              "public": true,
+              "businessKey": "{{reservation.token}}",
+              "input": {
+                "reservationId": "{{reservation.reservationId}}",
+                "token": "{{reservation.token}}",
+                "appointment": "{{appointment}}",
+                "contact": "{{contact}}",
+                "remark": "{{remark}}"
+              },
+              "errors": {
+                "400": "Die Reservierung ist abgelaufen – bitte den Termin noch einmal wählen.",
+                "default": "Die Anfrage ging gerade nicht durch – bitte noch einmal versuchen."
+              }
+            },
+            { "do": "set", "path": "step", "value": "sent" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "visible": "step == 'sent'",
+      "body": [
+        {
+          "type": "text",
+          "tone": "success",
+          "text": "Fast geschafft: Wir haben Ihnen eine E-Mail an {{contact.email}} geschickt. Bitte bestätigen Sie darin Ihre Adresse innerhalb von 30 Minuten – sonst geben wir den Termin wieder frei."
+        },
+        {
+          "type": "summary",
+          "items": [
+            { "label": "Wann", "value": "{{appointment.start|datetime}}–{{appointment.end|time}}" },
+            { "label": "Mit", "value": "{{appointment.advisorName}}" },
+            { "label": "Thema", "value": "{{appointment.topic|label:topic}}, {{appointment.channel|label:channel}}" }
+          ]
+        }
+      ]
+    }
+  ]
+}

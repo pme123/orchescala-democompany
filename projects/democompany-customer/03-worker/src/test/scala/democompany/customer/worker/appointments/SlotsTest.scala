@@ -31,7 +31,7 @@ class SlotsTest extends munit.FunSuite:
 
   test("reserved or booked - blocked; an expired reservation is free again"):
     def reservation(status: ReservationStatus, until: LocalDateTime) =
-      Reservation("x", Appointment.example.copy(advisorId = anna.id, start = at(8), end = at(9)), Contact.example, None, status, until)
+      Reservation("x", "t", Appointment.example.copy(advisorId = anna.id, start = at(8), end = at(9)), Contact.example, None, status, until)
     def first(r: Reservation) = free(reservations = Seq(r)).headOption.map(_.start.toLocalTime.toString)
     assertEquals(first(reservation(ReservationStatus.reserved, now.plusMinutes(10))), Some("09:30"))
     assertEquals(first(reservation(ReservationStatus.booked, now.minusDays(1))), Some("09:30"))

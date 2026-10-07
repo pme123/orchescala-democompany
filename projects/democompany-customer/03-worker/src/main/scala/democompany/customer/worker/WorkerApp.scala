@@ -27,6 +27,7 @@ object WorkerApp extends CompanyWorkerApp:
     Seq(
       FreeSlotsWorker(),
       ReserveSlotWorker(),
+      AppointmentToConfirmWorker(),
     )
   end appointmentsWorkers
 

@@ -12,6 +12,7 @@ class BookAppointmentWorkerTest extends munit.FunSuite:
 
   private val in = In.example.copy(
     reservationId = "anna.berater-2026-10-20T09:00",
+    token = "0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11",
     appointment = Appointment.example.copy(
       start = LocalDateTime.of(2026, 10, 20, 9, 0),
       end = LocalDateTime.of(2026, 10, 20, 10, 30),
@@ -28,14 +29,14 @@ class BookAppointmentWorkerTest extends munit.FunSuite:
     assertEquals((init.topic, init.channel), ("mortgage", "branch"))
     assertEquals(init.appointmentText, "Di 20.10.2026, 09:00-10:30, Hypothek, Filiale")
 
-  test("customInit - the links carry the reservation"):
+  test("customInit - the links carry the token (unguessable), not the reservation id"):
     val init = worker.customInit(in)
-    assert(init.verificationLink.endsWith("/appointments/verified?reservation=anna.berater-2026-10-20T09:00"))
-    assert(init.confirmLink.endsWith("/appointments/confirm?reservation=anna.berater-2026-10-20T09:00"))
+    assert(init.verificationLink.endsWith("/appointments/verified?token=0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11"))
+    assert(init.confirmLink.endsWith("/appointments/confirm?token=0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11"))
 
   private val now                = LocalDateTime.of(2026, 10, 6, 12, 0)
   private def reservation(status: ReservationStatus = ReservationStatus.reserved, until: LocalDateTime = now.plusMinutes(20)) =
-    Reservation(in.reservationId, in.appointment, in.contact, None, status, until)
+    Reservation(in.reservationId, in.token, in.appointment, in.contact, None, status, until)
   private def verify(r: Option[Reservation], i: In = in) =
     BookAppointmentWorker.verify(i, r, now).left.map(_.errorMsg)
 
@@ -44,6 +45,10 @@ class BookAppointmentWorkerTest extends munit.FunSuite:
     assert(verify(None).left.exists(_.contains("unknown")))
     assert(verify(Some(reservation(ReservationStatus.booked))).left.exists(_.contains("booked")))
     assert(verify(Some(reservation(until = now.minusMinutes(1)))).left.exists(_.contains("expired")))
+
+  test("verify - only with the token of the reservation"):
+    val otherToken = in.copy(token = "11111111-2222-3333-4444-555555555555")
+    assert(verify(Some(reservation()), otherToken).left.exists(_.contains("another token")))
 
   test("verify - the same slot and e-mail as reserved"):
     val otherSlot = in.copy(appointment = in.appointment.copy(start = in.appointment.start.plusHours(1)))

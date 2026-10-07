@@ -33,6 +33,7 @@ object ApiProjectCreator extends CompanyApiCreator:
     group("Termine")(
       FreeSlots.example,
       ReserveSlot.example,
+      AppointmentToConfirm.example,
     )
   end appointmentsApi
 

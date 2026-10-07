@@ -1,26 +1,14 @@
 package democompany.orchescala.gateway
 
-import democompany.orchescala.engine.CompanyEngineOpConfig
+import democompany.orchescala.engine.{CompanyEngineOpConfig, CompanyTokenValidation}
 import orchescala.engine.auth.TokenValidation
 import orchescala.gateway.PublicAccess
 
 /** The settings of the gateway per environment - from the env. */
 object CompanyGatewayConfig:
 
-  /** `GATEWAY_TOKEN_ISSUER` (as in the tokens, e.g. `http://localhost:8182/auth/realms/democompany`):
-    * the Bearer tokens are verified (signature, issuer, expiry); the keys from `GATEWAY_TOKEN_JWKS_URL`
-    * (e.g. the IdP inside the cluster), else from the issuer. `GATEWAY_TOKEN_AUDIENCE`: the token must
-    * name one of them (comma separated). Without `GATEWAY_TOKEN_ISSUER` only their presence is checked.
-    */
-  lazy val tokenValidation: TokenValidation =
-    sys.env.get("GATEWAY_TOKEN_ISSUER").filter(_.nonEmpty) match
-      case None         => TokenValidation.PresenceOnly
-      case Some(issuer) =>
-        TokenValidation.Jwt(
-          issuer = issuer,
-          jwksUrl = sys.env.get("GATEWAY_TOKEN_JWKS_URL").filter(_.nonEmpty),
-          audience = list("GATEWAY_TOKEN_AUDIENCE").toSeq
-        )
+  /** See [[CompanyTokenValidation]] - the same for the worker apps. */
+  lazy val tokenValidation: TokenValidation = CompanyTokenValidation.fromEnv
 
   /** What is reachable without a token (`/public/...`): `PUBLIC_WORKERS`, `PUBLIC_PROCESSES`,
     * `PUBLIC_MESSAGES` (comma separated). Inside, the gateway logs in as the technical user of the

@@ -11,6 +11,8 @@ object BookAppointment extends CompanyBpmnProcessDsl:
   case class In(
       @description("Reservierung `<advisor>-<start>` - entsteht vor dem Start (Service reserveSlot)")
       reservationId: String,
+      @description("Das Geheimnis der Reservierung (aus reserveSlot) - auch der Business Key")
+      token: String,
       @description("Der gewählte Termin")
       appointment: Appointment,
       @description("Kontaktdaten")
@@ -29,6 +31,7 @@ object BookAppointment extends CompanyBpmnProcessDsl:
 
     lazy val example = In(
       reservationId = "anna.berater-2026-10-20T09:00",
+      token = "0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11",
       appointment = Appointment.example,
       contact = Contact.example,
       remark = Some("Bitte mit Parkplatz")
@@ -69,8 +72,8 @@ object BookAppointment extends CompanyBpmnProcessDsl:
       topic = "mortgage",
       channel = "branch",
       appointmentText = "Mo 20.10.2026, 09:00-10:30, Hypothek, Filiale",
-      verificationLink = "http://localhost:8888/app/democompany-customer/appointments/verified?reservation=anna.berater-2026-10-20T09:00",
-      confirmLink = "http://localhost:8888/app/democompany-customer/appointments/confirm?process=123"
+      verificationLink = "http://localhost:8889/app/democompany-customer/appointments/verified?token=0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11",
+      confirmLink = "http://localhost:8889/app/democompany-customer/appointments/confirm?token=0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11"
     )
     lazy val exampleMinimal = example
   end InitIn

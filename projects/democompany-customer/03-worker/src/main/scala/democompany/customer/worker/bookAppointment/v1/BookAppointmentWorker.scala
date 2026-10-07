@@ -48,19 +48,22 @@ class BookAppointmentWorker extends CompanyInitWorkerDsl[In, Out, InitIn, InConf
       topic = in.appointment.topic.toString,
       channel = in.appointment.channel.toString,
       appointmentText = AppointmentTexts.of(in.appointment),
-      verificationLink = AppointmentsConfig.verificationLink(in.reservationId),
-      confirmLink = AppointmentsConfig.confirmLink(in.reservationId)
+      verificationLink = AppointmentsConfig.verificationLink(in.token),
+      confirmLink = AppointmentsConfig.confirmLink(in.token)
     )
 
 end BookAppointmentWorker
 
 object BookAppointmentWorker:
 
-  /** The process belongs to its reservation: reserved (not booked), not expired, same slot and e-mail. */
+  /** The process belongs to its reservation: its token, reserved (not booked), not expired, same
+    * slot and e-mail.
+    */
   def verify(in: In, reservation: Option[Reservation], now: LocalDateTime): Either[WorkerError.InitProcessError, Unit] =
     def fail(why: String) = Left(WorkerError.InitProcessError(s"No valid reservation ${in.reservationId}: $why"))
     reservation match
       case None                                                       => fail("unknown")
+      case Some(r) if r.token != in.token                             => fail("another token")
       case Some(r) if r.status != ReservationStatus.reserved          => fail("already booked")
       case Some(r) if r.reservedUntil.isBefore(now)                   => fail("expired - please choose the slot again")
       case Some(r) if r.appointment != in.appointment                 => fail("another slot")

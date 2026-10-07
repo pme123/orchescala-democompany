@@ -20,6 +20,8 @@ end ReservationStatus
 case class Reservation(
     @description("`<advisor>-<start>`")
     id: String,
+    @description("Ein Zufallswert (UUID) - Business Key des Prozesses, in den Links der Mails; wer ihn kennt, darf die Reservierung bestätigen")
+    token: String,
     @description("Der Termin")
     appointment: Appointment,
     @description("Kontaktdaten")
