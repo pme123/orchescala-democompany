@@ -4,7 +4,7 @@ info:
   version: 0.1.0-SNAPSHOT
   summary: "\n**This is for Postman - to have example requests. Be aware the Output\
     \ is not provided!**\n\n\n\nKunden-PoCs der democompany - zuerst die Terminbuchung\
-    \ (appointments).\n\nCreated at 10/7/26, 5:23 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ (appointments).\n\nCreated at 10/8/26, 8:22 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -113,7 +113,7 @@ info:
     ,\n  \"impersonateProcessValue\": \"department-123\",\n  \"issuedAt\": 1706371200000,\n\
     \  \"processInstanceId\": \"12345\",\n  \"signature\": \"abc123...\"\n},\n...\n\
     ```\n\n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api\
-    \ v0.9.0-durchstich-SNAPSHOT](https://github.com/pme123/orchescala)\n> - democompany-orchescala-api\
+    \ v0.9.0-SNAPSHOT](https://github.com/pme123/orchescala)\n> - democompany-orchescala-api\
     \ 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\n\n"
 servers:
 - url: http://localhost:8080/engine-rest
@@ -178,8 +178,8 @@ paths:
                           "advisorId" : "anna.berater",
                           "advisorName" : "Anna Berater",
                           "advisorEmail" : "anna.berater@democompany.ch",
-                          "start" : "2026-10-07T17:23:31.189311",
-                          "end" : "2026-10-07T17:23:31.189335",
+                          "start" : "2026-10-08T08:22:03.403353",
+                          "end" : "2026-10-08T08:22:03.403382",
                           "topic" : "advice",
                           "channel" : "branch"
                         }
@@ -284,8 +284,8 @@ paths:
                           "advisorId" : "anna.berater",
                           "advisorName" : "Anna Berater",
                           "advisorEmail" : "anna.berater@democompany.ch",
-                          "start" : "2026-10-07T17:23:31.189311",
-                          "end" : "2026-10-07T17:23:31.189335",
+                          "start" : "2026-10-08T08:22:03.403353",
+                          "end" : "2026-10-08T08:22:03.403382",
                           "topic" : "advice",
                           "channel" : "branch"
                         }
@@ -331,7 +331,7 @@ paths:
                   businessKey: democompany-customer-bookAppointmentV1-emailVerified
                   processVariables:
                     verifiedAt:
-                      value: '2026-10-07T17:23:31.220700'
+                      value: '2026-10-08T08:22:03.432063'
                       type: String
                   all: false
                   resultEnabled: true
@@ -621,8 +621,8 @@ paths:
                           "advisorId" : "anna.berater",
                           "advisorName" : "Anna Berater",
                           "advisorEmail" : "anna.berater@democompany.ch",
-                          "start" : "2026-10-07T17:23:31.189311",
-                          "end" : "2026-10-07T17:23:31.189335",
+                          "start" : "2026-10-08T08:22:03.403353",
+                          "end" : "2026-10-08T08:22:03.403382",
                           "topic" : "advice",
                           "channel" : "branch"
                         }
@@ -840,8 +840,8 @@ paths:
                       value: |-
                         [
                           {
-                            "start" : "2026-10-07T17:23:31.26704",
-                            "end" : "2026-10-07T17:23:31.267048"
+                            "start" : "2026-10-08T08:22:03.473116",
+                            "end" : "2026-10-08T08:22:03.473124"
                           }
                         ]
                       type: Json
