@@ -34,13 +34,18 @@ object CompanyApiCreator:
 
   lazy val `democompany-services` = generalProjectConfig("democompany-services", "#ffffcc")
   lazy val `democompany-cards` = generalProjectConfig("democompany-cards", "#c8feda")
+  // Kundentermine - on Operaton, i.e. the BPMN of Camunda 7 (src/main/resources/camunda)
+  lazy val `democompany-customer` =
+    ProjectConfig("democompany-customer", group = customer, color = "#d9d2f5", bpmnProcessType = BpmnProcessType.C7())
 
   lazy val projects: Seq[ProjectConfig] = Seq(
     `democompany-cards`,
+    `democompany-customer`,
     `democompany-services`
   )
 
   private lazy val general = ProjectGroup("general", color = "green")
+  private lazy val customer = ProjectGroup("customer", color = "#7252ac", fill = "#efeafb")
 
   def generalProjectConfig(projectName: String, color: String) =
     projectConfig(projectName, color, general)
