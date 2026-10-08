@@ -1,0 +1,105 @@
+{
+  "path": "appointments/confirm",
+  "title": "Termin bestätigen",
+  "access": { "roles": ["kundenberater"] },
+  "state": { "step": "decide" },
+  "load": [
+    {
+      "do": "call",
+      "service": "democompany-customer-appointmentToConfirm",
+      "input": { "token": "{{query.token}}" },
+      "result": "task",
+      "errors": {
+        "404": "Zu diesem Link gibt es keinen Termin (mehr) – die Reservierung ist abgelaufen oder abgelehnt.",
+        "403": "Dafür braucht es die Rolle «kundenberater»."
+      }
+    }
+  ],
+  "body": [
+    { "type": "heading", "text": "Termin bestätigen" },
+    { "type": "loading", "text": "Termin laden …" },
+    {
+      "type": "summary",
+      "label": "Anfrage",
+      "visible": "task",
+      "items": [
+        { "label": "Wann", "value": "{{task.appointment.start|datetime}}–{{task.appointment.end|time}}" },
+        { "label": "Thema", "value": "{{task.appointment.topic|label:topic}}, {{task.appointment.channel|label:channel}}" },
+        { "label": "Kunde", "value": "{{task.contact.firstName}} {{task.contact.lastName}}" },
+        { "label": "E-Mail", "value": "{{task.contact.email}}" },
+        { "label": "Telefon", "value": "{{task.contact.phone}}" },
+        { "label": "Kunden-Nr.", "value": "{{task.contact.customerNo}}" },
+        { "label": "Bemerkung", "value": "{{task.remark}}" },
+        { "label": "Status", "value": "{{task.status|label:status}}" }
+      ]
+    },
+    {
+      "type": "text",
+      "tone": "info",
+      "visible": "task && !task.taskId && task.status == 'booked'",
+      "text": "Dieser Termin ist schon gebucht – die Einladung ist verschickt."
+    },
+    {
+      "type": "text",
+      "tone": "info",
+      "visible": "task && !task.taskId && task.status == 'reserved'",
+      "text": "Hier ist nichts zu bestätigen – der Kunde hat seine E-Mail-Adresse noch nicht bestätigt."
+    },
+    {
+      "type": "section",
+      "label": "Bestätigen",
+      "visible": "task.taskId && step == 'decide'",
+      "body": [
+        {
+          "type": "choice",
+          "bind": "accepted",
+          "label": "Ihr Entscheid",
+          "required": true,
+          "options": [
+            { "value": true, "label": "Annehmen", "hint": "Einladung an Kunde und mich" },
+            { "value": false, "label": "Ablehnen", "hint": "mit Begründung an den Kunden" }
+          ]
+        },
+        {
+          "type": "fields",
+          "fields": [
+            {
+              "bind": "declineReason",
+              "label": "Begründung – geht an den Kunden",
+              "input": "textarea",
+              "required": true,
+              "visible": "accepted == false"
+            }
+          ]
+        },
+        {
+          "type": "button",
+          "label": "Entscheid senden",
+          "validate": true,
+          "actions": [
+            {
+              "do": "completeTask",
+              "taskKey": "ConfirmAppointmentTask",
+              "taskId": "{{task.taskId}}",
+              "input": { "accepted": "{{accepted}}", "declineReason": "{{declineReason}}" },
+              "errors": { "404": "Der Task ist schon erledigt.", "default": "Der Entscheid ging nicht durch – bitte noch einmal versuchen." }
+            },
+            { "do": "set", "path": "step", "value": "done" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "tone": "success",
+      "visible": "step == 'done' && accepted == true",
+      "text": "Angenommen – die Einladung geht an den Kunden und an Sie."
+    },
+    {
+      "type": "text",
+      "tone": "success",
+      "visible": "step == 'done' && accepted == false",
+      "text": "Abgelehnt – der Kunde erhält Ihre Begründung per E-Mail."
+    }
+  ]
+}

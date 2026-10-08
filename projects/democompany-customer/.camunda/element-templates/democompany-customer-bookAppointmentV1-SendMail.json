@@ -1,0 +1,138 @@
+{
+  "name" : "democompany-customer-bookAppointmentV1-SendMail",
+  "id" : "democompany-customer-bookAppointmentV1-SendMail",
+  "description" : "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit).",
+  "version" : 0,
+  "appliesTo" : [
+    "bpmn:Activity"
+  ],
+  "elementType" : {
+    "value" : "bpmn:ServiceTask"
+  },
+  "properties" : [
+    {
+      "value" : "#{to}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "to"
+      },
+      "label" : "to",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{subject}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "subject"
+      },
+      "label" : "subject",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{body}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "body"
+      },
+      "label" : "body",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "sentAt",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{sentAt}"
+      },
+      "label" : "sentAt",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "democompany-customer-bookAppointmentV1-SendMail",
+      "binding" : {
+        "type" : "property",
+        "name" : "camunda:topic"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "external",
+      "binding" : {
+        "type" : "property",
+        "name" : "camunda:type"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{true}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_manualOutMapping"
+      },
+      "label" : "_manualOutMapping",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "sentAt",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_outputVariables"
+      },
+      "label" : "_outputVariables",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.getVariable('_outputMock')}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_outputMock"
+      },
+      "label" : "_outputMock",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "handledError1, handledError2",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_handledErrors"
+      },
+      "label" : "_handledErrors",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "errorRegex1, errorRegex2",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_regexHandledErrors"
+      },
+      "label" : "_regexHandledErrors",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "Send Mail",
+      "binding" : {
+        "type" : "property",
+        "name" : "name"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    }
+  ],
+  "$schema" : "https://unpkg.com/@camunda/element-templates-json-schema@0.16.0/resources/schema.json",
+  "groups" : [
+  ],
+  "entriesVisible" : true
+}

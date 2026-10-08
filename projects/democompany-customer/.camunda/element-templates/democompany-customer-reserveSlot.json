@@ -1,0 +1,158 @@
+{
+  "name" : "democompany-customer-reserveSlot",
+  "id" : "democompany-customer-reserveSlot",
+  "description" : "Reserviert einen freien Termin - ist er schon vergeben, ein Fehler 409 «leider vergeben».",
+  "version" : 0,
+  "appliesTo" : [
+    "bpmn:Activity"
+  ],
+  "elementType" : {
+    "value" : "bpmn:ServiceTask"
+  },
+  "properties" : [
+    {
+      "value" : "#{appointment}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "appointment"
+      },
+      "label" : "appointment",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{contact}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "contact"
+      },
+      "label" : "contact",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.getVariable('remark')}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "remark"
+      },
+      "label" : "remark",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "reservationId",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{reservationId}"
+      },
+      "label" : "reservationId",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "token",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{token}"
+      },
+      "label" : "token",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "reservedUntil",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{reservedUntil}"
+      },
+      "label" : "reservedUntil",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "democompany-customer-reserveSlot",
+      "binding" : {
+        "type" : "property",
+        "name" : "camunda:topic"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "external",
+      "binding" : {
+        "type" : "property",
+        "name" : "camunda:type"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{true}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_manualOutMapping"
+      },
+      "label" : "_manualOutMapping",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "reservationId, token, reservedUntil",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_outputVariables"
+      },
+      "label" : "_outputVariables",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.getVariable('_outputMock')}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_outputMock"
+      },
+      "label" : "_outputMock",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "handledError1, handledError2",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_handledErrors"
+      },
+      "label" : "_handledErrors",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "errorRegex1, errorRegex2",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_regexHandledErrors"
+      },
+      "label" : "_regexHandledErrors",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "Reserve Slot",
+      "binding" : {
+        "type" : "property",
+        "name" : "name"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    }
+  ],
+  "$schema" : "https://unpkg.com/@camunda/element-templates-json-schema@0.16.0/resources/schema.json",
+  "groups" : [
+  ],
+  "entriesVisible" : true
+}

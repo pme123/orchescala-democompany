@@ -1,0 +1,190 @@
+{
+  "name" : "democompany-customer-bookAppointmentV1",
+  "id" : "democompany-customer-bookAppointmentV1",
+  "description" : "\n\n\n",
+  "version" : 0,
+  "appliesTo" : [
+    "bpmn:Activity"
+  ],
+  "elementType" : {
+    "value" : "bpmn:CallActivity"
+  },
+  "properties" : [
+    {
+      "value" : "reservationId",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "reservationId",
+        "expression" : false
+      },
+      "label" : "reservationId",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "token",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "token",
+        "expression" : false
+      },
+      "label" : "token",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "appointment",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "appointment",
+        "expression" : false
+      },
+      "label" : "appointment",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "contact",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "contact",
+        "expression" : false
+      },
+      "label" : "contact",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "remark",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "remark",
+        "expression" : false
+      },
+      "label" : "remark",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "reservationId",
+      "binding" : {
+        "type" : "camunda:out",
+        "source" : "reservationId",
+        "expression" : false
+      },
+      "label" : "reservationId",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "booked",
+      "binding" : {
+        "type" : "camunda:out",
+        "source" : "booked",
+        "expression" : false
+      },
+      "label" : "booked",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "customerStatus",
+      "binding" : {
+        "type" : "camunda:out",
+        "source" : "customerStatus",
+        "expression" : false
+      },
+      "label" : "customerStatus",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "democompany-customer-bookAppointmentV1",
+      "binding" : {
+        "type" : "property",
+        "name" : "calledElement"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "_servicesMocked",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "_servicesMocked",
+        "expression" : false
+      },
+      "label" : "_servicesMocked",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "_mockedWorkers",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "_mockedWorkers",
+        "expression" : false
+      },
+      "label" : "_mockedWorkers",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "_outputMock",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "_outputMock",
+        "expression" : false
+      },
+      "label" : "_outputMock",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "impersonateUserId",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "impersonateUserId",
+        "expression" : false
+      },
+      "label" : "impersonateUserId",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "_identityCorrelation",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "_identityCorrelation",
+        "expression" : false
+      },
+      "label" : "_identityCorrelation",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.processBusinessKey}",
+      "binding" : {
+        "type" : "camunda:in:businessKey"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "Book Appointment V1",
+      "binding" : {
+        "type" : "property",
+        "name" : "name"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    }
+  ],
+  "$schema" : "https://unpkg.com/@camunda/element-templates-json-schema@0.16.0/resources/schema.json",
+  "groups" : [
+  ],
+  "entriesVisible" : true
+}

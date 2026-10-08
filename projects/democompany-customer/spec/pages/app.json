@@ -1,0 +1,22 @@
+{
+  "title": "democompany · Kundentermine",
+  "subtitle": "Termin bei Ihrer Beraterin oder Ihrem Berater",
+  "home": "appointments/book",
+  "labels": {
+    "topic": {
+      "advice": "Beratung",
+      "mortgage": "Hypothek",
+      "pension": "Vorsorge",
+      "investment": "Anlegen"
+    },
+    "channel": {
+      "branch": "in der Filiale",
+      "video": "per Video",
+      "phone": "am Telefon"
+    },
+    "status": {
+      "reserved": "reserviert",
+      "booked": "gebucht"
+    }
+  }
+}

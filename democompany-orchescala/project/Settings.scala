@@ -15,13 +15,14 @@ import scala.jdk.CollectionConverters.asScalaBufferConverter
 object Settings {
 
   val scalaV       = "3.8.3"
-  val orchescalaV  = "0.8.0-SNAPSHOT"
+  val orchescalaV  = "0.9.0-SNAPSHOT"
   val camundaV     = "7.24.0" // only as info
   val mUnitVersion = "1.2.4"
   val zioVersion = "2.1.24"
   val zioLoggingVersion = "2.5.3"
   val logbackVersion = "1.5.32"
   val jaxbApiVersion = "4.0.2"
+  val angusMailV = "2.0.3"
   // project
   val projectOrg = ProjectDef.org
   val projectV = ProjectDef.version
@@ -133,6 +134,9 @@ object Settings {
     "io.github.pme123" %% "orchescala-worker-c7" % orchescalaV,
     "io.github.pme123" %% "orchescala-worker-c8" % orchescalaV,
     "io.github.pme123" %% "orchescala-worker-op" % orchescalaV,
+    // own data of the projects (CompanyPersistenceWorkerDsl) and mails (CompanyMailWorkerDsl)
+    "io.github.pme123" %% "orchescala-persistence-postgres" % orchescalaV,
+    "org.eclipse.angus" % "angus-mail" % angusMailV,
   )
 
   lazy val gatewayDeps = Seq(

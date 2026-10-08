@@ -1,0 +1,378 @@
+{
+  "version": 1,
+  "slug": "democompany-customer-updateavailabilityv1",
+  "name": "updateAvailabilityV1",
+  "title": "Verfügbarkeit aktualisieren",
+  "processId": "democompany-customer-updateAvailabilityV1",
+  "project": "democompany-customer",
+  "engine": "c7",
+  "status": "implemented",
+  "description": "",
+  "createdAt": "2026-10-06",
+  "updatedAt": "2026-10-06T15:45:12+02:00",
+  "variables": [],
+  "timeToLive": "5",
+  "steps": [
+    {
+      "id": "StartProcessStartEvent",
+      "kind": "start",
+      "name": "alle 15 Minuten",
+      "status": "implemented",
+      "eventKind": "timer"
+    },
+    {
+      "id": "InitProcessTask",
+      "kind": "service",
+      "name": "Init Process",
+      "status": "implemented",
+      "topic": "democompany-customer-updateAvailabilityV1",
+      "inputs": [
+        {
+          "name": "handledErrors",
+          "expression": "output-mocked"
+        }
+      ],
+      "manualOutMapping": false,
+      "errors": [
+        {
+          "code": "output-mocked",
+          "interrupting": true,
+          "boundary": true,
+          "steps": [
+            {
+              "id": "OutputmockedEvent1",
+              "kind": "event",
+              "name": "output-mocked",
+              "status": "implemented",
+              "eventKind": "none",
+              "eventDirection": "throw"
+            },
+            {
+              "id": "OutputmockedEndEvent",
+              "kind": "end",
+              "name": "output-mocked",
+              "status": "implemented"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LoadAdvisorsTask",
+      "kind": "service",
+      "name": "Berater laden",
+      "status": "implemented",
+      "topic": "democompany-customer-updateAvailabilityV1-LoadAdvisors",
+      "manualOutMapping": false
+    },
+    {
+      "id": "PerAdvisorSubProcess",
+      "kind": "subprocess",
+      "name": "pro Berater",
+      "status": "implemented",
+      "multiInstance": {
+        "collection": "advisors",
+        "element": "advisor"
+      },
+      "inputs": [
+        {
+          "name": "busy",
+          "expression": "= null"
+        }
+      ],
+      "children": [
+        {
+          "id": "PerAdvisorStartEvent",
+          "kind": "start",
+          "name": "Start",
+          "status": "implemented"
+        },
+        {
+          "id": "ReadCalendarTask",
+          "kind": "service",
+          "name": "Kalender lesen",
+          "status": "implemented",
+          "topic": "democompany-customer-updateAvailabilityV1-ReadCalendar",
+          "inputs": [
+            {
+              "name": "advisor",
+              "expression": "= advisor"
+            }
+          ],
+          "manualOutMapping": false
+        },
+        {
+          "id": "SaveCalendarSnapshotTask",
+          "kind": "service",
+          "name": "Kalender-Snapshot speichern",
+          "status": "implemented",
+          "topic": "democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot",
+          "inputs": [
+            {
+              "name": "advisor",
+              "expression": "= advisor"
+            }
+          ],
+          "manualOutMapping": false
+        },
+        {
+          "id": "PerAdvisorEndEvent",
+          "kind": "end",
+          "name": "Ende",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "SucceededEndEvent",
+      "kind": "end",
+      "name": "aktualisiert",
+      "status": "implemented"
+    }
+  ],
+  "types": [
+    {
+      "id": "t-in",
+      "name": "In",
+      "kind": "case",
+      "description": "Gestartet vom Timer - ohne Eingaben ausser der Reichweite.",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm70",
+          "name": "daysAhead",
+          "type": "Int",
+          "description": "Wie viele Tage voraus die Kalender gelesen werden",
+          "optional": true,
+          "example": "21",
+          "default": "21"
+        }
+      ],
+      "root": true
+    },
+    {
+      "id": "t-out",
+      "name": "Out",
+      "kind": "case",
+      "description": "Ergebnis des Laufs",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm71",
+          "name": "advisorCount",
+          "type": "Int",
+          "description": "Anzahl aktualisierter Berater",
+          "example": "3"
+        }
+      ],
+      "processOut": true
+    },
+    {
+      "id": "t-advisor",
+      "name": "Advisor",
+      "kind": "case",
+      "description": "Kundenberaterin oder Kundenberater",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm72",
+          "name": "id",
+          "type": "String",
+          "description": "Benutzer-ID im IdP",
+          "example": "\"anna.berater\""
+        },
+        {
+          "id": "f-dm73",
+          "name": "name",
+          "type": "String",
+          "description": "Name",
+          "example": "\"Anna Berater\""
+        },
+        {
+          "id": "f-dm74",
+          "name": "email",
+          "type": "String",
+          "description": "E-Mail für Benachrichtigungen und Einladungen",
+          "example": "\"anna.berater@democompany.ch\""
+        }
+      ]
+    },
+    {
+      "id": "t-busyPeriod",
+      "name": "BusyPeriod",
+      "kind": "case",
+      "description": "Eine belegte Zeit im Kalender",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm75",
+          "name": "start",
+          "type": "LocalDateTime",
+          "description": "Beginn"
+        },
+        {
+          "id": "f-dm76",
+          "name": "end",
+          "type": "LocalDateTime",
+          "description": "Ende"
+        }
+      ]
+    },
+    {
+      "id": "t-fa478ccacd",
+      "name": "LoadAdvisors.In",
+      "kind": "case",
+      "interactionId": "ia-d83517d5ec",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm62",
+          "name": "role",
+          "type": "String",
+          "description": "Rolle der Berater im IdP - ohne Angabe kundenberater",
+          "optional": true,
+          "example": "\"kundenberater\""
+        }
+      ],
+      "description": "Lädt die Berater mit der Rolle kundenberater."
+    },
+    {
+      "id": "t-fb7ebae9d0",
+      "name": "LoadAdvisors.Out",
+      "kind": "case",
+      "interactionId": "ia-d83517d5ec",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm63",
+          "name": "advisors",
+          "type": "t-advisor",
+          "description": "Die Berater",
+          "collection": true
+        },
+        {
+          "id": "f-dm63c",
+          "name": "advisorCount",
+          "type": "Int",
+          "description": "Wie viele - das Ergebnis des Prozesses",
+          "example": "1"
+        }
+      ],
+      "description": "Lädt die Berater mit der Rolle kundenberater."
+    },
+    {
+      "id": "t-5f62c38d41",
+      "name": "ReadCalendar.In",
+      "kind": "case",
+      "interactionId": "ia-2e2fe2ded9",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm64",
+          "name": "advisor",
+          "type": "t-advisor",
+          "description": "Berater"
+        },
+        {
+          "id": "f-dm65",
+          "name": "daysAhead",
+          "type": "Int",
+          "description": "Wie viele Tage voraus",
+          "example": "21"
+        }
+      ],
+      "description": "Liest die belegten Zeiten eines Beraters (Kalender-Mock, später Outlook über Graph)."
+    },
+    {
+      "id": "t-9ca39b7502",
+      "name": "ReadCalendar.Out",
+      "kind": "case",
+      "interactionId": "ia-2e2fe2ded9",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm66",
+          "name": "busy",
+          "type": "t-busyPeriod",
+          "description": "Belegte Zeiten",
+          "collection": true
+        }
+      ],
+      "description": "Liest die belegten Zeiten eines Beraters (Kalender-Mock, später Outlook über Graph)."
+    },
+    {
+      "id": "t-f071109311",
+      "name": "SaveCalendarSnapshot.In",
+      "kind": "case",
+      "interactionId": "ia-8de7d1a4e6",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm67",
+          "name": "advisor",
+          "type": "t-advisor",
+          "description": "Berater"
+        },
+        {
+          "id": "f-dm68",
+          "name": "busy",
+          "type": "t-busyPeriod",
+          "description": "Belegte Zeiten",
+          "collection": true
+        }
+      ],
+      "description": "Speichert die belegten Zeiten des Beraters (ersetzt den letzten Stand)."
+    },
+    {
+      "id": "t-46a51909f4",
+      "name": "SaveCalendarSnapshot.Out",
+      "kind": "case",
+      "interactionId": "ia-8de7d1a4e6",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dm69",
+          "name": "savedAt",
+          "type": "LocalDateTime",
+          "description": "Stand"
+        }
+      ],
+      "description": "Speichert die belegten Zeiten des Beraters (ersetzt den letzten Stand)."
+    }
+  ],
+  "interactions": [
+    {
+      "id": "ia-d83517d5ec",
+      "stepId": "LoadAdvisorsTask",
+      "kind": "customTask",
+      "name": "LoadAdvisors",
+      "key": "democompany-customer-updateAvailabilityV1-LoadAdvisors",
+      "status": "draft",
+      "inTypeId": "t-fa478ccacd",
+      "outTypeId": "t-fb7ebae9d0",
+      "descr": "Lädt die Berater mit der Rolle kundenberater."
+    },
+    {
+      "id": "ia-2e2fe2ded9",
+      "stepId": "ReadCalendarTask",
+      "kind": "customTask",
+      "name": "ReadCalendar",
+      "key": "democompany-customer-updateAvailabilityV1-ReadCalendar",
+      "status": "draft",
+      "inTypeId": "t-5f62c38d41",
+      "outTypeId": "t-9ca39b7502",
+      "descr": "Liest die belegten Zeiten eines Beraters (Kalender-Mock, später Outlook über Graph)."
+    },
+    {
+      "id": "ia-8de7d1a4e6",
+      "stepId": "SaveCalendarSnapshotTask",
+      "kind": "customTask",
+      "name": "SaveCalendarSnapshot",
+      "key": "democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot",
+      "status": "draft",
+      "inTypeId": "t-f071109311",
+      "outTypeId": "t-46a51909f4",
+      "descr": "Speichert die belegten Zeiten des Beraters (ersetzt den letzten Stand)."
+    }
+  ]
+}

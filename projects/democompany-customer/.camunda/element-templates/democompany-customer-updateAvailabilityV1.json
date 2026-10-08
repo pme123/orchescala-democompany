@@ -1,0 +1,124 @@
+{
+  "name" : "democompany-customer-updateAvailabilityV1",
+  "id" : "democompany-customer-updateAvailabilityV1",
+  "description" : "\n\n\n",
+  "version" : 0,
+  "appliesTo" : [
+    "bpmn:Activity"
+  ],
+  "elementType" : {
+    "value" : "bpmn:CallActivity"
+  },
+  "properties" : [
+    {
+      "value" : "daysAhead",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "daysAhead",
+        "expression" : false
+      },
+      "label" : "daysAhead",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "advisorCount",
+      "binding" : {
+        "type" : "camunda:out",
+        "source" : "advisorCount",
+        "expression" : false
+      },
+      "label" : "advisorCount",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "democompany-customer-updateAvailabilityV1",
+      "binding" : {
+        "type" : "property",
+        "name" : "calledElement"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "_servicesMocked",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "_servicesMocked",
+        "expression" : false
+      },
+      "label" : "_servicesMocked",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "_mockedWorkers",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "_mockedWorkers",
+        "expression" : false
+      },
+      "label" : "_mockedWorkers",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "_outputMock",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "_outputMock",
+        "expression" : false
+      },
+      "label" : "_outputMock",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "impersonateUserId",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "impersonateUserId",
+        "expression" : false
+      },
+      "label" : "impersonateUserId",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "_identityCorrelation",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "_identityCorrelation",
+        "expression" : false
+      },
+      "label" : "_identityCorrelation",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.processBusinessKey}",
+      "binding" : {
+        "type" : "camunda:in:businessKey"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "Update Availability V1",
+      "binding" : {
+        "type" : "property",
+        "name" : "name"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    }
+  ],
+  "$schema" : "https://unpkg.com/@camunda/element-templates-json-schema@0.16.0/resources/schema.json",
+  "groups" : [
+  ],
+  "entriesVisible" : true
+}

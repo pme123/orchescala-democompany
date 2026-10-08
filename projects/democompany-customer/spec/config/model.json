@@ -1,0 +1,369 @@
+{
+  "version": 1,
+  "services": [
+    {
+      "id": "democompany-services-clientsV1-GetClientsClientId",
+      "name": "GetClientsClientId",
+      "group": "democompany-services",
+      "description": "Get the Client by Id",
+      "topic": "democompany-services-clientsV1-GetClientsClientId",
+      "kind": "service",
+      "inputs": [
+        {
+          "name": "clientId",
+          "expression": "= clientId",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "client",
+          "expression": "= client",
+          "required": true
+        },
+        {
+          "name": "etag",
+          "expression": "= etag",
+          "required": true
+        },
+        {
+          "name": "email",
+          "expression": "= email"
+        }
+      ]
+    },
+    {
+      "id": "democompany-services-mailsV1-SendEmail",
+      "name": "SendEmail",
+      "group": "democompany-services",
+      "description": "Send an Email",
+      "topic": "democompany-services-mailsV1-SendEmail",
+      "kind": "service",
+      "inputs": [
+        {
+          "name": "subject",
+          "expression": "= subject",
+          "required": true
+        },
+        {
+          "name": "body",
+          "expression": "= body",
+          "required": true
+        },
+        {
+          "name": "to",
+          "expression": "= to",
+          "required": true
+        },
+        {
+          "name": "cc",
+          "expression": "= cc"
+        },
+        {
+          "name": "bcc",
+          "expression": "= bcc"
+        }
+      ],
+      "outputs": []
+    }
+  ],
+  "domainTypes": [
+    {
+      "id": "democompany.services.domain.clients.v1.GetClientsClientId.In",
+      "name": "GetClientsClientId.In",
+      "pkg": "democompany.services.domain.clients.v1",
+      "kind": "case",
+      "owner": "GetClientsClientId",
+      "importPath": "democompany.services.domain.clients.v1.GetClientsClientId",
+      "source": "democompany-services/01-domain/src/main/scala/democompany/services/domain/clients/v1/GetClientsClientId.scala",
+      "imports": [
+        "schema.*"
+      ],
+      "fields": [
+        {
+          "name": "clientId",
+          "type": "Long",
+          "example": "defaultClientId"
+        }
+      ],
+      "topicName": "democompany-services-clientsV1-GetClientsClientId",
+      "ownerDescr": "Get the Client by Id"
+    },
+    {
+      "id": "democompany.services.domain.clients.v1.GetClientsClientId.Out",
+      "name": "GetClientsClientId.Out",
+      "pkg": "democompany.services.domain.clients.v1",
+      "kind": "case",
+      "owner": "GetClientsClientId",
+      "importPath": "democompany.services.domain.clients.v1.GetClientsClientId",
+      "source": "democompany-services/01-domain/src/main/scala/democompany/services/domain/clients/v1/GetClientsClientId.scala",
+      "imports": [
+        "schema.*"
+      ],
+      "fields": [
+        {
+          "name": "client",
+          "type": "Client",
+          "example": "Client.example"
+        },
+        {
+          "name": "etag",
+          "type": "String",
+          "example": "defaultEtag"
+        },
+        {
+          "name": "email",
+          "type": "Option[String]",
+          "example": "Some(\"john.doe@example.com\")"
+        }
+      ],
+      "topicName": "democompany-services-clientsV1-GetClientsClientId",
+      "ownerDescr": "Get the Client by Id"
+    },
+    {
+      "id": "democompany.services.domain.clients.v1.GetClientsClientId.ServiceIn",
+      "name": "GetClientsClientId.ServiceIn",
+      "pkg": "democompany.services.domain.clients.v1",
+      "kind": "alias",
+      "owner": "GetClientsClientId",
+      "importPath": "democompany.services.domain.clients.v1.GetClientsClientId",
+      "source": "democompany-services/01-domain/src/main/scala/democompany/services/domain/clients/v1/GetClientsClientId.scala",
+      "imports": [
+        "schema.*"
+      ],
+      "target": "NoInput // if no input is needed",
+      "topicName": "democompany-services-clientsV1-GetClientsClientId",
+      "ownerDescr": "Get the Client by Id"
+    },
+    {
+      "id": "democompany.services.domain.clients.v1.GetClientsClientId.ServiceOut",
+      "name": "GetClientsClientId.ServiceOut",
+      "pkg": "democompany.services.domain.clients.v1",
+      "kind": "alias",
+      "owner": "GetClientsClientId",
+      "importPath": "democompany.services.domain.clients.v1.GetClientsClientId",
+      "source": "democompany-services/01-domain/src/main/scala/democompany/services/domain/clients/v1/GetClientsClientId.scala",
+      "imports": [
+        "schema.*"
+      ],
+      "target": "Client  // if no output is needed",
+      "topicName": "democompany-services-clientsV1-GetClientsClientId",
+      "ownerDescr": "Get the Client by Id"
+    },
+    {
+      "id": "democompany.services.domain.clients.v1.schema.Address",
+      "name": "Address",
+      "pkg": "democompany.services.domain.clients.v1.schema",
+      "kind": "case",
+      "importPath": "democompany.services.domain.clients.v1.schema.Address",
+      "source": "democompany-services/01-domain/src/main/scala/democompany/services/domain/clients/v1/schema/Address.scala",
+      "fields": [
+        {
+          "name": "street",
+          "type": "String",
+          "example": "\"Main Street\""
+        },
+        {
+          "name": "number",
+          "type": "String",
+          "example": "\"123\""
+        },
+        {
+          "name": "zip",
+          "type": "String",
+          "example": "\"12345\""
+        },
+        {
+          "name": "city",
+          "type": "String",
+          "example": "\"Anytown\""
+        },
+        {
+          "name": "country",
+          "type": "String",
+          "example": "\"Germany\""
+        },
+        {
+          "name": "additionalInfo",
+          "type": "Option[String]",
+          "example": "Some(\"Additional Info\")"
+        }
+      ]
+    },
+    {
+      "id": "democompany.services.domain.clients.v1.schema.Client",
+      "name": "Client",
+      "pkg": "democompany.services.domain.clients.v1.schema",
+      "kind": "case",
+      "importPath": "democompany.services.domain.clients.v1.schema.Client",
+      "source": "democompany-services/01-domain/src/main/scala/democompany/services/domain/clients/v1/schema/Client.scala",
+      "fields": [
+        {
+          "name": "id",
+          "type": "Long",
+          "example": "1"
+        },
+        {
+          "name": "firstName",
+          "type": "String",
+          "example": "\"John\""
+        },
+        {
+          "name": "lastName",
+          "type": "String",
+          "example": "\"Doe\""
+        },
+        {
+          "name": "email",
+          "type": "Option[String]",
+          "example": "Some(\"john.doe@example.com\")"
+        },
+        {
+          "name": "tel",
+          "type": "Option[String]",
+          "example": "Some(\"+411234567890\")"
+        },
+        {
+          "name": "address",
+          "type": "Address",
+          "example": "Address.example"
+        },
+        {
+          "name": "gender",
+          "type": "Gender",
+          "example": "Gender.Male"
+        },
+        {
+          "name": "fullName",
+          "type": "String"
+        },
+        {
+          "name": "salutation",
+          "type": "String"
+        },
+        {
+          "name": "dateOfBirth",
+          "type": "LocalDate",
+          "example": "LocalDate.of(1970, 1, 1) ).copy(createdAt = LocalDateTime.of(2021, 1, 1, 0, 0, 0)"
+        },
+        {
+          "name": "createdAt",
+          "type": "LocalDateTime"
+        },
+        {
+          "name": "updatedAt",
+          "type": "Option[LocalDateTime]"
+        }
+      ]
+    },
+    {
+      "id": "democompany.services.domain.clients.v1.schema.Gender",
+      "name": "Gender",
+      "pkg": "democompany.services.domain.clients.v1.schema",
+      "kind": "enum",
+      "importPath": "democompany.services.domain.clients.v1.schema.Gender",
+      "source": "democompany-services/01-domain/src/main/scala/democompany/services/domain/clients/v1/schema/Client.scala",
+      "values": [
+        "Male",
+        "Female",
+        "Unknown"
+      ]
+    },
+    {
+      "id": "democompany.services.domain.mails.v1.SendEmail.In",
+      "name": "SendEmail.In",
+      "pkg": "democompany.services.domain.mails.v1",
+      "kind": "case",
+      "owner": "SendEmail",
+      "importPath": "democompany.services.domain.mails.v1.SendEmail",
+      "source": "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
+      "fields": [
+        {
+          "name": "subject",
+          "type": "String",
+          "example": "\"Request for Information\""
+        },
+        {
+          "name": "body",
+          "type": "String",
+          "example": "\"\"\"Dear John, how are you?\n          |We need more information.\n          | - Passport or Drivers License\n          | - Proof of Address\n          |Kind regards, Jane\"\"\".stripMargin"
+        },
+        {
+          "name": "to",
+          "type": "String",
+          "example": "\"john.doe@example.com\""
+        },
+        {
+          "name": "cc",
+          "type": "Option[String]",
+          "example": "Some(\"jane.doe@example.com\")"
+        },
+        {
+          "name": "bcc",
+          "type": "Option[String]",
+          "example": "None"
+        }
+      ],
+      "topicName": "democompany-services-mailsV1-SendEmail",
+      "ownerDescr": "Send an Email"
+    },
+    {
+      "id": "democompany.services.domain.mails.v1.SendEmail.Out",
+      "name": "SendEmail.Out",
+      "pkg": "democompany.services.domain.mails.v1",
+      "kind": "case",
+      "owner": "SendEmail",
+      "importPath": "democompany.services.domain.mails.v1.SendEmail",
+      "source": "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
+      "topicName": "democompany-services-mailsV1-SendEmail",
+      "ownerDescr": "Send an Email"
+    },
+    {
+      "id": "democompany.services.domain.mails.v1.SendEmail.ServiceIn",
+      "name": "SendEmail.ServiceIn",
+      "pkg": "democompany.services.domain.mails.v1",
+      "kind": "alias",
+      "owner": "SendEmail",
+      "importPath": "democompany.services.domain.mails.v1.SendEmail",
+      "source": "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
+      "target": "In       // just need to format the body to html",
+      "topicName": "democompany-services-mailsV1-SendEmail",
+      "ownerDescr": "Send an Email"
+    },
+    {
+      "id": "democompany.services.domain.mails.v1.SendEmail.ServiceOut",
+      "name": "SendEmail.ServiceOut",
+      "pkg": "democompany.services.domain.mails.v1",
+      "kind": "alias",
+      "owner": "SendEmail",
+      "importPath": "democompany.services.domain.mails.v1.SendEmail",
+      "source": "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
+      "target": "NoOutput // if no output is needed",
+      "topicName": "democompany-services-mailsV1-SendEmail",
+      "ownerDescr": "Send an Email"
+    }
+  ],
+  "domainDefaults": [
+    {
+      "name": "defaultClientId",
+      "pkg": "democompany.services.domain.clients.v1",
+      "type": "Long"
+    },
+    {
+      "name": "defaultEtag",
+      "pkg": "democompany.services.domain",
+      "type": "String"
+    }
+  ],
+  "projects": [
+    {
+      "id": "p-democompany-services",
+      "name": "democompany-services",
+      "path": "/Users/pme/dev/Github/pme123/orchescala-democompany/projects/democompany-services",
+      "types": 11
+    }
+  ],
+  "domainSources": [
+    "/Users/pme/dev/Github/pme123/orchescala-democompany/projects/democompany-customer/spec/catalog/democompany-services-OpenApi.yml"
+  ]
+}

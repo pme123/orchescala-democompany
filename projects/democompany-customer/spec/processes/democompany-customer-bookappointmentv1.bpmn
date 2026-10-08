@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_democompany-customer-bookAppointmentV1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.46.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.24.0">
+  <bpmn:collaboration id="Collaboration_democompany-customer-bookAppointmentV1">
+    <bpmn:participant id="democompany-customer-bookAppointmentV1-participant" name="Termin vereinbaren" processRef="democompany-customer-bookAppointmentV1" />
+  </bpmn:collaboration>
+  <bpmn:process id="democompany-customer-bookAppointmentV1" name="Termin vereinbaren" isExecutable="true" camunda:historyTimeToLive="5">
+    <bpmn:startEvent id="StartProcessStartEvent" name="Termin reserviert" camunda:asyncAfter="true">
+      <bpmn:extensionElements />
+      <bpmn:outgoing>Flow_StartProcessStartEvent_InitProcessTask</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="InitProcessTask" name="Init Process" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="handledErrors">output-mocked</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_StartProcessStartEvent_InitProcessTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_InitProcessTask_SendVerificationEmailTask</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="OutputmockedBoundaryEvent" name="output-mocked" cancelActivity="true" attachedToRef="InitProcessTask">
+      <bpmn:extensionElements />
+      <bpmn:outgoing>Flow_OutputmockedBoundaryEvent_OutputmockedEvent1</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_output-mocked" errorRef="Error_output-mocked" />
+    </bpmn:boundaryEvent>
+    <bpmn:intermediateThrowEvent id="OutputmockedEvent1" name="output-mocked">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_OutputmockedBoundaryEvent_OutputmockedEvent1</bpmn:incoming>
+      <bpmn:linkEventDefinition id="LinkEventDefinition_throw" name="output-mocked" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:serviceTask id="SendVerificationEmailTask" name="E-Mail-Bestätigung senden" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-SendMail">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="to">#{email}</camunda:inputParameter>
+          <camunda:inputParameter name="subject">Bitte bestätigen Sie Ihre Terminanfrage</camunda:inputParameter>
+          <camunda:inputParameter name="body">Guten Tag #{customerName}\n\nBitte bestätigen Sie Ihre Terminanfrage (#{appointmentText}) mit diesem Link:\n#{verificationLink}\n\nFreundliche Grüsse\nDemo Company</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_InitProcessTask_SendVerificationEmailTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_SendVerificationEmailTask_VerifyEmailGateway</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:eventBasedGateway id="VerifyEmailGateway">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_SendVerificationEmailTask_VerifyEmailGateway</bpmn:incoming>
+      <bpmn:outgoing>Flow_VerifyEmailGateway_EmailVerifiedEvent</bpmn:outgoing>
+      <bpmn:outgoing>Flow_VerifyEmailGateway_VerificationExpiredEvent</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="EmailVerifiedEvent" name="E-Mail bestätigt">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_VerifyEmailGateway_EmailVerifiedEvent</bpmn:incoming>
+      <bpmn:outgoing>Flow_EmailVerifiedEvent_AssignCustomerTask</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_emailVerified" messageRef="Message_emailVerified" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="VerificationExpiredEvent" name="nicht bestätigt">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_VerifyEmailGateway_VerificationExpiredEvent</bpmn:incoming>
+      <bpmn:outgoing>Flow_VerificationExpiredEvent_ReleaseExpiredReservationTask</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_verify">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">${timerVerifyEmail}</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:serviceTask id="ReleaseExpiredReservationTask" name="Reservierung freigeben" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-ReleaseReservation">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_VerificationExpiredEvent_ReleaseExpiredReservationTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReleaseExpiredReservationTask_NotVerifiedEndEvent</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="NotVerifiedEndEvent" name="nicht bestätigt">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="#{execution.setVariable(&#34;processStatus&#34;, &#34;notVerified&#34;)}" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ReleaseExpiredReservationTask_NotVerifiedEndEvent</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="AssignCustomerTask" name="Kunde zuordnen" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-AssignCustomer">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_EmailVerifiedEvent_AssignCustomerTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_AssignCustomerTask_AppointmentRulesTask</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:businessRuleTask id="AppointmentRulesTask" name="Terminregeln" camunda:decisionRef="democompany-customer-bookAppointmentV1-AppointmentRules" camunda:resultVariable="rules" camunda:mapDecisionResult="singleResult">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_AssignCustomerTask_AppointmentRulesTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_AppointmentRulesTask_ConfirmationRequiredGateway</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+    <bpmn:exclusiveGateway id="ConfirmationRequiredGateway" name="Bestätigung nötig?" default="NoConfirmationFlow">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_AppointmentRulesTask_ConfirmationRequiredGateway</bpmn:incoming>
+      <bpmn:outgoing>ConfirmationFlow</bpmn:outgoing>
+      <bpmn:outgoing>NoConfirmationFlow</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="NotifyAdvisorTask" name="Berater benachrichtigen" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-SendMail">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="to">#{advisorEmail}</camunda:inputParameter>
+          <camunda:inputParameter name="subject">Neue Terminanfrage</camunda:inputParameter>
+          <camunda:inputParameter name="body">Neue Terminanfrage von #{customerName}: #{appointmentText}\n\nBitte bestätigen oder ablehnen:\n#{confirmLink}</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>ConfirmationFlow</bpmn:incoming>
+      <bpmn:outgoing>Flow_NotifyAdvisorTask_ConfirmAppointmentTask</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="ConfirmAppointmentTask" name="Termin bestätigen" camunda:candidateGroups="kundenberater">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_NotifyAdvisorTask_ConfirmAppointmentTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_ConfirmAppointmentTask_AcceptedGateway</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:boundaryEvent id="ConfirmReminderEvent" name="nach 1 Arbeitstag" cancelActivity="false" attachedToRef="ConfirmAppointmentTask">
+      <bpmn:extensionElements />
+      <bpmn:outgoing>Flow_ConfirmReminderEvent_SendReminderTask</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_reminder">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">${timerConfirmReminder}</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="SendReminderTask" name="Erinnerung senden" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-SendMail">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="to">#{advisorEmail}</camunda:inputParameter>
+          <camunda:inputParameter name="subject">Erinnerung: Terminanfrage offen</camunda:inputParameter>
+          <camunda:inputParameter name="body">Die Terminanfrage von #{customerName} (#{appointmentText}) ist noch offen:\n#{confirmLink}</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ConfirmReminderEvent_SendReminderTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_SendReminderTask_ReminderSentEndEvent</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="ReminderSentEndEvent" name="erinnert">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_SendReminderTask_ReminderSentEndEvent</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="AcceptedGateway" name="angenommen?">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_ConfirmAppointmentTask_AcceptedGateway</bpmn:incoming>
+      <bpmn:outgoing>AcceptedFlow</bpmn:outgoing>
+      <bpmn:outgoing>DeclinedFlow</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="ReleaseDeclinedReservationTask" name="Reservierung freigeben" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-ReleaseReservation">
+      <bpmn:extensionElements />
+      <bpmn:incoming>DeclinedFlow</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReleaseDeclinedReservationTask_SendDeclinedEmailTask</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="SendDeclinedEmailTask" name="Absage senden" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-SendMail">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="to">#{email}</camunda:inputParameter>
+          <camunda:inputParameter name="subject">Ihre Terminanfrage</camunda:inputParameter>
+          <camunda:inputParameter name="body">Guten Tag #{customerName}\n\nLeider können wir den Termin (#{appointmentText}) nicht wahrnehmen. Bitte wählen Sie auf unserer Homepage einen anderen Termin.\n\nFreundliche Grüsse\nDemo Company</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ReleaseDeclinedReservationTask_SendDeclinedEmailTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_SendDeclinedEmailTask_DeclinedEndEvent</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="DeclinedEndEvent" name="abgelehnt">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="#{execution.setVariable(&#34;processStatus&#34;, &#34;declined&#34;)}" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_SendDeclinedEmailTask_DeclinedEndEvent</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="BookJoinGateway">
+      <bpmn:extensionElements />
+      <bpmn:incoming>NoConfirmationFlow</bpmn:incoming>
+      <bpmn:incoming>AcceptedFlow</bpmn:incoming>
+      <bpmn:outgoing>Flow_BookJoinGateway_BookReservationTask</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="BookReservationTask" name="Termin buchen" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-BookReservation">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_BookJoinGateway_BookReservationTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_BookReservationTask_SendInvitationTask</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="SendInvitationTask" name="Einladung senden" camunda:type="external" camunda:topic="democompany-customer-bookAppointmentV1-SendInvitation">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_BookReservationTask_SendInvitationTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_SendInvitationTask_SucceededEndEvent</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="SucceededEndEvent" name="gebucht">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="#{execution.setVariable(&#34;processStatus&#34;, &#34;succeeded&#34;)}" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_SendInvitationTask_SucceededEndEvent</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="OutputmockedEvent" name="output-mocked">
+      <bpmn:extensionElements />
+      <bpmn:outgoing>Flow_OutputmockedEvent_OutputmockedEndEvent</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="LinkEventDefinition_catch" name="output-mocked" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="OutputmockedEndEvent" name="output-mocked">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="#{execution.setVariable(&#34;processStatus&#34;, &#34;output-mocked&#34;)}" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_OutputmockedEvent_OutputmockedEndEvent</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_OutputmockedBoundaryEvent_OutputmockedEvent1" sourceRef="OutputmockedBoundaryEvent" targetRef="OutputmockedEvent1" />
+    <bpmn:sequenceFlow id="Flow_StartProcessStartEvent_InitProcessTask" sourceRef="StartProcessStartEvent" targetRef="InitProcessTask" />
+    <bpmn:sequenceFlow id="Flow_InitProcessTask_SendVerificationEmailTask" sourceRef="InitProcessTask" targetRef="SendVerificationEmailTask" />
+    <bpmn:sequenceFlow id="Flow_SendVerificationEmailTask_VerifyEmailGateway" sourceRef="SendVerificationEmailTask" targetRef="VerifyEmailGateway" />
+    <bpmn:sequenceFlow id="Flow_VerifyEmailGateway_EmailVerifiedEvent" sourceRef="VerifyEmailGateway" targetRef="EmailVerifiedEvent" />
+    <bpmn:sequenceFlow id="Flow_VerifyEmailGateway_VerificationExpiredEvent" sourceRef="VerifyEmailGateway" targetRef="VerificationExpiredEvent" />
+    <bpmn:sequenceFlow id="Flow_VerificationExpiredEvent_ReleaseExpiredReservationTask" sourceRef="VerificationExpiredEvent" targetRef="ReleaseExpiredReservationTask" />
+    <bpmn:sequenceFlow id="Flow_ReleaseExpiredReservationTask_NotVerifiedEndEvent" sourceRef="ReleaseExpiredReservationTask" targetRef="NotVerifiedEndEvent" />
+    <bpmn:sequenceFlow id="Flow_EmailVerifiedEvent_AssignCustomerTask" sourceRef="EmailVerifiedEvent" targetRef="AssignCustomerTask" />
+    <bpmn:sequenceFlow id="Flow_AssignCustomerTask_AppointmentRulesTask" sourceRef="AssignCustomerTask" targetRef="AppointmentRulesTask" />
+    <bpmn:sequenceFlow id="Flow_AppointmentRulesTask_ConfirmationRequiredGateway" sourceRef="AppointmentRulesTask" targetRef="ConfirmationRequiredGateway" />
+    <bpmn:sequenceFlow id="ConfirmationFlow" name="ja" sourceRef="ConfirmationRequiredGateway" targetRef="NotifyAdvisorTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${rules.confirmationRequired}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="NoConfirmationFlow" name="nein" sourceRef="ConfirmationRequiredGateway" targetRef="BookJoinGateway" />
+    <bpmn:sequenceFlow id="Flow_NotifyAdvisorTask_ConfirmAppointmentTask" sourceRef="NotifyAdvisorTask" targetRef="ConfirmAppointmentTask" />
+    <bpmn:sequenceFlow id="Flow_ConfirmAppointmentTask_AcceptedGateway" sourceRef="ConfirmAppointmentTask" targetRef="AcceptedGateway" />
+    <bpmn:sequenceFlow id="Flow_ConfirmReminderEvent_SendReminderTask" sourceRef="ConfirmReminderEvent" targetRef="SendReminderTask" />
+    <bpmn:sequenceFlow id="Flow_SendReminderTask_ReminderSentEndEvent" sourceRef="SendReminderTask" targetRef="ReminderSentEndEvent" />
+    <bpmn:sequenceFlow id="AcceptedFlow" name="ja" sourceRef="AcceptedGateway" targetRef="BookJoinGateway">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${accepted}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="DeclinedFlow" name="nein" sourceRef="AcceptedGateway" targetRef="ReleaseDeclinedReservationTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!accepted}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_ReleaseDeclinedReservationTask_SendDeclinedEmailTask" sourceRef="ReleaseDeclinedReservationTask" targetRef="SendDeclinedEmailTask" />
+    <bpmn:sequenceFlow id="Flow_SendDeclinedEmailTask_DeclinedEndEvent" sourceRef="SendDeclinedEmailTask" targetRef="DeclinedEndEvent" />
+    <bpmn:sequenceFlow id="Flow_BookJoinGateway_BookReservationTask" sourceRef="BookJoinGateway" targetRef="BookReservationTask" />
+    <bpmn:sequenceFlow id="Flow_BookReservationTask_SendInvitationTask" sourceRef="BookReservationTask" targetRef="SendInvitationTask" />
+    <bpmn:sequenceFlow id="Flow_SendInvitationTask_SucceededEndEvent" sourceRef="SendInvitationTask" targetRef="SucceededEndEvent" />
+    <bpmn:sequenceFlow id="Flow_OutputmockedEvent_OutputmockedEndEvent" sourceRef="OutputmockedEvent" targetRef="OutputmockedEndEvent" />
+  </bpmn:process>
+  <bpmn:message id="Message_emailVerified" name="democompany-customer-bookAppointmentV1-emailVerified" />
+  <bpmn:error id="Error_validation-failed" name="validation-failed" errorCode="validation-failed" camunda:errorMessage="${validationErrors.toString()}" />
+  <bpmn:error id="Error_output-mocked" name="output-mocked" errorCode="output-mocked" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_democompany-customer-bookAppointmentV1">
+    <bpmndi:BPMNPlane id="BPMNPlane_democompany-customer-bookAppointmentV1" bpmnElement="Collaboration_democompany-customer-bookAppointmentV1">
+      <bpmndi:BPMNShape id="democompany-customer-bookAppointmentV1-participant_di" bpmnElement="democompany-customer-bookAppointmentV1-participant" isHorizontal="true">
+        <dc:Bounds x="160" y="60" width="2428" height="568" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartProcessStartEvent_di" bpmnElement="StartProcessStartEvent">
+        <dc:Bounds x="232" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="202" y="182" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="InitProcessTask_di" bpmnElement="InitProcessTask">
+        <dc:Bounds x="360" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedBoundaryEvent_di" bpmnElement="OutputmockedBoundaryEvent">
+        <dc:Bounds x="430" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="400" y="222" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedEvent1_di" bpmnElement="OutputmockedEvent1">
+        <dc:Bounds x="552" y="272" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="522" y="312" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SendVerificationEmailTask_di" bpmnElement="SendVerificationEmailTask">
+        <dc:Bounds x="520" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="VerifyEmailGateway_di" bpmnElement="VerifyEmailGateway">
+        <dc:Bounds x="705" y="135" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EmailVerifiedEvent_di" bpmnElement="EmailVerifiedEvent">
+        <dc:Bounds x="872" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="842" y="182" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="VerificationExpiredEvent_di" bpmnElement="VerificationExpiredEvent">
+        <dc:Bounds x="872" y="324" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="842" y="364" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ReleaseExpiredReservationTask_di" bpmnElement="ReleaseExpiredReservationTask">
+        <dc:Bounds x="1000" y="302" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NotVerifiedEndEvent_di" bpmnElement="NotVerifiedEndEvent">
+        <dc:Bounds x="1192" y="324" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1162" y="364" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AssignCustomerTask_di" bpmnElement="AssignCustomerTask">
+        <dc:Bounds x="1000" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AppointmentRulesTask_di" bpmnElement="AppointmentRulesTask">
+        <dc:Bounds x="1160" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ConfirmationRequiredGateway_di" bpmnElement="ConfirmationRequiredGateway" isMarkerVisible="true">
+        <dc:Bounds x="1345" y="135" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1315" y="189" width="110" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NotifyAdvisorTask_di" bpmnElement="NotifyAdvisorTask">
+        <dc:Bounds x="1480" y="302" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ConfirmAppointmentTask_di" bpmnElement="ConfirmAppointmentTask">
+        <dc:Bounds x="1640" y="302" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ConfirmReminderEvent_di" bpmnElement="ConfirmReminderEvent">
+        <dc:Bounds x="1710" y="364" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1680" y="404" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SendReminderTask_di" bpmnElement="SendReminderTask">
+        <dc:Bounds x="1800" y="458" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ReminderSentEndEvent_di" bpmnElement="ReminderSentEndEvent">
+        <dc:Bounds x="1992" y="480" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1962" y="520" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AcceptedGateway_di" bpmnElement="AcceptedGateway" isMarkerVisible="true">
+        <dc:Bounds x="1825" y="317" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1795" y="371" width="110" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ReleaseDeclinedReservationTask_di" bpmnElement="ReleaseDeclinedReservationTask">
+        <dc:Bounds x="1960" y="302" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SendDeclinedEmailTask_di" bpmnElement="SendDeclinedEmailTask">
+        <dc:Bounds x="2120" y="302" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DeclinedEndEvent_di" bpmnElement="DeclinedEndEvent">
+        <dc:Bounds x="2312" y="324" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2282" y="364" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BookJoinGateway_di" bpmnElement="BookJoinGateway" isMarkerVisible="true">
+        <dc:Bounds x="1985" y="135" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BookReservationTask_di" bpmnElement="BookReservationTask">
+        <dc:Bounds x="2120" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SendInvitationTask_di" bpmnElement="SendInvitationTask">
+        <dc:Bounds x="2280" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SucceededEndEvent_di" bpmnElement="SucceededEndEvent">
+        <dc:Bounds x="2472" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2442" y="182" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedEvent_di" bpmnElement="OutputmockedEvent">
+        <dc:Bounds x="2152" y="480" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2122" y="520" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedEndEvent_di" bpmnElement="OutputmockedEndEvent">
+        <dc:Bounds x="2312" y="480" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2282" y="520" width="96" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_OutputmockedBoundaryEvent_OutputmockedEvent1_di" bpmnElement="Flow_OutputmockedBoundaryEvent_OutputmockedEvent1">
+        <di:waypoint x="448" y="218" />
+        <di:waypoint x="448" y="290" />
+        <di:waypoint x="552" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_StartProcessStartEvent_InitProcessTask_di" bpmnElement="Flow_StartProcessStartEvent_InitProcessTask">
+        <di:waypoint x="268" y="160" />
+        <di:waypoint x="360" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_InitProcessTask_SendVerificationEmailTask_di" bpmnElement="Flow_InitProcessTask_SendVerificationEmailTask">
+        <di:waypoint x="460" y="160" />
+        <di:waypoint x="520" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SendVerificationEmailTask_VerifyEmailGateway_di" bpmnElement="Flow_SendVerificationEmailTask_VerifyEmailGateway">
+        <di:waypoint x="620" y="160" />
+        <di:waypoint x="705" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_VerifyEmailGateway_EmailVerifiedEvent_di" bpmnElement="Flow_VerifyEmailGateway_EmailVerifiedEvent">
+        <di:waypoint x="755" y="160" />
+        <di:waypoint x="872" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_VerifyEmailGateway_VerificationExpiredEvent_di" bpmnElement="Flow_VerifyEmailGateway_VerificationExpiredEvent">
+        <di:waypoint x="730" y="185" />
+        <di:waypoint x="730" y="342" />
+        <di:waypoint x="872" y="342" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_VerificationExpiredEvent_ReleaseExpiredReservationTask_di" bpmnElement="Flow_VerificationExpiredEvent_ReleaseExpiredReservationTask">
+        <di:waypoint x="908" y="342" />
+        <di:waypoint x="1000" y="342" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ReleaseExpiredReservationTask_NotVerifiedEndEvent_di" bpmnElement="Flow_ReleaseExpiredReservationTask_NotVerifiedEndEvent">
+        <di:waypoint x="1100" y="342" />
+        <di:waypoint x="1192" y="342" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_EmailVerifiedEvent_AssignCustomerTask_di" bpmnElement="Flow_EmailVerifiedEvent_AssignCustomerTask">
+        <di:waypoint x="908" y="160" />
+        <di:waypoint x="1000" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_AssignCustomerTask_AppointmentRulesTask_di" bpmnElement="Flow_AssignCustomerTask_AppointmentRulesTask">
+        <di:waypoint x="1100" y="160" />
+        <di:waypoint x="1160" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_AppointmentRulesTask_ConfirmationRequiredGateway_di" bpmnElement="Flow_AppointmentRulesTask_ConfirmationRequiredGateway">
+        <di:waypoint x="1260" y="160" />
+        <di:waypoint x="1345" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="ConfirmationFlow_di" bpmnElement="ConfirmationFlow">
+        <di:waypoint x="1370" y="185" />
+        <di:waypoint x="1370" y="342" />
+        <di:waypoint x="1480" y="342" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="NoConfirmationFlow_di" bpmnElement="NoConfirmationFlow">
+        <di:waypoint x="1395" y="160" />
+        <di:waypoint x="1985" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NotifyAdvisorTask_ConfirmAppointmentTask_di" bpmnElement="Flow_NotifyAdvisorTask_ConfirmAppointmentTask">
+        <di:waypoint x="1580" y="342" />
+        <di:waypoint x="1640" y="342" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ConfirmAppointmentTask_AcceptedGateway_di" bpmnElement="Flow_ConfirmAppointmentTask_AcceptedGateway">
+        <di:waypoint x="1740" y="342" />
+        <di:waypoint x="1825" y="342" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ConfirmReminderEvent_SendReminderTask_di" bpmnElement="Flow_ConfirmReminderEvent_SendReminderTask">
+        <di:waypoint x="1728" y="400" />
+        <di:waypoint x="1728" y="498" />
+        <di:waypoint x="1800" y="498" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SendReminderTask_ReminderSentEndEvent_di" bpmnElement="Flow_SendReminderTask_ReminderSentEndEvent">
+        <di:waypoint x="1900" y="498" />
+        <di:waypoint x="1992" y="498" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AcceptedFlow_di" bpmnElement="AcceptedFlow">
+        <di:waypoint x="1850" y="317" />
+        <di:waypoint x="1850" y="160" />
+        <di:waypoint x="1985" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DeclinedFlow_di" bpmnElement="DeclinedFlow">
+        <di:waypoint x="1875" y="342" />
+        <di:waypoint x="1960" y="342" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ReleaseDeclinedReservationTask_SendDeclinedEmailTask_di" bpmnElement="Flow_ReleaseDeclinedReservationTask_SendDeclinedEmailTask">
+        <di:waypoint x="2060" y="342" />
+        <di:waypoint x="2120" y="342" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SendDeclinedEmailTask_DeclinedEndEvent_di" bpmnElement="Flow_SendDeclinedEmailTask_DeclinedEndEvent">
+        <di:waypoint x="2220" y="342" />
+        <di:waypoint x="2312" y="342" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BookJoinGateway_BookReservationTask_di" bpmnElement="Flow_BookJoinGateway_BookReservationTask">
+        <di:waypoint x="2035" y="160" />
+        <di:waypoint x="2120" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BookReservationTask_SendInvitationTask_di" bpmnElement="Flow_BookReservationTask_SendInvitationTask">
+        <di:waypoint x="2220" y="160" />
+        <di:waypoint x="2280" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SendInvitationTask_SucceededEndEvent_di" bpmnElement="Flow_SendInvitationTask_SucceededEndEvent">
+        <di:waypoint x="2380" y="160" />
+        <di:waypoint x="2472" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_OutputmockedEvent_OutputmockedEndEvent_di" bpmnElement="Flow_OutputmockedEvent_OutputmockedEndEvent">
+        <di:waypoint x="2188" y="498" />
+        <di:waypoint x="2312" y="498" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
