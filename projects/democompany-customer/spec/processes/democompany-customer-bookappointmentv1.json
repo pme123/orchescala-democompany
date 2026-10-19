@@ -593,9 +593,23 @@
           "name": "contact",
           "type": "t-contact",
           "description": "Kontaktdaten aus dem Formular"
+        },
+        {
+          "id": "f-ac-res",
+          "name": "reservationId",
+          "type": "String",
+          "description": "Reservierung",
+          "example": "\"anna.berater-2026-10-20T09:00\""
+        },
+        {
+          "id": "f-ac-tok",
+          "name": "token",
+          "type": "String",
+          "description": "Das Geheimnis der Reservierung (aus reserveSlot) - nur die eigene wird geändert",
+          "example": "\"0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11\""
         }
       ],
-      "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
+      "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest."
     },
     {
       "id": "t-2e07e7889c",
@@ -626,7 +640,7 @@
           "optional": true
         }
       ],
-      "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
+      "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest."
     },
     {
       "id": "t-64410ae9f8",
@@ -790,6 +804,13 @@
           "type": "String",
           "description": "Reservierung",
           "example": "\"anna.berater-2026-10-20T09:00\""
+        },
+        {
+          "id": "f-br-tok",
+          "name": "token",
+          "type": "String",
+          "description": "Das Geheimnis der Reservierung (aus reserveSlot) - nur die eigene wird geändert",
+          "example": "\"0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11\""
         }
       ],
       "description": "Setzt die Reservierung auf gebucht."
@@ -868,6 +889,13 @@
           "type": "String",
           "description": "Reservierung",
           "example": "\"anna.berater-2026-10-20T09:00\""
+        },
+        {
+          "id": "f-rr-tok",
+          "name": "token",
+          "type": "String",
+          "description": "Das Geheimnis der Reservierung (aus reserveSlot) - nur die eigene wird geändert",
+          "example": "\"0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11\""
         }
       ],
       "description": "Löscht die Reservierung - der Termin ist wieder frei."
@@ -1006,7 +1034,7 @@
       "status": "draft",
       "inTypeId": "t-828ea31ba0",
       "outTypeId": "t-2e07e7889c",
-      "descr": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
+      "descr": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest."
     },
     {
       "id": "ia-0d7ee084dc",

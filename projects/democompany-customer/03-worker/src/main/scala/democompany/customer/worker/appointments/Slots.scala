@@ -1,7 +1,7 @@
 package democompany.customer
 package worker.appointments
 
-import democompany.customer.domain.appointments.{Reservation, ReservationStatus}
+import democompany.customer.domain.appointments.Reservation
 import democompany.customer.domain.bookAppointment.v1.schema.{Appointment, Channel, Topic}
 import democompany.customer.domain.updateAvailability.v1.schema.{Advisor, BusyPeriod}
 import democompany.customer.domain.bookAppointment.v1.AppointmentRulesDmn
@@ -32,7 +32,7 @@ object Slots:
   ): Seq[Appointment] =
     val earliest = now.plusHours(rules.leadTimeHours)
     val window   = LocalTime.parse(rules.windowStart) -> LocalTime.parse(rules.windowEnd)
-    val taken    = reservations.filter(r => r.status == ReservationStatus.booked || r.reservedUntil.isAfter(now))
+    val taken    = reservations.filter(Reservations.isTaken(_, now))
     for
       cal   <- calendars
       day   <- (0 until days).map(from.plusDays(_))

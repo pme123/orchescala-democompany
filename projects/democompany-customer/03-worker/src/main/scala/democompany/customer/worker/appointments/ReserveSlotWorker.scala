@@ -7,7 +7,8 @@ import democompany.customer.worker.appointments.AppointmentsStore.reservations
 
 /** Reserves the slot for 30 minutes (as long as the opt-in may take, `timerVerifyEmail`). The id
   * `<advisor>-<start>` makes a slot exist once: is it reserved or booked, the answer is a 409
-  * «leider vergeben». An expired reservation that was never booked is taken over. The token (a
+  * «leider vergeben». An expired reservation without opt-in is taken over (a requested one -
+  * opt-in done, waiting for the advisor - never). The token (a
   * random UUID) is the business key of the process and the secret of the links in the mails.
   */
 class ReserveSlotWorker extends CompanyPersistenceWorkerDsl[In, Out]:
@@ -30,7 +31,8 @@ class ReserveSlotWorker extends CompanyPersistenceWorkerDsl[In, Out]:
       existing <- get(reservations, id)
       version  <- existing match
                     case None                                                                => ZIO.none
-                    case Some(s) if s.entity.status == ReservationStatus.reserved && s.entity.reservedUntil.isBefore(now) =>
+                    // an expired reservation without opt-in is taken over - a requested one never
+                    case Some(s) if !Reservations.isTaken(s.entity, now)                     =>
                       ZIO.some(s.version)
                     case Some(_)                                                             => ZIO.fail(taken)
       _        <- save(
