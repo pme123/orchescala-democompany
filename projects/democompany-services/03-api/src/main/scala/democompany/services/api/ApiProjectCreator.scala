@@ -12,7 +12,8 @@ object ApiProjectCreator extends CompanyApiCreator:
 
   document(
     clientsApi,
-    mailsApi
+    mailsApi,
+    smtpApi
   )
 
 
@@ -25,6 +26,11 @@ object ApiProjectCreator extends CompanyApiCreator:
     import domain.mails.v1.*
     group(MailsV1.serviceLabel)(
       SendEmail.example
+    )
+  private lazy val smtpApi =
+    import domain.smtp.v1.*
+    group("SMTP")(
+      SendMail.example
     )
 
 end ApiProjectCreator

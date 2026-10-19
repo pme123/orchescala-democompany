@@ -82,12 +82,12 @@
         "type" : "Hidden"
       },
       {
-        "value" : "outputServiceMock",
+        "value" : "_outputServiceMock",
         "binding" : {
           "type" : "zeebe:input",
-          "name" : "outputServiceMock"
+          "name" : "_outputServiceMock"
         },
-        "label" : "outputServiceMock",
+        "label" : "_outputServiceMock",
         "description" : "",
         "type" : "Hidden"
       },
@@ -95,9 +95,9 @@
         "value" : "true",
         "binding" : {
           "type" : "zeebe:input",
-          "name" : "manualOutMapping"
+          "name" : "_manualOutMapping"
         },
-        "label" : "manualOutMapping",
+        "label" : "_manualOutMapping",
         "description" : "",
         "type" : "Hidden"
       },
@@ -105,19 +105,19 @@
         "value" : "[  ]",
         "binding" : {
           "type" : "zeebe:input",
-          "name" : "outputVariables"
+          "name" : "_outputVariables"
         },
-        "label" : "outputVariables",
+        "label" : "_outputVariables",
         "description" : "",
         "type" : "Hidden"
       },
       {
-        "value" : "outputMock",
+        "value" : "_outputMock",
         "binding" : {
           "type" : "zeebe:input",
-          "name" : "outputMock"
+          "name" : "_outputMock"
         },
-        "label" : "outputMock",
+        "label" : "_outputMock",
         "description" : "",
         "type" : "Hidden"
       },
@@ -125,9 +125,9 @@
         "value" : "[\"handledError1\", \"handledError2\"]",
         "binding" : {
           "type" : "zeebe:input",
-          "name" : "handledErrors"
+          "name" : "_handledErrors"
         },
-        "label" : "handledErrors",
+        "label" : "_handledErrors",
         "description" : "",
         "type" : "Hidden"
       },
@@ -135,9 +135,9 @@
         "value" : "[\"errorRegex1\", \"errorRegex2\"]",
         "binding" : {
           "type" : "zeebe:input",
-          "name" : "regexHandledErrors"
+          "name" : "_regexHandledErrors"
         },
-        "label" : "regexHandledErrors",
+        "label" : "_regexHandledErrors",
         "description" : "",
         "type" : "Hidden"
       },

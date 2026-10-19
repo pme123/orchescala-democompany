@@ -73,6 +73,7 @@ lazy val worker = project
     publicationSettings,
     libraryDependencies ++= workerDeps,
     dockerSettings,
+    dockerBuildSettings,
     testSettings,
     zioTestSettings
   ).dependsOn(domain)
