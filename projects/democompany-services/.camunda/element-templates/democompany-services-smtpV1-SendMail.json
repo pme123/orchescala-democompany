@@ -1,6 +1,6 @@
 {
-  "name" : "democompany-customer-bookAppointmentV1-SendMail",
-  "id" : "democompany-customer-bookAppointmentV1-SendMail",
+  "name" : "democompany-services-smtpV1-SendMail",
+  "id" : "democompany-services-smtpV1-SendMail",
   "description" : "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit).",
   "version" : 0,
   "appliesTo" : [
@@ -51,7 +51,7 @@
       "type" : "Hidden"
     },
     {
-      "value" : "democompany-customer-bookAppointmentV1-SendMail",
+      "value" : "democompany-services-smtpV1-SendMail",
       "binding" : {
         "type" : "property",
         "name" : "camunda:topic"

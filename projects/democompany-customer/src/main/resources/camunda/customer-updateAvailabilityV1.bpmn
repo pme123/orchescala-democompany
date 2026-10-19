@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_democompany-customer-updateAvailabilityV1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.46.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.24.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_democompany-customer-updateAvailabilityV1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.46.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.24.0">
   <bpmn:collaboration id="Collaboration_democompany-customer-updateAvailabilityV1">
     <bpmn:participant id="democompany-customer-updateAvailabilityV1-participant" name="Verfügbarkeit aktualisieren" processRef="democompany-customer-updateAvailabilityV1" />
   </bpmn:collaboration>
@@ -76,7 +76,7 @@
     </bpmn:subProcess>
     <bpmn:endEvent id="SucceededEndEvent" name="aktualisiert">
       <bpmn:extensionElements>
-        <camunda:executionListener expression="#{execution.setVariable(&quot;processStatus&quot;, &quot;succeeded&quot;)}" event="start" />
+        <camunda:executionListener expression="#{execution.setVariable(&#34;processStatus&#34;, &#34;succeeded&#34;)}" event="start" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_PerAdvisorSubProcess_SucceededEndEvent</bpmn:incoming>
     </bpmn:endEvent>
@@ -87,7 +87,7 @@
     </bpmn:intermediateCatchEvent>
     <bpmn:endEvent id="OutputmockedEndEvent" name="output-mocked">
       <bpmn:extensionElements>
-        <camunda:executionListener expression="#{execution.setVariable(&quot;processStatus&quot;, &quot;output-mocked&quot;)}" event="start" />
+        <camunda:executionListener expression="#{execution.setVariable(&#34;processStatus&#34;, &#34;output-mocked&#34;)}" event="start" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_OutputmockedEvent_OutputmockedEndEvent</bpmn:incoming>
     </bpmn:endEvent>
@@ -110,16 +110,16 @@
           <dc:Bounds x="202" y="182" width="96" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="InitProcessTask_di" bpmnElement="InitProcessTask">
+      <bpmndi:BPMNShape id="InitProcessTask_di" bpmnElement="InitProcessTask" color:background-color="#D5D5D5">
         <dc:Bounds x="360" y="120" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="OutputmockedBoundaryEvent_di" bpmnElement="OutputmockedBoundaryEvent">
+      <bpmndi:BPMNShape id="OutputmockedBoundaryEvent_di" bpmnElement="OutputmockedBoundaryEvent" color:background-color="#D5D5D5">
         <dc:Bounds x="430" y="182" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="400" y="222" width="96" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="OutputmockedEvent1_di" bpmnElement="OutputmockedEvent1">
+      <bpmndi:BPMNShape id="OutputmockedEvent1_di" bpmnElement="OutputmockedEvent1" color:background-color="#D5D5D5">
         <dc:Bounds x="552" y="272" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="522" y="312" width="96" height="27" />
@@ -149,13 +149,13 @@
           <dc:Bounds x="1082" y="182" width="96" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="OutputmockedEvent_di" bpmnElement="OutputmockedEvent">
+      <bpmndi:BPMNShape id="OutputmockedEvent_di" bpmnElement="OutputmockedEvent" color:background-color="#D5D5D5">
         <dc:Bounds x="952" y="350" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="922" y="390" width="96" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="OutputmockedEndEvent_di" bpmnElement="OutputmockedEndEvent">
+      <bpmndi:BPMNShape id="OutputmockedEndEvent_di" bpmnElement="OutputmockedEndEvent" color:background-color="#D5D5D5">
         <dc:Bounds x="1112" y="350" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1082" y="390" width="96" height="27" />

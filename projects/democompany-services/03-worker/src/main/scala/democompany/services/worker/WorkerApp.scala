@@ -4,7 +4,8 @@ package democompany.services.worker
 object WorkerApp extends CompanyWorkerApp:
   workers(
     clientsV1Workers,
-    mailsV1Workers
+    mailsV1Workers,
+    smtpV1Workers
   )
   dependencies(
   )
@@ -14,5 +15,9 @@ object WorkerApp extends CompanyWorkerApp:
   )
   private lazy val mailsV1Workers = Seq(
     mails.v1.SendEmailWorker()
+  )
+  // mails over the SMTP of the environment (locally Mailpit)
+  private lazy val smtpV1Workers = Seq(
+    smtp.v1.SendMailWorker()
   )
 end WorkerApp

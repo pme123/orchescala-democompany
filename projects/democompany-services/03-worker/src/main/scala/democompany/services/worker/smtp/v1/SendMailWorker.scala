@@ -1,7 +1,7 @@
-package democompany.customer
-package worker.bookAppointment.v1
+package democompany.services
+package worker.smtp.v1
 
-import democompany.customer.domain.bookAppointment.v1.SendMail.*
+import democompany.services.domain.smtp.v1.SendMail.*
 
 /** A mail over the SMTP of the environment - the text comes from the BPMN, `\n` is a line break. */
 class SendMailWorker extends CompanyMailWorkerDsl[In, Out]:

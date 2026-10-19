@@ -11,7 +11,7 @@ object Settings {
   val customer = ProjectDef.org
   val customerOrchescalaV = "0.1.0-SNAPSHOT"
   // to override the version defined in customerOrchescala
-  val orchescalaV = "0.7.0-SNAPSHOT"
+  val orchescalaV = "0.9.0-SNAPSHOT"
 
   // other dependencies
   // run worker
@@ -110,10 +110,14 @@ object Settings {
 
 // Repos
   // 
-  lazy val releaseRepoStr = 
+  lazy val releaseRepoStr =
     "???"
   lazy val releaseRepo: MavenRepository = "gitlab" at releaseRepoStr
 
+  // the options of `docker build` (SbtConfig.dockerBuildOptions in CompanyDevConfig)
+  lazy val dockerBuildSettings: Seq[Setting[_]] = Seq(
+    dockerBuildOptions ++= Seq("--platform", "linux/amd64")
+  )
   lazy val dockerSettings = Seq()
   lazy val testSettings = Seq(
     libraryDependencies += mUnit,

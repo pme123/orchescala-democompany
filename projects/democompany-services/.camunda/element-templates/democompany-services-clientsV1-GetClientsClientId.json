@@ -41,6 +41,16 @@
       "type" : "Hidden"
     },
     {
+      "value" : "email",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{execution.getVariable('email')}"
+      },
+      "label" : "email",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
       "value" : "democompany-services-clientsV1-GetClientsClientId",
       "binding" : {
         "type" : "property",
@@ -61,12 +71,12 @@
       "type" : "Hidden"
     },
     {
-      "value" : "#{execution.getVariable('outputServiceMock')}",
+      "value" : "#{execution.getVariable('_outputServiceMock')}",
       "binding" : {
         "type" : "camunda:inputParameter",
-        "name" : "outputServiceMock"
+        "name" : "_outputServiceMock"
       },
-      "label" : "outputServiceMock",
+      "label" : "_outputServiceMock",
       "description" : "",
       "type" : "Hidden"
     },
@@ -74,29 +84,29 @@
       "value" : "#{true}",
       "binding" : {
         "type" : "camunda:inputParameter",
-        "name" : "manualOutMapping"
+        "name" : "_manualOutMapping"
       },
-      "label" : "manualOutMapping",
+      "label" : "_manualOutMapping",
       "description" : "",
       "type" : "Hidden"
     },
     {
-      "value" : "client, etag",
+      "value" : "client, etag, email",
       "binding" : {
         "type" : "camunda:inputParameter",
-        "name" : "outputVariables"
+        "name" : "_outputVariables"
       },
-      "label" : "outputVariables",
+      "label" : "_outputVariables",
       "description" : "",
       "type" : "Hidden"
     },
     {
-      "value" : "#{execution.getVariable('outputMock')}",
+      "value" : "#{execution.getVariable('_outputMock')}",
       "binding" : {
         "type" : "camunda:inputParameter",
-        "name" : "outputMock"
+        "name" : "_outputMock"
       },
-      "label" : "outputMock",
+      "label" : "_outputMock",
       "description" : "",
       "type" : "Hidden"
     },
@@ -104,9 +114,9 @@
       "value" : "handledError1, handledError2",
       "binding" : {
         "type" : "camunda:inputParameter",
-        "name" : "handledErrors"
+        "name" : "_handledErrors"
       },
-      "label" : "handledErrors",
+      "label" : "_handledErrors",
       "description" : "",
       "type" : "Hidden"
     },
@@ -114,9 +124,9 @@
       "value" : "errorRegex1, errorRegex2",
       "binding" : {
         "type" : "camunda:inputParameter",
-        "name" : "regexHandledErrors"
+        "name" : "_regexHandledErrors"
       },
-      "label" : "regexHandledErrors",
+      "label" : "_regexHandledErrors",
       "description" : "",
       "type" : "Hidden"
     },

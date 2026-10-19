@@ -61,7 +61,7 @@
       "kind": "service",
       "name": "E-Mail-Bestätigung senden",
       "status": "implemented",
-      "topic": "democompany-customer-bookAppointmentV1-SendMail",
+      "topic": "democompany-services-smtpV1-SendMail",
       "inputs": [
         {
           "name": "to",
@@ -132,7 +132,7 @@
                       "kind": "service",
                       "name": "Berater benachrichtigen",
                       "status": "implemented",
-                      "topic": "democompany-customer-bookAppointmentV1-SendMail",
+                      "topic": "democompany-services-smtpV1-SendMail",
                       "inputs": [
                         {
                           "name": "to",
@@ -166,7 +166,7 @@
                               "kind": "service",
                               "name": "Erinnerung senden",
                               "status": "implemented",
-                              "topic": "democompany-customer-bookAppointmentV1-SendMail",
+                              "topic": "democompany-services-smtpV1-SendMail",
                               "inputs": [
                                 {
                                   "name": "to",
@@ -247,7 +247,7 @@
                               "kind": "service",
                               "name": "Absage senden",
                               "status": "implemented",
-                              "topic": "democompany-customer-bookAppointmentV1-SendMail",
+                              "topic": "democompany-services-smtpV1-SendMail",
                               "inputs": [
                                 {
                                   "name": "to",
@@ -563,53 +563,6 @@
           "example": "\"100200\""
         }
       ]
-    },
-    {
-      "id": "t-79c079b97e",
-      "name": "SendMail.In",
-      "kind": "case",
-      "interactionId": "ia-c16489381c",
-      "status": "draft",
-      "fields": [
-        {
-          "id": "f-dm17",
-          "name": "to",
-          "type": "String",
-          "description": "Empfänger",
-          "example": "\"peter.muster@example.ch\""
-        },
-        {
-          "id": "f-dm18",
-          "name": "subject",
-          "type": "String",
-          "description": "Betreff",
-          "example": "\"Bitte bestätigen Sie Ihre Terminanfrage\""
-        },
-        {
-          "id": "f-dm19",
-          "name": "body",
-          "type": "String",
-          "description": "Text - `\\n` ist ein Zeilenumbruch",
-          "example": "\"Guten Tag\""
-        }
-      ],
-      "description": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
-    },
-    {
-      "id": "t-b24047fe98",
-      "name": "SendMail.Out",
-      "kind": "case",
-      "interactionId": "ia-c16489381c",
-      "status": "draft",
-      "fields": [
-        {
-          "id": "f-dm20",
-          "name": "sentAt",
-          "type": "LocalDateTime",
-          "description": "Zeitpunkt des Versands"
-        }
-      ],
-      "description": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
     },
     {
       "id": "t-7ac6b5e76c",
@@ -1035,17 +988,6 @@
   ],
   "interactions": [
     {
-      "id": "ia-c16489381c",
-      "stepId": "SendVerificationEmailTask",
-      "kind": "customTask",
-      "name": "SendMail",
-      "key": "democompany-customer-bookAppointmentV1-SendMail",
-      "status": "draft",
-      "inTypeId": "t-79c079b97e",
-      "outTypeId": "t-b24047fe98",
-      "descr": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
-    },
-    {
       "id": "ia-f9fef0deae",
       "stepId": "EmailVerifiedEvent",
       "kind": "message",
@@ -1080,17 +1022,6 @@
       "descr": "Terminregeln: Dauer, Vorlaufzeit, Zeitfenster, Puffer, Berater-Pool und ob der Berater bestätigt."
     },
     {
-      "id": "ia-b9941e1711",
-      "stepId": "NotifyAdvisorTask",
-      "kind": "customTask",
-      "name": "SendMail",
-      "key": "democompany-customer-bookAppointmentV1-SendMail",
-      "status": "draft",
-      "inTypeId": "t-79c079b97e",
-      "outTypeId": "t-b24047fe98",
-      "descr": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
-    },
-    {
       "id": "ia-4d6d17cee6",
       "stepId": "ConfirmAppointmentTask",
       "kind": "userTask",
@@ -1100,17 +1031,6 @@
       "inTypeId": "t-8aad175755",
       "outTypeId": "t-cdfe08d474",
       "descr": "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab."
-    },
-    {
-      "id": "ia-f6df717b57",
-      "stepId": "SendReminderTask",
-      "kind": "customTask",
-      "name": "SendMail",
-      "key": "democompany-customer-bookAppointmentV1-SendMail",
-      "status": "draft",
-      "inTypeId": "t-79c079b97e",
-      "outTypeId": "t-b24047fe98",
-      "descr": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
     },
     {
       "id": "ia-210e68d666",
@@ -1144,17 +1064,6 @@
       "inTypeId": "t-efa265e3e0",
       "outTypeId": "t-999c8b92e5",
       "descr": "Löscht die Reservierung - der Termin ist wieder frei."
-    },
-    {
-      "id": "ia-a8722010a4",
-      "stepId": "SendDeclinedEmailTask",
-      "kind": "customTask",
-      "name": "SendMail",
-      "key": "democompany-customer-bookAppointmentV1-SendMail",
-      "status": "draft",
-      "inTypeId": "t-79c079b97e",
-      "outTypeId": "t-b24047fe98",
-      "descr": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
     },
     {
       "id": "ia-803e2e92cd",

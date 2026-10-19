@@ -1,11 +1,10 @@
-package democompany.customer.domain.bookAppointment.v1
-
-import democompany.customer.domain.bookAppointment.v1.schema.*
+package democompany.services
+package domain.smtp.v1
 
 /** Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit). */
 object SendMail extends CompanyBpmnCustomTaskDsl:
 
-  val topicName = "democompany-customer-bookAppointmentV1-SendMail"
+  val topicName     = "democompany-services-smtpV1-SendMail"
   val descr: String = "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
 
   /** Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit). */

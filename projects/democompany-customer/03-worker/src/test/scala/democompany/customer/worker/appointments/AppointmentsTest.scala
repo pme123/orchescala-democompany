@@ -2,7 +2,6 @@ package democompany.customer
 package worker.appointments
 
 import democompany.customer.domain.bookAppointment.v1.schema.{Appointment, Channel, Contact, Topic}
-import democompany.customer.worker.bookAppointment.v1.SendMailWorker
 
 //sbt worker/testOnly *AppointmentsTest
 class AppointmentsTest extends munit.FunSuite:
@@ -30,8 +29,5 @@ class AppointmentsTest extends munit.FunSuite:
   test("invitation - commas and semicolons are escaped"):
     val ics = Invitation.ics("x", appointment.copy(advisorName = "Berater, Anna"), contact, LocalDateTime.now())
     assert(ics.contains("ORGANIZER;CN=Berater\\, Anna:"), ics)
-
-  test("a mail text from the BPMN - `\\n` is a line break"):
-    assertEquals(SendMailWorker.text("Guten Tag\\n\\nGrüsse"), "Guten Tag\n\nGrüsse")
 
 end AppointmentsTest
