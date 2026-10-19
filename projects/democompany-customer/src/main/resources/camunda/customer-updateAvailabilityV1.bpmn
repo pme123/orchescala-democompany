@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_democompany-customer-updateAvailabilityV1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.46.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.24.0">
   <bpmn:collaboration id="Collaboration_democompany-customer-updateAvailabilityV1">
     <bpmn:participant id="democompany-customer-updateAvailabilityV1-participant" name="Verfügbarkeit aktualisieren" processRef="democompany-customer-updateAvailabilityV1" />
@@ -76,7 +76,7 @@
     </bpmn:subProcess>
     <bpmn:endEvent id="SucceededEndEvent" name="aktualisiert">
       <bpmn:extensionElements>
-        <camunda:executionListener expression="#{execution.setVariable(&quot;processStatus&quot;, &quot;succeeded&quot;)}" event="start" />
+        <camunda:executionListener expression="#{execution.setVariable(&#34;processStatus&#34;, &#34;succeeded&#34;)}" event="start" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_PerAdvisorSubProcess_SucceededEndEvent</bpmn:incoming>
     </bpmn:endEvent>
@@ -87,7 +87,7 @@
     </bpmn:intermediateCatchEvent>
     <bpmn:endEvent id="OutputmockedEndEvent" name="output-mocked">
       <bpmn:extensionElements>
-        <camunda:executionListener expression="#{execution.setVariable(&quot;processStatus&quot;, &quot;output-mocked&quot;)}" event="start" />
+        <camunda:executionListener expression="#{execution.setVariable(&#34;processStatus&#34;, &#34;output-mocked&#34;)}" event="start" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_OutputmockedEvent_OutputmockedEndEvent</bpmn:incoming>
     </bpmn:endEvent>

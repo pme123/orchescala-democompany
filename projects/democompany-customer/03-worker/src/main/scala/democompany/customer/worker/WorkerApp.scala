@@ -17,8 +17,9 @@ object WorkerApp extends CompanyWorkerApp:
     updateAvailabilityWorkers,
     //TODO add workers here
   )
+  // the mails (SendMail) are a service of democompany-services - run by this app
   dependencies(
-    
+    democompany.services.worker.WorkerApp
   )
 
   // the services of the area appointments - without process, over the gateway
@@ -39,7 +40,6 @@ object WorkerApp extends CompanyWorkerApp:
       BookReservationWorker(),
       SendInvitationWorker(),
       ReleaseReservationWorker(),
-      SendMailWorker(),
     )
   end bookAppointmentWorkers
 
