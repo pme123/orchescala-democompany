@@ -5,9 +5,11 @@ import democompany.customer.domain.updateAvailability.v1.schema.BusyPeriod
 
 /** The own data of the area appointments (PersistenceWorker) - no interface of a process. */
 
-/** Reserved or booked */
+/** Reserved (until `reservedUntil`, the opt-in), requested (the opt-in is done - held until the
+  * decision of the advisor, it does not expire) or booked.
+  */
 enum ReservationStatus:
-  case reserved, booked
+  case reserved, requested, booked
 
 object ReservationStatus:
   given ApiSchema[ReservationStatus]  = deriveEnumApiSchema
@@ -28,9 +30,9 @@ case class Reservation(
     contact: Contact,
     @description("Bemerkung")
     remark: Option[String],
-    @description("reserviert oder gebucht")
+    @description("reserviert (bis zum Opt-in), angefragt (Opt-in bestätigt - bis zum Entscheid des Beraters) oder gebucht")
     status: ReservationStatus,
-    @description("Bis wann die Reservierung ohne Opt-in gilt - danach ist der Termin wieder frei")
+    @description("Bis wann die Reservierung ohne Opt-in gilt - danach ist der Termin wieder frei; eine angefragte läuft nicht ab")
     reservedUntil: LocalDateTime
 )
 

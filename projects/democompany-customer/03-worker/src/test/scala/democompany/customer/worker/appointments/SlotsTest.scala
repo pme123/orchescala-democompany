@@ -36,6 +36,8 @@ class SlotsTest extends munit.FunSuite:
     assertEquals(first(reservation(ReservationStatus.reserved, now.plusMinutes(10))), Some("09:30"))
     assertEquals(first(reservation(ReservationStatus.booked, now.minusDays(1))), Some("09:30"))
     assertEquals(first(reservation(ReservationStatus.reserved, now.minusMinutes(1))), Some("08:00"))
+    // the opt-in is done: held until the advisor decides - also after the 30 minutes
+    assertEquals(first(reservation(ReservationStatus.requested, now.minusDays(1))), Some("09:30"))
 
   test("the lead time and no weekends"):
     // on Monday 09:10: only from Tuesday 09:10 on (24 hours) - Saturday and Sunday never

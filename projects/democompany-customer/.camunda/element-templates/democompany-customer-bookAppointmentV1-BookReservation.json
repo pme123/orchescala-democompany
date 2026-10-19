@@ -21,6 +21,16 @@
       "type" : "Hidden"
     },
     {
+      "value" : "#{token}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "token"
+      },
+      "label" : "token",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
       "value" : "bookedAt",
       "binding" : {
         "type" : "camunda:outputParameter",
