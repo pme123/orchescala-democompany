@@ -2,21 +2,21 @@ openapi: 3.1.0
 info:
   title: Card Management
   version: 0.1.0-SNAPSHOT
-  summary: "\n         |**This is for Postman - to have example requests. Be aware\
-    \ the Output is not provided!**\n         |\n         |\n\nProcesses and Workers\
-    \ related to Card Management.\n\nCreated at 13.01.2026, 13:56\n\n**See the [Orchescala\
-    \ Documentation](https://pme123.github.io/orchescala/)**\n\n<details>\n<summary><b><i>Postman\
-    \ Instructions</i></b></summary>\n<p>\nYou can directly import this OpenApi YAML\
-    \ to [Postman](https://www.postman.com/).\n\nOnly thing you need to adjust is\
-    \ in the Collection.\n- **Authorization**: `Bearer Token` with the `{{access_token}}`\
-    \ from the `GetToken` request.\n- **Variables**: `tenantId`: `{{bank}}`\n- **Scripts\
-    \ - Pre-Request**:\n\n```javascript\n// Refresh the OAuth token if necessary\n\
-    let tokenDate = new Date(2010, 1, 1);\nconst tokenTimestamp = pm.environment.get(\"\
-    OAuth_Timestamp\");\nif (tokenTimestamp) {\n  tokenDate = Date.parse(tokenTimestamp);\n\
-    }\nlet expiresInTime = pm.environment.get(\"ExpiresInTime\");\nif (!expiresInTime)\
-    \ {\n  expiresInTime = 300000; // Set default expiration time to 5 minutes\n}\n\
-    if (new Date() - tokenDate >= expiresInTime) {\npm.sendRequest(\n{\n  url: `${pm.environment.get(\n\
-    \      \"tokenService\"\n    )}/auth/realms/${pm.environment.get(\n      \"bank\"\
+  summary: "\n**This is for Postman - to have example requests. Be aware the Output\
+    \ is not provided!**\n\n\n\nProcesses and Workers related to Card Management.\n\
+    \nCreated at 10/20/26, 3:09 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
+    \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
+    **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
+    - **Authorization**: `Bearer Token` with the `{{access_token}}` from the `GetToken`\
+    \ request.\n- **Variables**: `tenantId`: `{{bank}}`\n- **Scripts - Pre-Request**:\n\
+    \n```javascript\n// Refresh the OAuth token if necessary\nlet tokenDate = new\
+    \ Date(2010, 1, 1);\nconst tokenTimestamp = pm.environment.get(\"OAuth_Timestamp\"\
+    );\nif (tokenTimestamp) {\n  tokenDate = Date.parse(tokenTimestamp);\n}\nlet expiresInTime\
+    \ = pm.environment.get(\"ExpiresInTime\");\nif (!expiresInTime) {\n  expiresInTime\
+    \ = 300000; // Set default expiration time to 5 minutes\n}\nif (new Date() - tokenDate\
+    \ >= expiresInTime) {\npm.sendRequest(\n{\n  url: `${pm.environment.get(\n   \
+    \   \"tokenService\"\n    )}/auth/realms/${pm.environment.get(\n      \"bank\"\
     \n    )}/protocol/openid-connect/token`,\n  method: \"POST\",\n  header: {\n \
     \   \"Content-Type\": \"application/x-www-form-urlencoded\",\n  },\n  body: {\n\
     \    mode: \"urlencoded\",\n    urlencoded: [\n      { key: \"grant_type\", value:\
@@ -38,20 +38,18 @@ info:
     \    if (pm.response.headers.get(\"userTaskId\")) {\n        const id = pm.response.headers.get(\"\
     userTaskId\")\n        pm.collectionVariables.set(\"userTaskInstanceId\", id);\n\
     \        console.log(\"userTaskInstanceId: \" + id)\n\n    }\n\n});\n  ```\n\n\
-    </p>\n</details>\n\n\n# Package Configuration\n**Check all dependency trees here:\
-    \ [democompany-cards](../../dependencies/democompany-cards.html)**\n\n### Dependencies:\n\
-    \n- _**[democompany-services](NOT_SET/democompany-services/OpenApi.html)**_\n\n\
-    \n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\
-    \nprojectName: democompany-cards\nprojectVersion: 0.1.0-SNAPSHOT\nsubProjects:\
-    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n  democompany-services\n\
-    ]\n\n```\n\n</p>\n</details>\n\n\nThere is no README.md in the Project.\n\n\n\
-    <details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n<p>\n\n\nAll notable\
-    \ changes to this project will be documented in this file.\n\n* Types of Changes\
-    \ (L3):\n  * Added: new features\n  * Changed: changes in existing functionality\n\
-    \  * Deprecated: soon-to-be-removed features\n  * Removed: now removed features\n\
-    \  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\n\nThe format\
-    \ is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this\
-    \ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
+    </p>\n</details>\n\n\n\n\n# Package Configuration\n**Check all dependency trees\
+    \ here: [democompany-cards](../../dependencies/democompany-cards.html)**\n\n<details>\n\
+    <summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\nprojectName:\
+    \ democompany-cards\nprojectVersion: 0.1.0-SNAPSHOT\nsubProjects: [\n  // subProject1\n\
+    \  // subProject2\n]\ndependencies: [\n  democompany-services\n]\n\n```\n\n</p>\n\
+    </details>\n\n\nThere is no README.md in the Project.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
+    <p>\n\n\nAll notable changes to this project will be documented in this file.\n\
+    \n* Types of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
+    \ functionality\n  * Deprecated: soon-to-be-removed features\n  * Removed: now\
+    \ removed features\n  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\
+    \n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\n\
+    and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
     \n\n</p>\n</details>\n\n\n<p/>\n<details>\n<summary>\n<b><i>General Variables</i></b>\n\
     </summary>\n\n<p>\n\n### Mocking\n\n**_servicesMocked**:\n\nMock all the _ServiceWorkers_\
     \ in your process with their default Mock:\n\n- DSL:\n```scala\nprocess(..)\n\
@@ -79,35 +77,42 @@ info:
     It is also possible to use a _comma separated_ String,\nlike `\"name,firstName\"\
     `\n\n\n- DSL:\n```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n  .withOutputVariables(\"\
     name\", \"firstName\") // creates a list with outputVariables\n  .withOutputVariable(\"\
-    nickname\") // adds a outputVariable\n```\n\n- Json\n```json\n...\n\"outputVariables\"\
+    nickname\") // adds a outputVariable\n```\n\n- Json\n```json\n...\n\"_outputVariables\"\
     : [\"name\", \"firstName\"],\n...\n```\n\n\n**_manualOutMapping**:\n\nBy default\
     \ all output Variables (`Out`) are on the Process for _External Tasks_.\nIf the\
     \ filter __outputVariables_ is not enough,\nyou can set this variable - every\
     \ output variable is then local.\n\n_Be aware_ that you must then manually have\
     \ _output mappings_ for each output variable!\n\n\n- DSL:\n```scala\nserviceTask(..)\
-    \ // or customTask(..)\n  .manualOutMapping\n```\n\n- Json\n```json\n...\n\"manualOutMapping\"\
+    \ // or customTask(..)\n  .manualOutMapping\n```\n\n- Json\n```json\n...\n\"_manualOutMapping\"\
     : true,\n...\n```\n\n### Mocking\n**_handledErrors**:\n\nA list of error codes\
     \ that are handled (`BpmnError`)\nIt is also possible to use a _comma separated_\
     \ String,\nlike `\"validation-failed,404\"`\n\nAt the moment only _ServiceTasks_\
     \ supported.\n\n\n- DSL:\n```scala\nserviceTask(..)\n  .handleErrors(ErrorCodes.`validation-failed`,\
     \ \"404\") // create a list of handledErrors\n  .handleError(\"404\") // add a\
-    \ handledError\n```\n\n- Json\n```json\n...\n\"handledErrors\": [\"validation-failed\"\
+    \ handledError\n```\n\n- Json\n```json\n...\n\"_handledErrors\": [\"validation-failed\"\
     , \"404\"],\n...\n```\n\n\n**_regexHandledErrors**:\n\nYou can further filter\
     \ Handled Errors with a list of Regex expressions that the body error message\
     \ must match.\nIt is also possible to use a _comma separated_ String,\nlike `\"\
     SQL exception,\"errorNr\":\"20000\"\"`\n\nAt the moment only _ServiceTasks_ supported.\n\
     \n\n- DSL:\n```scala\nserviceTask(..)\n  .handleErrorWithRegex(\"SQL exception\"\
     )\n  .handleErrorWithRegex(\"\\\"errorNr\\\":\\\"20000\\\"\")\n```\n\n- Json\n\
-    ```json\n...\n\"regexHandledErrors\": [\"SQL exception\", \"\"errorNr\":\"20000\"\
-    \"],\n...\n```\n\n### Authorization\n**impersonateUserId**:\n\nUser-ID of a User\
-    \ that should be taken to authenticate to the services.\nThis must be supported\
-    \ by your implementation. *Be caution: this may be a security issue!*.\nIt is\
-    \ helpful if you have Tokens that expire, but long running Processes.\n\n- DSL:\n\
-    ```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n  .withImpersonateUserId(impersonateUserId)\n\
-    ```\n\n- Json\n```json\n...\n\"impersonateUserId\": \"myUserName\",\n...\n```\n\
-    \n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api v0.4.0-SNAPSHOT](https://github.com/pme123/orchescala)\n\
-    > - democompany-orchescala-api 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\
-    \n\n         |"
+    ```json\n...\n\"_regexHandledErrors\": [\"SQL exception\", \"\"errorNr\":\"20000\"\
+    \"],\n...\n```\n\n### Authorization\n**_identityCorrelation**:\n\nIdentity correlation\
+    \ for binding user identity to the process instance using HMAC-SHA256 signatures.\n\
+    This prevents replay attacks and tampering by cryptographically binding the user\
+    \ identity to a specific process instance.\nThe correlation is automatically signed\
+    \ with the process instance ID when starting a process or completing a user task.\n\
+    Configure the signing key via environment variable `ORCHESCALA_IDENTITY_SIGNING_KEY`\
+    \ or in `EngineConfig`.\n\n- DSL:\n```scala\nval identity = IdentityCorrelation(\n\
+    \  username = \"alice@example.com\",\n  email = Some(\"alice@example.com\"),\n\
+    \  impersonateProcessValue = Some(\"department-123\")\n)\nprocess(..) // or serviceTask(..)/customTask(..)\n\
+    \  .withIdentityCorrelation(identity)\n```\n\n- Json\n```json\n...\n\"_identityCorrelation\"\
+    : {\n  \"username\": \"alice@example.com\",\n  \"email\": \"alice@example.com\"\
+    ,\n  \"impersonateProcessValue\": \"department-123\",\n  \"issuedAt\": 1706371200000,\n\
+    \  \"processInstanceId\": \"12345\",\n  \"signature\": \"abc123...\"\n},\n...\n\
+    ```\n\n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api\
+    \ v0.9.0-SNAPSHOT](https://github.com/pme123/orchescala)\n> - democompany-orchescala-api\
+    \ 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\n\n"
 servers:
 - url: http://localhost:8080/engine-rest
   description: Local Developer Server
@@ -132,7 +137,7 @@ paths:
 
 
 
-        See API Doc: [Bpmn: orderCreditcardV1](/democompany/democompany-cards/OpenApi.html#operation/Bpmn:%20orderCreditcardV1)
+        See API Doc: [Bpmn: orderCreditcardV1](/site/democompany/democompany-cards/OpenApi.html#operation/Bpmn:%20orderCreditcardV1)
       operationId: postProcess-definitionKeyDemocompany-cards-ordercreditcardv1Start
       requestBody:
         content:
@@ -181,7 +186,7 @@ paths:
     post:
       tags:
       - democompany-cards-orderCreditcardV1
-      summary: 'UserTask variables: CheckOrderTask'
+      summary: 'UserTask task: CheckOrderTask'
       description: |2
 
         Check if the order can be done.
@@ -193,7 +198,7 @@ paths:
 
 
 
-        See API Doc: [UserTask variables: CheckOrderTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask%20variables:%20CheckOrderTask)
+        See API Doc: [UserTask task: CheckOrderTask](/site/democompany/democompany-cards/OpenApi.html#operation/UserTask%20task:%20CheckOrderTask)
       operationId: postTask--remove:checkordertask--
       requestBody:
         content:
@@ -225,7 +230,7 @@ paths:
 
 
 
-        See API Doc: [UserTask variables: CheckOrderTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask%20variables:%20CheckOrderTask)
+        See API Doc: [UserTask variables: CheckOrderTask](/site/democompany/democompany-cards/OpenApi.html#operation/UserTask%20variables:%20CheckOrderTask)
       operationId: getTaskTaskidForm-variables--remove:checkordertask--
       parameters:
       - name: taskId
@@ -266,7 +271,7 @@ paths:
     post:
       tags:
       - democompany-cards-orderCreditcardV1
-      summary: 'UserTask variables: CheckOrderTask'
+      summary: 'UserTask complete: CheckOrderTask'
       description: |2
 
         Check if the order can be done.
@@ -278,7 +283,7 @@ paths:
 
 
 
-        See API Doc: [UserTask variables: CheckOrderTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask%20variables:%20CheckOrderTask)
+        See API Doc: [UserTask complete: CheckOrderTask](/site/democompany/democompany-cards/OpenApi.html#operation/UserTask%20complete:%20CheckOrderTask)
       operationId: postTaskTaskidComplete--remove:checkordertask--
       parameters:
       - name: taskId
@@ -320,7 +325,7 @@ paths:
     post:
       tags:
       - democompany-cards-orderCreditcardV1
-      summary: 'UserTask variables: CallClientTask'
+      summary: 'UserTask task: CallClientTask'
       description: |2
 
         The Customer Service must call the client due to missing information.
@@ -332,7 +337,7 @@ paths:
 
 
 
-        See API Doc: [UserTask variables: CallClientTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask%20variables:%20CallClientTask)
+        See API Doc: [UserTask task: CallClientTask](/site/democompany/democompany-cards/OpenApi.html#operation/UserTask%20task:%20CallClientTask)
       operationId: postTask--remove:callclienttask--
       requestBody:
         content:
@@ -364,7 +369,7 @@ paths:
 
 
 
-        See API Doc: [UserTask variables: CallClientTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask%20variables:%20CallClientTask)
+        See API Doc: [UserTask variables: CallClientTask](/site/democompany/democompany-cards/OpenApi.html#operation/UserTask%20variables:%20CallClientTask)
       operationId: getTaskTaskidForm-variables--remove:callclienttask--
       parameters:
       - name: taskId
@@ -405,7 +410,7 @@ paths:
     post:
       tags:
       - democompany-cards-orderCreditcardV1
-      summary: 'UserTask variables: CallClientTask'
+      summary: 'UserTask complete: CallClientTask'
       description: |2
 
         The Customer Service must call the client due to missing information.
@@ -417,7 +422,7 @@ paths:
 
 
 
-        See API Doc: [UserTask variables: CallClientTask](/democompany/democompany-cards/OpenApi.html#operation/UserTask%20variables:%20CallClientTask)
+        See API Doc: [UserTask complete: CallClientTask](/site/democompany/democompany-cards/OpenApi.html#operation/UserTask%20complete:%20CallClientTask)
       operationId: postTaskTaskidComplete--remove:callclienttask--
       parameters:
       - name: taskId
@@ -463,7 +468,7 @@ paths:
       description: |
         Evaluates the different responses if not approved.
 
-        See API Doc: [Worker: EvalResponse](/democompany/democompany-cards/OpenApi.html#operation/Worker:%20EvalResponse)
+        See API Doc: [Worker: EvalResponse](/site/democompany/democompany-cards/OpenApi.html#operation/Worker:%20EvalResponse)
       operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-cards-ordercreditcardv1-evalresponse--
       requestBody:
         content:
@@ -515,7 +520,7 @@ paths:
         - _messageName_: `democompany-cards-orderCreditcardV1.ReceiveEmail`,
 
 
-        See API Doc: [Message: ReceiveEmail](/democompany/democompany-cards/OpenApi.html#operation/Message:%20ReceiveEmail)
+        See API Doc: [Message: ReceiveEmail](/site/democompany/democompany-cards/OpenApi.html#operation/Message:%20ReceiveEmail)
       operationId: postMessage--remove:democompany-cards-ordercreditcardv1.receiveemail--
       requestBody:
         content:
@@ -573,7 +578,7 @@ paths:
         - _messageName_: `democompany-cards-orderCreditcardV1-{processInstanceId}.CancelOrderSignal`,
 
 
-        See API Doc: [Signal: {processInstanceId}.CancelOrderSignal](/democompany/democompany-cards/OpenApi.html#operation/Signal:%20{processInstanceId}.CancelOrderSignal)
+        See API Doc: [Signal: {processInstanceId}.CancelOrderSignal](/site/democompany/democompany-cards/OpenApi.html#operation/Signal:%20{processInstanceId}.CancelOrderSignal)
       operationId: postSignal--remove:democompany-cards-ordercreditcardv1-{processinstanceid}.cancelordersignal--
       responses:
         '200':
@@ -678,7 +683,6 @@ components:
         type:
           type: string
     CamundaVariable:
-      title: CamundaVariable
       oneOf:
       - $ref: '#/components/schemas/CBoolean'
       - $ref: '#/components/schemas/CDouble'
@@ -698,7 +702,7 @@ components:
       - withVariablesInReturn
       properties:
         variables:
-          $ref: '#/components/schemas/Map_CamundaVariable'
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
         withVariablesInReturn:
           description: Set to false will not return the Process Variables and the
             Result Status is 204.
@@ -723,13 +727,13 @@ components:
         processInstanceId:
           type: string
         correlationKeys:
-          $ref: '#/components/schemas/Map_CamundaVariable'
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
         localCorrelationKeys:
-          $ref: '#/components/schemas/Map_CamundaVariable'
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
         processVariables:
-          $ref: '#/components/schemas/Map_CamundaVariable'
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
         processVariablesLocal:
-          $ref: '#/components/schemas/Map_CamundaVariable'
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
         all:
           type: boolean
         resultEnabled:
@@ -759,8 +763,8 @@ components:
         active:
           description: We are only interested in the active Task(s)
           type: boolean
-    Map_CamundaVariable:
-      title: Map_CamundaVariable
+    Map_orchescala.domain.CamundaVariable:
+      title: Map_orchescala.domain.CamundaVariable
       type: object
       additionalProperties:
         $ref: '#/components/schemas/CamundaVariable'
@@ -774,7 +778,7 @@ components:
       - withVariablesInReturn
       properties:
         variables:
-          $ref: '#/components/schemas/Map_CamundaVariable'
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
         businessKey:
           description: The business key of the process instance.
           type: string
