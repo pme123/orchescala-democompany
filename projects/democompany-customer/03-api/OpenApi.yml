@@ -3,7 +3,7 @@ info:
   title: democompany-customer
   version: 0.1.0-SNAPSHOT
   summary: "\n\nKunden-PoCs der democompany - zuerst die Terminbuchung (appointments).\n\
-    \nCreated at 10/19/26, 3:14 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \nCreated at 10/20/26, 3:08 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -176,8 +176,8 @@ paths:
                     - advisorId: anna.berater
                       advisorName: Anna Berater
                       advisorEmail: anna.berater@democompany.ch
-                      start: '2026-10-19T15:14:34.267588'
-                      end: '2026-10-19T15:14:34.267596'
+                      start: '2026-10-20T15:08:48.164443'
+                      end: '2026-10-20T15:08:48.164455'
                       topic: advice
                       channel: branch
   /worker/democompany-customer-reserveSlot:
@@ -227,8 +227,8 @@ paths:
                     advisorId: anna.berater
                     advisorName: Anna Berater
                     advisorEmail: anna.berater@democompany.ch
-                    start: '2026-10-19T15:14:34.267588'
-                    end: '2026-10-19T15:14:34.267596'
+                    start: '2026-10-20T15:08:48.164443'
+                    end: '2026-10-20T15:08:48.164455'
                     topic: advice
                     channel: branch
                   contact:
@@ -310,8 +310,8 @@ paths:
                       advisorId: anna.berater
                       advisorName: Anna Berater
                       advisorEmail: anna.berater@democompany.ch
-                      start: '2026-10-19T15:14:34.267588'
-                      end: '2026-10-19T15:14:34.267596'
+                      start: '2026-10-20T15:08:48.164443'
+                      end: '2026-10-20T15:08:48.164455'
                       topic: advice
                       channel: branch
                     contact:
@@ -332,11 +332,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.customer.domain.bookAppointment.v1.BookAppointment\
         \ > In`\n- Output: `democompany.customer.domain.bookAppointment.v1.BookAppointment\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"customer-bookAppointmentV1-21764\">\n    <img onLoad=\"openFromUrl('customer-bookAppointmentV1.bpmn',\
-        \ new BpmnJS({ container: $('#customer-bookAppointmentV1-21764'), height:\
+        \ id=\"customer-bookAppointmentV1-58264\">\n    <img onLoad=\"openFromUrl('customer-bookAppointmentV1.bpmn',\
+        \ new BpmnJS({ container: $('#customer-bookAppointmentV1-58264'), height:\
         \ '95%', width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [customer-bookAppointmentV1.bpmn](diagrams/customer-bookAppointmentV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('customer-bookAppointmentV1-21764')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('customer-bookAppointmentV1-58264')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -345,12 +345,12 @@ paths:
         ,\n  \"booked\" : true,\n  \"customerStatus\" : \"customer\"\n},\n...\n```\n\
         \n</p>\n</details>\n</p>\n      \n\n\n**Used in no other Process.**\n\n<details>\n\
         <summary><b>Uses 2 Project(s)</b></summary>\n<p>\n\n\n- _democompany-customer_\n\
-        \   - _[Dmn: AppointmentRules](NOT_SET/OpenApi.html#operation/Dmn:%20AppointmentRules)_\
-        \ \n   - _[Worker: AssignCustomer](NOT_SET/OpenApi.html#operation/Worker:%20AssignCustomer)_\
-        \ \n   - _[Worker: BookReservation](NOT_SET/OpenApi.html#operation/Worker:%20BookReservation)_\
-        \ \n   - _[Worker: ReleaseReservation](NOT_SET/OpenApi.html#operation/Worker:%20ReleaseReservation)_\
-        \ \n   - _[Worker: SendInvitation](NOT_SET/OpenApi.html#operation/Worker:%20SendInvitation)_\
-        \ \n\n\n- _democompany-services_\n   - _[Worker: SendMail](NOT_SET/OpenApi.html#operation/Worker:%20SendMail)_\
+        \   - _[Dmn: AppointmentRules](/site/democompany/democompany-customer/OpenApi.html#operation/Dmn:%20AppointmentRules)_\
+        \ \n   - _[Worker: AssignCustomer](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20AssignCustomer)_\
+        \ \n   - _[Worker: BookReservation](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20BookReservation)_\
+        \ \n   - _[Worker: ReleaseReservation](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20ReleaseReservation)_\
+        \ \n   - _[Worker: SendInvitation](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20SendInvitation)_\
+        \ \n\n\n- _democompany-services_\n   - _[Worker: SendMail](/site/democompany/democompany-services/OpenApi.html#operation/Worker:%20SendMail)_\
         \ \n\n\n\n</p>\n</details>\n<p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
         <p>\n\nThis describes the <b>Input</b> to start the Process with.\n\nBe aware\
         \ that running this request with Postman,\nyou will not get the <b>Output</b>\
@@ -389,8 +389,8 @@ paths:
                     advisorId: anna.berater
                     advisorName: Anna Berater
                     advisorEmail: anna.berater@democompany.ch
-                    start: '2026-10-19T15:14:34.267588'
-                    end: '2026-10-19T15:14:34.267596'
+                    start: '2026-10-20T15:08:48.164443'
+                    end: '2026-10-20T15:08:48.164455'
                     topic: advice
                     channel: branch
                   contact:
@@ -499,8 +499,8 @@ paths:
                     advisorId: anna.berater
                     advisorName: Anna Berater
                     advisorEmail: anna.berater@democompany.ch
-                    start: '2026-10-19T15:14:34.267588'
-                    end: '2026-10-19T15:14:34.267596'
+                    start: '2026-10-20T15:08:48.164443'
+                    end: '2026-10-20T15:08:48.164455'
                     topic: advice
                     channel: branch
                   contact:
@@ -603,7 +603,7 @@ paths:
             examples:
               democompany-customer-bookAppointmentV1-emailVerified:
                 value:
-                  verifiedAt: '2026-10-19T15:14:34.292042'
+                  verifiedAt: '2026-10-20T15:08:48.195841'
         required: true
       responses:
         '200':
@@ -634,7 +634,7 @@ paths:
 
 
         - _democompany-customer_
-           - [Bpmn: bookAppointmentV1](NOT_SET/OpenApi.html#tag/Book-Appointment-V1)
+           - [Bpmn: bookAppointmentV1](/site/democompany/democompany-customer/OpenApi.html#tag/Book-Appointment-V1)
 
 
 
@@ -708,8 +708,8 @@ paths:
 
 
         <div class="diagramCanvas">
-          <div class="diagram" id="customer-bookAppointmentV1-AppointmentRules-63249">
-            <img onLoad="openFromUrl('customer-bookAppointmentV1-AppointmentRules.dmn', new DmnJS({ container: $('#customer-bookAppointmentV1-AppointmentRules-63249'), height: '95%', width: '95%' }));" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" />
+          <div class="diagram" id="customer-bookAppointmentV1-AppointmentRules-29781">
+            <img onLoad="openFromUrl('customer-bookAppointmentV1-AppointmentRules.dmn', new DmnJS({ container: $('#customer-bookAppointmentV1-AppointmentRules-29781'), height: '95%', width: '95%' }));" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" />
           </div>
         </div>
 
@@ -717,7 +717,7 @@ paths:
 
 
         <div>
-          <button onclick="downloadSVG('customer-bookAppointmentV1-AppointmentRules-63249')">Download Diagram as SVG</button>
+          <button onclick="downloadSVG('customer-bookAppointmentV1-AppointmentRules-29781')">Download Diagram as SVG</button>
         </div>
 
 
@@ -728,7 +728,7 @@ paths:
 
 
         - _democompany-customer_
-           - [Bpmn: bookAppointmentV1](NOT_SET/OpenApi.html#tag/Book-Appointment-V1)
+           - [Bpmn: bookAppointmentV1](/site/democompany/democompany-customer/OpenApi.html#tag/Book-Appointment-V1)
 
 
 
@@ -858,8 +858,8 @@ paths:
                       advisorId: anna.berater
                       advisorName: Anna Berater
                       advisorEmail: anna.berater@democompany.ch
-                      start: '2026-10-19T15:14:34.267588'
-                      end: '2026-10-19T15:14:34.267596'
+                      start: '2026-10-20T15:08:48.164443'
+                      end: '2026-10-20T15:08:48.164455'
                       topic: advice
                       channel: branch
                     contact:
@@ -953,7 +953,7 @@ paths:
 
 
         - _democompany-customer_
-           - [Bpmn: bookAppointmentV1](NOT_SET/OpenApi.html#tag/Book-Appointment-V1)
+           - [Bpmn: bookAppointmentV1](/site/democompany/democompany-customer/OpenApi.html#tag/Book-Appointment-V1)
 
 
 
@@ -995,7 +995,7 @@ paths:
               examples:
                 democompany-customer-bookAppointmentV1-BookReservation:
                   value:
-                    bookedAt: '2026-10-19T15:14:34.307772'
+                    bookedAt: '2026-10-20T15:08:48.213547'
                     booked: true
   /worker/democompany-customer-bookAppointmentV1-SendInvitation:
     post:
@@ -1023,7 +1023,7 @@ paths:
 
 
         - _democompany-customer_
-           - [Bpmn: bookAppointmentV1](NOT_SET/OpenApi.html#tag/Book-Appointment-V1)
+           - [Bpmn: bookAppointmentV1](/site/democompany/democompany-customer/OpenApi.html#tag/Book-Appointment-V1)
 
 
 
@@ -1056,8 +1056,8 @@ paths:
                     advisorId: anna.berater
                     advisorName: Anna Berater
                     advisorEmail: anna.berater@democompany.ch
-                    start: '2026-10-19T15:14:34.267588'
-                    end: '2026-10-19T15:14:34.267596'
+                    start: '2026-10-20T15:08:48.164443'
+                    end: '2026-10-20T15:08:48.164455'
                     topic: advice
                     channel: branch
                   contact:
@@ -1077,7 +1077,7 @@ paths:
               examples:
                 democompany-customer-bookAppointmentV1-SendInvitation:
                   value:
-                    sentAt: '2026-10-19T15:14:34.310231'
+                    sentAt: '2026-10-20T15:08:48.216687'
   /worker/democompany-customer-bookAppointmentV1-ReleaseReservation:
     post:
       tags:
@@ -1104,7 +1104,7 @@ paths:
 
 
         - _democompany-customer_
-           - [Bpmn: bookAppointmentV1](NOT_SET/OpenApi.html#tag/Book-Appointment-V1)
+           - [Bpmn: bookAppointmentV1](/site/democompany/democompany-customer/OpenApi.html#tag/Book-Appointment-V1)
 
 
 
@@ -1146,7 +1146,7 @@ paths:
               examples:
                 democompany-customer-bookAppointmentV1-ReleaseReservation:
                   value:
-                    releasedAt: '2026-10-19T15:14:34.312853'
+                    releasedAt: '2026-10-20T15:08:48.219584'
                     booked: false
   /process/democompany-customer-updateAvailabilityV1/async:
     post:
@@ -1157,20 +1157,20 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.customer.domain.updateAvailability.v1.UpdateAvailability\
         \ > In`\n- Output: `democompany.customer.domain.updateAvailability.v1.UpdateAvailability\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"customer-updateAvailabilityV1-55429\">\n    <img onLoad=\"openFromUrl('customer-updateAvailabilityV1.bpmn',\
-        \ new BpmnJS({ container: $('#customer-updateAvailabilityV1-55429'), height:\
+        \ id=\"customer-updateAvailabilityV1-85365\">\n    <img onLoad=\"openFromUrl('customer-updateAvailabilityV1.bpmn',\
+        \ new BpmnJS({ container: $('#customer-updateAvailabilityV1-85365'), height:\
         \ '95%', width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [customer-updateAvailabilityV1.bpmn](diagrams/customer-updateAvailabilityV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('customer-updateAvailabilityV1-55429')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('customer-updateAvailabilityV1-85365')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
         : \"advisorCount\",\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\"\
         : {\n  \"advisorCount\" : 2\n},\n...\n```\n\n</p>\n</details>\n</p>\n    \
         \  \n\n\n**Used in no other Process.**\n\n<details>\n<summary><b>Uses 1 Project(s)</b></summary>\n\
-        <p>\n\n\n- _democompany-customer_\n   - _[Worker: LoadAdvisors](NOT_SET/OpenApi.html#operation/Worker:%20LoadAdvisors)_\
-        \ \n   - _[Worker: ReadCalendar](NOT_SET/OpenApi.html#operation/Worker:%20ReadCalendar)_\
-        \ \n   - _[Worker: SaveCalendarSnapshot](NOT_SET/OpenApi.html#operation/Worker:%20SaveCalendarSnapshot)_\
+        <p>\n\n\n- _democompany-customer_\n   - _[Worker: LoadAdvisors](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20LoadAdvisors)_\
+        \ \n   - _[Worker: ReadCalendar](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20ReadCalendar)_\
+        \ \n   - _[Worker: SaveCalendarSnapshot](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20SaveCalendarSnapshot)_\
         \ \n\n\n\n</p>\n</details>\n<p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
         <p>\n\nThis describes the <b>Input</b> to start the Process with.\n\nBe aware\
         \ that running this request with Postman,\nyou will not get the <b>Output</b>\
@@ -1333,7 +1333,7 @@ paths:
 
 
         - _democompany-customer_
-           - [Bpmn: updateAvailabilityV1](NOT_SET/OpenApi.html#tag/Update-Availability-V1)
+           - [Bpmn: updateAvailabilityV1](/site/democompany/democompany-customer/OpenApi.html#tag/Update-Availability-V1)
 
 
 
@@ -1405,7 +1405,7 @@ paths:
 
 
         - _democompany-customer_
-           - [Bpmn: updateAvailabilityV1](NOT_SET/OpenApi.html#tag/Update-Availability-V1)
+           - [Bpmn: updateAvailabilityV1](/site/democompany/democompany-customer/OpenApi.html#tag/Update-Availability-V1)
 
 
 
@@ -1451,8 +1451,8 @@ paths:
                 democompany-customer-updateAvailabilityV1-ReadCalendar:
                   value:
                     busy:
-                    - start: '2026-10-19T15:14:34.324983'
-                      end: '2026-10-19T15:14:34.324988'
+                    - start: '2026-10-20T15:08:48.233773'
+                      end: '2026-10-20T15:08:48.233782'
   /worker/democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot:
     post:
       tags:
@@ -1479,7 +1479,7 @@ paths:
 
 
         - _democompany-customer_
-           - [Bpmn: updateAvailabilityV1](NOT_SET/OpenApi.html#tag/Update-Availability-V1)
+           - [Bpmn: updateAvailabilityV1](/site/democompany/democompany-customer/OpenApi.html#tag/Update-Availability-V1)
 
 
 
@@ -1513,8 +1513,8 @@ paths:
                     name: Anna Berater
                     email: anna.berater@democompany.ch
                   busy:
-                  - start: '2026-10-19T15:14:34.324983'
-                    end: '2026-10-19T15:14:34.324988'
+                  - start: '2026-10-20T15:08:48.233773'
+                    end: '2026-10-20T15:08:48.233782'
         required: true
       responses:
         '200':
@@ -1526,7 +1526,7 @@ paths:
               examples:
                 democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot:
                   value:
-                    savedAt: '2026-10-19T15:14:34.327338'
+                    savedAt: '2026-10-20T15:08:48.236262'
 components:
   schemas:
     Advisor:

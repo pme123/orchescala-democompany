@@ -19,6 +19,10 @@ trait CompanyApiCreator extends ApiCreator, ApiDsl, CamundaPostmanApiCreator:
 
 object CompanyApiCreator:
   lazy val apiConfig = ApiConfig(engineConfig = companyEngineConfig, companyName = "democompany")
+    // where the company's site is - the links between the projects (`Uses`, `Used by`) point to
+    // <docBaseUrl>/site/democompany/<project>; without it they read NOT_SET. Empty: relative links,
+    // they work on every host that serves the site (the gateway of the demo stack, the homepage).
+    .withDocBaseUrl(sys.env.getOrElse("DOC_BASE_URL", ""))
 
   lazy val projectsConfig = ProjectsConfig(
     perGitRepoConfigs = Seq(

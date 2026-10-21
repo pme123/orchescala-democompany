@@ -2,24 +2,25 @@ openapi: 3.1.0
 info:
   title: Card Management
   version: 0.1.0-SNAPSHOT
-  summary: "\n\nProcesses and Workers related to Card Management.\n\nCreated at 13.01.2026,\
-    \ 13:56\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+  summary: "\n\nProcesses and Workers related to Card Management.\n\nCreated at 10/20/26,\
+    \ 3:09 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
-    \ directly import this OpenApi YAML to [Postman](https://www.postman.com/).\n\n\
-    Only thing you need to adjust is in the Collection.\n- **Authorization**: `Bearer\
-    \ Token` with the `{{access_token}}` from the `GetToken` request.\n- **Variables**:\
-    \ `tenantId`: `{{bank}}`\n- **Scripts - Pre-Request**:\n\n```javascript\n// Refresh\
-    \ the OAuth token if necessary\nlet tokenDate = new Date(2010, 1, 1);\nconst tokenTimestamp\
-    \ = pm.environment.get(\"OAuth_Timestamp\");\nif (tokenTimestamp) {\n  tokenDate\
-    \ = Date.parse(tokenTimestamp);\n}\nlet expiresInTime = pm.environment.get(\"\
-    ExpiresInTime\");\nif (!expiresInTime) {\n  expiresInTime = 300000; // Set default\
-    \ expiration time to 5 minutes\n}\nif (new Date() - tokenDate >= expiresInTime)\
-    \ {\npm.sendRequest(\n{\n  url: `${pm.environment.get(\n      \"tokenService\"\
-    \n    )}/auth/realms/${pm.environment.get(\n      \"bank\"\n    )}/protocol/openid-connect/token`,\n\
-    \  method: \"POST\",\n  header: {\n    \"Content-Type\": \"application/x-www-form-urlencoded\"\
-    ,\n  },\n  body: {\n    mode: \"urlencoded\",\n    urlencoded: [\n      { key:\
-    \ \"grant_type\", value: \"password\" },\n      { key: \"client_id\", value: pm.environment.get(\"\
-    clientId\")},\n      { key: \"client_secret\", value: pm.environment.get(\"clientSecret\"\
+    \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
+    **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
+    - **Authorization**: `Bearer Token` with the `{{access_token}}` from the `GetToken`\
+    \ request.\n- **Variables**: `tenantId`: `{{bank}}`\n- **Scripts - Pre-Request**:\n\
+    \n```javascript\n// Refresh the OAuth token if necessary\nlet tokenDate = new\
+    \ Date(2010, 1, 1);\nconst tokenTimestamp = pm.environment.get(\"OAuth_Timestamp\"\
+    );\nif (tokenTimestamp) {\n  tokenDate = Date.parse(tokenTimestamp);\n}\nlet expiresInTime\
+    \ = pm.environment.get(\"ExpiresInTime\");\nif (!expiresInTime) {\n  expiresInTime\
+    \ = 300000; // Set default expiration time to 5 minutes\n}\nif (new Date() - tokenDate\
+    \ >= expiresInTime) {\npm.sendRequest(\n{\n  url: `${pm.environment.get(\n   \
+    \   \"tokenService\"\n    )}/auth/realms/${pm.environment.get(\n      \"bank\"\
+    \n    )}/protocol/openid-connect/token`,\n  method: \"POST\",\n  header: {\n \
+    \   \"Content-Type\": \"application/x-www-form-urlencoded\",\n  },\n  body: {\n\
+    \    mode: \"urlencoded\",\n    urlencoded: [\n      { key: \"grant_type\", value:\
+    \ \"password\" },\n      { key: \"client_id\", value: pm.environment.get(\"clientId\"\
+    )},\n      { key: \"client_secret\", value: pm.environment.get(\"clientSecret\"\
     )},\n      { key: \"username\", value: pm.environment.get(\"username\")},\n  \
     \    { key: \"password\", value: pm.environment.get(\"pwd\") },\n      { key:\
     \ \"scope\", value: pm.environment.get(\"scope\") },\n    ],\n  },\n},\n  (_,\
@@ -36,20 +37,18 @@ info:
     \    if (pm.response.headers.get(\"userTaskId\")) {\n        const id = pm.response.headers.get(\"\
     userTaskId\")\n        pm.collectionVariables.set(\"userTaskInstanceId\", id);\n\
     \        console.log(\"userTaskInstanceId: \" + id)\n\n    }\n\n});\n  ```\n\n\
-    </p>\n</details>\n\n\n# Package Configuration\n**Check all dependency trees here:\
-    \ [democompany-cards](../../dependencies/democompany-cards.html)**\n\n### Dependencies:\n\
-    \n- _**[democompany-services](NOT_SET/democompany-services/OpenApi.html)**_\n\n\
-    \n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\
-    \nprojectName: democompany-cards\nprojectVersion: 0.1.0-SNAPSHOT\nsubProjects:\
-    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n  democompany-services\n\
-    ]\n\n```\n\n</p>\n</details>\n\n\nThere is no README.md in the Project.\n\n\n\
-    <details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n<p>\n\n\nAll notable\
-    \ changes to this project will be documented in this file.\n\n* Types of Changes\
-    \ (L3):\n  * Added: new features\n  * Changed: changes in existing functionality\n\
-    \  * Deprecated: soon-to-be-removed features\n  * Removed: now removed features\n\
-    \  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\n\nThe format\
-    \ is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this\
-    \ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
+    </p>\n</details>\n\n\n\n\n# Package Configuration\n**Check all dependency trees\
+    \ here: [democompany-cards](../../dependencies/democompany-cards.html)**\n\n<details>\n\
+    <summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\nprojectName:\
+    \ democompany-cards\nprojectVersion: 0.1.0-SNAPSHOT\nsubProjects: [\n  // subProject1\n\
+    \  // subProject2\n]\ndependencies: [\n  democompany-services\n]\n\n```\n\n</p>\n\
+    </details>\n\n\nThere is no README.md in the Project.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
+    <p>\n\n\nAll notable changes to this project will be documented in this file.\n\
+    \n* Types of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
+    \ functionality\n  * Deprecated: soon-to-be-removed features\n  * Removed: now\
+    \ removed features\n  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\
+    \n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\n\
+    and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
     \n\n</p>\n</details>\n\n\n<p/>\n<details>\n<summary>\n<b><i>General Variables</i></b>\n\
     </summary>\n\n<p>\n\n### Mocking\n\n**_servicesMocked**:\n\nMock all the _ServiceWorkers_\
     \ in your process with their default Mock:\n\n- DSL:\n```scala\nprocess(..)\n\
@@ -77,35 +76,42 @@ info:
     It is also possible to use a _comma separated_ String,\nlike `\"name,firstName\"\
     `\n\n\n- DSL:\n```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n  .withOutputVariables(\"\
     name\", \"firstName\") // creates a list with outputVariables\n  .withOutputVariable(\"\
-    nickname\") // adds a outputVariable\n```\n\n- Json\n```json\n...\n\"outputVariables\"\
+    nickname\") // adds a outputVariable\n```\n\n- Json\n```json\n...\n\"_outputVariables\"\
     : [\"name\", \"firstName\"],\n...\n```\n\n\n**_manualOutMapping**:\n\nBy default\
     \ all output Variables (`Out`) are on the Process for _External Tasks_.\nIf the\
     \ filter __outputVariables_ is not enough,\nyou can set this variable - every\
     \ output variable is then local.\n\n_Be aware_ that you must then manually have\
     \ _output mappings_ for each output variable!\n\n\n- DSL:\n```scala\nserviceTask(..)\
-    \ // or customTask(..)\n  .manualOutMapping\n```\n\n- Json\n```json\n...\n\"manualOutMapping\"\
+    \ // or customTask(..)\n  .manualOutMapping\n```\n\n- Json\n```json\n...\n\"_manualOutMapping\"\
     : true,\n...\n```\n\n### Mocking\n**_handledErrors**:\n\nA list of error codes\
     \ that are handled (`BpmnError`)\nIt is also possible to use a _comma separated_\
     \ String,\nlike `\"validation-failed,404\"`\n\nAt the moment only _ServiceTasks_\
     \ supported.\n\n\n- DSL:\n```scala\nserviceTask(..)\n  .handleErrors(ErrorCodes.`validation-failed`,\
     \ \"404\") // create a list of handledErrors\n  .handleError(\"404\") // add a\
-    \ handledError\n```\n\n- Json\n```json\n...\n\"handledErrors\": [\"validation-failed\"\
+    \ handledError\n```\n\n- Json\n```json\n...\n\"_handledErrors\": [\"validation-failed\"\
     , \"404\"],\n...\n```\n\n\n**_regexHandledErrors**:\n\nYou can further filter\
     \ Handled Errors with a list of Regex expressions that the body error message\
     \ must match.\nIt is also possible to use a _comma separated_ String,\nlike `\"\
     SQL exception,\"errorNr\":\"20000\"\"`\n\nAt the moment only _ServiceTasks_ supported.\n\
     \n\n- DSL:\n```scala\nserviceTask(..)\n  .handleErrorWithRegex(\"SQL exception\"\
     )\n  .handleErrorWithRegex(\"\\\"errorNr\\\":\\\"20000\\\"\")\n```\n\n- Json\n\
-    ```json\n...\n\"regexHandledErrors\": [\"SQL exception\", \"\"errorNr\":\"20000\"\
-    \"],\n...\n```\n\n### Authorization\n**impersonateUserId**:\n\nUser-ID of a User\
-    \ that should be taken to authenticate to the services.\nThis must be supported\
-    \ by your implementation. *Be caution: this may be a security issue!*.\nIt is\
-    \ helpful if you have Tokens that expire, but long running Processes.\n\n- DSL:\n\
-    ```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n  .withImpersonateUserId(impersonateUserId)\n\
-    ```\n\n- Json\n```json\n...\n\"impersonateUserId\": \"myUserName\",\n...\n```\n\
-    \n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api v0.4.0-SNAPSHOT](https://github.com/pme123/orchescala)\n\
-    > - democompany-orchescala-api 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\
-    \n"
+    ```json\n...\n\"_regexHandledErrors\": [\"SQL exception\", \"\"errorNr\":\"20000\"\
+    \"],\n...\n```\n\n### Authorization\n**_identityCorrelation**:\n\nIdentity correlation\
+    \ for binding user identity to the process instance using HMAC-SHA256 signatures.\n\
+    This prevents replay attacks and tampering by cryptographically binding the user\
+    \ identity to a specific process instance.\nThe correlation is automatically signed\
+    \ with the process instance ID when starting a process or completing a user task.\n\
+    Configure the signing key via environment variable `ORCHESCALA_IDENTITY_SIGNING_KEY`\
+    \ or in `EngineConfig`.\n\n- DSL:\n```scala\nval identity = IdentityCorrelation(\n\
+    \  username = \"alice@example.com\",\n  email = Some(\"alice@example.com\"),\n\
+    \  impersonateProcessValue = Some(\"department-123\")\n)\nprocess(..) // or serviceTask(..)/customTask(..)\n\
+    \  .withIdentityCorrelation(identity)\n```\n\n- Json\n```json\n...\n\"_identityCorrelation\"\
+    : {\n  \"username\": \"alice@example.com\",\n  \"email\": \"alice@example.com\"\
+    ,\n  \"impersonateProcessValue\": \"department-123\",\n  \"issuedAt\": 1706371200000,\n\
+    \  \"processInstanceId\": \"12345\",\n  \"signature\": \"abc123...\"\n},\n...\n\
+    ```\n\n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api\
+    \ v0.9.0-SNAPSHOT](https://github.com/pme123/orchescala)\n> - democompany-orchescala-api\
+    \ 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\n"
 paths:
   /process/democompany-cards-orderCreditcardV1/async:
     post:
@@ -117,11 +123,11 @@ paths:
         \n\n\n---\n\n\n\n\n- Input:  `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
         \ > In`\n- Output: `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"cards-orderCreditcardV1-80903\">\n    <img onLoad=\"openFromUrl('cards-orderCreditcardV1.bpmn',\
-        \ new BpmnJS({ container: $('#cards-orderCreditcardV1-80903'), height: '95%',\
+        \ id=\"cards-orderCreditcardV1-22859\">\n    <img onLoad=\"openFromUrl('cards-orderCreditcardV1.bpmn',\
+        \ new BpmnJS({ container: $('#cards-orderCreditcardV1-22859'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [cards-orderCreditcardV1.bpmn](diagrams/cards-orderCreditcardV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('cards-orderCreditcardV1-80903')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('cards-orderCreditcardV1-22859')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -159,7 +165,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/In'
+              $ref: '#/components/schemas/OrderCreditcard.In'
             examples:
               democompany-cards-orderCreditcardV1:
                 value:
@@ -199,17 +205,10 @@ paths:
         \ `democompany-cards-orderCreditcardV1` (to define in the Call Activity)\n\
         \n\n\n---\n\n\n\n\n- Input:  `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
         \ > In`\n- Output: `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
-        \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"cards-orderCreditcardV1-75936\">\n    <img onLoad=\"openFromUrl('cards-orderCreditcardV1.bpmn',\
-        \ new BpmnJS({ container: $('#cards-orderCreditcardV1-75936'), height: '95%',\
-        \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
-        \ />\n  </div>\n</div>\n\nDownload: [cards-orderCreditcardV1.bpmn](diagrams/cards-orderCreditcardV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('cards-orderCreditcardV1-75936')\"\
-        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
-        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
-        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
-        : \"processStatus,creditCardAccount,initCreditCardAccount,simpleValue\",\n\
-        ...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
+        </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,creditCardAccount,initCreditCardAccount,simpleValue\"\
+        ,\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
         \ : \"succeeded\",\n  \"creditCardAccount\" : {\n    \"clientId\" : 1213456,\n\
         \    \"accountId\" : 5555555\n  },\n  \"initCreditCardAccount\" : {\n    \"\
         clientId\" : 1213456\n  },\n  \"simpleValue\" : \"PETER PAN\"\n},\n...\n```\n\
@@ -242,7 +241,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Out'
+                $ref: '#/components/schemas/OrderCreditcard.Out'
               examples:
                 democompany-cards-orderCreditcardV1:
                   value:
@@ -279,7 +278,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/In'
+              $ref: '#/components/schemas/OrderCreditcard.In'
             examples:
               democompany-cards-orderCreditcardV1:
                 value:
@@ -304,7 +303,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InitIn'
+                $ref: '#/components/schemas/OrderCreditcard.InitIn'
               examples:
                 InitIn:
                   value:
@@ -368,11 +367,13 @@ paths:
       - name: timeoutInSec
         in: query
         description: The maximum number of seconds to wait for the user task to become
-          active. If not provided, it will wait 10 seconds.
+          active (0 - 60). If not provided, it will wait 10 seconds.
         required: false
         schema:
           type: integer
           format: int32
+          minimum: 0
+          maximum: 60
         example: 10
       responses:
         '200':
@@ -380,7 +381,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/In1'
+                $ref: '#/components/schemas/CheckOrderTask.In'
               examples:
                 CheckOrderTask:
                   value:
@@ -463,7 +464,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Out1'
+              $ref: '#/components/schemas/CheckOrderTask.Out'
             examples:
               CheckOrderTask:
                 value:
@@ -530,11 +531,13 @@ paths:
       - name: timeoutInSec
         in: query
         description: The maximum number of seconds to wait for the user task to become
-          active. If not provided, it will wait 10 seconds.
+          active (0 - 60). If not provided, it will wait 10 seconds.
         required: false
         schema:
           type: integer
           format: int32
+          minimum: 0
+          maximum: 60
         example: 10
       responses:
         '200':
@@ -542,7 +545,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/In2'
+                $ref: '#/components/schemas/CallClientTask.In'
               examples:
                 CallClientTask:
                   value:
@@ -625,7 +628,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Out2'
+              $ref: '#/components/schemas/CallClientTask.Out'
             examples:
               CallClientTask:
                 value:
@@ -675,7 +678,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/In3'
+              $ref: '#/components/schemas/EvalResponse.In'
             examples:
               EvalResponse > In > Email:
                 value:
@@ -694,7 +697,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Out3'
+                $ref: '#/components/schemas/EvalResponse.Out'
               examples:
                 democompany-cards-orderCreditcardV1-EvalResponse:
                   value:
@@ -769,7 +772,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/In4'
+              $ref: '#/components/schemas/ReceiveEmailME.In'
             examples:
               democompany-cards-orderCreditcardV1.ReceiveEmail:
                 value:
@@ -857,6 +860,30 @@ components:
           type: string
         additionalInfo:
           type: string
+    CallClientTask.In:
+      title: CallClientTask.In
+      type: object
+      required:
+      - client
+      - creditCardAccount
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        creditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        mainCardHolder:
+          $ref: '#/components/schemas/CardHolder'
+    CallClientTask.Out:
+      title: CallClientTask.Out
+      type: object
+      required:
+      - approvedOnTelephone
+      - approveOnTelephoneComment
+      properties:
+        approvedOnTelephone:
+          type: boolean
+        approveOnTelephoneComment:
+          type: string
     CardAccount:
       title: CardAccount
       type: object
@@ -903,6 +930,30 @@ components:
       enum:
       - AdditionalCard
       - MainCard
+    CheckOrderTask.In:
+      title: CheckOrderTask.In
+      type: object
+      required:
+      - client
+      - creditCardAccount
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        creditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        mainCardHolder:
+          $ref: '#/components/schemas/CardHolder'
+    CheckOrderTask.Out:
+      title: CheckOrderTask.Out
+      type: object
+      required:
+      - approved
+      - approveComment
+      properties:
+        approved:
+          type: boolean
+        approveComment:
+          type: string
     Client:
       title: Client
       type: object
@@ -960,11 +1011,11 @@ components:
           enum:
           - 1
           - 2
-          - 7
           - 3
           - 4
           - 5
           - 6
+          - 7
           - 8
           format: int32
     Email:
@@ -983,110 +1034,33 @@ components:
       - C7
       - C8
       - Gateway
-    Female:
-      title: Female
-      type: object
-    Gender:
-      title: Gender
-      oneOf:
-      - $ref: '#/components/schemas/Female'
-      - $ref: '#/components/schemas/Male'
-      - $ref: '#/components/schemas/Unknown'
-    In:
-      title: In
-      type: object
-      required:
-      - clientId
-      - creditCardAccount
-      properties:
-        clientId:
-          type: integer
-          format: int64
-        creditCardAccount:
-          $ref: '#/components/schemas/CardAccount'
-        mainCardHolder:
-          $ref: '#/components/schemas/CardHolder'
-        inConfig:
-          $ref: '#/components/schemas/InConfig'
-    In1:
-      title: In
-      type: object
-      required:
-      - client
-      - creditCardAccount
-      properties:
-        client:
-          $ref: '#/components/schemas/Client'
-        creditCardAccount:
-          $ref: '#/components/schemas/CardAccount'
-        mainCardHolder:
-          $ref: '#/components/schemas/CardHolder'
-    In2:
-      title: In
-      type: object
-      required:
-      - client
-      - creditCardAccount
-      properties:
-        client:
-          $ref: '#/components/schemas/Client'
-        creditCardAccount:
-          $ref: '#/components/schemas/CardAccount'
-        mainCardHolder:
-          $ref: '#/components/schemas/CardHolder'
-    In3:
-      title: In
+      - Op
+    EvalResponse.In:
       oneOf:
       - $ref: '#/components/schemas/Email'
       - $ref: '#/components/schemas/None'
       - $ref: '#/components/schemas/Telephone'
-    In4:
-      title: In
+    EvalResponse.Out:
+      title: EvalResponse.Out
       type: object
       required:
-      - sender
-      - receiver
-      - subject
-      - body
+      - orderCorrect
       properties:
-        sender:
-          type: string
-        receiver:
-          type: string
-        subject:
-          type: string
-        body:
-          type: string
-    InConfig:
-      title: InConfig
-      description: |-
-        A way to override process configuration.
-
-        **SHOULD NOT BE USED on Production!**
+        orderCorrect:
+          type: boolean
+    Female:
+      title: Female
       type: object
-      required:
-      - timerNotReceivedEmail
-      properties:
-        timerNotReceivedEmail:
-          description: To test cancel from other processes you need to set this flag.
-          type: string
-        getClientMock:
-          $ref: '#/components/schemas/MockedServiceResponse_ServiceOut'
-    InitIn:
-      title: InitIn
-      type: object
-      required:
-      - initCreditCardAccount
-      properties:
-        initCreditCardAccount:
-          $ref: '#/components/schemas/CardAccount'
-        simpleValue:
-          type: string
+    Gender:
+      oneOf:
+      - $ref: '#/components/schemas/Female'
+      - $ref: '#/components/schemas/Male'
+      - $ref: '#/components/schemas/Unknown'
     Male:
       title: Male
       type: object
-    MockedServiceResponse_ServiceOut:
-      title: MockedServiceResponse_ServiceOut
+    MockedServiceResponse_orchescala.domain.MockedServiceResponse.tapirSchema.ServiceOut:
+      title: MockedServiceResponse_orchescala.domain.MockedServiceResponse.tapirSchema.ServiceOut
       description: |
         You can mock the response variables of this (sub)process.
 
@@ -1127,6 +1101,7 @@ components:
       required:
       - respStatus
       - respBody
+      - respHeaders
       properties:
         respStatus:
           type: integer
@@ -1160,8 +1135,49 @@ components:
     None:
       title: None
       type: object
-    Out:
-      title: Out
+    OrderCreditcard.In:
+      title: OrderCreditcard.In
+      type: object
+      required:
+      - clientId
+      - creditCardAccount
+      properties:
+        clientId:
+          type: integer
+          format: int64
+        creditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        mainCardHolder:
+          $ref: '#/components/schemas/CardHolder'
+        inConfig:
+          $ref: '#/components/schemas/OrderCreditcard.InConfig'
+    OrderCreditcard.InConfig:
+      title: OrderCreditcard.InConfig
+      description: |-
+        A way to override process configuration.
+
+        **SHOULD NOT BE USED on Production!**
+      type: object
+      required:
+      - timerNotReceivedEmail
+      properties:
+        timerNotReceivedEmail:
+          description: To test cancel from other processes you need to set this flag.
+          type: string
+        getClientMock:
+          $ref: '#/components/schemas/MockedServiceResponse_orchescala.domain.MockedServiceResponse.tapirSchema.ServiceOut'
+    OrderCreditcard.InitIn:
+      title: OrderCreditcard.InitIn
+      type: object
+      required:
+      - initCreditCardAccount
+      properties:
+        initCreditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        simpleValue:
+          type: string
+    OrderCreditcard.Out:
+      title: OrderCreditcard.Out
       type: object
       required:
       - processStatus
@@ -1176,36 +1192,6 @@ components:
           $ref: '#/components/schemas/CardAccount'
         simpleValue:
           type: string
-    Out1:
-      title: Out
-      type: object
-      required:
-      - approved
-      - approveComment
-      properties:
-        approved:
-          type: boolean
-        approveComment:
-          type: string
-    Out2:
-      title: Out
-      type: object
-      required:
-      - approvedOnTelephone
-      - approveOnTelephoneComment
-      properties:
-        approvedOnTelephone:
-          type: boolean
-        approveOnTelephoneComment:
-          type: string
-    Out3:
-      title: Out
-      type: object
-      required:
-      - orderCorrect
-      properties:
-        orderCorrect:
-          type: boolean
     ProcessInfo:
       title: ProcessInfo
       description: Contains information about a process instance or execution
@@ -1243,6 +1229,23 @@ components:
       - notValid
       - output-mocked
       - succeeded
+    ReceiveEmailME.In:
+      title: ReceiveEmailME.In
+      type: object
+      required:
+      - sender
+      - receiver
+      - subject
+      - body
+      properties:
+        sender:
+          type: string
+        receiver:
+          type: string
+        subject:
+          type: string
+        body:
+          type: string
     Telephone:
       title: Telephone
       type: object
