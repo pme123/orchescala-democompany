@@ -211,10 +211,10 @@
   </bpmn:process>
   <bpmn:message id="Message_0g4f55o" name="democompany-cards-orderCreditcardV1.ReceiveEmail">
     <bpmn:extensionElements>
-      <zeebe:subscription correlationKey="=processInstanceKey" />
+      <zeebe:subscription correlationKey="=processInstanceId" />
     </bpmn:extensionElements>
   </bpmn:message>
-  <bpmn:signal id="Signal_14pqrim" name="=&#34;democompany-cards-orderCreditcardV1-&#34; + string(processInstanceKey) + &#34;.CancelOrderSignal&#34;" />
+  <bpmn:signal id="Signal_14pqrim" name="=&#34;democompany-cards-orderCreditcardV1-&#34; + string(processInstanceId) + &#34;.CancelOrderSignal&#34;" />
   <bpmn:error id="Error_1xfupdi" name="client-not-found" errorCode="client-not-found" />
   <bpmn:message id="Message_2urmknp" name="democompany-cards-orderCreditcardV1" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
