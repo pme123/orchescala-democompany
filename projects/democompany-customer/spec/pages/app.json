@@ -1,5 +1,5 @@
 {
-  "title": "democompany · Kundentermine",
+  "title": "Kundentermine",
   "subtitle": "Termin bei Ihrer Beraterin oder Ihrem Berater",
   "home": "appointments/book",
   "labels": {
@@ -18,5 +18,16 @@
       "reserved": "reserviert",
       "booked": "gebucht"
     }
+  },
+  "theme": {
+    "primary": "#0077b9",
+    "background": "#ffffff",
+    "text": "#4f6573",
+    "font": "\"Open Sans\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+    "radius": "none",
+    "mode": "light",
+    "surface": "#e4eaed",
+    "onPrimary": "#ffffff",
+    "logo": "data:image/png;base64,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"
   }
 }

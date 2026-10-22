@@ -1,0 +1,425 @@
+{
+  "company" : "democompany",
+  "title" : "Democompany Process Documentation",
+  "release" : {
+    "tag" : "2026-10",
+    "released" : true,
+    "createdDay" : "19.10.2026",
+    "jiraUrl" : "https://yourReleasePage/versions/64209",
+    "notes" : "- **Kundentermine** (democompany-customer): Termine buchen ohne Login, Bestätigung durch den Berater, Einladung als .ics - auf Operaton, mit Seiten aus orch-spec und dem Gateway als einzigem Einstieg.\n- Orchescala 0.9: Gateway mit öffentlichem Zugang, `CustomError.refused`, der Renderer der Seiten.",
+    "olderReleases" : [
+    ],
+    "approvedBy" : {
+      "name" : "Peter Blank",
+      "date" : "2026-10-08"
+    }
+  },
+  "groups" : [
+    {
+      "name" : "customer",
+      "color" : "gray"
+    },
+    {
+      "name" : "general",
+      "color" : "green"
+    }
+  ],
+  "projects" : [
+    {
+      "name" : "democompany-cards",
+      "group" : "customer",
+      "color" : "#c8feda",
+      "version" : "0.1.0",
+      "apiDocUrl" : "democompany-cards/OpenApi.html",
+      "hasDependencies" : true
+    },
+    {
+      "name" : "democompany-customer",
+      "group" : "customer",
+      "color" : "#d9d2f5",
+      "version" : "0.1.0",
+      "apiDocUrl" : "democompany-customer/OpenApi.html",
+      "hasDependencies" : true
+    },
+    {
+      "name" : "democompany-services",
+      "group" : "general",
+      "color" : "#ffffcc",
+      "version" : "0.1.0",
+      "apiDocUrl" : "democompany-services/OpenApi.html",
+      "hasDependencies" : false
+    }
+  ],
+  "graph" : [
+    {
+      "from" : "democompany-cards",
+      "to" : "democompany-services"
+    },
+    {
+      "from" : "democompany-customer",
+      "to" : "democompany-services"
+    }
+  ],
+  "dependencies" : [
+    {
+      "project" : "democompany-cards",
+      "version" : "0.1",
+      "dependsOn" : [
+        {
+          "project" : "democompany-services",
+          "version" : "0.1"
+        }
+      ]
+    },
+    {
+      "project" : "democompany-customer",
+      "version" : "0.1",
+      "dependsOn" : [
+        {
+          "project" : "democompany-services",
+          "version" : "0.1"
+        }
+      ]
+    }
+  ],
+  "releaseTables" : [
+    {
+      "kind" : "bpmn",
+      "title" : "Camunda Dependencies",
+      "columns" : [
+        {
+          "project" : "democompany-services",
+          "version" : "0.1.0"
+        }
+      ],
+      "rows" : [
+        {
+          "project" : "democompany-cards",
+          "version" : "0.1.0-SNAPSHOT",
+          "previousVersion" : "0.1.0",
+          "status" : "unchanged",
+          "uses" : {
+            "democompany-services" : "0.1.0-SNAPSHOT"
+          }
+        },
+        {
+          "project" : "democompany-customer",
+          "version" : "0.1.0-SNAPSHOT",
+          "previousVersion" : "0.1.0",
+          "status" : "unchanged",
+          "uses" : {
+            "democompany-services" : "0.1.0-SNAPSHOT"
+          }
+        },
+        {
+          "project" : "democompany-services",
+          "version" : "0.1.0-SNAPSHOT",
+          "previousVersion" : "0.1.0",
+          "status" : "unchanged",
+          "uses" : {
+            
+          }
+        }
+      ]
+    }
+  ],
+  "releaseNotes" : [
+  ],
+  "catalog" : [
+    {
+      "title" : "Card Management",
+      "entries" : [
+        {
+          "kind" : "Bpmn",
+          "name" : "orderCreditcardV1",
+          "url" : "/democompany/democompany-cards/OpenApi.html#operation/Bpmn:%20orderCreditcardV1"
+        },
+        {
+          "kind" : "Message",
+          "name" : "ReceiveEmail",
+          "url" : "/democompany/democompany-cards/OpenApi.html#operation/Message:%20ReceiveEmail"
+        },
+        {
+          "kind" : "Signal",
+          "name" : "{processInstanceId}.CancelOrderSignal",
+          "url" : "/democompany/democompany-cards/OpenApi.html#operation/Signal:%20{processInstanceId}.CancelOrderSignal"
+        },
+        {
+          "kind" : "Worker",
+          "name" : "EvalResponse",
+          "url" : "/democompany/democompany-cards/OpenApi.html#operation/Worker:%20EvalResponse"
+        }
+      ]
+    },
+    {
+      "title" : "democompany-customer",
+      "entries" : [
+        {
+          "kind" : "Bpmn",
+          "name" : "bookAppointmentV1",
+          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Bpmn:%20bookAppointmentV1"
+        },
+        {
+          "kind" : "Bpmn",
+          "name" : "updateAvailabilityV1",
+          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Bpmn:%20updateAvailabilityV1"
+        },
+        {
+          "kind" : "Dmn",
+          "name" : "AppointmentRules",
+          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Dmn:%20AppointmentRules"
+        },
+        {
+          "kind" : "Message",
+          "name" : "emailVerified",
+          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Message:%20emailVerified"
+        },
+        {
+          "kind" : "Worker",
+          "name" : "AssignCustomer",
+          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20AssignCustomer"
+        },
+        {
+          "kind" : "Worker",
+          "name" : "BookReservation",
+          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20BookReservation"
+        },
+        {
+          "kind" : "Worker",
+          "name" : "LoadAdvisors",
+          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20LoadAdvisors"
+        },
+        {
+          "kind" : "Worker",
+          "name" : "ReadCalendar",
+          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20ReadCalendar"
+        },
+        {
+          "kind" : "Worker",
+          "name" : "ReleaseReservation",
+          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20ReleaseReservation"
+        },
+        {
+          "kind" : "Worker",
+          "name" : "SaveCalendarSnapshot",
+          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20SaveCalendarSnapshot"
+        },
+        {
+          "kind" : "Worker",
+          "name" : "SendInvitation",
+          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20SendInvitation"
+        },
+        {
+          "kind" : "Worker",
+          "name" : "SendMail",
+          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20SendMail"
+        },
+        {
+          "kind" : "Worker",
+          "name" : "appointmentToConfirm",
+          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20appointmentToConfirm"
+        },
+        {
+          "kind" : "Worker",
+          "name" : "freeSlots",
+          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20freeSlots"
+        },
+        {
+          "kind" : "Worker",
+          "name" : "reserveSlot",
+          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20reserveSlot"
+        }
+      ]
+    },
+    {
+      "title" : "democompany-services",
+      "entries" : [
+        {
+          "kind" : "Worker",
+          "name" : "GetClientsClientId",
+          "url" : "None/democompany-services/OpenApi.html#operation/Worker:%20GetClientsClientId"
+        },
+        {
+          "kind" : "Worker",
+          "name" : "SendEmail",
+          "url" : "None/democompany-services/OpenApi.html#operation/Worker:%20SendEmail"
+        }
+      ]
+    }
+  ],
+  "devStats" : [
+    {
+      "title" : "InitWorkerDsl",
+      "rows" : [
+        {
+          "project" : "democompany-cards",
+          "lines" : 19,
+          "files" : 1
+        },
+        {
+          "project" : "democompany-customer",
+          "lines" : 88,
+          "files" : 2
+        },
+        {
+          "project" : "democompany-services",
+          "lines" : 0,
+          "files" : 0
+        }
+      ],
+      "total" : {
+        "lines" : 107,
+        "files" : 3
+      }
+    },
+    {
+      "title" : "CustomWorkerDsl",
+      "rows" : [
+        {
+          "project" : "democompany-cards",
+          "lines" : 19,
+          "files" : 1
+        },
+        {
+          "project" : "democompany-customer",
+          "lines" : 61,
+          "files" : 3
+        },
+        {
+          "project" : "democompany-services",
+          "lines" : 0,
+          "files" : 0
+        }
+      ],
+      "total" : {
+        "lines" : 80,
+        "files" : 4
+      }
+    },
+    {
+      "title" : "ServiceWorkerDsl",
+      "rows" : [
+        {
+          "project" : "democompany-cards",
+          "lines" : 0,
+          "files" : 0
+        },
+        {
+          "project" : "democompany-customer",
+          "lines" : 0,
+          "files" : 0
+        },
+        {
+          "project" : "democompany-services",
+          "lines" : 45,
+          "files" : 2
+        }
+      ],
+      "total" : {
+        "lines" : 45,
+        "files" : 2
+      }
+    },
+    {
+      "title" : "bpmn",
+      "rows" : [
+        {
+          "project" : "democompany-cards",
+          "lines" : 1385,
+          "files" : 3
+        },
+        {
+          "project" : "democompany-customer",
+          "lines" : 1327,
+          "files" : 4
+        },
+        {
+          "project" : "democompany-services",
+          "lines" : 0,
+          "files" : 0
+        }
+      ],
+      "total" : {
+        "lines" : 2712,
+        "files" : 7
+      }
+    },
+    {
+      "title" : "dmn",
+      "rows" : [
+        {
+          "project" : "democompany-cards",
+          "lines" : 0,
+          "files" : 0
+        },
+        {
+          "project" : "democompany-customer",
+          "lines" : 468,
+          "files" : 2
+        },
+        {
+          "project" : "democompany-services",
+          "lines" : 0,
+          "files" : 0
+        }
+      ],
+      "total" : {
+        "lines" : 468,
+        "files" : 2
+      }
+    },
+    {
+      "title" : "scala",
+      "rows" : [
+        {
+          "project" : "democompany-cards",
+          "lines" : 1101,
+          "files" : 30
+        },
+        {
+          "project" : "democompany-customer",
+          "lines" : 2587,
+          "files" : 59
+        },
+        {
+          "project" : "democompany-services",
+          "lines" : 715,
+          "files" : 23
+        }
+      ],
+      "total" : {
+        "lines" : 4403,
+        "files" : 112
+      }
+    }
+  ],
+  "pages" : [
+    {
+      "slug" : "pattern",
+      "title" : "Process Pattern",
+      "file" : "pages/pattern.md"
+    },
+    {
+      "slug" : "statistics",
+      "title" : "Process Statistics",
+      "file" : "pages/statistics.md"
+    },
+    {
+      "slug" : "contact",
+      "title" : "Contact",
+      "file" : "pages/contact.md"
+    },
+    {
+      "slug" : "development/instructions",
+      "title" : "Create a Release",
+      "file" : "pages/development-instructions.md",
+      "section" : "Development"
+    },
+    {
+      "slug" : "development/onboarding",
+      "title" : "Onboarding",
+      "file" : "pages/development-onboarding.md",
+      "section" : "Development"
+    }
+  ]
+}

@@ -1,0 +1,314 @@
+[
+  {
+    "company" : "democompany",
+    "project" : "democompany-cards",
+    "id" : "Process start",
+    "operationId" : "Process start",
+    "tag" : "Order Creditcard V1",
+    "path" : "/process/democompany-cards-orderCreditcardV1/async",
+    "summary" : "Process start"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-cards",
+    "id" : "Process variables",
+    "operationId" : "Process variables",
+    "tag" : "Order Creditcard V1",
+    "path" : "/process/democompany-cards-orderCreditcardV1/{processInstanceId}/variables",
+    "summary" : "Process variables"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-cards",
+    "id" : "Init Worker",
+    "operationId" : "Init Worker",
+    "tag" : "Order Creditcard V1",
+    "path" : "/worker/democompany-cards-orderCreditcardV1",
+    "topic" : "democompany-cards-orderCreditcardV1",
+    "summary" : "Init Worker"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-cards",
+    "id" : "UserTask variables: CheckOrderTask",
+    "operationId" : "UserTask variables: CheckOrderTask",
+    "tag" : "Order Creditcard V1",
+    "path" : "/process/{processInstanceId}/userTask/CheckOrderTask/variables",
+    "summary" : "UserTask variables: CheckOrderTask"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-cards",
+    "id" : "UserTask complete: CheckOrderTask",
+    "operationId" : "UserTask complete: CheckOrderTask",
+    "tag" : "Order Creditcard V1",
+    "path" : "/userTask/CheckOrderTask/{userTaskInstanceId}/complete",
+    "summary" : "UserTask complete: CheckOrderTask"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-cards",
+    "id" : "UserTask variables: CallClientTask",
+    "operationId" : "UserTask variables: CallClientTask",
+    "tag" : "Order Creditcard V1",
+    "path" : "/process/{processInstanceId}/userTask/CallClientTask/variables",
+    "summary" : "UserTask variables: CallClientTask"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-cards",
+    "id" : "UserTask complete: CallClientTask",
+    "operationId" : "UserTask complete: CallClientTask",
+    "tag" : "Order Creditcard V1",
+    "path" : "/userTask/CallClientTask/{userTaskInstanceId}/complete",
+    "summary" : "UserTask complete: CallClientTask"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-cards",
+    "id" : "Worker: EvalResponse",
+    "operationId" : "Worker: EvalResponse",
+    "tag" : "Order Creditcard V1",
+    "path" : "/worker/democompany-cards-orderCreditcardV1-EvalResponse",
+    "topic" : "democompany-cards-orderCreditcardV1-EvalResponse",
+    "summary" : "Worker: EvalResponse"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-cards",
+    "id" : "Message: ReceiveEmail",
+    "operationId" : "Message: ReceiveEmail",
+    "tag" : "Order Creditcard V1",
+    "path" : "/message/democompany-cards-orderCreditcardV1.ReceiveEmail",
+    "summary" : "Message: ReceiveEmail"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-cards",
+    "id" : "Signal: {processInstanceId}.CancelOrderSignal",
+    "operationId" : "Signal: {processInstanceId}.CancelOrderSignal",
+    "tag" : "Order Creditcard V1",
+    "path" : "/signal/{orderCreditcardV1-processInstanceId_CancelOrderSignal}",
+    "summary" : "Signal: {processInstanceId}.CancelOrderSignal"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Worker: freeSlots",
+    "operationId" : "Worker: freeSlots",
+    "tag" : "Termine",
+    "path" : "/worker/democompany-customer-freeSlots",
+    "topic" : "democompany-customer-freeSlots",
+    "summary" : "Worker: freeSlots"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Worker: reserveSlot",
+    "operationId" : "Worker: reserveSlot",
+    "tag" : "Termine",
+    "path" : "/worker/democompany-customer-reserveSlot",
+    "topic" : "democompany-customer-reserveSlot",
+    "summary" : "Worker: reserveSlot"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Worker: appointmentToConfirm",
+    "operationId" : "Worker: appointmentToConfirm",
+    "tag" : "Termine",
+    "path" : "/worker/democompany-customer-appointmentToConfirm",
+    "topic" : "democompany-customer-appointmentToConfirm",
+    "summary" : "Worker: appointmentToConfirm"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Book Appointment V1 · Process start",
+    "operationId" : "Process start",
+    "tag" : "Book Appointment V1",
+    "path" : "/process/democompany-customer-bookAppointmentV1/async",
+    "summary" : "Process start"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Book Appointment V1 · Process variables",
+    "operationId" : "Process variables",
+    "tag" : "Book Appointment V1",
+    "path" : "/process/democompany-customer-bookAppointmentV1/{processInstanceId}/variables",
+    "summary" : "Process variables"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Book Appointment V1 · Init Worker",
+    "operationId" : "Init Worker",
+    "tag" : "Book Appointment V1",
+    "path" : "/worker/democompany-customer-bookAppointmentV1",
+    "topic" : "democompany-customer-bookAppointmentV1",
+    "summary" : "Init Worker"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Message: emailVerified",
+    "operationId" : "Message: emailVerified",
+    "tag" : "Book Appointment V1",
+    "path" : "/message/democompany-customer-bookAppointmentV1-emailVerified",
+    "summary" : "Message: emailVerified"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Worker: AssignCustomer",
+    "operationId" : "Worker: AssignCustomer",
+    "tag" : "Book Appointment V1",
+    "path" : "/worker/democompany-customer-bookAppointmentV1-AssignCustomer",
+    "topic" : "democompany-customer-bookAppointmentV1-AssignCustomer",
+    "summary" : "Worker: AssignCustomer"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Dmn: AppointmentRules",
+    "operationId" : "Dmn: AppointmentRules",
+    "tag" : "Book Appointment V1",
+    "path" : "/dmn/democompany-customer-bookAppointmentV1-AppointmentRules/NOT_IMPLEMENTED",
+    "summary" : "Dmn: AppointmentRules"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "UserTask variables: ConfirmAppointmentTask",
+    "operationId" : "UserTask variables: ConfirmAppointmentTask",
+    "tag" : "Book Appointment V1",
+    "path" : "/process/{processInstanceId}/userTask/ConfirmAppointmentTask/variables",
+    "summary" : "UserTask variables: ConfirmAppointmentTask"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "UserTask complete: ConfirmAppointmentTask",
+    "operationId" : "UserTask complete: ConfirmAppointmentTask",
+    "tag" : "Book Appointment V1",
+    "path" : "/userTask/ConfirmAppointmentTask/{userTaskInstanceId}/complete",
+    "summary" : "UserTask complete: ConfirmAppointmentTask"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Worker: BookReservation",
+    "operationId" : "Worker: BookReservation",
+    "tag" : "Book Appointment V1",
+    "path" : "/worker/democompany-customer-bookAppointmentV1-BookReservation",
+    "topic" : "democompany-customer-bookAppointmentV1-BookReservation",
+    "summary" : "Worker: BookReservation"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Worker: SendInvitation",
+    "operationId" : "Worker: SendInvitation",
+    "tag" : "Book Appointment V1",
+    "path" : "/worker/democompany-customer-bookAppointmentV1-SendInvitation",
+    "topic" : "democompany-customer-bookAppointmentV1-SendInvitation",
+    "summary" : "Worker: SendInvitation"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Worker: ReleaseReservation",
+    "operationId" : "Worker: ReleaseReservation",
+    "tag" : "Book Appointment V1",
+    "path" : "/worker/democompany-customer-bookAppointmentV1-ReleaseReservation",
+    "topic" : "democompany-customer-bookAppointmentV1-ReleaseReservation",
+    "summary" : "Worker: ReleaseReservation"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Worker: SendMail",
+    "operationId" : "Worker: SendMail",
+    "tag" : "Book Appointment V1",
+    "path" : "/worker/democompany-customer-bookAppointmentV1-SendMail",
+    "topic" : "democompany-customer-bookAppointmentV1-SendMail",
+    "summary" : "Worker: SendMail"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Update Availability V1 · Process start",
+    "operationId" : "Process start",
+    "tag" : "Update Availability V1",
+    "path" : "/process/democompany-customer-updateAvailabilityV1/async",
+    "summary" : "Process start"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Update Availability V1 · Process variables",
+    "operationId" : "Process variables",
+    "tag" : "Update Availability V1",
+    "path" : "/process/democompany-customer-updateAvailabilityV1/{processInstanceId}/variables",
+    "summary" : "Process variables"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Update Availability V1 · Init Worker",
+    "operationId" : "Init Worker",
+    "tag" : "Update Availability V1",
+    "path" : "/worker/democompany-customer-updateAvailabilityV1",
+    "topic" : "democompany-customer-updateAvailabilityV1",
+    "summary" : "Init Worker"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Worker: LoadAdvisors",
+    "operationId" : "Worker: LoadAdvisors",
+    "tag" : "Update Availability V1",
+    "path" : "/worker/democompany-customer-updateAvailabilityV1-LoadAdvisors",
+    "topic" : "democompany-customer-updateAvailabilityV1-LoadAdvisors",
+    "summary" : "Worker: LoadAdvisors"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Worker: ReadCalendar",
+    "operationId" : "Worker: ReadCalendar",
+    "tag" : "Update Availability V1",
+    "path" : "/worker/democompany-customer-updateAvailabilityV1-ReadCalendar",
+    "topic" : "democompany-customer-updateAvailabilityV1-ReadCalendar",
+    "summary" : "Worker: ReadCalendar"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-customer",
+    "id" : "Worker: SaveCalendarSnapshot",
+    "operationId" : "Worker: SaveCalendarSnapshot",
+    "tag" : "Update Availability V1",
+    "path" : "/worker/democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot",
+    "topic" : "democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot",
+    "summary" : "Worker: SaveCalendarSnapshot"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-services",
+    "id" : "Worker: GetClientsClientId",
+    "operationId" : "Worker: GetClientsClientId",
+    "tag" : "Clients 1.0",
+    "path" : "/Worker/Clients1.0/clientsV1-GetClientsClientId/democompany-services-clientsV1-GetClientsClientId",
+    "summary" : "Worker: GetClientsClientId"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-services",
+    "id" : "Worker: SendEmail",
+    "operationId" : "Worker: SendEmail",
+    "tag" : "Mails 1.0",
+    "path" : "/Worker/Mails1.0/mailsV1-SendEmail/democompany-services-mailsV1-SendEmail",
+    "summary" : "Worker: SendEmail"
+  }
+]

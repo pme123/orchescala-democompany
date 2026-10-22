@@ -1,0 +1,3272 @@
+{
+  "version" : 1,
+  "services" : [
+    {
+      "id" : "democompany-cards-orderCreditcardV1",
+      "name" : "democompany-cards-orderCreditcardV1",
+      "group" : "democompany-cards",
+      "description" : "Demo Process to order a credit card.",
+      "kind" : "call",
+      "calledProcess" : "democompany-cards-orderCreditcardV1",
+      "inputs" : [
+        {
+          "name" : "clientId",
+          "expression" : "= clientId",
+          "required" : true
+        },
+        {
+          "name" : "creditCardAccount",
+          "expression" : "= creditCardAccount",
+          "required" : true
+        },
+        {
+          "name" : "mainCardHolder",
+          "expression" : "= mainCardHolder"
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "processStatus",
+          "expression" : "= processStatus",
+          "required" : true
+        },
+        {
+          "name" : "creditCardAccount",
+          "expression" : "= creditCardAccount",
+          "required" : true
+        },
+        {
+          "name" : "initCreditCardAccount",
+          "expression" : "= initCreditCardAccount",
+          "required" : true
+        },
+        {
+          "name" : "simpleValue",
+          "expression" : "= simpleValue"
+        }
+      ]
+    },
+    {
+      "id" : "democompany-cards-orderCreditcardV1-EvalResponse",
+      "name" : "EvalResponse",
+      "group" : "democompany-cards",
+      "description" : "Evaluates the different responses if not approved.",
+      "topic" : "democompany-cards-orderCreditcardV1-EvalResponse",
+      "kind" : "service",
+      "inputs" : [
+        {
+          "name" : "emailBody",
+          "expression" : "= emailBody",
+          "required" : true,
+          "variants" : [
+            "Email"
+          ]
+        },
+        {
+          "name" : "approvedOnTelephone",
+          "expression" : "= approvedOnTelephone",
+          "required" : true,
+          "variants" : [
+            "Telephone"
+          ]
+        },
+        {
+          "name" : "approveOnTelephoneComment",
+          "expression" : "= approveOnTelephoneComment",
+          "required" : true,
+          "variants" : [
+            "Telephone"
+          ]
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "orderCorrect",
+          "expression" : "= orderCorrect",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-cards.signal.ReceiveEmail",
+      "name" : "ReceiveEmail",
+      "group" : "democompany-cards",
+      "kind" : "send",
+      "inputs" : [
+        {
+          "name" : "sender",
+          "expression" : "= sender",
+          "required" : true
+        },
+        {
+          "name" : "receiver",
+          "expression" : "= receiver",
+          "required" : true
+        },
+        {
+          "name" : "subject",
+          "expression" : "= subject",
+          "required" : true
+        },
+        {
+          "name" : "body",
+          "expression" : "= body",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-cards.userTask.CallClientTask",
+      "name" : "CallClientTask",
+      "group" : "democompany-cards",
+      "kind" : "user",
+      "inputs" : [
+        {
+          "name" : "client",
+          "expression" : "= client",
+          "required" : true
+        },
+        {
+          "name" : "creditCardAccount",
+          "expression" : "= creditCardAccount",
+          "required" : true
+        },
+        {
+          "name" : "mainCardHolder",
+          "expression" : "= mainCardHolder"
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "approvedOnTelephone",
+          "expression" : "= approvedOnTelephone",
+          "required" : true
+        },
+        {
+          "name" : "approveOnTelephoneComment",
+          "expression" : "= approveOnTelephoneComment",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-cards.userTask.CheckOrderTask",
+      "name" : "CheckOrderTask",
+      "group" : "democompany-cards",
+      "kind" : "user",
+      "inputs" : [
+        {
+          "name" : "client",
+          "expression" : "= client",
+          "required" : true
+        },
+        {
+          "name" : "creditCardAccount",
+          "expression" : "= creditCardAccount",
+          "required" : true
+        },
+        {
+          "name" : "mainCardHolder",
+          "expression" : "= mainCardHolder"
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "approved",
+          "expression" : "= approved",
+          "required" : true
+        },
+        {
+          "name" : "approveComment",
+          "expression" : "= approveComment",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer-appointmentToConfirm",
+      "name" : "appointmentToConfirm",
+      "group" : "democompany-customer",
+      "description" : "Die Reservierung zum Link in der Mail an den Berater - mit dem offenen Task «Termin bestätigen».",
+      "topic" : "democompany-customer-appointmentToConfirm",
+      "kind" : "service",
+      "inputs" : [
+        {
+          "name" : "token",
+          "expression" : "= token",
+          "description" : "Das Token aus dem Link",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "appointment",
+          "expression" : "= appointment",
+          "description" : "Der Termin",
+          "required" : true
+        },
+        {
+          "name" : "contact",
+          "expression" : "= contact",
+          "description" : "Kontaktdaten",
+          "required" : true
+        },
+        {
+          "name" : "remark",
+          "expression" : "= remark",
+          "description" : "Bemerkung"
+        },
+        {
+          "name" : "status",
+          "expression" : "= status",
+          "description" : "reserved oder booked",
+          "required" : true
+        },
+        {
+          "name" : "taskId",
+          "expression" : "= taskId",
+          "description" : "Der offene Task «Termin bestätigen» - ohne, wenn er schon erledigt ist"
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer-bookAppointmentV1",
+      "name" : "democompany-customer-bookAppointmentV1",
+      "group" : "democompany-customer",
+      "description" : "---",
+      "kind" : "call",
+      "calledProcess" : "democompany-customer-bookAppointmentV1",
+      "inputs" : [
+        {
+          "name" : "reservationId",
+          "expression" : "= reservationId",
+          "description" : "Reservierung `<advisor>-<start>` - entsteht vor dem Start (Service reserveSlot)",
+          "required" : true
+        },
+        {
+          "name" : "token",
+          "expression" : "= token",
+          "description" : "Das Geheimnis der Reservierung (aus reserveSlot) - auch der Business Key",
+          "required" : true
+        },
+        {
+          "name" : "appointment",
+          "expression" : "= appointment",
+          "description" : "Der gewählte Termin",
+          "required" : true
+        },
+        {
+          "name" : "contact",
+          "expression" : "= contact",
+          "description" : "Kontaktdaten",
+          "required" : true
+        },
+        {
+          "name" : "remark",
+          "expression" : "= remark",
+          "description" : "Bemerkung"
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "reservationId",
+          "expression" : "= reservationId",
+          "description" : "Reservierung",
+          "required" : true
+        },
+        {
+          "name" : "booked",
+          "expression" : "= booked",
+          "description" : "Termin gebucht",
+          "required" : true
+        },
+        {
+          "name" : "customerStatus",
+          "expression" : "= customerStatus",
+          "description" : "Kunde oder Interessent"
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer-bookAppointmentV1-AppointmentRules",
+      "name" : "AppointmentRules",
+      "group" : "democompany-customer",
+      "description" : "Terminregeln: Dauer, Vorlaufzeit, Zeitfenster, Puffer, Berater-Pool und ob der Berater bestätigt.",
+      "topic" : "democompany-customer-bookAppointmentV1-AppointmentRules",
+      "kind" : "rule",
+      "inputs" : [
+        {
+          "name" : "topic",
+          "expression" : "= topic",
+          "description" : "Thema (advice, mortgage, pension, investment)",
+          "required" : true
+        },
+        {
+          "name" : "channel",
+          "expression" : "= channel",
+          "description" : "Kanal (branch, video, phone)",
+          "required" : true
+        },
+        {
+          "name" : "customerStatus",
+          "expression" : "= customerStatus",
+          "description" : "Kundenstatus (customer, prospect)",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "durationMinutes",
+          "expression" : "= durationMinutes",
+          "description" : "Dauer in Minuten",
+          "required" : true
+        },
+        {
+          "name" : "leadTimeHours",
+          "expression" : "= leadTimeHours",
+          "description" : "Vorlaufzeit in Stunden",
+          "required" : true
+        },
+        {
+          "name" : "windowStart",
+          "expression" : "= windowStart",
+          "description" : "Zeitfenster von (HH:mm)",
+          "required" : true
+        },
+        {
+          "name" : "windowEnd",
+          "expression" : "= windowEnd",
+          "description" : "Zeitfenster bis (HH:mm)",
+          "required" : true
+        },
+        {
+          "name" : "bufferMinutes",
+          "expression" : "= bufferMinutes",
+          "description" : "Puffer zwischen Terminen in Minuten",
+          "required" : true
+        },
+        {
+          "name" : "advisorPool",
+          "expression" : "= advisorPool",
+          "description" : "Berater-Pool",
+          "required" : true
+        },
+        {
+          "name" : "confirmationRequired",
+          "expression" : "= confirmationRequired",
+          "description" : "Bestätigung durch den Berater nötig",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer-bookAppointmentV1-AssignCustomer",
+      "name" : "AssignCustomer",
+      "group" : "democompany-customer",
+      "description" : "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent.",
+      "topic" : "democompany-customer-bookAppointmentV1-AssignCustomer",
+      "kind" : "service",
+      "inputs" : [
+        {
+          "name" : "contact",
+          "expression" : "= contact",
+          "description" : "Kontaktdaten aus dem Formular",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "customerStatus",
+          "expression" : "= customerStatus",
+          "description" : "Kunde oder Interessent",
+          "required" : true
+        },
+        {
+          "name" : "clientId",
+          "expression" : "= clientId",
+          "description" : "Kunden-ID, wenn gefunden"
+        },
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "description" : "Name laut Kundenstamm, wenn gefunden"
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer-bookAppointmentV1-BookReservation",
+      "name" : "BookReservation",
+      "group" : "democompany-customer",
+      "description" : "Setzt die Reservierung auf gebucht.",
+      "topic" : "democompany-customer-bookAppointmentV1-BookReservation",
+      "kind" : "service",
+      "inputs" : [
+        {
+          "name" : "reservationId",
+          "expression" : "= reservationId",
+          "description" : "Reservierung",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "bookedAt",
+          "expression" : "= bookedAt",
+          "description" : "Zeitpunkt der Buchung",
+          "required" : true
+        },
+        {
+          "name" : "booked",
+          "expression" : "= booked",
+          "description" : "Termin gebucht - das Ergebnis des Prozesses",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer-bookAppointmentV1-ReleaseReservation",
+      "name" : "ReleaseReservation",
+      "group" : "democompany-customer",
+      "description" : "Löscht die Reservierung - der Termin ist wieder frei.",
+      "topic" : "democompany-customer-bookAppointmentV1-ReleaseReservation",
+      "kind" : "service",
+      "inputs" : [
+        {
+          "name" : "reservationId",
+          "expression" : "= reservationId",
+          "description" : "Reservierung",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "releasedAt",
+          "expression" : "= releasedAt",
+          "description" : "Zeitpunkt der Freigabe",
+          "required" : true
+        },
+        {
+          "name" : "booked",
+          "expression" : "= booked",
+          "description" : "Termin nicht gebucht - das Ergebnis des Prozesses",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer-bookAppointmentV1-SendInvitation",
+      "name" : "SendInvitation",
+      "group" : "democompany-customer",
+      "description" : "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook.",
+      "topic" : "democompany-customer-bookAppointmentV1-SendInvitation",
+      "kind" : "service",
+      "inputs" : [
+        {
+          "name" : "appointment",
+          "expression" : "= appointment",
+          "description" : "Der gebuchte Termin",
+          "required" : true
+        },
+        {
+          "name" : "contact",
+          "expression" : "= contact",
+          "description" : "Kontaktdaten des Kunden",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "sentAt",
+          "expression" : "= sentAt",
+          "description" : "Zeitpunkt des Versands",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer-bookAppointmentV1-SendMail",
+      "name" : "SendMail",
+      "group" : "democompany-customer",
+      "description" : "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit).",
+      "topic" : "democompany-customer-bookAppointmentV1-SendMail",
+      "kind" : "service",
+      "inputs" : [
+        {
+          "name" : "to",
+          "expression" : "= to",
+          "description" : "Empfänger",
+          "required" : true
+        },
+        {
+          "name" : "subject",
+          "expression" : "= subject",
+          "description" : "Betreff",
+          "required" : true
+        },
+        {
+          "name" : "body",
+          "expression" : "= body",
+          "description" : "Text - `\\n` ist ein Zeilenumbruch",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "sentAt",
+          "expression" : "= sentAt",
+          "description" : "Zeitpunkt des Versands",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer-freeSlots",
+      "name" : "freeSlots",
+      "group" : "democompany-customer",
+      "description" : "Freie Termine für Thema und Kanal - nach den Terminregeln, aus Outlook, ohne Reservierungen.",
+      "topic" : "democompany-customer-freeSlots",
+      "kind" : "service",
+      "inputs" : [
+        {
+          "name" : "topic",
+          "expression" : "= topic",
+          "description" : "Thema",
+          "required" : true
+        },
+        {
+          "name" : "channel",
+          "expression" : "= channel",
+          "description" : "Kanal",
+          "required" : true
+        },
+        {
+          "name" : "from",
+          "expression" : "= from",
+          "description" : "Ab welchem Tag - ohne Angabe heute"
+        },
+        {
+          "name" : "days",
+          "expression" : "= days",
+          "description" : "Wie viele Tage",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "slots",
+          "expression" : "= slots",
+          "description" : "Die freien Termine, nach Beginn",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer-reserveSlot",
+      "name" : "reserveSlot",
+      "group" : "democompany-customer",
+      "description" : "Reserviert einen freien Termin - ist er schon vergeben, ein Fehler 409 «leider vergeben».",
+      "topic" : "democompany-customer-reserveSlot",
+      "kind" : "service",
+      "inputs" : [
+        {
+          "name" : "appointment",
+          "expression" : "= appointment",
+          "description" : "Der gewählte Termin",
+          "required" : true
+        },
+        {
+          "name" : "contact",
+          "expression" : "= contact",
+          "description" : "Kontaktdaten",
+          "required" : true
+        },
+        {
+          "name" : "remark",
+          "expression" : "= remark",
+          "description" : "Bemerkung"
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "reservationId",
+          "expression" : "= reservationId",
+          "description" : "Die Reservierung `<advisor>-<start>` - damit startet der Prozess bookAppointment",
+          "required" : true
+        },
+        {
+          "name" : "token",
+          "expression" : "= token",
+          "description" : "Das Geheimnis der Reservierung (UUID) - Business Key des Prozesses",
+          "required" : true
+        },
+        {
+          "name" : "reservedUntil",
+          "expression" : "= reservedUntil",
+          "description" : "Bis wann sie ohne Opt-in gilt",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer-updateAvailabilityV1",
+      "name" : "democompany-customer-updateAvailabilityV1",
+      "group" : "democompany-customer",
+      "description" : "---",
+      "kind" : "call",
+      "calledProcess" : "democompany-customer-updateAvailabilityV1",
+      "inputs" : [
+        {
+          "name" : "daysAhead",
+          "expression" : "= daysAhead",
+          "description" : "Wie viele Tage voraus die Kalender gelesen werden"
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "advisorCount",
+          "expression" : "= advisorCount",
+          "description" : "Anzahl aktualisierter Berater",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer-updateAvailabilityV1-LoadAdvisors",
+      "name" : "LoadAdvisors",
+      "group" : "democompany-customer",
+      "description" : "Lädt die Berater mit der Rolle kundenberater.",
+      "topic" : "democompany-customer-updateAvailabilityV1-LoadAdvisors",
+      "kind" : "service",
+      "inputs" : [
+        {
+          "name" : "role",
+          "expression" : "= role",
+          "description" : "Rolle der Berater im IdP - ohne Angabe kundenberater"
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "advisors",
+          "expression" : "= advisors",
+          "description" : "Die Berater",
+          "required" : true
+        },
+        {
+          "name" : "advisorCount",
+          "expression" : "= advisorCount",
+          "description" : "Wie viele - das Ergebnis des Prozesses",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer-updateAvailabilityV1-ReadCalendar",
+      "name" : "ReadCalendar",
+      "group" : "democompany-customer",
+      "description" : "Liest die belegten Zeiten eines Beraters (Kalender-Mock, später Outlook über Graph).",
+      "topic" : "democompany-customer-updateAvailabilityV1-ReadCalendar",
+      "kind" : "service",
+      "inputs" : [
+        {
+          "name" : "advisor",
+          "expression" : "= advisor",
+          "description" : "Berater",
+          "required" : true
+        },
+        {
+          "name" : "daysAhead",
+          "expression" : "= daysAhead",
+          "description" : "Wie viele Tage voraus",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "busy",
+          "expression" : "= busy",
+          "description" : "Belegte Zeiten",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot",
+      "name" : "SaveCalendarSnapshot",
+      "group" : "democompany-customer",
+      "description" : "Speichert die belegten Zeiten des Beraters (ersetzt den letzten Stand).",
+      "topic" : "democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot",
+      "kind" : "service",
+      "inputs" : [
+        {
+          "name" : "advisor",
+          "expression" : "= advisor",
+          "description" : "Berater",
+          "required" : true
+        },
+        {
+          "name" : "busy",
+          "expression" : "= busy",
+          "description" : "Belegte Zeiten",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "savedAt",
+          "expression" : "= savedAt",
+          "description" : "Stand",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer.signal.emailVerified",
+      "name" : "emailVerified",
+      "group" : "democompany-customer",
+      "kind" : "send",
+      "inputs" : [
+        {
+          "name" : "verifiedAt",
+          "expression" : "= verifiedAt",
+          "description" : "Zeitpunkt des Klicks"
+        }
+      ]
+    },
+    {
+      "id" : "democompany-customer.userTask.ConfirmAppointmentTask",
+      "name" : "ConfirmAppointmentTask",
+      "group" : "democompany-customer",
+      "kind" : "user",
+      "inputs" : [
+        {
+          "name" : "appointment",
+          "expression" : "= appointment",
+          "description" : "Der reservierte Termin",
+          "required" : true
+        },
+        {
+          "name" : "contact",
+          "expression" : "= contact",
+          "description" : "Kontaktdaten",
+          "required" : true
+        },
+        {
+          "name" : "customerStatus",
+          "expression" : "= customerStatus",
+          "description" : "Kunde oder Interessent",
+          "required" : true
+        },
+        {
+          "name" : "remark",
+          "expression" : "= remark",
+          "description" : "Bemerkung des Kunden"
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "accepted",
+          "expression" : "= accepted",
+          "description" : "Termin angenommen",
+          "required" : true
+        },
+        {
+          "name" : "declineReason",
+          "expression" : "= declineReason",
+          "description" : "Begründung - geht in die Absage an den Kunden"
+        }
+      ]
+    }
+  ],
+  "domainTypes" : [
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.CallClientTask.In",
+      "name" : "CallClientTask.In",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1",
+      "kind" : "case",
+      "owner" : "CallClientTask",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.CallClientTask",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/CallClientTask.scala",
+      "imports" : [
+        "democompany.cards.domain.orderCreditcard.v1.schema.CardAccount",
+        "democompany.cards.domain.orderCreditcard.v1.schema.CardHolder",
+        "democompany.services.domain.clients.v1.schema.Client"
+      ],
+      "fields" : [
+        {
+          "name" : "client",
+          "type" : "Client",
+          "example" : "Client.example"
+        },
+        {
+          "name" : "creditCardAccount",
+          "type" : "CardAccount",
+          "example" : "CardAccount.example"
+        },
+        {
+          "name" : "mainCardHolder",
+          "type" : "Option[CardHolder]",
+          "example" : "Some(CardHolder.example)"
+        }
+      ],
+      "dsl" : "UserTask",
+      "keyName" : "name",
+      "key" : "CallClientTask",
+      "ownerDescr" : "The Customer Service must call the client due to missing information."
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.CallClientTask.Out",
+      "name" : "CallClientTask.Out",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1",
+      "kind" : "case",
+      "owner" : "CallClientTask",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.CallClientTask",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/CallClientTask.scala",
+      "imports" : [
+        "democompany.cards.domain.orderCreditcard.v1.schema.CardAccount",
+        "democompany.cards.domain.orderCreditcard.v1.schema.CardHolder",
+        "democompany.services.domain.clients.v1.schema.Client"
+      ],
+      "fields" : [
+        {
+          "name" : "approvedOnTelephone",
+          "type" : "Boolean",
+          "example" : "true"
+        },
+        {
+          "name" : "approveOnTelephoneComment",
+          "type" : "String",
+          "example" : "\"Approved on telephone. Everything could be clarified.\""
+        }
+      ],
+      "dsl" : "UserTask",
+      "keyName" : "name",
+      "key" : "CallClientTask",
+      "ownerDescr" : "The Customer Service must call the client due to missing information."
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.CancelOrderSignal.In",
+      "name" : "CancelOrderSignal.In",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1",
+      "kind" : "alias",
+      "owner" : "CancelOrderSignal",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.CancelOrderSignal",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/CancelOrderSignal.scala",
+      "target" : "NoInput",
+      "dsl" : "SignalEvent",
+      "keyName" : "messageName",
+      "key" : "democompany-cards-orderCreditcardV1-${SignalEvent.Dynamic_ProcessInstance}.CancelOrderSignal",
+      "ownerDescr" : "Signal to cancel the order."
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.CancelOrderSignal.Out",
+      "name" : "CancelOrderSignal.Out",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1",
+      "kind" : "member",
+      "owner" : "CancelOrderSignal",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.CancelOrderSignal",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/CancelOrderSignal.scala",
+      "dsl" : "SignalEvent",
+      "keyName" : "messageName",
+      "key" : "democompany-cards-orderCreditcardV1-${SignalEvent.Dynamic_ProcessInstance}.CancelOrderSignal",
+      "ownerDescr" : "Signal to cancel the order."
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.CheckOrderTask.In",
+      "name" : "CheckOrderTask.In",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1",
+      "kind" : "case",
+      "owner" : "CheckOrderTask",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.CheckOrderTask",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/CheckOrderTask.scala",
+      "imports" : [
+        "schema.*",
+        "democompany.services.domain.clients.v1.schema.Client"
+      ],
+      "fields" : [
+        {
+          "name" : "client",
+          "type" : "Client",
+          "example" : "Client.example"
+        },
+        {
+          "name" : "creditCardAccount",
+          "type" : "CardAccount",
+          "example" : "CardAccount.example"
+        },
+        {
+          "name" : "mainCardHolder",
+          "type" : "Option[CardHolder]",
+          "example" : "Some(CardHolder.example)"
+        }
+      ],
+      "dsl" : "UserTask",
+      "keyName" : "name",
+      "key" : "CheckOrderTask",
+      "ownerDescr" : "Check if the order can be done."
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.CheckOrderTask.Out",
+      "name" : "CheckOrderTask.Out",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1",
+      "kind" : "case",
+      "owner" : "CheckOrderTask",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.CheckOrderTask",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/CheckOrderTask.scala",
+      "imports" : [
+        "schema.*",
+        "democompany.services.domain.clients.v1.schema.Client"
+      ],
+      "fields" : [
+        {
+          "name" : "approved",
+          "type" : "Boolean",
+          "example" : "true"
+        },
+        {
+          "name" : "approveComment",
+          "type" : "String",
+          "example" : "\"Approved with no issues.\""
+        }
+      ],
+      "dsl" : "UserTask",
+      "keyName" : "name",
+      "key" : "CheckOrderTask",
+      "ownerDescr" : "Check if the order can be done."
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.EvalResponse.In",
+      "name" : "EvalResponse.In",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1",
+      "kind" : "enum",
+      "owner" : "EvalResponse",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.EvalResponse",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/EvalResponse.scala",
+      "values" : [
+        "None",
+        "Email",
+        "Telephone"
+      ],
+      "cases" : [
+        {
+          "name" : "None"
+        },
+        {
+          "name" : "Email",
+          "fields" : [
+            {
+              "name" : "emailBody",
+              "type" : "String",
+              "example" : "\"Hello\""
+            }
+          ]
+        },
+        {
+          "name" : "Telephone",
+          "fields" : [
+            {
+              "name" : "approvedOnTelephone",
+              "type" : "Boolean",
+              "example" : "true"
+            },
+            {
+              "name" : "approveOnTelephoneComment",
+              "type" : "String",
+              "example" : "\"Approved on telephone. Everything could be clarified.\""
+            }
+          ]
+        }
+      ],
+      "topicName" : "democompany-cards-orderCreditcardV1-EvalResponse",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Evaluates the different responses if not approved."
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.EvalResponse.Out",
+      "name" : "EvalResponse.Out",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1",
+      "kind" : "case",
+      "owner" : "EvalResponse",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.EvalResponse",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/EvalResponse.scala",
+      "fields" : [
+        {
+          "name" : "orderCorrect",
+          "type" : "Boolean",
+          "example" : "true"
+        }
+      ],
+      "topicName" : "democompany-cards-orderCreditcardV1-EvalResponse",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Evaluates the different responses if not approved."
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.OrderCreditcard.In",
+      "name" : "OrderCreditcard.In",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1",
+      "kind" : "case",
+      "owner" : "OrderCreditcard",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.OrderCreditcard",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/OrderCreditcard.scala",
+      "imports" : [
+        "democompany.services.domain.clients.v1.GetClientsClientId",
+        "democompany.services.domain.clients.v1.schema.Client",
+        "schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "clientId",
+          "type" : "Long",
+          "example" : "1000"
+        },
+        {
+          "name" : "creditCardAccount",
+          "type" : "CardAccount",
+          "example" : "CardAccount.example"
+        },
+        {
+          "name" : "mainCardHolder",
+          "type" : "Option[CardHolder]",
+          "example" : "Some(CardHolder.example)"
+        },
+        {
+          "name" : "inConfig",
+          "type" : "Option[InConfig]",
+          "description" : "A way to override process configuration.\n\n**SHOULD NOT BE USED on Production!**",
+          "example" : "None"
+        }
+      ],
+      "processName" : "democompany-cards-orderCreditcardV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Demo Process to order a credit card."
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.OrderCreditcard.InConfig",
+      "name" : "OrderCreditcard.InConfig",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1",
+      "kind" : "case",
+      "owner" : "OrderCreditcard",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.OrderCreditcard",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/OrderCreditcard.scala",
+      "imports" : [
+        "democompany.services.domain.clients.v1.GetClientsClientId",
+        "democompany.services.domain.clients.v1.schema.Client",
+        "schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "timerNotReceivedEmail",
+          "type" : "String",
+          "default" : "\"P3D\"",
+          "description" : "To test cancel from other processes you need to set this flag.",
+          "example" : "\"P3D\""
+        },
+        {
+          "name" : "getClientMock",
+          "type" : "Option[MockedServiceResponse[Client]]",
+          "default" : "None",
+          "description" : "serviceOrProcessMockDescr(Client.example)",
+          "descriptionExpr" : "serviceOrProcessMockDescr(Client.example)"
+        }
+      ],
+      "processName" : "democompany-cards-orderCreditcardV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Demo Process to order a credit card."
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.OrderCreditcard.InitIn",
+      "name" : "OrderCreditcard.InitIn",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1",
+      "kind" : "case",
+      "owner" : "OrderCreditcard",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.OrderCreditcard",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/OrderCreditcard.scala",
+      "imports" : [
+        "democompany.services.domain.clients.v1.GetClientsClientId",
+        "democompany.services.domain.clients.v1.schema.Client",
+        "schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "initCreditCardAccount",
+          "type" : "CardAccount",
+          "example" : "CardAccount.example.copy(accountId = None)"
+        },
+        {
+          "name" : "simpleValue",
+          "type" : "Option[String]",
+          "example" : "Some(\"PETER PAN\")"
+        }
+      ],
+      "processName" : "democompany-cards-orderCreditcardV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Demo Process to order a credit card."
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.OrderCreditcard.Out",
+      "name" : "OrderCreditcard.Out",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1",
+      "kind" : "case",
+      "owner" : "OrderCreditcard",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.OrderCreditcard",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/OrderCreditcard.scala",
+      "imports" : [
+        "democompany.services.domain.clients.v1.GetClientsClientId",
+        "democompany.services.domain.clients.v1.schema.Client",
+        "schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "processStatus",
+          "type" : "ProcessStatus",
+          "example" : "ProcessStatus.succeeded"
+        },
+        {
+          "name" : "creditCardAccount",
+          "type" : "CardAccount",
+          "example" : "CardAccount.example"
+        },
+        {
+          "name" : "initCreditCardAccount",
+          "type" : "CardAccount",
+          "example" : "CardAccount.example.copy(accountId = None)"
+        },
+        {
+          "name" : "simpleValue",
+          "type" : "Option[String]",
+          "example" : "Some(\"PETER PAN\")"
+        }
+      ],
+      "processName" : "democompany-cards-orderCreditcardV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Demo Process to order a credit card."
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.ReceiveEmailME.In",
+      "name" : "ReceiveEmailME.In",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1",
+      "kind" : "case",
+      "owner" : "ReceiveEmailME",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.ReceiveEmailME",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/ReceiveEmailME.scala",
+      "fields" : [
+        {
+          "name" : "sender",
+          "type" : "String",
+          "example" : "\"peter.pan@demoland.com\""
+        },
+        {
+          "name" : "receiver",
+          "type" : "String",
+          "example" : "\"customerservice@democompany.ch\""
+        },
+        {
+          "name" : "subject",
+          "type" : "String",
+          "example" : "\"RE: Missing Information for ordering creditcard.\""
+        },
+        {
+          "name" : "body",
+          "type" : "String",
+          "example" : "\"\"\"Hello\n          |\n          |Here the missing information:\n          | Birthday: 01.01.1990\n          | Gender: Male\n          |\"\"\".stripMargin"
+        }
+      ],
+      "dsl" : "MessageEvent",
+      "keyName" : "messageName",
+      "key" : "democompany-cards-orderCreditcardV1.ReceiveEmail",
+      "ownerDescr" : "Mail Service calls us after response is received."
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.ReceiveEmailME.Out",
+      "name" : "ReceiveEmailME.Out",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1",
+      "kind" : "member",
+      "owner" : "ReceiveEmailME",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.ReceiveEmailME",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/ReceiveEmailME.scala",
+      "dsl" : "MessageEvent",
+      "keyName" : "messageName",
+      "key" : "democompany-cards-orderCreditcardV1.ReceiveEmail",
+      "ownerDescr" : "Mail Service calls us after response is received."
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.schema.AddressType",
+      "name" : "AddressType",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1.schema",
+      "kind" : "enum",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.schema.AddressType",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/schema/exports.scala",
+      "values" : [
+        "Billing",
+        "Shipping"
+      ]
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.schema.CardAccount",
+      "name" : "CardAccount",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1.schema",
+      "kind" : "case",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.schema.CardAccount",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/schema/CardAccount.scala",
+      "fields" : [
+        {
+          "name" : "clientId",
+          "type" : "Long",
+          "example" : "defaultClientId"
+        },
+        {
+          "name" : "accountId",
+          "type" : "Option[Long]",
+          "example" : "Some(defaultAccountId)"
+        }
+      ]
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.schema.CardCurrency",
+      "name" : "CardCurrency",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1.schema",
+      "kind" : "enum",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.schema.CardCurrency",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/schema/exports.scala",
+      "values" : [
+        "CHF",
+        "EUR",
+        "USD"
+      ]
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.schema.CardHolder",
+      "name" : "CardHolder",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1.schema",
+      "kind" : "case",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.schema.CardHolder",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/schema/CardHolder.scala",
+      "fields" : [
+        {
+          "name" : "clientInformation",
+          "type" : "ClientInfo",
+          "example" : "ClientInfo.example"
+        },
+        {
+          "name" : "cards",
+          "type" : "Cards",
+          "description" : "The list of cards must have at least one _Card_.",
+          "example" : "refineUnsafe(List(ModuleCard.example))"
+        }
+      ]
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.schema.CardHolderType",
+      "name" : "CardHolderType",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1.schema",
+      "kind" : "enum",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.schema.CardHolderType",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/schema/exports.scala",
+      "values" : [
+        "Domicile",
+        "Additional"
+      ]
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.schema.Cards",
+      "name" : "Cards",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1.schema",
+      "kind" : "alias",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.schema.Cards",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/schema/ModuleCard.scala",
+      "target" : "List[ModuleCard] :| CardsV"
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.schema.CardsV",
+      "name" : "CardsV",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1.schema",
+      "kind" : "alias",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.schema.CardsV",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/schema/ModuleCard.scala",
+      "target" : "collection.MinLength[1]"
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.schema.CategoryType",
+      "name" : "CategoryType",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1.schema",
+      "kind" : "enum",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.schema.CategoryType",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/schema/exports.scala",
+      "values" : [
+        "MainCard",
+        "AdditionalCard"
+      ]
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.schema.ClientInfo",
+      "name" : "ClientInfo",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1.schema",
+      "kind" : "case",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.schema.ClientInfo",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/schema/ClientInfo.scala",
+      "fields" : [
+        {
+          "name" : "clientId",
+          "type" : "Long",
+          "example" : "defaultClientId"
+        },
+        {
+          "name" : "addressType",
+          "type" : "CardHolderType",
+          "example" : "CardHolderType.Domicile"
+        },
+        {
+          "name" : "residencePermitCode",
+          "type" : "Option[ResidencePermitCode]",
+          "example" : "Some(2)"
+        }
+      ]
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.schema.ModuleCard",
+      "name" : "ModuleCard",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1.schema",
+      "kind" : "case",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.schema.ModuleCard",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/schema/ModuleCard.scala",
+      "fields" : [
+        {
+          "name" : "categoryType",
+          "type" : "CategoryType",
+          "example" : "CategoryType.MainCard"
+        },
+        {
+          "name" : "cardLimit",
+          "type" : "Option[Double]",
+          "example" : "Some(10 * 1000)"
+        },
+        {
+          "name" : "cardCurrency",
+          "type" : "Option[CardCurrency]",
+          "example" : "Some(CardCurrency.CHF)"
+        },
+        {
+          "name" : "embossedLineOne",
+          "type" : "String",
+          "example" : "\"PETER PAN\""
+        }
+      ]
+    },
+    {
+      "id" : "democompany.cards.domain.orderCreditcard.v1.schema.ResidencePermitCode",
+      "name" : "ResidencePermitCode",
+      "pkg" : "democompany.cards.domain.orderCreditcard.v1.schema",
+      "kind" : "alias",
+      "importPath" : "democompany.cards.domain.orderCreditcard.v1.schema.ResidencePermitCode",
+      "source" : "democompany-cards/01-domain/src/main/scala/democompany/cards/domain/orderCreditcard/v1/schema/ClientInfo.scala",
+      "target" : "Int :| any.In[(1, 2, 3, 4, 5, 6, 7, 8)]"
+    },
+    {
+      "id" : "democompany.customer.domain.appointments.AppointmentToConfirm.In",
+      "name" : "AppointmentToConfirm.In",
+      "pkg" : "democompany.customer.domain.appointments",
+      "kind" : "case",
+      "owner" : "AppointmentToConfirm",
+      "importPath" : "democompany.customer.domain.appointments.AppointmentToConfirm",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/appointments/Services.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.Appointment",
+        "democompany.customer.domain.bookAppointment.v1.schema.Channel",
+        "democompany.customer.domain.bookAppointment.v1.schema.Contact",
+        "democompany.customer.domain.bookAppointment.v1.schema.Topic"
+      ],
+      "fields" : [
+        {
+          "name" : "token",
+          "type" : "String",
+          "default" : "\"0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11\"",
+          "description" : "Das Token aus dem Link",
+          "example" : "\"0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11\""
+        }
+      ],
+      "topicName" : "democompany-customer-appointmentToConfirm",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Die Reservierung zum Link in der Mail an den Berater - mit dem offenen Task «Termin bestätigen»."
+    },
+    {
+      "id" : "democompany.customer.domain.appointments.AppointmentToConfirm.Out",
+      "name" : "AppointmentToConfirm.Out",
+      "pkg" : "democompany.customer.domain.appointments",
+      "kind" : "case",
+      "owner" : "AppointmentToConfirm",
+      "importPath" : "democompany.customer.domain.appointments.AppointmentToConfirm",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/appointments/Services.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.Appointment",
+        "democompany.customer.domain.bookAppointment.v1.schema.Channel",
+        "democompany.customer.domain.bookAppointment.v1.schema.Contact",
+        "democompany.customer.domain.bookAppointment.v1.schema.Topic"
+      ],
+      "fields" : [
+        {
+          "name" : "appointment",
+          "type" : "Appointment",
+          "default" : "Appointment.example",
+          "description" : "Der Termin",
+          "example" : "Appointment.example"
+        },
+        {
+          "name" : "contact",
+          "type" : "Contact",
+          "default" : "Contact.example",
+          "description" : "Kontaktdaten",
+          "example" : "Contact.example"
+        },
+        {
+          "name" : "remark",
+          "type" : "Option[String]",
+          "default" : "Some(\"Bitte mit Parkplatz\")",
+          "description" : "Bemerkung",
+          "example" : "Some(\"Bitte mit Parkplatz\")"
+        },
+        {
+          "name" : "status",
+          "type" : "String",
+          "default" : "\"reserved\"",
+          "description" : "reserved oder booked",
+          "example" : "\"reserved\""
+        },
+        {
+          "name" : "taskId",
+          "type" : "Option[String]",
+          "default" : "Some(\"6a1e2f3c-0000-0000-0000-000000000001\")",
+          "description" : "Der offene Task «Termin bestätigen» - ohne, wenn er schon erledigt ist",
+          "example" : "Some(\"6a1e2f3c-0000-0000-0000-000000000001\")"
+        }
+      ],
+      "topicName" : "democompany-customer-appointmentToConfirm",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Die Reservierung zum Link in der Mail an den Berater - mit dem offenen Task «Termin bestätigen»."
+    },
+    {
+      "id" : "democompany.customer.domain.appointments.CalendarSnapshot",
+      "name" : "CalendarSnapshot",
+      "pkg" : "democompany.customer.domain.appointments",
+      "kind" : "case",
+      "importPath" : "democompany.customer.domain.appointments.CalendarSnapshot",
+      "descr" : "The busy times of an advisor as Outlook had them at `takenAt` (process updateAvailability).",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/appointments/Appointments.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.Appointment",
+        "democompany.customer.domain.bookAppointment.v1.schema.Contact",
+        "democompany.customer.domain.updateAvailability.v1.schema.BusyPeriod"
+      ],
+      "fields" : [
+        {
+          "name" : "advisorId",
+          "type" : "String",
+          "description" : "Berater (Benutzer-ID)"
+        },
+        {
+          "name" : "busy",
+          "type" : "Seq[BusyPeriod]",
+          "description" : "Belegte Zeiten"
+        },
+        {
+          "name" : "takenAt",
+          "type" : "LocalDateTime",
+          "description" : "Stand"
+        }
+      ]
+    },
+    {
+      "id" : "democompany.customer.domain.appointments.FreeSlots.In",
+      "name" : "FreeSlots.In",
+      "pkg" : "democompany.customer.domain.appointments",
+      "kind" : "case",
+      "owner" : "FreeSlots",
+      "importPath" : "democompany.customer.domain.appointments.FreeSlots",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/appointments/Services.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.Appointment",
+        "democompany.customer.domain.bookAppointment.v1.schema.Channel",
+        "democompany.customer.domain.bookAppointment.v1.schema.Contact",
+        "democompany.customer.domain.bookAppointment.v1.schema.Topic"
+      ],
+      "fields" : [
+        {
+          "name" : "topic",
+          "type" : "Topic",
+          "default" : "Topic.advice",
+          "description" : "Thema",
+          "example" : "Topic.advice"
+        },
+        {
+          "name" : "channel",
+          "type" : "Channel",
+          "default" : "Channel.branch",
+          "description" : "Kanal",
+          "example" : "Channel.branch"
+        },
+        {
+          "name" : "from",
+          "type" : "Option[LocalDate]",
+          "default" : "None",
+          "description" : "Ab welchem Tag - ohne Angabe heute"
+        },
+        {
+          "name" : "days",
+          "type" : "Int",
+          "default" : "14",
+          "description" : "Wie viele Tage",
+          "example" : "14"
+        }
+      ],
+      "topicName" : "democompany-customer-freeSlots",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Freie Termine für Thema und Kanal - nach den Terminregeln, aus Outlook, ohne Reservierungen."
+    },
+    {
+      "id" : "democompany.customer.domain.appointments.FreeSlots.Out",
+      "name" : "FreeSlots.Out",
+      "pkg" : "democompany.customer.domain.appointments",
+      "kind" : "case",
+      "owner" : "FreeSlots",
+      "importPath" : "democompany.customer.domain.appointments.FreeSlots",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/appointments/Services.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.Appointment",
+        "democompany.customer.domain.bookAppointment.v1.schema.Channel",
+        "democompany.customer.domain.bookAppointment.v1.schema.Contact",
+        "democompany.customer.domain.bookAppointment.v1.schema.Topic"
+      ],
+      "fields" : [
+        {
+          "name" : "slots",
+          "type" : "Seq[Appointment]",
+          "default" : "Seq(Appointment.example)",
+          "description" : "Die freien Termine, nach Beginn",
+          "example" : "Seq(Appointment.example)"
+        }
+      ],
+      "topicName" : "democompany-customer-freeSlots",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Freie Termine für Thema und Kanal - nach den Terminregeln, aus Outlook, ohne Reservierungen."
+    },
+    {
+      "id" : "democompany.customer.domain.appointments.Reservation",
+      "name" : "Reservation",
+      "pkg" : "democompany.customer.domain.appointments",
+      "kind" : "case",
+      "importPath" : "democompany.customer.domain.appointments.Reservation",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/appointments/Appointments.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.Appointment",
+        "democompany.customer.domain.bookAppointment.v1.schema.Contact",
+        "democompany.customer.domain.updateAvailability.v1.schema.BusyPeriod"
+      ],
+      "fields" : [
+        {
+          "name" : "id",
+          "type" : "String",
+          "description" : "`<advisor>-<start>`"
+        },
+        {
+          "name" : "token",
+          "type" : "String",
+          "description" : "Ein Zufallswert (UUID) - Business Key des Prozesses, in den Links der Mails; wer ihn kennt, darf die Reservierung bestätigen"
+        },
+        {
+          "name" : "appointment",
+          "type" : "Appointment",
+          "description" : "Der Termin"
+        },
+        {
+          "name" : "contact",
+          "type" : "Contact",
+          "description" : "Kontaktdaten"
+        },
+        {
+          "name" : "remark",
+          "type" : "Option[String]",
+          "description" : "Bemerkung"
+        },
+        {
+          "name" : "status",
+          "type" : "ReservationStatus",
+          "description" : "reserviert oder gebucht"
+        },
+        {
+          "name" : "reservedUntil",
+          "type" : "LocalDateTime",
+          "description" : "Bis wann die Reservierung ohne Opt-in gilt - danach ist der Termin wieder frei"
+        }
+      ]
+    },
+    {
+      "id" : "democompany.customer.domain.appointments.ReservationStatus",
+      "name" : "ReservationStatus",
+      "pkg" : "democompany.customer.domain.appointments",
+      "kind" : "enum",
+      "importPath" : "democompany.customer.domain.appointments.ReservationStatus",
+      "descr" : "Reserved or booked",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/appointments/Appointments.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.Appointment",
+        "democompany.customer.domain.bookAppointment.v1.schema.Contact",
+        "democompany.customer.domain.updateAvailability.v1.schema.BusyPeriod"
+      ],
+      "values" : [
+        "reserved",
+        "booked"
+      ]
+    },
+    {
+      "id" : "democompany.customer.domain.appointments.ReserveSlot.In",
+      "name" : "ReserveSlot.In",
+      "pkg" : "democompany.customer.domain.appointments",
+      "kind" : "case",
+      "owner" : "ReserveSlot",
+      "importPath" : "democompany.customer.domain.appointments.ReserveSlot",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/appointments/Services.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.Appointment",
+        "democompany.customer.domain.bookAppointment.v1.schema.Channel",
+        "democompany.customer.domain.bookAppointment.v1.schema.Contact",
+        "democompany.customer.domain.bookAppointment.v1.schema.Topic"
+      ],
+      "fields" : [
+        {
+          "name" : "appointment",
+          "type" : "Appointment",
+          "default" : "Appointment.example",
+          "description" : "Der gewählte Termin",
+          "example" : "Appointment.example"
+        },
+        {
+          "name" : "contact",
+          "type" : "Contact",
+          "default" : "Contact.example",
+          "description" : "Kontaktdaten",
+          "example" : "Contact.example"
+        },
+        {
+          "name" : "remark",
+          "type" : "Option[String]",
+          "default" : "None",
+          "description" : "Bemerkung"
+        }
+      ],
+      "topicName" : "democompany-customer-reserveSlot",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Reserviert einen freien Termin - ist er schon vergeben, ein Fehler 409 «leider vergeben»."
+    },
+    {
+      "id" : "democompany.customer.domain.appointments.ReserveSlot.Out",
+      "name" : "ReserveSlot.Out",
+      "pkg" : "democompany.customer.domain.appointments",
+      "kind" : "case",
+      "owner" : "ReserveSlot",
+      "importPath" : "democompany.customer.domain.appointments.ReserveSlot",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/appointments/Services.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.Appointment",
+        "democompany.customer.domain.bookAppointment.v1.schema.Channel",
+        "democompany.customer.domain.bookAppointment.v1.schema.Contact",
+        "democompany.customer.domain.bookAppointment.v1.schema.Topic"
+      ],
+      "fields" : [
+        {
+          "name" : "reservationId",
+          "type" : "String",
+          "default" : "\"anna.berater-2026-10-20T09:00\"",
+          "description" : "Die Reservierung `<advisor>-<start>` - damit startet der Prozess bookAppointment",
+          "example" : "\"anna.berater-2026-10-20T09:00\""
+        },
+        {
+          "name" : "token",
+          "type" : "String",
+          "default" : "\"0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11\"",
+          "description" : "Das Geheimnis der Reservierung (UUID) - Business Key des Prozesses",
+          "example" : "\"0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11\""
+        },
+        {
+          "name" : "reservedUntil",
+          "type" : "LocalDateTime",
+          "default" : "LocalDateTime.of(2026, 10, 6, 12, 30)",
+          "description" : "Bis wann sie ohne Opt-in gilt",
+          "example" : "LocalDateTime.of(2026, 10, 6, 12, 30)"
+        }
+      ],
+      "topicName" : "democompany-customer-reserveSlot",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Reserviert einen freien Termin - ist er schon vergeben, ein Fehler 409 «leider vergeben»."
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.AppointmentRulesDmn.In",
+      "name" : "AppointmentRulesDmn.In",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "AppointmentRulesDmn",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.AppointmentRulesDmn",
+      "descr" : "Eingaben der Terminregeln",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/AppointmentRulesDmn.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "topic",
+          "type" : "String",
+          "description" : "Thema (advice, mortgage, pension, investment)",
+          "example" : "\"mortgage\""
+        },
+        {
+          "name" : "channel",
+          "type" : "String",
+          "description" : "Kanal (branch, video, phone)",
+          "example" : "\"branch\""
+        },
+        {
+          "name" : "customerStatus",
+          "type" : "String",
+          "description" : "Kundenstatus (customer, prospect)",
+          "example" : "\"customer\""
+        }
+      ],
+      "dsl" : "Decision",
+      "keyName" : "decisionId",
+      "key" : "democompany-customer-bookAppointmentV1-AppointmentRules",
+      "ownerDescr" : "Terminregeln: Dauer, Vorlaufzeit, Zeitfenster, Puffer, Berater-Pool und ob der Berater bestätigt.",
+      "decisionResult" : "singleResult"
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.AppointmentRulesDmn.Out",
+      "name" : "AppointmentRulesDmn.Out",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "AppointmentRulesDmn",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.AppointmentRulesDmn",
+      "descr" : "Ergebnis der Terminregeln",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/AppointmentRulesDmn.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "durationMinutes",
+          "type" : "Int",
+          "description" : "Dauer in Minuten",
+          "example" : "90"
+        },
+        {
+          "name" : "leadTimeHours",
+          "type" : "Int",
+          "description" : "Vorlaufzeit in Stunden",
+          "example" : "48"
+        },
+        {
+          "name" : "windowStart",
+          "type" : "String",
+          "description" : "Zeitfenster von (HH:mm)",
+          "example" : "\"08:00\""
+        },
+        {
+          "name" : "windowEnd",
+          "type" : "String",
+          "description" : "Zeitfenster bis (HH:mm)",
+          "example" : "\"17:00\""
+        },
+        {
+          "name" : "bufferMinutes",
+          "type" : "Int",
+          "description" : "Puffer zwischen Terminen in Minuten",
+          "example" : "15"
+        },
+        {
+          "name" : "advisorPool",
+          "type" : "String",
+          "description" : "Berater-Pool",
+          "example" : "\"mortgage\""
+        },
+        {
+          "name" : "confirmationRequired",
+          "type" : "Boolean",
+          "description" : "Bestätigung durch den Berater nötig",
+          "example" : "true"
+        }
+      ],
+      "dsl" : "Decision",
+      "keyName" : "decisionId",
+      "key" : "democompany-customer-bookAppointmentV1-AppointmentRules",
+      "ownerDescr" : "Terminregeln: Dauer, Vorlaufzeit, Zeitfenster, Puffer, Berater-Pool und ob der Berater bestätigt.",
+      "decisionResult" : "singleResult"
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.AssignCustomer.In",
+      "name" : "AssignCustomer.In",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "AssignCustomer",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.AssignCustomer",
+      "descr" : "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent.",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/AssignCustomer.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "contact",
+          "type" : "Contact",
+          "description" : "Kontaktdaten aus dem Formular",
+          "example" : "Contact.example"
+        }
+      ],
+      "topicName" : "democompany-customer-bookAppointmentV1-AssignCustomer",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.AssignCustomer.Out",
+      "name" : "AssignCustomer.Out",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "AssignCustomer",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.AssignCustomer",
+      "descr" : "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent.",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/AssignCustomer.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "customerStatus",
+          "type" : "CustomerStatus",
+          "description" : "Kunde oder Interessent",
+          "example" : "CustomerStatus.customer"
+        },
+        {
+          "name" : "clientId",
+          "type" : "Option[String]",
+          "description" : "Kunden-ID, wenn gefunden",
+          "example" : "Some(\"100200\")"
+        },
+        {
+          "name" : "customerName",
+          "type" : "Option[String]",
+          "description" : "Name laut Kundenstamm, wenn gefunden",
+          "example" : "Some(\"Beispiel\")"
+        }
+      ],
+      "topicName" : "democompany-customer-bookAppointmentV1-AssignCustomer",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent."
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.BookAppointment.In",
+      "name" : "BookAppointment.In",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "BookAppointment",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.BookAppointment",
+      "descr" : "Die Anfrage von der Homepage - der Termin ist schon reserviert.",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/BookAppointment.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "reservationId",
+          "type" : "String",
+          "description" : "Reservierung `<advisor>-<start>` - entsteht vor dem Start (Service reserveSlot)",
+          "example" : "\"anna.berater-2026-10-20T09:00\""
+        },
+        {
+          "name" : "token",
+          "type" : "String",
+          "description" : "Das Geheimnis der Reservierung (aus reserveSlot) - auch der Business Key",
+          "example" : "\"0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11\""
+        },
+        {
+          "name" : "appointment",
+          "type" : "Appointment",
+          "description" : "Der gewählte Termin",
+          "example" : "Appointment.example"
+        },
+        {
+          "name" : "contact",
+          "type" : "Contact",
+          "description" : "Kontaktdaten",
+          "example" : "Contact.example"
+        },
+        {
+          "name" : "remark",
+          "type" : "Option[String]",
+          "description" : "Bemerkung",
+          "example" : "Some(\"Bitte mit Parkplatz\")"
+        },
+        {
+          "name" : "inConfig",
+          "type" : "Option[InConfig]",
+          "default" : "None",
+          "description" : "A way to override process configuration.\n\n**SHOULD NOT BE USED on Production!**"
+        }
+      ],
+      "processName" : "democompany-customer-bookAppointmentV1",
+      "dsl" : "Process"
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.BookAppointment.InConfig",
+      "name" : "BookAppointment.InConfig",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "BookAppointment",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.BookAppointment",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/BookAppointment.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "timerVerifyEmail",
+          "type" : "Iso8601Duration",
+          "default" : "\"PT30M\"",
+          "description" : "So lange gilt die Reservierung ohne Opt-in",
+          "example" : "\"PT30M\""
+        },
+        {
+          "name" : "timerConfirmReminder",
+          "type" : "Iso8601Duration",
+          "default" : "\"P1D\"",
+          "description" : "Erinnerung an den Berater, wenn der Task offen ist",
+          "example" : "\"P1D\""
+        }
+      ],
+      "processName" : "democompany-customer-bookAppointmentV1",
+      "dsl" : "Process"
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.BookAppointment.InitIn",
+      "name" : "BookAppointment.InitIn",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "BookAppointment",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.BookAppointment",
+      "descr" : "Vom Init-Worker gesetzt",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/BookAppointment.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "email",
+          "type" : "String",
+          "description" : "E-Mail des Kunden (aus contact)",
+          "example" : "\"peter.muster@example.ch\""
+        },
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "description" : "Vorname und Name (aus contact)",
+          "example" : "\"Peter Muster\""
+        },
+        {
+          "name" : "advisorEmail",
+          "type" : "String",
+          "description" : "E-Mail des Beraters (aus appointment)",
+          "example" : "\"anna.berater@democompany.ch\""
+        },
+        {
+          "name" : "topic",
+          "type" : "String",
+          "description" : "Thema - für die Terminregeln",
+          "example" : "\"mortgage\""
+        },
+        {
+          "name" : "channel",
+          "type" : "String",
+          "description" : "Kanal - für die Terminregeln",
+          "example" : "\"branch\""
+        },
+        {
+          "name" : "appointmentText",
+          "type" : "String",
+          "description" : "Der Termin als Text für die Mails",
+          "example" : "\"Mo 20.10.2026, 09:00-10:30, Hypothek, Filiale\""
+        },
+        {
+          "name" : "verificationLink",
+          "type" : "String",
+          "description" : "Link für den Opt-in",
+          "example" : "\"http://localhost:8889/app/democompany-customer/appointments/verified?token=0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11\""
+        },
+        {
+          "name" : "confirmLink",
+          "type" : "String",
+          "description" : "Link auf den Task «Termin bestätigen»",
+          "example" : "\"http://localhost:8889/app/democompany-customer/appointments/confirm?token=0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11\""
+        }
+      ],
+      "processName" : "democompany-customer-bookAppointmentV1",
+      "dsl" : "Process"
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.BookAppointment.Out",
+      "name" : "BookAppointment.Out",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "BookAppointment",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.BookAppointment",
+      "descr" : "Ergebnis der Anfrage",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/BookAppointment.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "reservationId",
+          "type" : "String",
+          "description" : "Reservierung",
+          "example" : "\"anna.berater-2026-10-20T09:00\""
+        },
+        {
+          "name" : "booked",
+          "type" : "Boolean",
+          "description" : "Termin gebucht",
+          "example" : "true"
+        },
+        {
+          "name" : "customerStatus",
+          "type" : "Option[CustomerStatus]",
+          "description" : "Kunde oder Interessent",
+          "example" : "Some(CustomerStatus.customer)"
+        }
+      ],
+      "processName" : "democompany-customer-bookAppointmentV1",
+      "dsl" : "Process"
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.BookReservation.In",
+      "name" : "BookReservation.In",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "BookReservation",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.BookReservation",
+      "descr" : "Setzt die Reservierung auf gebucht.",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/BookReservation.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "reservationId",
+          "type" : "String",
+          "description" : "Reservierung",
+          "example" : "\"anna.berater-2026-10-20T09:00\""
+        }
+      ],
+      "topicName" : "democompany-customer-bookAppointmentV1-BookReservation",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Setzt die Reservierung auf gebucht."
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.BookReservation.Out",
+      "name" : "BookReservation.Out",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "BookReservation",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.BookReservation",
+      "descr" : "Setzt die Reservierung auf gebucht.",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/BookReservation.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "bookedAt",
+          "type" : "LocalDateTime",
+          "description" : "Zeitpunkt der Buchung",
+          "example" : "LocalDateTime.now()"
+        },
+        {
+          "name" : "booked",
+          "type" : "Boolean",
+          "default" : "true",
+          "description" : "Termin gebucht - das Ergebnis des Prozesses",
+          "example" : "true"
+        }
+      ],
+      "topicName" : "democompany-customer-bookAppointmentV1-BookReservation",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Setzt die Reservierung auf gebucht."
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.ConfirmAppointmentUT.In",
+      "name" : "ConfirmAppointmentUT.In",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "ConfirmAppointmentUT",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.ConfirmAppointmentUT",
+      "descr" : "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab.",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/ConfirmAppointmentUT.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "appointment",
+          "type" : "Appointment",
+          "description" : "Der reservierte Termin",
+          "example" : "Appointment.example"
+        },
+        {
+          "name" : "contact",
+          "type" : "Contact",
+          "description" : "Kontaktdaten",
+          "example" : "Contact.example"
+        },
+        {
+          "name" : "customerStatus",
+          "type" : "CustomerStatus",
+          "description" : "Kunde oder Interessent",
+          "example" : "CustomerStatus.customer"
+        },
+        {
+          "name" : "remark",
+          "type" : "Option[String]",
+          "description" : "Bemerkung des Kunden",
+          "example" : "Some(\"Beispiel\")"
+        }
+      ],
+      "dsl" : "UserTask",
+      "keyName" : "name",
+      "key" : "ConfirmAppointmentTask",
+      "ownerDescr" : "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab."
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.ConfirmAppointmentUT.Out",
+      "name" : "ConfirmAppointmentUT.Out",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "ConfirmAppointmentUT",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.ConfirmAppointmentUT",
+      "descr" : "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab.",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/ConfirmAppointmentUT.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "accepted",
+          "type" : "Boolean",
+          "description" : "Termin angenommen",
+          "example" : "true"
+        },
+        {
+          "name" : "declineReason",
+          "type" : "Option[String]",
+          "description" : "Begründung - geht in die Absage an den Kunden",
+          "example" : "Some(\"Beispiel\")"
+        }
+      ],
+      "dsl" : "UserTask",
+      "keyName" : "name",
+      "key" : "ConfirmAppointmentTask",
+      "ownerDescr" : "Der Berater nimmt den Termin an oder lehnt ihn mit Begründung ab."
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.EmailVerifiedME.In",
+      "name" : "EmailVerifiedME.In",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "EmailVerifiedME",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.EmailVerifiedME",
+      "descr" : "Der Kunde hat den Link in der Opt-in-Mail angeklickt.",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/EmailVerifiedME.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "verifiedAt",
+          "type" : "Option[LocalDateTime]",
+          "description" : "Zeitpunkt des Klicks",
+          "example" : "Some(LocalDateTime.now())"
+        }
+      ],
+      "dsl" : "MessageEvent",
+      "keyName" : "messageName",
+      "key" : "democompany-customer-bookAppointmentV1-emailVerified",
+      "ownerDescr" : "Der Kunde hat den Link in der Opt-in-Mail angeklickt."
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.EmailVerifiedME.Out",
+      "name" : "EmailVerifiedME.Out",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "member",
+      "owner" : "EmailVerifiedME",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.EmailVerifiedME",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/EmailVerifiedME.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "dsl" : "MessageEvent",
+      "keyName" : "messageName",
+      "key" : "democompany-customer-bookAppointmentV1-emailVerified",
+      "ownerDescr" : "Der Kunde hat den Link in der Opt-in-Mail angeklickt."
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.ReleaseReservation.In",
+      "name" : "ReleaseReservation.In",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "ReleaseReservation",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.ReleaseReservation",
+      "descr" : "Löscht die Reservierung - der Termin ist wieder frei.",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/ReleaseReservation.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "reservationId",
+          "type" : "String",
+          "description" : "Reservierung",
+          "example" : "\"anna.berater-2026-10-20T09:00\""
+        }
+      ],
+      "topicName" : "democompany-customer-bookAppointmentV1-ReleaseReservation",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Löscht die Reservierung - der Termin ist wieder frei."
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.ReleaseReservation.Out",
+      "name" : "ReleaseReservation.Out",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "ReleaseReservation",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.ReleaseReservation",
+      "descr" : "Löscht die Reservierung - der Termin ist wieder frei.",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/ReleaseReservation.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "releasedAt",
+          "type" : "LocalDateTime",
+          "description" : "Zeitpunkt der Freigabe",
+          "example" : "LocalDateTime.now()"
+        },
+        {
+          "name" : "booked",
+          "type" : "Boolean",
+          "default" : "false",
+          "description" : "Termin nicht gebucht - das Ergebnis des Prozesses",
+          "example" : "false"
+        }
+      ],
+      "topicName" : "democompany-customer-bookAppointmentV1-ReleaseReservation",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Löscht die Reservierung - der Termin ist wieder frei."
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.schema.Appointment",
+      "name" : "Appointment",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1.schema",
+      "kind" : "case",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.schema.Appointment",
+      "descr" : "Ein Termin bei einem Berater",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/schema/Appointment.scala",
+      "fields" : [
+        {
+          "name" : "advisorId",
+          "type" : "String",
+          "description" : "Berater (Benutzer-ID)",
+          "example" : "\"anna.berater\""
+        },
+        {
+          "name" : "advisorName",
+          "type" : "String",
+          "description" : "Name des Beraters",
+          "example" : "\"Anna Berater\""
+        },
+        {
+          "name" : "advisorEmail",
+          "type" : "String",
+          "description" : "E-Mail des Beraters",
+          "example" : "\"anna.berater@democompany.ch\""
+        },
+        {
+          "name" : "start",
+          "type" : "LocalDateTime",
+          "description" : "Beginn",
+          "example" : "LocalDateTime.now()"
+        },
+        {
+          "name" : "end",
+          "type" : "LocalDateTime",
+          "description" : "Ende",
+          "example" : "LocalDateTime.now()"
+        },
+        {
+          "name" : "topic",
+          "type" : "Topic",
+          "description" : "Thema",
+          "example" : "Topic.advice"
+        },
+        {
+          "name" : "channel",
+          "type" : "Channel",
+          "description" : "Kanal",
+          "example" : "Channel.branch"
+        }
+      ]
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.schema.Channel",
+      "name" : "Channel",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1.schema",
+      "kind" : "enum",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.schema.Channel",
+      "descr" : "Wie der Termin stattfindet",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/schema/Channel.scala",
+      "values" : [
+        "branch",
+        "video",
+        "phone"
+      ]
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.schema.Contact",
+      "name" : "Contact",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1.schema",
+      "kind" : "case",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.schema.Contact",
+      "descr" : "Kontaktdaten aus dem Formular der Homepage",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/schema/Contact.scala",
+      "fields" : [
+        {
+          "name" : "firstName",
+          "type" : "String",
+          "description" : "Vorname",
+          "example" : "\"Peter\""
+        },
+        {
+          "name" : "lastName",
+          "type" : "String",
+          "description" : "Nachname",
+          "example" : "\"Muster\""
+        },
+        {
+          "name" : "email",
+          "type" : "String",
+          "description" : "E-Mail - für den Opt-in und die Einladung",
+          "example" : "\"peter.muster@example.ch\""
+        },
+        {
+          "name" : "phone",
+          "type" : "Option[String]",
+          "description" : "Telefon",
+          "example" : "Some(\"+41 79 123 45 67\")"
+        },
+        {
+          "name" : "customerNo",
+          "type" : "Option[String]",
+          "description" : "Kunden-Nr. - nur ein Hinweis, verbindlich ordnet der Berater zu",
+          "example" : "Some(\"100200\")"
+        }
+      ]
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.schema.CustomerStatus",
+      "name" : "CustomerStatus",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1.schema",
+      "kind" : "enum",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.schema.CustomerStatus",
+      "descr" : "Kunde der Bank oder Interessent",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/schema/CustomerStatus.scala",
+      "values" : [
+        "customer",
+        "prospect"
+      ]
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.schema.Topic",
+      "name" : "Topic",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1.schema",
+      "kind" : "enum",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.schema.Topic",
+      "descr" : "Thema des Termins",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/schema/Topic.scala",
+      "values" : [
+        "advice",
+        "mortgage",
+        "pension",
+        "investment"
+      ]
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.SendInvitation.In",
+      "name" : "SendInvitation.In",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "SendInvitation",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.SendInvitation",
+      "descr" : "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook.",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/SendInvitation.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "appointment",
+          "type" : "Appointment",
+          "description" : "Der gebuchte Termin",
+          "example" : "Appointment.example"
+        },
+        {
+          "name" : "contact",
+          "type" : "Contact",
+          "description" : "Kontaktdaten des Kunden",
+          "example" : "Contact.example"
+        }
+      ],
+      "topicName" : "democompany-customer-bookAppointmentV1-SendInvitation",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook."
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.SendInvitation.Out",
+      "name" : "SendInvitation.Out",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "SendInvitation",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.SendInvitation",
+      "descr" : "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook.",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/SendInvitation.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "sentAt",
+          "type" : "LocalDateTime",
+          "description" : "Zeitpunkt des Versands",
+          "example" : "LocalDateTime.now()"
+        }
+      ],
+      "topicName" : "democompany-customer-bookAppointmentV1-SendInvitation",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Schickt die Einladung (.ics) an Kunde und Berater - so steht der Termin in Outlook."
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.SendMail.In",
+      "name" : "SendMail.In",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "SendMail",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.SendMail",
+      "descr" : "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit).",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/SendMail.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "to",
+          "type" : "String",
+          "description" : "Empfänger",
+          "example" : "\"peter.muster@example.ch\""
+        },
+        {
+          "name" : "subject",
+          "type" : "String",
+          "description" : "Betreff",
+          "example" : "\"Bitte bestätigen Sie Ihre Terminanfrage\""
+        },
+        {
+          "name" : "body",
+          "type" : "String",
+          "description" : "Text - `\\\n` ist ein Zeilenumbruch",
+          "example" : "\"Guten Tag\""
+        }
+      ],
+      "topicName" : "democompany-customer-bookAppointmentV1-SendMail",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
+    },
+    {
+      "id" : "democompany.customer.domain.bookAppointment.v1.SendMail.Out",
+      "name" : "SendMail.Out",
+      "pkg" : "democompany.customer.domain.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "SendMail",
+      "importPath" : "democompany.customer.domain.bookAppointment.v1.SendMail",
+      "descr" : "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit).",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/bookAppointment/v1/SendMail.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "sentAt",
+          "type" : "LocalDateTime",
+          "description" : "Zeitpunkt des Versands",
+          "example" : "LocalDateTime.now()"
+        }
+      ],
+      "topicName" : "democompany-customer-bookAppointmentV1-SendMail",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit)."
+    },
+    {
+      "id" : "democompany.customer.domain.updateAvailability.v1.LoadAdvisors.In",
+      "name" : "LoadAdvisors.In",
+      "pkg" : "democompany.customer.domain.updateAvailability.v1",
+      "kind" : "case",
+      "owner" : "LoadAdvisors",
+      "importPath" : "democompany.customer.domain.updateAvailability.v1.LoadAdvisors",
+      "descr" : "Lädt die Berater mit der Rolle kundenberater.",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/updateAvailability/v1/LoadAdvisors.scala",
+      "imports" : [
+        "democompany.customer.domain.updateAvailability.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "role",
+          "type" : "Option[String]",
+          "description" : "Rolle der Berater im IdP - ohne Angabe kundenberater",
+          "example" : "Some(\"kundenberater\")"
+        }
+      ],
+      "topicName" : "democompany-customer-updateAvailabilityV1-LoadAdvisors",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Lädt die Berater mit der Rolle kundenberater."
+    },
+    {
+      "id" : "democompany.customer.domain.updateAvailability.v1.LoadAdvisors.Out",
+      "name" : "LoadAdvisors.Out",
+      "pkg" : "democompany.customer.domain.updateAvailability.v1",
+      "kind" : "case",
+      "owner" : "LoadAdvisors",
+      "importPath" : "democompany.customer.domain.updateAvailability.v1.LoadAdvisors",
+      "descr" : "Lädt die Berater mit der Rolle kundenberater.",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/updateAvailability/v1/LoadAdvisors.scala",
+      "imports" : [
+        "democompany.customer.domain.updateAvailability.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "advisors",
+          "type" : "Seq[Advisor]",
+          "description" : "Die Berater",
+          "example" : "Seq(Advisor.example)"
+        },
+        {
+          "name" : "advisorCount",
+          "type" : "Int",
+          "description" : "Wie viele - das Ergebnis des Prozesses",
+          "example" : "1"
+        }
+      ],
+      "topicName" : "democompany-customer-updateAvailabilityV1-LoadAdvisors",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Lädt die Berater mit der Rolle kundenberater."
+    },
+    {
+      "id" : "democompany.customer.domain.updateAvailability.v1.ReadCalendar.In",
+      "name" : "ReadCalendar.In",
+      "pkg" : "democompany.customer.domain.updateAvailability.v1",
+      "kind" : "case",
+      "owner" : "ReadCalendar",
+      "importPath" : "democompany.customer.domain.updateAvailability.v1.ReadCalendar",
+      "descr" : "Liest die belegten Zeiten eines Beraters (Kalender-Mock, später Outlook über Graph).",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/updateAvailability/v1/ReadCalendar.scala",
+      "imports" : [
+        "democompany.customer.domain.updateAvailability.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "advisor",
+          "type" : "Advisor",
+          "description" : "Berater",
+          "example" : "Advisor.example"
+        },
+        {
+          "name" : "daysAhead",
+          "type" : "Int",
+          "description" : "Wie viele Tage voraus",
+          "example" : "21"
+        }
+      ],
+      "topicName" : "democompany-customer-updateAvailabilityV1-ReadCalendar",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Liest die belegten Zeiten eines Beraters (Kalender-Mock, später Outlook über Graph)."
+    },
+    {
+      "id" : "democompany.customer.domain.updateAvailability.v1.ReadCalendar.Out",
+      "name" : "ReadCalendar.Out",
+      "pkg" : "democompany.customer.domain.updateAvailability.v1",
+      "kind" : "case",
+      "owner" : "ReadCalendar",
+      "importPath" : "democompany.customer.domain.updateAvailability.v1.ReadCalendar",
+      "descr" : "Liest die belegten Zeiten eines Beraters (Kalender-Mock, später Outlook über Graph).",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/updateAvailability/v1/ReadCalendar.scala",
+      "imports" : [
+        "democompany.customer.domain.updateAvailability.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "busy",
+          "type" : "Seq[BusyPeriod]",
+          "description" : "Belegte Zeiten",
+          "example" : "Seq(BusyPeriod.example)"
+        }
+      ],
+      "topicName" : "democompany-customer-updateAvailabilityV1-ReadCalendar",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Liest die belegten Zeiten eines Beraters (Kalender-Mock, später Outlook über Graph)."
+    },
+    {
+      "id" : "democompany.customer.domain.updateAvailability.v1.SaveCalendarSnapshot.In",
+      "name" : "SaveCalendarSnapshot.In",
+      "pkg" : "democompany.customer.domain.updateAvailability.v1",
+      "kind" : "case",
+      "owner" : "SaveCalendarSnapshot",
+      "importPath" : "democompany.customer.domain.updateAvailability.v1.SaveCalendarSnapshot",
+      "descr" : "Speichert die belegten Zeiten des Beraters (ersetzt den letzten Stand).",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/updateAvailability/v1/SaveCalendarSnapshot.scala",
+      "imports" : [
+        "democompany.customer.domain.updateAvailability.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "advisor",
+          "type" : "Advisor",
+          "description" : "Berater",
+          "example" : "Advisor.example"
+        },
+        {
+          "name" : "busy",
+          "type" : "Seq[BusyPeriod]",
+          "description" : "Belegte Zeiten",
+          "example" : "Seq(BusyPeriod.example)"
+        }
+      ],
+      "topicName" : "democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Speichert die belegten Zeiten des Beraters (ersetzt den letzten Stand)."
+    },
+    {
+      "id" : "democompany.customer.domain.updateAvailability.v1.SaveCalendarSnapshot.Out",
+      "name" : "SaveCalendarSnapshot.Out",
+      "pkg" : "democompany.customer.domain.updateAvailability.v1",
+      "kind" : "case",
+      "owner" : "SaveCalendarSnapshot",
+      "importPath" : "democompany.customer.domain.updateAvailability.v1.SaveCalendarSnapshot",
+      "descr" : "Speichert die belegten Zeiten des Beraters (ersetzt den letzten Stand).",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/updateAvailability/v1/SaveCalendarSnapshot.scala",
+      "imports" : [
+        "democompany.customer.domain.updateAvailability.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "savedAt",
+          "type" : "LocalDateTime",
+          "description" : "Stand",
+          "example" : "LocalDateTime.now()"
+        }
+      ],
+      "topicName" : "democompany-customer-updateAvailabilityV1-SaveCalendarSnapshot",
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Speichert die belegten Zeiten des Beraters (ersetzt den letzten Stand)."
+    },
+    {
+      "id" : "democompany.customer.domain.updateAvailability.v1.schema.Advisor",
+      "name" : "Advisor",
+      "pkg" : "democompany.customer.domain.updateAvailability.v1.schema",
+      "kind" : "case",
+      "importPath" : "democompany.customer.domain.updateAvailability.v1.schema.Advisor",
+      "descr" : "Kundenberaterin oder Kundenberater",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/updateAvailability/v1/schema/Advisor.scala",
+      "fields" : [
+        {
+          "name" : "id",
+          "type" : "String",
+          "description" : "Benutzer-ID im IdP",
+          "example" : "\"anna.berater\""
+        },
+        {
+          "name" : "name",
+          "type" : "String",
+          "description" : "Name",
+          "example" : "\"Anna Berater\""
+        },
+        {
+          "name" : "email",
+          "type" : "String",
+          "description" : "E-Mail für Benachrichtigungen und Einladungen",
+          "example" : "\"anna.berater@democompany.ch\""
+        }
+      ]
+    },
+    {
+      "id" : "democompany.customer.domain.updateAvailability.v1.schema.BusyPeriod",
+      "name" : "BusyPeriod",
+      "pkg" : "democompany.customer.domain.updateAvailability.v1.schema",
+      "kind" : "case",
+      "importPath" : "democompany.customer.domain.updateAvailability.v1.schema.BusyPeriod",
+      "descr" : "Eine belegte Zeit im Kalender",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/updateAvailability/v1/schema/BusyPeriod.scala",
+      "fields" : [
+        {
+          "name" : "start",
+          "type" : "LocalDateTime",
+          "description" : "Beginn",
+          "example" : "LocalDateTime.now()"
+        },
+        {
+          "name" : "end",
+          "type" : "LocalDateTime",
+          "description" : "Ende",
+          "example" : "LocalDateTime.now()"
+        }
+      ]
+    },
+    {
+      "id" : "democompany.customer.domain.updateAvailability.v1.UpdateAvailability.In",
+      "name" : "UpdateAvailability.In",
+      "pkg" : "democompany.customer.domain.updateAvailability.v1",
+      "kind" : "case",
+      "owner" : "UpdateAvailability",
+      "importPath" : "democompany.customer.domain.updateAvailability.v1.UpdateAvailability",
+      "descr" : "Gestartet vom Timer - ohne Eingaben ausser der Reichweite.",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/updateAvailability/v1/UpdateAvailability.scala",
+      "imports" : [
+        "democompany.customer.domain.updateAvailability.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "daysAhead",
+          "type" : "Option[Int]",
+          "description" : "Wie viele Tage voraus die Kalender gelesen werden",
+          "example" : "Some(21)"
+        },
+        {
+          "name" : "inConfig",
+          "type" : "Option[InConfig]",
+          "default" : "None",
+          "description" : "A way to override process configuration.\n\n**SHOULD NOT BE USED on Production!**"
+        }
+      ],
+      "processName" : "democompany-customer-updateAvailabilityV1",
+      "dsl" : "Process"
+    },
+    {
+      "id" : "democompany.customer.domain.updateAvailability.v1.UpdateAvailability.InConfig",
+      "name" : "UpdateAvailability.InConfig",
+      "pkg" : "democompany.customer.domain.updateAvailability.v1",
+      "kind" : "case",
+      "owner" : "UpdateAvailability",
+      "importPath" : "democompany.customer.domain.updateAvailability.v1.UpdateAvailability",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/updateAvailability/v1/UpdateAvailability.scala",
+      "imports" : [
+        "democompany.customer.domain.updateAvailability.v1.schema.*"
+      ],
+      "processName" : "democompany-customer-updateAvailabilityV1",
+      "dsl" : "Process"
+    },
+    {
+      "id" : "democompany.customer.domain.updateAvailability.v1.UpdateAvailability.InitIn",
+      "name" : "UpdateAvailability.InitIn",
+      "pkg" : "democompany.customer.domain.updateAvailability.v1",
+      "kind" : "case",
+      "owner" : "UpdateAvailability",
+      "importPath" : "democompany.customer.domain.updateAvailability.v1.UpdateAvailability",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/updateAvailability/v1/UpdateAvailability.scala",
+      "imports" : [
+        "democompany.customer.domain.updateAvailability.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "daysAhead",
+          "type" : "Int",
+          "description" : "Wie viele Tage voraus die Kalender gelesen werden",
+          "example" : "21"
+        }
+      ],
+      "processName" : "democompany-customer-updateAvailabilityV1",
+      "dsl" : "Process"
+    },
+    {
+      "id" : "democompany.customer.domain.updateAvailability.v1.UpdateAvailability.Out",
+      "name" : "UpdateAvailability.Out",
+      "pkg" : "democompany.customer.domain.updateAvailability.v1",
+      "kind" : "case",
+      "owner" : "UpdateAvailability",
+      "importPath" : "democompany.customer.domain.updateAvailability.v1.UpdateAvailability",
+      "descr" : "Ergebnis des Laufs",
+      "source" : "democompany-customer/01-domain/src/main/scala/democompany/customer/domain/updateAvailability/v1/UpdateAvailability.scala",
+      "imports" : [
+        "democompany.customer.domain.updateAvailability.v1.schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "advisorCount",
+          "type" : "Int",
+          "description" : "Anzahl aktualisierter Berater",
+          "example" : "2"
+        }
+      ],
+      "processName" : "democompany-customer-updateAvailabilityV1",
+      "dsl" : "Process"
+    },
+    {
+      "id" : "democompany.customer.worker.appointments.Slots.Calendar",
+      "name" : "Slots.Calendar",
+      "pkg" : "democompany.customer.worker.appointments",
+      "kind" : "case",
+      "owner" : "Slots",
+      "importPath" : "democompany.customer.worker.appointments.Slots",
+      "source" : "/Users/pme/dev/Github/pme123/git-temp/democompany-customer/03-worker/src/main/scala/democompany/customer/worker/appointments/Slots.scala",
+      "imports" : [
+        "democompany.customer.domain.appointments.Reservation",
+        "democompany.customer.domain.appointments.ReservationStatus",
+        "democompany.customer.domain.bookAppointment.v1.schema.Appointment",
+        "democompany.customer.domain.bookAppointment.v1.schema.Channel",
+        "democompany.customer.domain.bookAppointment.v1.schema.Topic",
+        "democompany.customer.domain.updateAvailability.v1.schema.Advisor",
+        "democompany.customer.domain.updateAvailability.v1.schema.BusyPeriod",
+        "democompany.customer.domain.bookAppointment.v1.AppointmentRulesDmn",
+        "java.time.DayOfWeek",
+        "java.time.LocalDate",
+        "java.time.LocalDateTime",
+        "java.time.LocalTime"
+      ],
+      "fields" : [
+        {
+          "name" : "advisor",
+          "type" : "Advisor"
+        },
+        {
+          "name" : "busy",
+          "type" : "Seq[BusyPeriod]"
+        }
+      ]
+    },
+    {
+      "id" : "democompany.customer.worker.bookAppointment.v1.AssignCustomerWorker.Customer",
+      "name" : "AssignCustomerWorker.Customer",
+      "pkg" : "democompany.customer.worker.bookAppointment.v1",
+      "kind" : "case",
+      "owner" : "AssignCustomerWorker",
+      "importPath" : "democompany.customer.worker.bookAppointment.v1.AssignCustomerWorker",
+      "source" : "/Users/pme/dev/Github/pme123/git-temp/democompany-customer/03-worker/src/main/scala/democompany/customer/worker/bookAppointment/v1/AssignCustomerWorker.scala",
+      "imports" : [
+        "democompany.customer.domain.bookAppointment.v1.AssignCustomer.*",
+        "democompany.customer.domain.bookAppointment.v1.schema.CustomerStatus"
+      ],
+      "fields" : [
+        {
+          "name" : "no",
+          "type" : "String"
+        },
+        {
+          "name" : "name",
+          "type" : "String"
+        },
+        {
+          "name" : "email",
+          "type" : "String"
+        }
+      ]
+    },
+    {
+      "id" : "democompany.orchescala.worker.IdentityCorrelation",
+      "name" : "IdentityCorrelation",
+      "pkg" : "democompany.orchescala.worker",
+      "kind" : "case",
+      "importPath" : "democompany.orchescala.worker.IdentityCorrelation",
+      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/03-worker/src/main/scala/democompany/orchescala/worker/IdentityCorrelation.scala",
+      "imports" : [
+        "democompany.orchescala.engine.CompanyEngineC7Config",
+        "scala.jdk.OptionConverters.*"
+      ],
+      "fields" : [
+        {
+          "name" : "key",
+          "type" : "String"
+        },
+        {
+          "name" : "secret",
+          "type" : "Option[String]"
+        },
+        {
+          "name" : "clientKeyForExternal",
+          "type" : "Option[Long]",
+          "default" : "None"
+        }
+      ]
+    },
+    {
+      "id" : "democompany.orchescala.worker.MailPart",
+      "name" : "MailPart",
+      "pkg" : "democompany.orchescala.worker",
+      "kind" : "case",
+      "importPath" : "democompany.orchescala.worker.MailPart",
+      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/03-worker/src/main/scala/democompany/orchescala/worker/CompanyMailWorkerDsl.scala",
+      "imports" : [
+        "jakarta.mail.Message",
+        "jakarta.mail.Session",
+        "jakarta.mail.Transport",
+        "jakarta.mail.internet.InternetAddress",
+        "jakarta.mail.internet.MimeBodyPart",
+        "jakarta.mail.internet.MimeMessage",
+        "jakarta.mail.internet.MimeMultipart",
+        "orchescala.worker.WorkerError.CustomError",
+        "zio.*",
+        "java.util.Properties"
+      ],
+      "fields" : [
+        {
+          "name" : "contentType",
+          "type" : "String"
+        },
+        {
+          "name" : "content",
+          "type" : "String"
+        },
+        {
+          "name" : "fileName",
+          "type" : "Option[String]",
+          "default" : "None"
+        }
+      ]
+    },
+    {
+      "id" : "democompany.services.domain.clients.v1.GetClientsClientId.In",
+      "name" : "GetClientsClientId.In",
+      "pkg" : "democompany.services.domain.clients.v1",
+      "kind" : "case",
+      "owner" : "GetClientsClientId",
+      "importPath" : "democompany.services.domain.clients.v1.GetClientsClientId",
+      "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/clients/v1/GetClientsClientId.scala",
+      "imports" : [
+        "schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "clientId",
+          "type" : "Long",
+          "example" : "defaultClientId"
+        }
+      ],
+      "topicName" : "democompany-services-clientsV1-GetClientsClientId",
+      "ownerDescr" : "Get the Client by Id"
+    },
+    {
+      "id" : "democompany.services.domain.clients.v1.GetClientsClientId.Out",
+      "name" : "GetClientsClientId.Out",
+      "pkg" : "democompany.services.domain.clients.v1",
+      "kind" : "case",
+      "owner" : "GetClientsClientId",
+      "importPath" : "democompany.services.domain.clients.v1.GetClientsClientId",
+      "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/clients/v1/GetClientsClientId.scala",
+      "imports" : [
+        "schema.*"
+      ],
+      "fields" : [
+        {
+          "name" : "client",
+          "type" : "Client",
+          "example" : "Client.example"
+        },
+        {
+          "name" : "etag",
+          "type" : "String",
+          "example" : "defaultEtag"
+        },
+        {
+          "name" : "email",
+          "type" : "Option[String]",
+          "example" : "Some(\"john.doe@example.com\")"
+        }
+      ],
+      "topicName" : "democompany-services-clientsV1-GetClientsClientId",
+      "ownerDescr" : "Get the Client by Id"
+    },
+    {
+      "id" : "democompany.services.domain.clients.v1.GetClientsClientId.ServiceIn",
+      "name" : "GetClientsClientId.ServiceIn",
+      "pkg" : "democompany.services.domain.clients.v1",
+      "kind" : "alias",
+      "owner" : "GetClientsClientId",
+      "importPath" : "democompany.services.domain.clients.v1.GetClientsClientId",
+      "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/clients/v1/GetClientsClientId.scala",
+      "imports" : [
+        "schema.*"
+      ],
+      "target" : "NoInput // if no input is needed",
+      "topicName" : "democompany-services-clientsV1-GetClientsClientId",
+      "ownerDescr" : "Get the Client by Id"
+    },
+    {
+      "id" : "democompany.services.domain.clients.v1.GetClientsClientId.ServiceOut",
+      "name" : "GetClientsClientId.ServiceOut",
+      "pkg" : "democompany.services.domain.clients.v1",
+      "kind" : "alias",
+      "owner" : "GetClientsClientId",
+      "importPath" : "democompany.services.domain.clients.v1.GetClientsClientId",
+      "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/clients/v1/GetClientsClientId.scala",
+      "imports" : [
+        "schema.*"
+      ],
+      "target" : "Client  // if no output is needed",
+      "topicName" : "democompany-services-clientsV1-GetClientsClientId",
+      "ownerDescr" : "Get the Client by Id"
+    },
+    {
+      "id" : "democompany.services.domain.clients.v1.schema.Address",
+      "name" : "Address",
+      "pkg" : "democompany.services.domain.clients.v1.schema",
+      "kind" : "case",
+      "importPath" : "democompany.services.domain.clients.v1.schema.Address",
+      "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/clients/v1/schema/Address.scala",
+      "fields" : [
+        {
+          "name" : "street",
+          "type" : "String",
+          "example" : "\"Main Street\""
+        },
+        {
+          "name" : "number",
+          "type" : "String",
+          "example" : "\"123\""
+        },
+        {
+          "name" : "zip",
+          "type" : "String",
+          "example" : "\"12345\""
+        },
+        {
+          "name" : "city",
+          "type" : "String",
+          "example" : "\"Anytown\""
+        },
+        {
+          "name" : "country",
+          "type" : "String",
+          "example" : "\"Germany\""
+        },
+        {
+          "name" : "additionalInfo",
+          "type" : "Option[String]",
+          "example" : "Some(\"Additional Info\")"
+        }
+      ]
+    },
+    {
+      "id" : "democompany.services.domain.clients.v1.schema.Client",
+      "name" : "Client",
+      "pkg" : "democompany.services.domain.clients.v1.schema",
+      "kind" : "case",
+      "importPath" : "democompany.services.domain.clients.v1.schema.Client",
+      "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/clients/v1/schema/Client.scala",
+      "fields" : [
+        {
+          "name" : "id",
+          "type" : "Long",
+          "example" : "1"
+        },
+        {
+          "name" : "firstName",
+          "type" : "String",
+          "example" : "\"John\""
+        },
+        {
+          "name" : "lastName",
+          "type" : "String",
+          "example" : "\"Doe\""
+        },
+        {
+          "name" : "email",
+          "type" : "Option[String]",
+          "example" : "Some(\"john.doe@example.com\")"
+        },
+        {
+          "name" : "tel",
+          "type" : "Option[String]",
+          "example" : "Some(\"+411234567890\")"
+        },
+        {
+          "name" : "address",
+          "type" : "Address",
+          "example" : "Address.example"
+        },
+        {
+          "name" : "gender",
+          "type" : "Gender",
+          "example" : "Gender.Male"
+        },
+        {
+          "name" : "fullName",
+          "type" : "String"
+        },
+        {
+          "name" : "salutation",
+          "type" : "String"
+        },
+        {
+          "name" : "dateOfBirth",
+          "type" : "LocalDate",
+          "example" : "LocalDate.of(1970, 1, 1) ).copy(createdAt = LocalDateTime.of(2021, 1, 1, 0, 0, 0)"
+        },
+        {
+          "name" : "createdAt",
+          "type" : "LocalDateTime"
+        },
+        {
+          "name" : "updatedAt",
+          "type" : "Option[LocalDateTime]"
+        }
+      ]
+    },
+    {
+      "id" : "democompany.services.domain.clients.v1.schema.Gender",
+      "name" : "Gender",
+      "pkg" : "democompany.services.domain.clients.v1.schema",
+      "kind" : "enum",
+      "importPath" : "democompany.services.domain.clients.v1.schema.Gender",
+      "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/clients/v1/schema/Client.scala",
+      "values" : [
+        "Male",
+        "Female",
+        "Unknown"
+      ]
+    },
+    {
+      "id" : "democompany.services.domain.mails.v1.SendEmail.In",
+      "name" : "SendEmail.In",
+      "pkg" : "democompany.services.domain.mails.v1",
+      "kind" : "case",
+      "owner" : "SendEmail",
+      "importPath" : "democompany.services.domain.mails.v1.SendEmail",
+      "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
+      "fields" : [
+        {
+          "name" : "subject",
+          "type" : "String",
+          "example" : "\"Request for Information\""
+        },
+        {
+          "name" : "body",
+          "type" : "String",
+          "example" : "\"\"\"Dear John, how are you?\n          |We need more information.\n          | - Passport or Drivers License\n          | - Proof of Address\n          |Kind regards, Jane\"\"\".stripMargin"
+        },
+        {
+          "name" : "to",
+          "type" : "String",
+          "example" : "\"john.doe@example.com\""
+        },
+        {
+          "name" : "cc",
+          "type" : "Option[String]",
+          "example" : "Some(\"jane.doe@example.com\")"
+        },
+        {
+          "name" : "bcc",
+          "type" : "Option[String]",
+          "example" : "None"
+        }
+      ],
+      "topicName" : "democompany-services-mailsV1-SendEmail",
+      "ownerDescr" : "Send an Email"
+    },
+    {
+      "id" : "democompany.services.domain.mails.v1.SendEmail.Out",
+      "name" : "SendEmail.Out",
+      "pkg" : "democompany.services.domain.mails.v1",
+      "kind" : "case",
+      "owner" : "SendEmail",
+      "importPath" : "democompany.services.domain.mails.v1.SendEmail",
+      "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
+      "topicName" : "democompany-services-mailsV1-SendEmail",
+      "ownerDescr" : "Send an Email"
+    },
+    {
+      "id" : "democompany.services.domain.mails.v1.SendEmail.ServiceIn",
+      "name" : "SendEmail.ServiceIn",
+      "pkg" : "democompany.services.domain.mails.v1",
+      "kind" : "alias",
+      "owner" : "SendEmail",
+      "importPath" : "democompany.services.domain.mails.v1.SendEmail",
+      "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
+      "target" : "In       // just need to format the body to html",
+      "topicName" : "democompany-services-mailsV1-SendEmail",
+      "ownerDescr" : "Send an Email"
+    },
+    {
+      "id" : "democompany.services.domain.mails.v1.SendEmail.ServiceOut",
+      "name" : "SendEmail.ServiceOut",
+      "pkg" : "democompany.services.domain.mails.v1",
+      "kind" : "alias",
+      "owner" : "SendEmail",
+      "importPath" : "democompany.services.domain.mails.v1.SendEmail",
+      "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
+      "target" : "NoOutput // if no output is needed",
+      "topicName" : "democompany-services-mailsV1-SendEmail",
+      "ownerDescr" : "Send an Email"
+    }
+  ],
+  "domainSources" : [
+    "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+  ],
+  "domainDefaults" : [
+    {
+      "name" : "defaultClientId",
+      "pkg" : "democompany.cards.domain",
+      "type" : "Long"
+    },
+    {
+      "name" : "defaultAccountId",
+      "pkg" : "democompany.cards.domain",
+      "type" : "Long"
+    },
+    {
+      "name" : "defaultClientId",
+      "pkg" : "democompany.services.domain.clients.v1",
+      "type" : "Long"
+    },
+    {
+      "name" : "defaultEtag",
+      "pkg" : "democompany.services.domain",
+      "type" : "String"
+    }
+  ],
+  "projects" : [
+    {
+      "id" : "p-democompany-orchescala",
+      "name" : "democompany-orchescala",
+      "path" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala",
+      "types" : 2
+    },
+    {
+      "id" : "p-democompany-cards",
+      "name" : "democompany-cards",
+      "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-cards",
+      "types" : 25
+    },
+    {
+      "id" : "p-democompany-customer",
+      "name" : "democompany-customer",
+      "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-customer",
+      "types" : 48
+    },
+    {
+      "id" : "p-democompany-services",
+      "name" : "democompany-services",
+      "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-services",
+      "types" : 11
+    }
+  ],
+  "projectColors" : {
+    "democompany-cards" : "#c8feda",
+    "democompany-customer" : "#d9d2f5",
+    "democompany-services" : "#ffffcc"
+  }
+}

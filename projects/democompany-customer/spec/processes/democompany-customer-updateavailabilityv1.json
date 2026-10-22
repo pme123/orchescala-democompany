@@ -6,10 +6,10 @@
   "processId": "democompany-customer-updateAvailabilityV1",
   "project": "democompany-customer",
   "engine": "c7",
-  "status": "implemented",
+  "status": "draft",
   "description": "",
   "createdAt": "2026-10-06",
-  "updatedAt": "2026-10-06T15:45:12+02:00",
+  "updatedAt": "2026-10-21T10:56:24+02:00",
   "variables": [],
   "timeToLive": "5",
   "steps": [
@@ -18,7 +18,11 @@
       "kind": "start",
       "name": "alle 15 Minuten",
       "status": "implemented",
-      "eventKind": "timer"
+      "eventKind": "timer",
+      "timer": {
+        "kind": "cycle",
+        "expression": "R/PT15M"
+      }
     },
     {
       "id": "InitProcessTask",

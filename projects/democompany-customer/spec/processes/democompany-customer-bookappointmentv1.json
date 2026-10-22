@@ -6,10 +6,10 @@
   "processId": "democompany-customer-bookAppointmentV1",
   "project": "democompany-customer",
   "engine": "c7",
-  "status": "implemented",
+  "status": "draft",
   "description": "",
   "createdAt": "2026-10-06",
-  "updatedAt": "2026-10-06T15:45:13+02:00",
+  "updatedAt": "2026-10-20T11:16:23+02:00",
   "variables": [],
   "timeToLive": "5",
   "steps": [
@@ -76,7 +76,16 @@
           "expression": "= \"Guten Tag \" + string(customerName) + \"\\\\n\\\\nBitte bestätigen Sie Ihre Terminanfrage (\" + string(appointmentText) + \") mit diesem Link:\\\\n\" + string(verificationLink) + \"\\\\n\\\\nFreundliche Grüsse\\\\nDemo Company\""
         }
       ],
-      "manualOutMapping": false
+      "manualOutMapping": false,
+      "outputs": [
+        {
+          "name": "sentAt",
+          "expression": "= sentAt",
+          "description": "Zeitpunkt des Versands",
+          "disabled": true,
+          "fromService": true
+        }
+      ]
     },
     {
       "id": "VerifyEmailGateway",
@@ -113,7 +122,24 @@
               "status": "implemented",
               "topic": "democompany-customer-bookAppointmentV1-AppointmentRules",
               "resultVariable": "rules",
-              "decisionResult": "singleResult"
+              "decisionResult": "singleResult",
+              "inputs": [
+                {
+                  "name": "topic",
+                  "expression": "= topic",
+                  "description": "Thema (advice, mortgage, pension, investment)"
+                },
+                {
+                  "name": "channel",
+                  "expression": "= channel",
+                  "description": "Kanal (branch, video, phone)"
+                },
+                {
+                  "name": "customerStatus",
+                  "expression": "= customerStatus",
+                  "description": "Kundenstatus (customer, prospect)"
+                }
+              ]
             },
             {
               "id": "ConfirmationRequiredGateway",
@@ -147,7 +173,16 @@
                           "expression": "= \"Neue Terminanfrage von \" + string(customerName) + \": \" + string(appointmentText) + \"\\\\n\\\\nBitte bestätigen oder ablehnen:\\\\n\" + string(confirmLink)"
                         }
                       ],
-                      "manualOutMapping": false
+                      "manualOutMapping": false,
+                      "outputs": [
+                        {
+                          "name": "sentAt",
+                          "expression": "= sentAt",
+                          "description": "Zeitpunkt des Versands",
+                          "disabled": true,
+                          "fromService": true
+                        }
+                      ]
                     },
                     {
                       "id": "ConfirmAppointmentTask",
@@ -181,7 +216,16 @@
                                   "expression": "= \"Die Terminanfrage von \" + string(customerName) + \" (\" + string(appointmentText) + \") ist noch offen:\\\\n\" + string(confirmLink)"
                                 }
                               ],
-                              "manualOutMapping": false
+                              "manualOutMapping": false,
+                              "outputs": [
+                                {
+                                  "name": "sentAt",
+                                  "expression": "= sentAt",
+                                  "description": "Zeitpunkt des Versands",
+                                  "disabled": true,
+                                  "fromService": true
+                                }
+                              ]
                             },
                             {
                               "id": "ReminderSentEndEvent",
@@ -189,7 +233,12 @@
                               "name": "erinnert",
                               "status": "implemented"
                             }
-                          ]
+                          ],
+                          "timer": {
+                            "kind": "duration",
+                            "expression": "= timerConfirmReminder"
+                          },
+                          "boundaryId": "ConfirmReminderEvent"
                         }
                       ]
                     },
@@ -262,7 +311,16 @@
                                   "expression": "= \"Guten Tag \" + string(customerName) + \"\\\\n\\\\nLeider können wir den Termin (\" + string(appointmentText) + \") nicht wahrnehmen. Bitte wählen Sie auf unserer Homepage einen anderen Termin.\\\\n\\\\nFreundliche Grüsse\\\\nDemo Company\""
                                 }
                               ],
-                              "manualOutMapping": false
+                              "manualOutMapping": false,
+                              "outputs": [
+                                {
+                                  "name": "sentAt",
+                                  "expression": "= sentAt",
+                                  "description": "Zeitpunkt des Versands",
+                                  "disabled": true,
+                                  "fromService": true
+                                }
+                              ]
                             },
                             {
                               "id": "DeclinedEndEvent",
@@ -304,7 +362,11 @@
               "name": "nicht bestätigt",
               "status": "implemented",
               "eventKind": "timer",
-              "eventDirection": "catch"
+              "eventDirection": "catch",
+              "timer": {
+                "kind": "duration",
+                "expression": "= timerVerifyEmail"
+              }
             },
             {
               "id": "ReleaseExpiredReservationTask",

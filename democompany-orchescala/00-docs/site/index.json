@@ -1,0 +1,13 @@
+{
+  "title" : "Process & Worker Catalogs",
+  "companies" : [
+    {
+      "id" : "democompany",
+      "name" : "Democompany",
+      "release" : "2026-10",
+      "logo" : "democompany/favicon.ico"
+    }
+  ],
+  "orchescalaUrl" : "https://pme123.github.io/orchescala/",
+  "specUrl" : "spec/"
+}

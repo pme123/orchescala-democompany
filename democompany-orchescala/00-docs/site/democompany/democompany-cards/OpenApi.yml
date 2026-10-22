@@ -1,0 +1,1260 @@
+openapi: 3.1.0
+info:
+  title: Card Management
+  version: 0.1.0-SNAPSHOT
+  summary: "\n\nProcesses and Workers related to Card Management.\n\nCreated at 13.01.2026,\
+    \ 13:56\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
+    \ directly import this OpenApi YAML to [Postman](https://www.postman.com/).\n\n\
+    Only thing you need to adjust is in the Collection.\n- **Authorization**: `Bearer\
+    \ Token` with the `{{access_token}}` from the `GetToken` request.\n- **Variables**:\
+    \ `tenantId`: `{{bank}}`\n- **Scripts - Pre-Request**:\n\n```javascript\n// Refresh\
+    \ the OAuth token if necessary\nlet tokenDate = new Date(2010, 1, 1);\nconst tokenTimestamp\
+    \ = pm.environment.get(\"OAuth_Timestamp\");\nif (tokenTimestamp) {\n  tokenDate\
+    \ = Date.parse(tokenTimestamp);\n}\nlet expiresInTime = pm.environment.get(\"\
+    ExpiresInTime\");\nif (!expiresInTime) {\n  expiresInTime = 300000; // Set default\
+    \ expiration time to 5 minutes\n}\nif (new Date() - tokenDate >= expiresInTime)\
+    \ {\npm.sendRequest(\n{\n  url: `${pm.environment.get(\n      \"tokenService\"\
+    \n    )}/auth/realms/${pm.environment.get(\n      \"bank\"\n    )}/protocol/openid-connect/token`,\n\
+    \  method: \"POST\",\n  header: {\n    \"Content-Type\": \"application/x-www-form-urlencoded\"\
+    ,\n  },\n  body: {\n    mode: \"urlencoded\",\n    urlencoded: [\n      { key:\
+    \ \"grant_type\", value: \"password\" },\n      { key: \"client_id\", value: pm.environment.get(\"\
+    clientId\")},\n      { key: \"client_secret\", value: pm.environment.get(\"clientSecret\"\
+    )},\n      { key: \"username\", value: pm.environment.get(\"username\")},\n  \
+    \    { key: \"password\", value: pm.environment.get(\"pwd\") },\n      { key:\
+    \ \"scope\", value: pm.environment.get(\"scope\") },\n    ],\n  },\n},\n  (_,\
+    \ res) => {\n    pm.environment.set(\"access_token\", res.json().access_token);\n\
+    \    pm.environment.set(\"OAuth_Timestamp\", new Date());\n    // Set the ExpiresInTime\
+    \ variable to the time given in the response if it exists\n    if (res.json().expires_in)\
+    \ {\n      expiresInTime = res.json().expires_in * 1000;\n    }\n    pm.environment.set(\"\
+    ExpiresInTime\", expiresInTime);\n  });\n}\n  ```\n\n- **Scripts - Post-Response**:\n\
+    \n```javascript\n  // Collection-level test script\n  pm.test(\"Auto-set variables\"\
+    , function () {\n    const response = pm.response.json();\n\n    // Set processInstanceId\
+    \ if present\n    if (response.processInstanceId) {\n        const id = response.processInstanceId;\n\
+    \        pm.collectionVariables.set(\"processInstanceId\", id);\n        console.log(\"\
+    Set processInstanceId: \" + id);\n    }\n\n    // Set taskId for array responses\n\
+    \    if (pm.response.headers.get(\"userTaskId\")) {\n        const id = pm.response.headers.get(\"\
+    userTaskId\")\n        pm.collectionVariables.set(\"userTaskInstanceId\", id);\n\
+    \        console.log(\"userTaskInstanceId: \" + id)\n\n    }\n\n});\n  ```\n\n\
+    </p>\n</details>\n\n\n# Package Configuration\n**Check all dependency trees here:\
+    \ [democompany-cards](../../dependencies/democompany-cards.html)**\n\n### Dependencies:\n\
+    \n- _**[democompany-services](NOT_SET/democompany-services/OpenApi.html)**_\n\n\
+    \n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\
+    \nprojectName: democompany-cards\nprojectVersion: 0.1.0-SNAPSHOT\nsubProjects:\
+    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n  democompany-services\n\
+    ]\n\n```\n\n</p>\n</details>\n\n\nThere is no README.md in the Project.\n\n\n\
+    <details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n<p>\n\n\nAll notable\
+    \ changes to this project will be documented in this file.\n\n* Types of Changes\
+    \ (L3):\n  * Added: new features\n  * Changed: changes in existing functionality\n\
+    \  * Deprecated: soon-to-be-removed features\n  * Removed: now removed features\n\
+    \  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\n\nThe format\
+    \ is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this\
+    \ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
+    \n\n</p>\n</details>\n\n\n<p/>\n<details>\n<summary>\n<b><i>General Variables</i></b>\n\
+    </summary>\n\n<p>\n\n### Mocking\n\n**_servicesMocked**:\n\nMock all the _ServiceWorkers_\
+    \ in your process with their default Mock:\n\n- DSL:\n```scala\nprocess(..)\n\
+    \  .mockServices\n```\n\n- Json\n```json\n...\n\"_servicesMocked\": true,\n...\n\
+    ```\n\n\n**_mockedWorkers**:\n\nMock any Process- and/or ExternalTask-Worker with\
+    \ their default Mocks.\nThis is a list of the _Worker topicNames or Process processNames_,\
+    \ you want to mock.\nIt is also possible to use a _comma separated_ String,\n\
+    like `\"mySubProcess,myOtherSubProcess,myService\"`\n\n_Be aware_: For Sub-Processes,\
+    \ this expects an _InitWorker_ where the _topicName_ is equal to the _processName_.\n\
+    \n\n- DSL:\n```scala\nprocess(..)\n  .mockedWorkers(\"mySubProcess1\", \"mySubProcess2\"\
+    ) // creates a list with SubProcessess\n  .mockedWorker(\"myOtherSubProcess\"\
+    ) // adds a SubProcess\n```\n\n- Json\n```json\n...\n\"mockedWorkers\": [\"mySubProcess\"\
+    , \"myOtherSubProcess, myService\"],\n...\n```\n\n\n**_outputMock**:\n\nMock the\
+    \ Process or ExternalTask (`Out`)\n - You find an example in every _Process_ and\
+    \ _ExternalTask_.\n\n\n- DSL:\n```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n\
+    \  .mockWith(outputMock)\n```\n\n- Json\n```json\n...\n\"outputMock\": {..},\n\
+    ...\n```\n\n\n**_outputServiceMock**:\n\nMock the Inner-Service (`MockedServiceResponse[ServiceOut]`)\n\
+    \ - You find an example in every _ServiceTask_.\n\n\n- DSL:\n```scala\nserviceTask(..)\n\
+    \  .mockServiceWith(MockedServiceResponse\n     .success200(inOut.defaultServiceOutMock))\n\
+    ```\n\n- Json\n```json\n...\n\"outputServiceMock\": {\n  \"respStatus\" : 200,\n\
+    \  \"respBody\" : \"Example String Body\",\n  \"respHeaders\" : [\n  ]\n},\n...\n\
+    ```\n\n### Mapping\n**_outputVariables**:\n\nYou can filter the Output with a\
+    \ list of variable names you are interested in.\nThis list may include all variables\
+    \ from the output (`Out`). We included an example for each Process or ExternalTask.\n\
+    It is also possible to use a _comma separated_ String,\nlike `\"name,firstName\"\
+    `\n\n\n- DSL:\n```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n  .withOutputVariables(\"\
+    name\", \"firstName\") // creates a list with outputVariables\n  .withOutputVariable(\"\
+    nickname\") // adds a outputVariable\n```\n\n- Json\n```json\n...\n\"outputVariables\"\
+    : [\"name\", \"firstName\"],\n...\n```\n\n\n**_manualOutMapping**:\n\nBy default\
+    \ all output Variables (`Out`) are on the Process for _External Tasks_.\nIf the\
+    \ filter __outputVariables_ is not enough,\nyou can set this variable - every\
+    \ output variable is then local.\n\n_Be aware_ that you must then manually have\
+    \ _output mappings_ for each output variable!\n\n\n- DSL:\n```scala\nserviceTask(..)\
+    \ // or customTask(..)\n  .manualOutMapping\n```\n\n- Json\n```json\n...\n\"manualOutMapping\"\
+    : true,\n...\n```\n\n### Mocking\n**_handledErrors**:\n\nA list of error codes\
+    \ that are handled (`BpmnError`)\nIt is also possible to use a _comma separated_\
+    \ String,\nlike `\"validation-failed,404\"`\n\nAt the moment only _ServiceTasks_\
+    \ supported.\n\n\n- DSL:\n```scala\nserviceTask(..)\n  .handleErrors(ErrorCodes.`validation-failed`,\
+    \ \"404\") // create a list of handledErrors\n  .handleError(\"404\") // add a\
+    \ handledError\n```\n\n- Json\n```json\n...\n\"handledErrors\": [\"validation-failed\"\
+    , \"404\"],\n...\n```\n\n\n**_regexHandledErrors**:\n\nYou can further filter\
+    \ Handled Errors with a list of Regex expressions that the body error message\
+    \ must match.\nIt is also possible to use a _comma separated_ String,\nlike `\"\
+    SQL exception,\"errorNr\":\"20000\"\"`\n\nAt the moment only _ServiceTasks_ supported.\n\
+    \n\n- DSL:\n```scala\nserviceTask(..)\n  .handleErrorWithRegex(\"SQL exception\"\
+    )\n  .handleErrorWithRegex(\"\\\"errorNr\\\":\\\"20000\\\"\")\n```\n\n- Json\n\
+    ```json\n...\n\"regexHandledErrors\": [\"SQL exception\", \"\"errorNr\":\"20000\"\
+    \"],\n...\n```\n\n### Authorization\n**impersonateUserId**:\n\nUser-ID of a User\
+    \ that should be taken to authenticate to the services.\nThis must be supported\
+    \ by your implementation. *Be caution: this may be a security issue!*.\nIt is\
+    \ helpful if you have Tokens that expire, but long running Processes.\n\n- DSL:\n\
+    ```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n  .withImpersonateUserId(impersonateUserId)\n\
+    ```\n\n- Json\n```json\n...\n\"impersonateUserId\": \"myUserName\",\n...\n```\n\
+    \n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api v0.4.0-SNAPSHOT](https://github.com/pme123/orchescala)\n\
+    > - democompany-orchescala-api 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\
+    \n"
+paths:
+  /process/democompany-cards-orderCreditcardV1/async:
+    post:
+      tags:
+      - Order Creditcard V1
+      summary: Process start
+      description: "\nDemo Process to order a credit card.\n\n---\n\n- **Called Element**:\
+        \ `democompany-cards-orderCreditcardV1` (to define in the Call Activity)\n\
+        \n\n\n---\n\n\n\n\n- Input:  `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
+        \ > In`\n- Output: `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
+        \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
+        \ id=\"cards-orderCreditcardV1-80903\">\n    <img onLoad=\"openFromUrl('cards-orderCreditcardV1.bpmn',\
+        \ new BpmnJS({ container: $('#cards-orderCreditcardV1-80903'), height: '95%',\
+        \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [cards-orderCreditcardV1.bpmn](diagrams/cards-orderCreditcardV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('cards-orderCreditcardV1-80903')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
+        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"processStatus,creditCardAccount,initCreditCardAccount,simpleValue\",\n\
+        ...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ : \"succeeded\",\n  \"creditCardAccount\" : {\n    \"clientId\" : 1213456,\n\
+        \    \"accountId\" : 5555555\n  },\n  \"initCreditCardAccount\" : {\n    \"\
+        clientId\" : 1213456\n  },\n  \"simpleValue\" : \"PETER PAN\"\n},\n...\n```\n\
+        \n</p>\n</details>\n</p>\n      \n\n\n**Used in no other Process.**\n\n**Uses\
+        \ no other Processes.**\n<p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Input</b> to start the Process with.\n\nBe aware\
+        \ that running this request with Postman,\nyou will not get the <b>Output</b>\
+        \ but the <i>processInstanceId</i>, as starting a process is asynchronous.\n\
+        \nTo get the <b>Output</b> you need to use the `Process variables` request.\n\
+        \n</p>\n</details>"
+      operationId: Process start
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/In'
+            examples:
+              democompany-cards-orderCreditcardV1:
+                value:
+                  clientId: 1000
+                  creditCardAccount:
+                    clientId: 1213456
+                    accountId: 5555555
+                  mainCardHolder:
+                    clientInformation:
+                      clientId: 1213456
+                      addressType: Domicile
+                      residencePermitCode: 2
+                    cards:
+                    - categoryType: MainCard
+                      cardLimit: 10000.0
+                      cardCurrency: CHF
+                      embossedLineOne: PETER PAN
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessInfo'
+              example:
+                processInstanceId: f150c3f1-13f5-11ec-936e-0242ac1d0007
+                businessKey: ORDER-2025-12345
+                status: Active
+                engineType: C7
+  /process/democompany-cards-orderCreditcardV1/{processInstanceId}/variables:
+    get:
+      tags:
+      - Order Creditcard V1
+      summary: Process variables
+      description: "\nDemo Process to order a credit card.\n\n---\n\n- **Called Element**:\
+        \ `democompany-cards-orderCreditcardV1` (to define in the Call Activity)\n\
+        \n\n\n---\n\n\n\n\n- Input:  `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
+        \ > In`\n- Output: `democompany.cards.domain.orderCreditcard.v1.OrderCreditcard\
+        \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
+        \ id=\"cards-orderCreditcardV1-75936\">\n    <img onLoad=\"openFromUrl('cards-orderCreditcardV1.bpmn',\
+        \ new BpmnJS({ container: $('#cards-orderCreditcardV1-75936'), height: '95%',\
+        \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [cards-orderCreditcardV1.bpmn](diagrams/cards-orderCreditcardV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('cards-orderCreditcardV1-75936')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
+        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"processStatus,creditCardAccount,initCreditCardAccount,simpleValue\",\n\
+        ...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ : \"succeeded\",\n  \"creditCardAccount\" : {\n    \"clientId\" : 1213456,\n\
+        \    \"accountId\" : 5555555\n  },\n  \"initCreditCardAccount\" : {\n    \"\
+        clientId\" : 1213456\n  },\n  \"simpleValue\" : \"PETER PAN\"\n},\n...\n```\n\
+        \n</p>\n</details>\n</p>\n      <p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Output</b> of the Process you get. Be aware this\
+        \ does not check if the process is finished (TODO).\n\n  \n</p>\n</details>"
+      operationId: Process variables
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: processStatus,creditCardAccount,initCreditCardAccount,simpleValue
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Out'
+              examples:
+                democompany-cards-orderCreditcardV1:
+                  value:
+                    processStatus: succeeded
+                    creditCardAccount:
+                      clientId: 1213456
+                      accountId: 5555555
+                    initCreditCardAccount:
+                      clientId: 1213456
+                    simpleValue: PETER PAN
+  /worker/democompany-cards-orderCreditcardV1:
+    post:
+      tags:
+      - Order Creditcard V1
+      summary: Init Worker
+      description: |2
+
+        <details>
+        <summary><b>General Information</b></summary>
+
+        The Init Worker has the following responsibilities:
+
+          - Validates the Process Input (`In`). -> by Orchescala
+          - Maps the Configuration to Process Variables (`InConfig`). -> by Orchescala
+          - Custom validation the Process Input (`In`, e.g. combining 2 variables). -> Process Specific
+          - Initializes the default Variables with `In` as input (see _Process_ description) and `InitIn` as output. -> Process Specific
+
+        The Input is the same as the `In` object of the _Process_.
+
+        `NoInput` means there is no initialization needed.
+        </details>
+      operationId: Init Worker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/In'
+            examples:
+              democompany-cards-orderCreditcardV1:
+                value:
+                  clientId: 1000
+                  creditCardAccount:
+                    clientId: 1213456
+                    accountId: 5555555
+                  mainCardHolder:
+                    clientInformation:
+                      clientId: 1213456
+                      addressType: Domicile
+                      residencePermitCode: 2
+                    cards:
+                    - categoryType: MainCard
+                      cardLimit: 10000.0
+                      cardCurrency: CHF
+                      embossedLineOne: PETER PAN
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitIn'
+              examples:
+                InitIn:
+                  value:
+                    initCreditCardAccount:
+                      clientId: 1213456
+                    simpleValue: PETER PAN
+  /process/{processInstanceId}/userTask/CheckOrderTask/variables:
+    get:
+      tags:
+      - Order Creditcard V1
+      summary: 'UserTask variables: CheckOrderTask'
+      description: |2-
+
+        Check if the order can be done.
+
+        - _taskDefinitionKey_: `CheckOrderTask`
+
+        ---
+
+
+
+
+        - Input:  `democompany.cards.domain.orderCreditcard.v1.CheckOrderTask > In`
+        - Output: `democompany.cards.domain.orderCreditcard.v1.CheckOrderTask > Out`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        A <b>UserTask</b> consists of two steps (variables and complete).
+        This is the <b>first step</b>:
+
+        1. Wait for the UserTask and get then the Variables.
+
+        The <b>Output</b> are the Variables you want for your UserTask Form.
+
+
+        </p>
+        </details>
+      operationId: 'UserTask variables: CheckOrderTask'
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: client,creditCardAccount,mainCardHolder
+      - name: timeoutInSec
+        in: query
+        description: The maximum number of seconds to wait for the user task to become
+          active. If not provided, it will wait 10 seconds.
+        required: false
+        schema:
+          type: integer
+          format: int32
+        example: 10
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/In1'
+              examples:
+                CheckOrderTask:
+                  value:
+                    client:
+                      id: 1
+                      firstName: John
+                      lastName: Doe
+                      email: john.doe@example.com
+                      tel: '+411234567890'
+                      address:
+                        street: Main Street
+                        number: '123'
+                        zip: '12345'
+                        city: Anytown
+                        country: Germany
+                        additionalInfo: Additional Info
+                      gender:
+                        type: Male
+                      fullName: John Doe
+                      salutation: Mr.
+                      dateOfBirth: '1970-01-01'
+                      createdAt: '2021-01-01T00:00:00'
+                    creditCardAccount:
+                      clientId: 1213456
+                      accountId: 5555555
+                    mainCardHolder:
+                      clientInformation:
+                        clientId: 1213456
+                        addressType: Domicile
+                        residencePermitCode: 2
+                      cards:
+                      - categoryType: MainCard
+                        cardLimit: 10000.0
+                        cardCurrency: CHF
+                        embossedLineOne: PETER PAN
+  /userTask/CheckOrderTask/{userTaskInstanceId}/complete:
+    post:
+      tags:
+      - Order Creditcard V1
+      summary: 'UserTask complete: CheckOrderTask'
+      description: |2-
+
+        Check if the order can be done.
+
+        - _taskDefinitionKey_: `CheckOrderTask`
+
+        ---
+
+
+
+
+        - Input:  `democompany.cards.domain.orderCreditcard.v1.CheckOrderTask > In`
+        - Output: `democompany.cards.domain.orderCreditcard.v1.CheckOrderTask > Out`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        A <b>UserTask</b> consists of two steps (variables and complete).
+        This is the <b>second step</b>:
+
+        2. Complete the UserTask
+
+        The <b>Input</b> are the Variables you want to set when completing the task.
+
+
+        </p>
+        </details>
+      operationId: 'UserTask complete: CheckOrderTask'
+      parameters:
+      - name: userTaskInstanceId
+        in: path
+        description: User task instance ID (obtained from getUserTaskVariables)
+        required: true
+        schema:
+          type: string
+        example: '{{userTaskInstanceId}}'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Out1'
+            examples:
+              CheckOrderTask:
+                value:
+                  approved: true
+                  approveComment: Approved with no issues.
+        required: true
+      responses:
+        '200':
+          description: ''
+  /process/{processInstanceId}/userTask/CallClientTask/variables:
+    get:
+      tags:
+      - Order Creditcard V1
+      summary: 'UserTask variables: CallClientTask'
+      description: |2-
+
+        The Customer Service must call the client due to missing information.
+
+        - _taskDefinitionKey_: `CallClientTask`
+
+        ---
+
+
+
+
+        - Input:  `democompany.cards.domain.orderCreditcard.v1.CallClientTask > In`
+        - Output: `democompany.cards.domain.orderCreditcard.v1.CallClientTask > Out`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        A <b>UserTask</b> consists of two steps (variables and complete).
+        This is the <b>first step</b>:
+
+        1. Wait for the UserTask and get then the Variables.
+
+        The <b>Output</b> are the Variables you want for your UserTask Form.
+
+
+        </p>
+        </details>
+      operationId: 'UserTask variables: CallClientTask'
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: client,creditCardAccount,mainCardHolder
+      - name: timeoutInSec
+        in: query
+        description: The maximum number of seconds to wait for the user task to become
+          active. If not provided, it will wait 10 seconds.
+        required: false
+        schema:
+          type: integer
+          format: int32
+        example: 10
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/In2'
+              examples:
+                CallClientTask:
+                  value:
+                    client:
+                      id: 1
+                      firstName: John
+                      lastName: Doe
+                      email: john.doe@example.com
+                      tel: '+411234567890'
+                      address:
+                        street: Main Street
+                        number: '123'
+                        zip: '12345'
+                        city: Anytown
+                        country: Germany
+                        additionalInfo: Additional Info
+                      gender:
+                        type: Male
+                      fullName: John Doe
+                      salutation: Mr.
+                      dateOfBirth: '1970-01-01'
+                      createdAt: '2021-01-01T00:00:00'
+                    creditCardAccount:
+                      clientId: 1213456
+                      accountId: 5555555
+                    mainCardHolder:
+                      clientInformation:
+                        clientId: 1213456
+                        addressType: Domicile
+                        residencePermitCode: 2
+                      cards:
+                      - categoryType: MainCard
+                        cardLimit: 10000.0
+                        cardCurrency: CHF
+                        embossedLineOne: PETER PAN
+  /userTask/CallClientTask/{userTaskInstanceId}/complete:
+    post:
+      tags:
+      - Order Creditcard V1
+      summary: 'UserTask complete: CallClientTask'
+      description: |2-
+
+        The Customer Service must call the client due to missing information.
+
+        - _taskDefinitionKey_: `CallClientTask`
+
+        ---
+
+
+
+
+        - Input:  `democompany.cards.domain.orderCreditcard.v1.CallClientTask > In`
+        - Output: `democompany.cards.domain.orderCreditcard.v1.CallClientTask > Out`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        A <b>UserTask</b> consists of two steps (variables and complete).
+        This is the <b>second step</b>:
+
+        2. Complete the UserTask
+
+        The <b>Input</b> are the Variables you want to set when completing the task.
+
+
+        </p>
+        </details>
+      operationId: 'UserTask complete: CallClientTask'
+      parameters:
+      - name: userTaskInstanceId
+        in: path
+        description: User task instance ID (obtained from getUserTaskVariables)
+        required: true
+        schema:
+          type: string
+        example: '{{userTaskInstanceId}}'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Out2'
+            examples:
+              CallClientTask:
+                value:
+                  approvedOnTelephone: true
+                  approveOnTelephoneComment: Approved on telephone. Everything could
+                    be clarified.
+        required: true
+      responses:
+        '200':
+          description: ''
+  /worker/democompany-cards-orderCreditcardV1-EvalResponse:
+    post:
+      tags:
+      - Order Creditcard V1
+      summary: 'Worker: EvalResponse'
+      description: |2-
+
+        **Topic:** `democompany-cards-orderCreditcardV1-EvalResponse` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
+
+        Evaluates the different responses if not approved.
+
+        - Input:  `democompany.cards.domain.orderCreditcard.v1.EvalResponse > In > Email`
+        - Output: `democompany.cards.domain.orderCreditcard.v1.EvalResponse > Out`
+
+
+
+        You can test this worker using the generic process _**orchescala-externalTask-generic**_ (e.g. with Postman).
+
+
+
+        **Used in no other Process.**
+
+        **Uses no other Processes.**
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        This describes the <b>Input</b> and the <b>Output</b> of the Worker.
+
+        Running this request with Postman, it will run the Worker directly, no Process will be started.
+
+        </p>
+        </details>
+      operationId: 'Worker: EvalResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/In3'
+            examples:
+              EvalResponse > In > Email:
+                value:
+                  emailBody: Hello
+                  type: Email
+              EvalResponse > In > Telephone:
+                value:
+                  approvedOnTelephone: true
+                  approveOnTelephoneComment: Approved on telephone. Everything could
+                    be clarified.
+                  type: Telephone
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Out3'
+              examples:
+                democompany-cards-orderCreditcardV1-EvalResponse:
+                  value:
+                    orderCorrect: true
+  /message/democompany-cards-orderCreditcardV1.ReceiveEmail:
+    post:
+      tags:
+      - Order Creditcard V1
+      summary: 'Message: ReceiveEmail'
+      description: |2-
+
+        Mail Service calls us after response is received.
+
+        - _messageName_: `democompany-cards-orderCreditcardV1.ReceiveEmail`
+
+        ---
+
+
+
+
+        - Input:  `democompany.cards.domain.orderCreditcard.v1.ReceiveEmailME > In`
+        - Output: `orchescala.domain.NoOutput`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+        Send a Message to the Process.
+        Process is waiting at a Message Event, or has the possibility to interact with a Message,
+        e.g. in a Boundary Event.
+
+        </p>
+        </details>
+      operationId: 'Message: ReceiveEmail'
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: timeToLiveInSec
+        in: query
+        description: 'The time in seconds the message is buffered, waiting for correlation.
+          The default value is 0 seconds (no buffering). Only supported in C8 - BE
+          AWARE that if set, it is fire and forget: Camunda will just try to correlate
+          for the configured time.'
+        required: false
+        schema:
+          type: integer
+          format: int32
+        example: 10
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      - name: processInstanceId
+        in: query
+        description: Process instance ID to correlate the message to a specific process
+          instance.
+        required: false
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/In4'
+            examples:
+              democompany-cards-orderCreditcardV1.ReceiveEmail:
+                value:
+                  sender: peter.pan@demoland.com
+                  receiver: customerservice@democompany.ch
+                  subject: 'RE: Missing Information for ordering creditcard.'
+                  body: |
+                    Hello
+
+                    Here the missing information:
+                     Birthday: 01.01.1990
+                     Gender: Male
+        required: true
+      responses:
+        '200':
+          description: ''
+  /signal/{orderCreditcardV1-processInstanceId_CancelOrderSignal}:
+    post:
+      tags:
+      - Order Creditcard V1
+      summary: 'Signal: {processInstanceId}.CancelOrderSignal'
+      description: |2-
+
+        Signal to cancel the order.
+
+        - _messageName_: `democompany-cards-orderCreditcardV1-{processInstanceId}.CancelOrderSignal`
+
+        ---
+
+
+
+
+        - Input:  `orchescala.domain.NoInput`
+        - Output: `orchescala.domain.NoOutput`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+        Send a Signal to the Process.
+        Process is waiting at a Signal Event, or has the possibility to interact with a Signal,
+        e.g. in a Boundary Event.
+        </p>
+        </details>
+      operationId: 'Signal: {processInstanceId}.CancelOrderSignal'
+      parameters:
+      - name: orderCreditcardV1-processInstanceId_CancelOrderSignal
+        in: path
+        required: true
+        schema:
+          type: string
+        example: democompany-cards-orderCreditcardV1-{{processInstanceId}}.CancelOrderSignal
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      responses:
+        '200':
+          description: ''
+components:
+  schemas:
+    Address:
+      title: Address
+      type: object
+      required:
+      - street
+      - number
+      - zip
+      - city
+      - country
+      properties:
+        street:
+          type: string
+        number:
+          type: string
+        zip:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        additionalInfo:
+          type: string
+    CardAccount:
+      title: CardAccount
+      type: object
+      required:
+      - clientId
+      properties:
+        clientId:
+          type: integer
+          format: int64
+        accountId:
+          type: integer
+          format: int64
+    CardCurrency:
+      title: CardCurrency
+      type: string
+      enum:
+      - CHF
+      - EUR
+      - USD
+    CardHolder:
+      title: CardHolder
+      type: object
+      required:
+      - clientInformation
+      - cards
+      properties:
+        clientInformation:
+          $ref: '#/components/schemas/ClientInfo'
+        cards:
+          description: The list of cards must have at least one _Card_.
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ModuleCard'
+    CardHolderType:
+      title: CardHolderType
+      type: string
+      enum:
+      - Additional
+      - Domicile
+    CategoryType:
+      title: CategoryType
+      type: string
+      enum:
+      - AdditionalCard
+      - MainCard
+    Client:
+      title: Client
+      type: object
+      required:
+      - id
+      - firstName
+      - lastName
+      - address
+      - gender
+      - fullName
+      - salutation
+      - dateOfBirth
+      - createdAt
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        tel:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+        gender:
+          $ref: '#/components/schemas/Gender'
+        fullName:
+          type: string
+        salutation:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    ClientInfo:
+      title: ClientInfo
+      type: object
+      required:
+      - clientId
+      - addressType
+      properties:
+        clientId:
+          type: integer
+          format: int64
+        addressType:
+          $ref: '#/components/schemas/CardHolderType'
+        residencePermitCode:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 7
+          - 3
+          - 4
+          - 5
+          - 6
+          - 8
+          format: int32
+    Email:
+      title: Email
+      type: object
+      required:
+      - emailBody
+      properties:
+        emailBody:
+          type: string
+    EngineType:
+      title: EngineType
+      description: Type of the engine
+      type: string
+      enum:
+      - C7
+      - C8
+      - Gateway
+    Female:
+      title: Female
+      type: object
+    Gender:
+      title: Gender
+      oneOf:
+      - $ref: '#/components/schemas/Female'
+      - $ref: '#/components/schemas/Male'
+      - $ref: '#/components/schemas/Unknown'
+    In:
+      title: In
+      type: object
+      required:
+      - clientId
+      - creditCardAccount
+      properties:
+        clientId:
+          type: integer
+          format: int64
+        creditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        mainCardHolder:
+          $ref: '#/components/schemas/CardHolder'
+        inConfig:
+          $ref: '#/components/schemas/InConfig'
+    In1:
+      title: In
+      type: object
+      required:
+      - client
+      - creditCardAccount
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        creditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        mainCardHolder:
+          $ref: '#/components/schemas/CardHolder'
+    In2:
+      title: In
+      type: object
+      required:
+      - client
+      - creditCardAccount
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        creditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        mainCardHolder:
+          $ref: '#/components/schemas/CardHolder'
+    In3:
+      title: In
+      oneOf:
+      - $ref: '#/components/schemas/Email'
+      - $ref: '#/components/schemas/None'
+      - $ref: '#/components/schemas/Telephone'
+    In4:
+      title: In
+      type: object
+      required:
+      - sender
+      - receiver
+      - subject
+      - body
+      properties:
+        sender:
+          type: string
+        receiver:
+          type: string
+        subject:
+          type: string
+        body:
+          type: string
+    InConfig:
+      title: InConfig
+      description: |-
+        A way to override process configuration.
+
+        **SHOULD NOT BE USED on Production!**
+      type: object
+      required:
+      - timerNotReceivedEmail
+      properties:
+        timerNotReceivedEmail:
+          description: To test cancel from other processes you need to set this flag.
+          type: string
+        getClientMock:
+          $ref: '#/components/schemas/MockedServiceResponse_ServiceOut'
+    InitIn:
+      title: InitIn
+      type: object
+      required:
+      - initCreditCardAccount
+      properties:
+        initCreditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        simpleValue:
+          type: string
+    Male:
+      title: Male
+      type: object
+    MockedServiceResponse_ServiceOut:
+      title: MockedServiceResponse_ServiceOut
+      description: |
+        You can mock the response variables of this (sub)process.
+
+        Class: `democompany.services.domain.clients.v1.schema.Client`
+
+        Here an example:
+
+        ```scala
+        {
+          "id" : 1,
+          "firstName" : "John",
+          "lastName" : "Doe",
+          "email" : "john.doe@example.com",
+          "tel" : "+411234567890",
+          "address" : {
+            "street" : "Main Street",
+            "number" : "123",
+            "zip" : "12345",
+            "city" : "Anytown",
+            "country" : "Germany",
+            "additionalInfo" : "Additional Info"
+          },
+          "gender" : {
+            "type" : "Male"
+          },
+          "fullName" : "John Doe",
+          "salutation" : "Mr.",
+          "dateOfBirth" : "1970-01-01",
+          "createdAt" : "2021-01-01T00:00:00"
+        }
+        ```
+
+        General to mocking:
+
+        - `outputMock` mocks this process.
+        - `someSubProcessMock` mocks a sub process
+      type: object
+      required:
+      - respStatus
+      - respBody
+      properties:
+        respStatus:
+          type: integer
+          format: int32
+        respBody:
+          oneOf:
+          - $ref: '#/components/schemas/Client'
+          - {}
+        respHeaders:
+          type: array
+          items:
+            type: array
+            items:
+              type: string
+    ModuleCard:
+      title: ModuleCard
+      type: object
+      required:
+      - categoryType
+      - embossedLineOne
+      properties:
+        categoryType:
+          $ref: '#/components/schemas/CategoryType'
+        cardLimit:
+          type: number
+          format: double
+        cardCurrency:
+          $ref: '#/components/schemas/CardCurrency'
+        embossedLineOne:
+          type: string
+    None:
+      title: None
+      type: object
+    Out:
+      title: Out
+      type: object
+      required:
+      - processStatus
+      - creditCardAccount
+      - initCreditCardAccount
+      properties:
+        processStatus:
+          $ref: '#/components/schemas/ProcessStatus1'
+        creditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        initCreditCardAccount:
+          $ref: '#/components/schemas/CardAccount'
+        simpleValue:
+          type: string
+    Out1:
+      title: Out
+      type: object
+      required:
+      - approved
+      - approveComment
+      properties:
+        approved:
+          type: boolean
+        approveComment:
+          type: string
+    Out2:
+      title: Out
+      type: object
+      required:
+      - approvedOnTelephone
+      - approveOnTelephoneComment
+      properties:
+        approvedOnTelephone:
+          type: boolean
+        approveOnTelephoneComment:
+          type: string
+    Out3:
+      title: Out
+      type: object
+      required:
+      - orderCorrect
+      properties:
+        orderCorrect:
+          type: boolean
+    ProcessInfo:
+      title: ProcessInfo
+      description: Contains information about a process instance or execution
+      type: object
+      required:
+      - processInstanceId
+      - status
+      - engineType
+      properties:
+        processInstanceId:
+          description: ID of the process instance
+          type: string
+        businessKey:
+          description: Optional business key associated with the process
+          type: string
+        status:
+          $ref: '#/components/schemas/ProcessStatus'
+        engineType:
+          $ref: '#/components/schemas/EngineType'
+    ProcessStatus:
+      title: ProcessStatus
+      description: Current status of the process
+      type: string
+      enum:
+      - Active
+      - Completed
+      - Failed
+    ProcessStatus1:
+      title: ProcessStatus
+      type: string
+      enum:
+      - canceled
+      - failed
+      - notSucceeded
+      - notValid
+      - output-mocked
+      - succeeded
+    Telephone:
+      title: Telephone
+      type: object
+      required:
+      - approvedOnTelephone
+      - approveOnTelephoneComment
+      properties:
+        approvedOnTelephone:
+          type: boolean
+        approveOnTelephoneComment:
+          type: string
+    Unknown:
+      title: Unknown
+      type: object
+tags: []
