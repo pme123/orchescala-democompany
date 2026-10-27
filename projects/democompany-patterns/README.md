@@ -70,39 +70,38 @@ und Szenario 3 käme nie zum InitWorker in der Engine.
 
 ### Engines
 
-- **Camunda 7**: die Firmen-Einstellung (`CAMUNDA_BASE_URL`, Standard
-  `http://localhost:8080/engine-rest`, Token über `SSO_BASE_URL`).
-- **Camunda 8**: ein **lokales c8run ohne Anmeldung** (`PatternsC8Simulation`, `PatternsC8Client`) –
-  die Firmen-Einstellung zeigt auf den SaaS-Cluster.
-  - `C8_LOCAL_GRPC_URL` (Standard `http://localhost:26500`)
-  - `C8_LOCAL_REST_URL` (Standard `http://localhost:8181`)
+Beide über die Firmen-Einstellung:
+
+- **Camunda 7**: `CAMUNDA_BASE_URL` (Standard `http://localhost:8080/engine-rest`, Token über `SSO_BASE_URL`).
+- **Camunda 8**: wie bei Valiant ein **lokales c8run ohne Anmeldung** – `CAMUNDA_C8_GRPC_URL`
+  (Standard `http://localhost:26500`), `CAMUNDA_C8_REST_URL` (Standard `http://localhost:8181`),
+  `CAMUNDA_C8_OPERATE_URL`.
+
+Gateway und Worker-Apps nutzen die Engines aus `COMPANY_ENGINES` (Standard `C7,C8,Op`).
 
 ### Starten
 
 1. Gateway der Firma starten – im Ordner `democompany-orchescala` (`GATEWAY_PORT`, wenn 8888 schon
    belegt ist):
    ```bash
-   COMPANY_ENGINES=C7 GATEWAY_PORT=8887 sbt gateway/run
+   COMPANY_ENGINES=C7,C8 GATEWAY_PORT=8887 sbt gateway/run
    ```
 2. Worker starten (C7 und C8 in einer App). `WORKER_APP_PORT`, wenn 5555 schon belegt ist:
    ```bash
-   WORKER_APP_PORT=5556 sbt "worker/runMain democompany.patterns.worker.WorkerApp"
+   COMPANY_ENGINES=C7,C8 WORKER_APP_PORT=5556 sbt "worker/runMain democompany.patterns.worker.WorkerApp"
    ```
-3. **C7** – deployen und simulieren in einem Schritt, wie bei Valiant, nur über den Gateway statt BPF:
+3. Deployen und simulieren in einem Schritt – wie bei Valiant, nur über den Gateway statt BPF:
    ```bash
    GATEWAY_URL=http://localhost:8887 ./helper.scala deploy InitProcessC7Simulation
    ```
+   ```bash
+   GATEWAY_URL=http://localhost:8887 ./helper.scala deploy InitProcessC8Simulation
+   ```
    Der Helper der Firma (`CompanyDeployHelper`) macht `sbt publishLocal`, schickt das Manifest
-   `democompany:democompany-patterns:0.1.0-SNAPSHOT` an `POST <GATEWAY_URL>/deployment?targetEngine=C7`
-   (der Gateway liest die BPMN aus dem Jar in `~/.ivy2/local`, Ordner `camunda`) und startet danach
-   die Simulation. `GATEWAY_TOKEN` ist nur nötig, wenn der Gateway Tokens prüft (`TOKEN_ISSUER`).
-4. **C8** (c8run) – direkt an die Engine, der Gateway der Firma kennt nur den SaaS-Cluster:
-   ```bash
-   curl -X POST -F "resources=@src/main/resources/camunda8/patterns-initProcessV1.bpmn" http://localhost:8181/v2/deployments
-   ```
-   ```bash
-   sbt "simulation/testOnly *InitProcessC8Simulation"
-   ```
+   `democompany:democompany-patterns:0.1.0-SNAPSHOT` an `POST <GATEWAY_URL>/deployment?targetEngine=<C7|C8>`
+   (die Engine aus dem Namen der Simulation; der Gateway liest die BPMN aus dem Jar in
+   `~/.ivy2/local`, Ordner `camunda` bzw. `camunda8`) und startet danach die Simulation.
+   `GATEWAY_TOKEN` ist nur nötig, wenn der Gateway Tokens prüft (`TOKEN_ISSUER`).
 
 ## Nächste Patterns
 
@@ -133,5 +132,3 @@ Signatur) erst nach der Korrelation.
 
 - Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId` nicht (im normalen Lauf schon) –
   die Variablen kommen dort über den Fehler `output-mocked`, nicht über das Abschliessen des Jobs.
-- Die Firma kennt kein lokales C8 (nur SaaS) und registriert keinen C8-Worker
-  (`CompanyWorkerApp`) – darum die eigenen Klassen `PatternsC8Client` / `PatternsC8Simulation`.
