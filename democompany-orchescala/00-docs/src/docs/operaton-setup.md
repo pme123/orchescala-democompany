@@ -108,7 +108,7 @@ class OrderCreditcardGSimulation
 
 The G-Simulation provides cockpit URLs for all engines:
 - Camunda 7: `CAMUNDA_COCKPIT_URL`
-- Camunda 8: `CAMUNDA8_CLOUD_OPERATE_URL`
+- Camunda 8: `CAMUNDA_C8_OPERATE_URL`
 - Operaton: `OPERATON_COCKPIT_URL`
 
 ## Workers

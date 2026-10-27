@@ -42,10 +42,13 @@ object CompanyApiCreator:
   // Kundentermine - on Operaton, i.e. the BPMN of Camunda 7 (src/main/resources/camunda)
   lazy val `democompany-customer` =
     ProjectConfig("democompany-customer", group = customer, color = "#d9d2f5", bpmnProcessType = BpmnProcessType.C7())
+  // the catalog with example processes for the Orchescala patterns - BPMN for C7 and C8
+  lazy val `democompany-patterns` = generalProjectConfig("democompany-patterns", "#dbe8fb")
 
   lazy val projects: Seq[ProjectConfig] = Seq(
     `democompany-cards`,
     `democompany-customer`,
+    `democompany-patterns`,
     `democompany-services`
   )
 

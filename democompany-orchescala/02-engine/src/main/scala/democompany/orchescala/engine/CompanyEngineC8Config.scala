@@ -1,16 +1,17 @@
 package democompany.orchescala.engine
 
-/** Using the SAAS version of Camunda 8 (Camunda Champions Access;).
+/** Camunda 8 - like at Valiant a local c8run (no authentication):
+  *   - `CAMUNDA_C8_GRPC_URL` (default `http://localhost:26500`)
+  *   - `CAMUNDA_C8_REST_URL` (default `http://localhost:8181`)
+  *   - `CAMUNDA_C8_OPERATE_URL` (default `http://localhost:8181/operate/processes/`)
   */
 trait CompanyEngineC8Config:
 
-  lazy val zeebeGrpc    = sys.env.getOrElse("CAMUNDA8_CLOUD_GRPC_URL", s"NOT_SET")
-  lazy val zeebeRest    = sys.env.getOrElse("CAMUNDA8_CLOUD_REST_URL", s"NOT_SET")
-  lazy val zeebeOperateUrl = sys.env.getOrElse("CAMUNDA8_CLOUD_OPERATE_URL", s"NOT_SET")
-  lazy val audience     = sys.env.getOrElse("CAMUNDA8_CLOUD_AUDIENCE", "zeebe.camunda.io")
-  lazy val clientId     = sys.env("CAMUNDA8_CLOUD_CLIENTID")
-  lazy val clientSecret = sys.env("CAMUNDA8_CLOUD_CLIENTSECRET")
-  lazy val oAuthAPI     =
-    sys.env.getOrElse("CAMUNDA8_CLOUD_OAUTH_URL", "https://login.cloud.camunda.io/oauth/token")
+  lazy val c8GrpcUrl    = sys.env.getOrElse("CAMUNDA_C8_GRPC_URL", "http://localhost:26500")
+  lazy val c8RestUrl    = sys.env.getOrElse("CAMUNDA_C8_REST_URL", "http://localhost:8181")
+  lazy val c8OperateUrl =
+    sys.env.getOrElse("CAMUNDA_C8_OPERATE_URL", "http://localhost:8181/operate/processes/")
+
+end CompanyEngineC8Config
 
 object CompanyEngineC8Config extends CompanyEngineC8Config
