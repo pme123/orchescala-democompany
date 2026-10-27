@@ -1,7 +1,6 @@
 package democompany.orchescala.worker
 
-import democompany.orchescala.engine.CompanyEngineC8Config
-import orchescala.engine.c8.C8SaasClient
+import democompany.orchescala.engine.CompanyEngineC8Client
 
-trait CompanyC8Client  extends C8SaasClient, CompanyEngineC8Config
+trait CompanyC8Client  extends CompanyEngineC8Client
 object CompanyC8Client extends CompanyC8Client

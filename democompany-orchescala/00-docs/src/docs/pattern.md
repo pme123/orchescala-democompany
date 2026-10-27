@@ -86,11 +86,9 @@ CAMUNDA_COCKPIT_URL=http://localhost:8080/camunda/app/cockpit/default/
 
 **Camunda 8:**
 ```bash
-CAMUNDA8_CLOUD_GRPC_URL=your-grpc-url
-CAMUNDA8_CLOUD_REST_URL=your-rest-url
-CAMUNDA8_CLOUD_OPERATE_URL=your-operate-url
-CAMUNDA8_CLOUD_CLIENTID=your-client-id
-CAMUNDA8_CLOUD_CLIENTSECRET=your-client-secret
+CAMUNDA_C8_GRPC_URL=http://localhost:26500
+CAMUNDA_C8_REST_URL=http://localhost:8181
+CAMUNDA_C8_OPERATE_URL=http://localhost:8181/operate/processes/
 ```
 
 **Operaton:**

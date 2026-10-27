@@ -10,7 +10,7 @@ trait CompanyGSimulation extends CompanySimulation, CompanyEngineGApp:
       engineConfig = companyEngineConfig,
       cockpitUrl = Map(
         EngineType.C7 -> CompanyEngineC7Config.camundaCockpitUrl,
-        EngineType.C8 -> CompanyEngineC8Config.zeebeOperateUrl,
+        EngineType.C8 -> CompanyEngineC8Config.c8OperateUrl,
         EngineType.Op -> CompanyEngineOpConfig.operatonCockpitUrl
       )
     )
