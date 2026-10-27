@@ -81,10 +81,10 @@ Gateway und Worker-Apps nutzen die Engines aus `COMPANY_ENGINES` (Standard `C7,C
 
 ### Starten
 
-1. Gateway der Firma starten – im Ordner `democompany-orchescala` (`GATEWAY_PORT`, wenn 8888 schon
-   belegt ist):
+1. Gateway der Firma starten – im Ordner `democompany-orchescala` (Port 8887, ein anderer mit
+   `GATEWAY_PORT`):
    ```bash
-   COMPANY_ENGINES=C7,C8 GATEWAY_PORT=8887 sbt gateway/run
+   COMPANY_ENGINES=C7,C8 sbt gateway/run
    ```
 2. Worker starten (C7 und C8 in einer App). `WORKER_APP_PORT`, wenn 5555 schon belegt ist:
    ```bash
@@ -92,16 +92,17 @@ Gateway und Worker-Apps nutzen die Engines aus `COMPANY_ENGINES` (Standard `C7,C
    ```
 3. Deployen und simulieren in einem Schritt – wie bei Valiant, nur über den Gateway statt BPF:
    ```bash
-   GATEWAY_URL=http://localhost:8887 ./helper.scala deploy InitProcessC7Simulation
+   ./helper.scala deploy InitProcessC7Simulation
    ```
    ```bash
-   GATEWAY_URL=http://localhost:8887 ./helper.scala deploy InitProcessC8Simulation
+   ./helper.scala deploy InitProcessC8Simulation
    ```
    Der Helper der Firma (`CompanyDeployHelper`) macht `sbt publishLocal`, schickt das Manifest
    `democompany:democompany-patterns:0.1.0-SNAPSHOT` an `POST <GATEWAY_URL>/deployment?targetEngine=<C7|C8>`
    (die Engine aus dem Namen der Simulation; der Gateway liest die BPMN aus dem Jar in
    `~/.ivy2/local`, Ordner `camunda` bzw. `camunda8`) und startet danach die Simulation.
-   `GATEWAY_TOKEN` ist nur nötig, wenn der Gateway Tokens prüft (`TOKEN_ISSUER`).
+   `GATEWAY_URL` (Standard `http://localhost:8887`) für einen anderen Gateway; `GATEWAY_TOKEN` ist nur
+   nötig, wenn der Gateway Tokens prüft (`TOKEN_ISSUER`).
 
 ## Nächste Patterns
 

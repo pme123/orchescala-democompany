@@ -16,13 +16,14 @@ import scala.concurrent.duration.*
   *   1. `POST <GATEWAY_URL>/deployment?targetEngine=<engine>` with the manifest of the project
   *   1. `sbt simulation/testOnly *<simulation>` (`all` for all simulations)
   *
-  * `GATEWAY_URL` (default `http://localhost:8888`), `GATEWAY_TOKEN` (default `local-dev` - enough for
-  * a gateway without `TOKEN_ISSUER`, it only checks that there is a token).
+  * `GATEWAY_URL` (default `http://localhost:8887` - the port of the company gateway), `GATEWAY_TOKEN`
+  * (default `local-dev` - enough for a gateway without `TOKEN_ISSUER`, it only checks that there is a
+  * token).
   */
 case class CompanyDeployHelper(devConfig: DevConfig):
 
   private lazy val gatewayUrl   =
-    sys.env.get("GATEWAY_URL").filter(_.nonEmpty).getOrElse("http://localhost:8888").stripSuffix("/")
+    sys.env.get("GATEWAY_URL").filter(_.nonEmpty).getOrElse("http://localhost:8887").stripSuffix("/")
   private lazy val gatewayToken = sys.env.get("GATEWAY_TOKEN").filter(_.nonEmpty).getOrElse("local-dev")
 
   def deploy(simulation: Option[String], engineType: EngineType): Unit =
