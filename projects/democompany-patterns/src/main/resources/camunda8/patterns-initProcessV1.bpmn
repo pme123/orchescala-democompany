@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_patternsInitProcessV1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.34.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
+  <bpmn:process id="democompany-patterns-initProcessV1" name="democompany-patterns-initProcessV1" isExecutable="true">
+    <bpmn:startEvent id="StartEvent" name="Start">
+      <bpmn:outgoing>StartFlow</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="InitProcessTask" name="Init Process">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="democompany-patterns-initProcessV1" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=&#34;output-mocked&#34;" target="_handledErrors" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>StartFlow</bpmn:incoming>
+      <bpmn:outgoing>InitProcessFlow</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="SucceededEndEvent" name="succeeded">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=&#34;succeeded&#34;" target="processStatus" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>InitProcessFlow</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="OutputMockedBoundary" attachedToRef="InitProcessTask">
+      <bpmn:outgoing>OutputMockedBoundaryFlow</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="OutputMockedBoundaryDef" errorRef="OutputMockedError" />
+    </bpmn:boundaryEvent>
+    <bpmn:intermediateThrowEvent id="OutputMockedThrow" name="output-mocked">
+      <bpmn:incoming>OutputMockedBoundaryFlow</bpmn:incoming>
+      <bpmn:linkEventDefinition id="OutputMockedThrowDef" name="output-mocked" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateCatchEvent id="OutputmockedEvent" name="output-mocked">
+      <bpmn:outgoing>OutputmockedFlow</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="OutputmockedEventDef" name="output-mocked" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="OutputmockedEndEvent" name="output-mocked">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=&#34;output-mocked&#34;" target="processStatus" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>OutputmockedFlow</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="StartFlow" sourceRef="StartEvent" targetRef="InitProcessTask" />
+    <bpmn:sequenceFlow id="InitProcessFlow" sourceRef="InitProcessTask" targetRef="SucceededEndEvent" />
+    <bpmn:sequenceFlow id="OutputMockedBoundaryFlow" sourceRef="OutputMockedBoundary" targetRef="OutputMockedThrow" />
+    <bpmn:sequenceFlow id="OutputmockedFlow" sourceRef="OutputmockedEvent" targetRef="OutputmockedEndEvent" />
+  </bpmn:process>
+  <bpmn:error id="OutputMockedError" name="output-mocked" errorCode="output-mocked" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="democompany-patterns-initProcessV1">
+      <bpmndi:BPMNShape id="StartEvent_di" bpmnElement="StartEvent">
+        <dc:Bounds x="112" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="118" y="165" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="InitProcessTask_di" bpmnElement="InitProcessTask" color:background-color="#D5D5D5">
+        <dc:Bounds x="200" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SucceededEndEvent_di" bpmnElement="SucceededEndEvent">
+        <dc:Bounds x="422" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="414" y="165" width="52" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputMockedThrow_di" bpmnElement="OutputMockedThrow" color:background-color="#D5D5D5">
+        <dc:Bounds x="262" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="244" y="285" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedEvent_di" bpmnElement="OutputmockedEvent" color:background-color="#D5D5D5">
+        <dc:Bounds x="422" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="404" y="385" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedEndEvent_di" bpmnElement="OutputmockedEndEvent" color:background-color="#D5D5D5">
+        <dc:Bounds x="522" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="504" y="385" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputMockedBoundary_di" bpmnElement="OutputMockedBoundary" color:background-color="#D5D5D5">
+        <dc:Bounds x="262" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="StartFlow_di" bpmnElement="StartFlow">
+        <di:waypoint x="148" y="140" />
+        <di:waypoint x="200" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="InitProcessFlow_di" bpmnElement="InitProcessFlow">
+        <di:waypoint x="300" y="140" />
+        <di:waypoint x="422" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="OutputMockedBoundaryFlow_di" bpmnElement="OutputMockedBoundaryFlow">
+        <di:waypoint x="280" y="198" />
+        <di:waypoint x="280" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="OutputmockedFlow_di" bpmnElement="OutputmockedFlow">
+        <di:waypoint x="458" y="360" />
+        <di:waypoint x="522" y="360" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
