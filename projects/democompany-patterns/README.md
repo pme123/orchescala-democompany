@@ -107,7 +107,8 @@ Gateway und Worker-Apps nutzen die Engines aus `COMPANY_ENGINES` (Standard `C7,C
 ## Identität übernehmen / zurücksetzen – `democompany-patterns-identityV1`
 
 ```
-Start ─▶ [Init Process] ─▶ [Antrag freigeben] ─▶ ◯ Identität übernehmen ─▶ [Antrag abschliessen] ─▶ ◯ Identität zurücksetzen ─▶ (succeeded)
+Start ─▶ [Init Process] ─▶ [Antrag freigeben] ─▶ ◯ Identität übernehmen ─▶ [Identität prüfen]
+      ─▶ [Antrag abschliessen] ─▶ ◯ Identität zurücksetzen ─▶ [Identität prüfen] ─▶ (succeeded)
 ```
 
 Zwei getrennte Patterns – opt-in wie in C7: nur wo das Pattern steht, wechselt die Identität.
@@ -125,7 +126,9 @@ entscheidet das BPMN (siehe «Voraussetzung: Orchescala»).
   `_identityCorrelation = _identityCorrelationBefore`.
 
 Die Signatur bindet die Identität an die Prozessinstanz, nicht an den Namen der Variable – nach dem
-Kopieren prüfen die Worker sie wie bisher.
+Kopieren prüfen die Worker sie wie bisher. Das zeigt **«Identität prüfen»**: ein ServiceWorker nach dem
+Übernehmen und nach dem Zurücksetzen. Er ist im BPMN gemockt (`_servicesMocked = true`), prüft aber
+vorher die Signatur von `_identityCorrelation` – eine ungültige lässt den Job scheitern.
 
 | | Camunda 7 | Camunda 8 |
 |---|---|---|
@@ -139,6 +142,8 @@ Kopieren prüfen die Worker sie wie bisher.
 |---|---|
 | [`Identity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/Identity.scala) | `In`, `Out` |
 | [`ApproveRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/ApproveRequestUT.scala) | «Antrag freigeben» – wer sie erledigt, wird übernommen |
+| [`CheckIdentity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala) | «Identität prüfen» – Service-Aufruf mit der Identität des Prozesses |
+| [`CheckIdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/CheckIdentityWorker.scala) | der ServiceWorker dazu (gemockt) |
 | [`CloseRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala) | «Antrag abschliessen» – hier hat der Prozess die übernommene Identität |
 | [`IdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/IdentityWorker.scala) | InitWorker: Prüfung des In |
 | [`camunda/patterns-identityV1.bpmn`](src/main/resources/camunda/patterns-identityV1.bpmn) | Camunda 7 |
@@ -147,8 +152,8 @@ Kopieren prüfen die Worker sie wie bisher.
 
 ### Simulationen
 
-1. **`Identity approved`** – beide Benutzeraufgaben; am Ende gibt es `_identityCorrelation`,
-   `_identityCorrelationBefore` und `_identityCorrelationOfActor`.
+1. **`Identity approved`** – beide Benutzeraufgaben, «Identität prüfen» zweimal ohne Fehler; am Ende
+   gibt es `_identityCorrelation`, `_identityCorrelationBefore` und `_identityCorrelationOfActor`.
 2. **`Identity mocked`** – endet über `output-mocked`, ohne Benutzeraufgabe.
 3. **`Identity invalid In`** – `customerName = " "`: Incident `validation-failed`.
 
@@ -168,6 +173,8 @@ lokales Gateway gestartet als `starter`, «Antrag freigeben» erledigt als `appr
 | bei «Antrag freigeben» | `starter` |
 | bei «Antrag abschliessen» | `approver` (übernommen) |
 | am Ende | `starter` (zurückgesetzt) – `_identityCorrelationBefore = starter` |
+
+«Identität prüfen» hat dabei beide Male die Signatur des Gateways akzeptiert (`approver`, dann `starter`).
 
 ### Voraussetzung: Orchescala
 

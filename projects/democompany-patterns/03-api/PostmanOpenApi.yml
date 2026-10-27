@@ -5,7 +5,7 @@ info:
   summary: "\n**This is for Postman - to have example requests. Be aware the Output\
     \ is not provided!**\n\n\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns\
     \ - je Pattern ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated\
-    \ at 10/27/26, 12:10 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ at 10/27/26, 12:20 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -112,48 +112,55 @@ info:
     \ anderen Gateway; `GATEWAY_TOKEN` ist nur\n   nötig, wenn der Gateway Tokens\
     \ prüft (`TOKEN_ISSUER`).\n\n## Identität übernehmen / zurücksetzen – `democompany-patterns-identityV1`\n\
     \n```\nStart ─▶ [Init Process] ─▶ [Antrag freigeben] ─▶ ◯ Identität übernehmen\
-    \ ─▶ [Antrag abschliessen] ─▶ ◯ Identität zurücksetzen ─▶ (succeeded)\n```\n\n\
-    Zwei getrennte Patterns – opt-in wie in C7: nur wo das Pattern steht, wechselt\
-    \ die Identität.\n\nDas Gateway setzt `_identityCorrelation` nur beim **Start**.\
-    \ Schliesst jemand eine Benutzeraufgabe ab\n(oder sendet eine Nachricht mit `processInstanceId`),\
-    \ gibt es dessen signierte Identität als\n**`_identityCorrelationOfActor`** mit\
-    \ – `_identityCorrelation` bleibt. Ob der Prozess sie übernimmt,\nentscheidet\
-    \ das BPMN (siehe «Voraussetzung: Orchescala»).\n\n- **«Identität übernehmen»\
-    ** – ein leeres Zwischenereignis direkt nach der Benutzeraufgabe (oder dem\n \
-    \ Empfang der Nachricht):\n  `_identityCorrelationBefore = _identityCorrelation`,\
-    \ dann\n  `_identityCorrelation = _identityCorrelationOfActor` (fehlt sie, bleibt\
-    \ die bisherige).\n- **«Identität zurücksetzen»** – ein leeres Zwischenereignis,\
-    \ überall möglich:\n  `_identityCorrelation = _identityCorrelationBefore`.\n\n\
-    Die Signatur bindet die Identität an die Prozessinstanz, nicht an den Namen der\
-    \ Variable – nach dem\nKopieren prüfen die Worker sie wie bisher.\n\n Camunda\
-    \ 7 | Camunda 8 |\n---|---|---|\n übernehmen | zwei Execution Listener (`start`)\
-    \ mit `execution.setVariable(...)` und `execution.getVariableTyped(...)` | Output-Mappings\
-    \ – die Quellen werden alle vor dem Setzen gelesen |\n zurücksetzen | ein Execution\
-    \ Listener | ein Output-Mapping |\n\n**C8:** die Output-Mappings stehen auf dem\
-    \ leeren Zwischenereignis – nicht auf der Benutzeraufgabe\n(mit einem Output-Mapping\
-    \ übernimmt Zeebe dort sonst nur noch die gemappten Variablen).\n\n Datei | Inhalt\
-    \ |\n---|---|\n [`Identity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/Identity.scala)\
+    \ ─▶ [Identität prüfen]\n      ─▶ [Antrag abschliessen] ─▶ ◯ Identität zurücksetzen\
+    \ ─▶ [Identität prüfen] ─▶ (succeeded)\n```\n\nZwei getrennte Patterns – opt-in\
+    \ wie in C7: nur wo das Pattern steht, wechselt die Identität.\n\nDas Gateway\
+    \ setzt `_identityCorrelation` nur beim **Start**. Schliesst jemand eine Benutzeraufgabe\
+    \ ab\n(oder sendet eine Nachricht mit `processInstanceId`), gibt es dessen signierte\
+    \ Identität als\n**`_identityCorrelationOfActor`** mit – `_identityCorrelation`\
+    \ bleibt. Ob der Prozess sie übernimmt,\nentscheidet das BPMN (siehe «Voraussetzung:\
+    \ Orchescala»).\n\n- **«Identität übernehmen»** – ein leeres Zwischenereignis\
+    \ direkt nach der Benutzeraufgabe (oder dem\n  Empfang der Nachricht):\n  `_identityCorrelationBefore\
+    \ = _identityCorrelation`, dann\n  `_identityCorrelation = _identityCorrelationOfActor`\
+    \ (fehlt sie, bleibt die bisherige).\n- **«Identität zurücksetzen»** – ein leeres\
+    \ Zwischenereignis, überall möglich:\n  `_identityCorrelation = _identityCorrelationBefore`.\n\
+    \nDie Signatur bindet die Identität an die Prozessinstanz, nicht an den Namen\
+    \ der Variable – nach dem\nKopieren prüfen die Worker sie wie bisher. Das zeigt\
+    \ **«Identität prüfen»**: ein ServiceWorker nach dem\nÜbernehmen und nach dem\
+    \ Zurücksetzen. Er ist im BPMN gemockt (`_servicesMocked = true`), prüft aber\n\
+    vorher die Signatur von `_identityCorrelation` – eine ungültige lässt den Job\
+    \ scheitern.\n\n Camunda 7 | Camunda 8 |\n---|---|---|\n übernehmen | zwei Execution\
+    \ Listener (`start`) mit `execution.setVariable(...)` und `execution.getVariableTyped(...)`\
+    \ | Output-Mappings – die Quellen werden alle vor dem Setzen gelesen |\n zurü\
+    cksetzen | ein Execution Listener | ein Output-Mapping |\n\n**C8:** die Output-Mappings\
+    \ stehen auf dem leeren Zwischenereignis – nicht auf der Benutzeraufgabe\n(mit\
+    \ einem Output-Mapping übernimmt Zeebe dort sonst nur noch die gemappten Variablen).\n\
+    \n Datei | Inhalt |\n---|---|\n [`Identity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/Identity.scala)\
     \ | `In`, `Out` |\n [`ApproveRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/ApproveRequestUT.scala)\
-    \ | «Antrag freigeben» – wer sie erledigt, wird übernommen |\n [`CloseRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala)\
+    \ | «Antrag freigeben» – wer sie erledigt, wird übernommen |\n [`CheckIdentity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala)\
+    \ | «Identität prüfen» – Service-Aufruf mit der Identität des Prozesses |\n [`CheckIdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/CheckIdentityWorker.scala)\
+    \ | der ServiceWorker dazu (gemockt) |\n [`CloseRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala)\
     \ | «Antrag abschliessen» – hier hat der Prozess die übernommene Identität |\n\
     \ [`IdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/IdentityWorker.scala)\
     \ | InitWorker: Prüfung des In |\n [`camunda/patterns-identityV1.bpmn`](src/main/resources/camunda/patterns-identityV1.bpmn)\
     \ | Camunda 7 |\n [`camunda8/patterns-identityV1.bpmn`](src/main/resources/camunda8/patterns-identityV1.bpmn)\
     \ | Camunda 8 |\n [`IdentitySimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/IdentitySimulation.scala)\
     \ | die Szenarien, für beide Engines gleich |\n\n### Simulationen\n\n1. **`Identity\
-    \ approved`** – beide Benutzeraufgaben; am Ende gibt es `_identityCorrelation`,\n\
-    \   `_identityCorrelationBefore` und `_identityCorrelationOfActor`.\n2. **`Identity\
-    \ mocked`** – endet über `output-mocked`, ohne Benutzeraufgabe.\n3. **`Identity\
-    \ invalid In`** – `customerName = \" \"`: Incident `validation-failed`.\n\n```bash\n\
-    ./helper.scala deploy IdentityC7Simulation\n```\n```bash\n./helper.scala deploy\
-    \ IdentityC8Simulation\n```\n\nDie Simulation startet und erledigt alles mit **derselben**\
-    \ Test-Identität (`admin`) – sie zeigt, dass\ndie Variablen gesetzt werden, aber\
-    \ nicht den Wechsel. Den Wechsel geprüft (C7 und C8): über ein\nlokales Gateway\
-    \ gestartet als `starter`, «Antrag freigeben» erledigt als `approver`:\n\n wann\
-    \ | `_identityCorrelation` |\n---|---|\n bei «Antrag freigeben» | `starter` |\n\
-    \ bei «Antrag abschliessen» | `approver` (übernommen) |\n am Ende | `starter`\
-    \ (zurückgesetzt) – `_identityCorrelationBefore = starter` |\n\n### Voraussetzung:\
-    \ Orchescala\n\n`_identityCorrelationOfActor` setzt das Gateway erst ab dem Orchescala-Branch\n\
+    \ approved`** – beide Benutzeraufgaben, «Identität prüfen» zweimal ohne Fehler;\
+    \ am Ende\n   gibt es `_identityCorrelation`, `_identityCorrelationBefore` und\
+    \ `_identityCorrelationOfActor`.\n2. **`Identity mocked`** – endet über `output-mocked`,\
+    \ ohne Benutzeraufgabe.\n3. **`Identity invalid In`** – `customerName = \" \"\
+    `: Incident `validation-failed`.\n\n```bash\n./helper.scala deploy IdentityC7Simulation\n\
+    ```\n```bash\n./helper.scala deploy IdentityC8Simulation\n```\n\nDie Simulation\
+    \ startet und erledigt alles mit **derselben** Test-Identität (`admin`) – sie\
+    \ zeigt, dass\ndie Variablen gesetzt werden, aber nicht den Wechsel. Den Wechsel\
+    \ geprüft (C7 und C8): über ein\nlokales Gateway gestartet als `starter`, «Antrag\
+    \ freigeben» erledigt als `approver`:\n\n wann | `_identityCorrelation` |\n---|---|\n\
+    \ bei «Antrag freigeben» | `starter` |\n bei «Antrag abschliessen» | `approver`\
+    \ (übernommen) |\n am Ende | `starter` (zurückgesetzt) – `_identityCorrelationBefore\
+    \ = starter` |\n\n«Identität prüfen» hat dabei beide Male die Signatur des Gateways\
+    \ akzeptiert (`approver`, dann `starter`).\n\n### Voraussetzung: Orchescala\n\n\
+    `_identityCorrelationOfActor` setzt das Gateway erst ab dem Orchescala-Branch\n\
     `claude/gateway-actor-identity-b424f0` (0.9.0-SNAPSHOT, noch nicht gemergt). Mit\
     \ einem älteren\nGateway überschreibt der Abschluss einer Aufgabe die Identitä\
     t selbst: C8 immer, C7 nur mit\n`doOverrideImpersonation = true`.\n\n## Offene\
@@ -467,6 +474,37 @@ paths:
                     approved:
                       value: true
                       type: Boolean
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-patterns-identityV1-CheckIdentity--:
+    post:
+      tags:
+      - democompany-patterns-identityV1
+      summary: 'Worker: CheckIdentity'
+      description: "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses;\
+        \ der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.\n\
+        \n---\n\n\n\n<details>\n<summary><b>Wrapped Service:</b>\n\n(Patterns Identity\
+        \ 1.0 - v1.0 - GET: identity)\n</summary>\n<p>\nInput Body: `orchescala.domain.NoInput`:\n\
+        \n\nExample Response: `orchescala.domain.NoOutput`:\n\n```json\n{\n  \"respStatus\"\
+        \ : 204,\n  \"respBody\" : {\n    \n  },\n  \"respHeaders\" : [\n  ]\n}\n\
+        ```\n</p>\n</details>\n</p>\n\n---\n\n\nSee API Doc: [Worker: CheckIdentity](/site/democompany/democompany-patterns/OpenApi.html#operation/Worker:%20CheckIdentity)\n"
+      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-patterns-identityv1-checkidentity--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-patterns-identityV1-CheckIdentity:
+                value:
+                  variables:
+                    customerName:
+                      value: Peter Muster
+                      type: String
+                  businessKey: democompany-patterns-identityV1-CheckIdentity
                   withVariablesInReturn: true
         required: true
       responses:

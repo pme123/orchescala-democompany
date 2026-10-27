@@ -24,7 +24,8 @@ object WorkerApp extends CompanyWorkerApp:
   private lazy val identityWorkers =
     import democompany.patterns.worker.identity.v1.*
     Seq(
-      new IdentityWorker()
+      new IdentityWorker(),
+      new CheckIdentityWorker()
     )
   end identityWorkers
 end WorkerApp

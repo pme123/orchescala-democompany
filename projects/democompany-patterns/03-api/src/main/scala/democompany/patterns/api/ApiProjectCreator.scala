@@ -23,6 +23,7 @@ object ApiProjectCreator extends CompanyApiCreator:
     import democompany.patterns.domain.identity.v1.*
     api(Identity.example)(
       ApproveRequestUT.example,
+      CheckIdentity.example,
       CloseRequestUT.example
     )
 end ApiProjectCreator

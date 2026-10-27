@@ -25,8 +25,17 @@
       <bpmn:incoming>ApproveRequestFlow</bpmn:incoming>
       <bpmn:outgoing>TakeOverIdentityFlow</bpmn:outgoing>
     </bpmn:intermediateThrowEvent>
-    <bpmn:userTask id="CloseRequestUT" name="Antrag abschliessen">
+    <bpmn:serviceTask id="CheckIdentityAsActorTask" name="Identität prüfen (übernommen)" camunda:type="external" camunda:topic="democompany-patterns-identityV1-CheckIdentity">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="_servicesMocked">${true}</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
       <bpmn:incoming>TakeOverIdentityFlow</bpmn:incoming>
+      <bpmn:outgoing>CheckIdentityAsActorFlow</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="CloseRequestUT" name="Antrag abschliessen">
+      <bpmn:incoming>CheckIdentityAsActorFlow</bpmn:incoming>
       <bpmn:outgoing>CloseRequestFlow</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:intermediateThrowEvent id="ResetIdentityEvent" name="Identität zurücksetzen">
@@ -36,11 +45,20 @@
       <bpmn:incoming>CloseRequestFlow</bpmn:incoming>
       <bpmn:outgoing>ResetIdentityFlow</bpmn:outgoing>
     </bpmn:intermediateThrowEvent>
+    <bpmn:serviceTask id="CheckIdentityAsStarterTask" name="Identität prüfen (zurückgesetzt)" camunda:type="external" camunda:topic="democompany-patterns-identityV1-CheckIdentity">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="_servicesMocked">${true}</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>ResetIdentityFlow</bpmn:incoming>
+      <bpmn:outgoing>CheckIdentityAsStarterFlow</bpmn:outgoing>
+    </bpmn:serviceTask>
     <bpmn:endEvent id="SucceededEndEvent" name="succeeded">
       <bpmn:extensionElements>
         <camunda:executionListener expression="${execution.setVariable(&#34;processStatus&#34;, &#34;succeeded&#34;)}" event="start" />
       </bpmn:extensionElements>
-      <bpmn:incoming>ResetIdentityFlow</bpmn:incoming>
+      <bpmn:incoming>CheckIdentityAsStarterFlow</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:boundaryEvent id="OutputMockedBoundary" attachedToRef="InitProcessTask">
       <bpmn:outgoing>OutputMockedBoundaryFlow</bpmn:outgoing>
@@ -63,9 +81,11 @@
     <bpmn:sequenceFlow id="StartFlow" sourceRef="StartEvent" targetRef="InitProcessTask" />
     <bpmn:sequenceFlow id="InitProcessFlow" sourceRef="InitProcessTask" targetRef="ApproveRequestUT" />
     <bpmn:sequenceFlow id="ApproveRequestFlow" sourceRef="ApproveRequestUT" targetRef="TakeOverIdentityEvent" />
-    <bpmn:sequenceFlow id="TakeOverIdentityFlow" sourceRef="TakeOverIdentityEvent" targetRef="CloseRequestUT" />
+    <bpmn:sequenceFlow id="TakeOverIdentityFlow" sourceRef="TakeOverIdentityEvent" targetRef="CheckIdentityAsActorTask" />
+    <bpmn:sequenceFlow id="CheckIdentityAsActorFlow" sourceRef="CheckIdentityAsActorTask" targetRef="CloseRequestUT" />
     <bpmn:sequenceFlow id="CloseRequestFlow" sourceRef="CloseRequestUT" targetRef="ResetIdentityEvent" />
-    <bpmn:sequenceFlow id="ResetIdentityFlow" sourceRef="ResetIdentityEvent" targetRef="SucceededEndEvent" />
+    <bpmn:sequenceFlow id="ResetIdentityFlow" sourceRef="ResetIdentityEvent" targetRef="CheckIdentityAsStarterTask" />
+    <bpmn:sequenceFlow id="CheckIdentityAsStarterFlow" sourceRef="CheckIdentityAsStarterTask" targetRef="SucceededEndEvent" />
     <bpmn:sequenceFlow id="OutputMockedBoundaryFlow" sourceRef="OutputMockedBoundary" targetRef="OutputMockedThrow" />
     <bpmn:sequenceFlow id="OutputmockedFlow" sourceRef="OutputmockedEvent" targetRef="OutputmockedEndEvent" />
   </bpmn:process>
@@ -90,19 +110,25 @@
           <dc:Bounds x="505" y="165" width="70" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CloseRequestUT_di" bpmnElement="CloseRequestUT">
+      <bpmndi:BPMNShape id="CheckIdentityAsActorTask_di" bpmnElement="CheckIdentityAsActorTask">
         <dc:Bounds x="620" y="100" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CloseRequestUT_di" bpmnElement="CloseRequestUT">
+        <dc:Bounds x="780" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ResetIdentityEvent_di" bpmnElement="ResetIdentityEvent" color:background-color="#D5D5D5">
-        <dc:Bounds x="782" y="122" width="36" height="36" />
+        <dc:Bounds x="942" y="122" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="765" y="165" width="70" height="27" />
+          <dc:Bounds x="925" y="165" width="70" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CheckIdentityAsStarterTask_di" bpmnElement="CheckIdentityAsStarterTask">
+        <dc:Bounds x="1040" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="SucceededEndEvent_di" bpmnElement="SucceededEndEvent">
-        <dc:Bounds x="882" y="122" width="36" height="36" />
+        <dc:Bounds x="1202" y="122" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="874" y="165" width="52" height="14" />
+          <dc:Bounds x="1194" y="165" width="52" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="OutputMockedThrow_di" bpmnElement="OutputMockedThrow" color:background-color="#D5D5D5">
@@ -112,15 +138,15 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="OutputmockedEvent_di" bpmnElement="OutputmockedEvent" color:background-color="#D5D5D5">
-        <dc:Bounds x="782" y="342" width="36" height="36" />
+        <dc:Bounds x="1102" y="342" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="764" y="385" width="72" height="14" />
+          <dc:Bounds x="1084" y="385" width="72" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="OutputmockedEndEvent_di" bpmnElement="OutputmockedEndEvent" color:background-color="#D5D5D5">
-        <dc:Bounds x="882" y="342" width="36" height="36" />
+        <dc:Bounds x="1202" y="342" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="864" y="385" width="72" height="14" />
+          <dc:Bounds x="1184" y="385" width="72" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="OutputMockedBoundary_di" bpmnElement="OutputMockedBoundary" color:background-color="#D5D5D5">
@@ -142,21 +168,29 @@
         <di:waypoint x="558" y="140" />
         <di:waypoint x="620" y="140" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CloseRequestFlow_di" bpmnElement="CloseRequestFlow">
+      <bpmndi:BPMNEdge id="CheckIdentityAsActorFlow_di" bpmnElement="CheckIdentityAsActorFlow">
         <di:waypoint x="720" y="140" />
-        <di:waypoint x="782" y="140" />
+        <di:waypoint x="780" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CloseRequestFlow_di" bpmnElement="CloseRequestFlow">
+        <di:waypoint x="880" y="140" />
+        <di:waypoint x="942" y="140" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ResetIdentityFlow_di" bpmnElement="ResetIdentityFlow">
-        <di:waypoint x="818" y="140" />
-        <di:waypoint x="882" y="140" />
+        <di:waypoint x="978" y="140" />
+        <di:waypoint x="1040" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CheckIdentityAsStarterFlow_di" bpmnElement="CheckIdentityAsStarterFlow">
+        <di:waypoint x="1140" y="140" />
+        <di:waypoint x="1202" y="140" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="OutputMockedBoundaryFlow_di" bpmnElement="OutputMockedBoundaryFlow">
         <di:waypoint x="280" y="198" />
         <di:waypoint x="280" y="242" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="OutputmockedFlow_di" bpmnElement="OutputmockedFlow">
-        <di:waypoint x="818" y="360" />
-        <di:waypoint x="882" y="360" />
+        <di:waypoint x="1138" y="360" />
+        <di:waypoint x="1202" y="360" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

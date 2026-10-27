@@ -1,0 +1,128 @@
+{
+  "name" : "democompany-patterns-identityV1-CheckIdentity",
+  "id" : "democompany-patterns-identityV1-CheckIdentity",
+  "description" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.\n\n",
+  "version" : 0,
+  "appliesTo" : [
+    "bpmn:Activity"
+  ],
+  "elementType" : {
+    "value" : "bpmn:ServiceTask"
+  },
+  "properties" : [
+    {
+      "value" : "#{customerName}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "customerName"
+      },
+      "label" : "customerName",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "identityChecked",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{identityChecked}"
+      },
+      "label" : "identityChecked",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "democompany-patterns-identityV1-CheckIdentity",
+      "binding" : {
+        "type" : "property",
+        "name" : "camunda:topic"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "external",
+      "binding" : {
+        "type" : "property",
+        "name" : "camunda:type"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.getVariable('_outputServiceMock')}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_outputServiceMock"
+      },
+      "label" : "_outputServiceMock",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{true}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_manualOutMapping"
+      },
+      "label" : "_manualOutMapping",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "identityChecked",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_outputVariables"
+      },
+      "label" : "_outputVariables",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.getVariable('_outputMock')}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_outputMock"
+      },
+      "label" : "_outputMock",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "handledError1, handledError2",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_handledErrors"
+      },
+      "label" : "_handledErrors",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "errorRegex1, errorRegex2",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "_regexHandledErrors"
+      },
+      "label" : "_regexHandledErrors",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "Check Identity",
+      "binding" : {
+        "type" : "property",
+        "name" : "name"
+      },
+      "label" : "",
+      "description" : "",
+      "type" : "Hidden"
+    }
+  ],
+  "$schema" : "https://unpkg.com/@camunda/element-templates-json-schema@0.16.0/resources/schema.json",
+  "groups" : [
+  ],
+  "entriesVisible" : true
+}
