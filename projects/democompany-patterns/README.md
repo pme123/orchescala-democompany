@@ -79,34 +79,29 @@ und Szenario 3 käme nie zum InitWorker in der Engine.
 
 ### Starten
 
-1. BPMN deployen
-   - C7 über den Gateway der Firma: er liest die BPMN aus dem Projekt-Jar in `~/.ivy2/local`
-     (Ordner `camunda`) und meldet sich selbst bei der Engine an.
-     ```bash
-     sbt publishLocal
-     ```
-     Im Ordner `democompany-orchescala` (`GATEWAY_PORT`, wenn 8888 schon belegt ist):
-     ```bash
-     COMPANY_ENGINES=C7 GATEWAY_PORT=8887 sbt gateway/run
-     ```
-     ```bash
-     curl -X POST "http://localhost:8887/deployment?targetEngine=C7" -H "Authorization: Bearer local-dev" -H "Content-Type: application/json" -d '{"deployments":[{"company":"democompany","project":"democompany-patterns","version":"0.1.0-SNAPSHOT"}]}'
-     ```
-     Ohne `TOKEN_ISSUER` prüft der Gateway nur, ob ein Token da ist.
-   - C8 (c8run): direkt an die Engine – der Gateway der Firma kennt nur den SaaS-Cluster.
-     ```bash
-     curl -X POST -F "resources=@src/main/resources/camunda8/patterns-initProcessV1.bpmn" http://localhost:8181/v2/deployments
-     ```
+1. Gateway der Firma starten – im Ordner `democompany-orchescala` (`GATEWAY_PORT`, wenn 8888 schon
+   belegt ist):
+   ```bash
+   COMPANY_ENGINES=C7 GATEWAY_PORT=8887 sbt gateway/run
+   ```
 2. Worker starten (C7 und C8 in einer App). `WORKER_APP_PORT`, wenn 5555 schon belegt ist:
    ```bash
    WORKER_APP_PORT=5556 sbt "worker/runMain democompany.patterns.worker.WorkerApp"
    ```
-3. Simulation:
+3. **C7** – deployen und simulieren in einem Schritt, wie bei Valiant, nur über den Gateway statt BPF:
    ```bash
-   sbt "simulation/testOnly *InitProcessC8Simulation"
+   GATEWAY_URL=http://localhost:8887 ./helper.scala deploy InitProcessC7Simulation
+   ```
+   Der Helper der Firma (`CompanyDeployHelper`) macht `sbt publishLocal`, schickt das Manifest
+   `democompany:democompany-patterns:0.1.0-SNAPSHOT` an `POST <GATEWAY_URL>/deployment?targetEngine=C7`
+   (der Gateway liest die BPMN aus dem Jar in `~/.ivy2/local`, Ordner `camunda`) und startet danach
+   die Simulation. `GATEWAY_TOKEN` ist nur nötig, wenn der Gateway Tokens prüft (`TOKEN_ISSUER`).
+4. **C8** (c8run) – direkt an die Engine, der Gateway der Firma kennt nur den SaaS-Cluster:
+   ```bash
+   curl -X POST -F "resources=@src/main/resources/camunda8/patterns-initProcessV1.bpmn" http://localhost:8181/v2/deployments
    ```
    ```bash
-   sbt "simulation/testOnly *InitProcessC7Simulation"
+   sbt "simulation/testOnly *InitProcessC8Simulation"
    ```
 
 ## Offene Punkte
