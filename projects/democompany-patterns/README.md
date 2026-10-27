@@ -104,6 +104,31 @@ und Szenario 3 käme nie zum InitWorker in der Engine.
    sbt "simulation/testOnly *InitProcessC8Simulation"
    ```
 
+## Nächste Patterns
+
+### Identität übernehmen / zurücksetzen
+
+Zwei getrennte Patterns – wie in C7 opt-in: nur wo das Pattern steht, wechselt die Identität.
+
+- **«Identität übernehmen»** – an einer Benutzeraufgabe (beim Abschluss) oder am Empfang einer Nachricht.
+  - C7 heute: Listener mit Skript
+    `impersonateUserIdTemp = impersonateUserId; impersonateUserId = <angemeldeter Benutzer>`.
+  - Neu mit `_identityCorrelation`: `_identityCorrelationBefore = _identityCorrelation`,
+    `_identityCorrelation = <Identität der handelnden Person>`.
+- **«Identität zurücksetzen»** – überall möglich.
+  - C7 heute: `impersonateUserId = impersonateUserIdTemp`.
+  - Neu: Output-Mapping `_identityCorrelation = _identityCorrelationBefore`.
+
+**C8:** die Output-Mappings stehen auf einem leeren Zwischenereignis direkt danach – nicht auf der
+Benutzeraufgabe, dem Nachrichten-Ereignis oder dem Service-Task (mit einem Output-Mapping übernimmt
+Zeebe dort sonst nur noch die gemappten Variablen).
+
+**Voraussetzung in Orchescala (Gateway):** `_identityCorrelation` nur beim Start setzen; beim
+Abschluss einer Aufgabe und beim Senden einer Nachricht die signierte Identität der handelnden Person
+unter eigenem Namen mitgeben (Arbeitsname `_identityCorrelationOfActor`).
+Offen: Nachrichten mit Korrelation über den businessKey – das Gateway kennt die Instanz (für die
+Signatur) erst nach der Korrelation.
+
 ## Offene Punkte
 
 - Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId` nicht (im normalen Lauf schon) –
