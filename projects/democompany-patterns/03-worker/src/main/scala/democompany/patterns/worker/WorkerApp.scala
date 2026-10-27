@@ -4,7 +4,8 @@ package democompany.patterns.worker
 // sbt worker/run
 object WorkerApp extends CompanyWorkerApp:
   workers(
-    initProcessWorkers
+    initProcessWorkers,
+    identityWorkers
   )
   dependencies(
   )
@@ -19,4 +20,11 @@ object WorkerApp extends CompanyWorkerApp:
       new InitProcessWorker()
     )
   end initProcessWorkers
+
+  private lazy val identityWorkers =
+    import democompany.patterns.worker.identity.v1.*
+    Seq(
+      new IdentityWorker()
+    )
+  end identityWorkers
 end WorkerApp

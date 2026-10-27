@@ -5,7 +5,7 @@ Orch Spec in einen Prozess einfügt und wiedererkennt. Je Pattern gibt es einen 
 für Camunda 7 und Camunda 8 und eine Simulation je Engine, die den Baustein auf einer echten Engine
 durchspielt. Später sollen die BPMN auch als Testdaten für die Orch Spec dienen.
 
-Bis jetzt: **«Init Process»**.
+Bis jetzt: **«Init Process»** und **«Identität übernehmen / zurücksetzen»**.
 
 ## Init Process – `democompany-patterns-initProcessV1`
 
@@ -104,32 +104,81 @@ Gateway und Worker-Apps nutzen die Engines aus `COMPANY_ENGINES` (Standard `C7,C
    `GATEWAY_URL` (Standard `http://localhost:8887`) für einen anderen Gateway; `GATEWAY_TOKEN` ist nur
    nötig, wenn der Gateway Tokens prüft (`TOKEN_ISSUER`).
 
-## Nächste Patterns
+## Identität übernehmen / zurücksetzen – `democompany-patterns-identityV1`
 
-### Identität übernehmen / zurücksetzen
+```
+Start ─▶ [Init Process] ─▶ [Antrag freigeben] ─▶ ◯ Identität übernehmen ─▶ [Antrag abschliessen] ─▶ ◯ Identität zurücksetzen ─▶ (succeeded)
+```
 
-Zwei getrennte Patterns – wie in C7 opt-in: nur wo das Pattern steht, wechselt die Identität.
+Zwei getrennte Patterns – opt-in wie in C7: nur wo das Pattern steht, wechselt die Identität.
 
-- **«Identität übernehmen»** – an einer Benutzeraufgabe (beim Abschluss) oder am Empfang einer Nachricht.
-  - C7 heute: Listener mit Skript
-    `impersonateUserIdTemp = impersonateUserId; impersonateUserId = <angemeldeter Benutzer>`.
-  - Neu mit `_identityCorrelation`: `_identityCorrelationBefore = _identityCorrelation`,
-    `_identityCorrelation = <Identität der handelnden Person>`.
-- **«Identität zurücksetzen»** – überall möglich.
-  - C7 heute: `impersonateUserId = impersonateUserIdTemp`.
-  - Neu: Output-Mapping `_identityCorrelation = _identityCorrelationBefore`.
+Das Gateway setzt `_identityCorrelation` nur beim **Start**. Schliesst jemand eine Benutzeraufgabe ab
+(oder sendet eine Nachricht mit `processInstanceId`), gibt es dessen signierte Identität als
+**`_identityCorrelationOfActor`** mit – `_identityCorrelation` bleibt. Ob der Prozess sie übernimmt,
+entscheidet das BPMN (siehe «Voraussetzung: Orchescala»).
 
-**C8:** die Output-Mappings stehen auf einem leeren Zwischenereignis direkt danach – nicht auf der
-Benutzeraufgabe, dem Nachrichten-Ereignis oder dem Service-Task (mit einem Output-Mapping übernimmt
-Zeebe dort sonst nur noch die gemappten Variablen).
+- **«Identität übernehmen»** – ein leeres Zwischenereignis direkt nach der Benutzeraufgabe (oder dem
+  Empfang der Nachricht):
+  `_identityCorrelationBefore = _identityCorrelation`, dann
+  `_identityCorrelation = _identityCorrelationOfActor` (fehlt sie, bleibt die bisherige).
+- **«Identität zurücksetzen»** – ein leeres Zwischenereignis, überall möglich:
+  `_identityCorrelation = _identityCorrelationBefore`.
 
-**Voraussetzung in Orchescala (Gateway):** `_identityCorrelation` nur beim Start setzen; beim
-Abschluss einer Aufgabe und beim Senden einer Nachricht die signierte Identität der handelnden Person
-unter eigenem Namen mitgeben (Arbeitsname `_identityCorrelationOfActor`).
-Offen: Nachrichten mit Korrelation über den businessKey – das Gateway kennt die Instanz (für die
-Signatur) erst nach der Korrelation.
+Die Signatur bindet die Identität an die Prozessinstanz, nicht an den Namen der Variable – nach dem
+Kopieren prüfen die Worker sie wie bisher.
+
+| | Camunda 7 | Camunda 8 |
+|---|---|---|
+| übernehmen | zwei Execution Listener (`start`) mit `execution.setVariable(...)` und `execution.getVariableTyped(...)` | Output-Mappings – die Quellen werden alle vor dem Setzen gelesen |
+| zurücksetzen | ein Execution Listener | ein Output-Mapping |
+
+**C8:** die Output-Mappings stehen auf dem leeren Zwischenereignis – nicht auf der Benutzeraufgabe
+(mit einem Output-Mapping übernimmt Zeebe dort sonst nur noch die gemappten Variablen).
+
+| Datei | Inhalt |
+|---|---|
+| [`Identity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/Identity.scala) | `In`, `Out` |
+| [`ApproveRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/ApproveRequestUT.scala) | «Antrag freigeben» – wer sie erledigt, wird übernommen |
+| [`CloseRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala) | «Antrag abschliessen» – hier hat der Prozess die übernommene Identität |
+| [`IdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/IdentityWorker.scala) | InitWorker: Prüfung des In |
+| [`camunda/patterns-identityV1.bpmn`](src/main/resources/camunda/patterns-identityV1.bpmn) | Camunda 7 |
+| [`camunda8/patterns-identityV1.bpmn`](src/main/resources/camunda8/patterns-identityV1.bpmn) | Camunda 8 |
+| [`IdentitySimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/IdentitySimulation.scala) | die Szenarien, für beide Engines gleich |
+
+### Simulationen
+
+1. **`Identity approved`** – beide Benutzeraufgaben; am Ende gibt es `_identityCorrelation`,
+   `_identityCorrelationBefore` und `_identityCorrelationOfActor`.
+2. **`Identity mocked`** – endet über `output-mocked`, ohne Benutzeraufgabe.
+3. **`Identity invalid In`** – `customerName = " "`: Incident `validation-failed`.
+
+```bash
+./helper.scala deploy IdentityC7Simulation
+```
+```bash
+./helper.scala deploy IdentityC8Simulation
+```
+
+Die Simulation startet und erledigt alles mit **derselben** Test-Identität (`admin`) – sie zeigt, dass
+die Variablen gesetzt werden, aber nicht den Wechsel. Den Wechsel geprüft (C7 und C8): über ein
+lokales Gateway gestartet als `starter`, «Antrag freigeben» erledigt als `approver`:
+
+| wann | `_identityCorrelation` |
+|---|---|
+| bei «Antrag freigeben» | `starter` |
+| bei «Antrag abschliessen» | `approver` (übernommen) |
+| am Ende | `starter` (zurückgesetzt) – `_identityCorrelationBefore = starter` |
+
+### Voraussetzung: Orchescala
+
+`_identityCorrelationOfActor` setzt das Gateway erst ab dem Orchescala-Branch
+`claude/gateway-actor-identity-b424f0` (0.9.0-SNAPSHOT, noch nicht gemergt). Mit einem älteren
+Gateway überschreibt der Abschluss einer Aufgabe die Identität selbst: C8 immer, C7 nur mit
+`doOverrideImpersonation = true`.
 
 ## Offene Punkte
 
 - Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId` nicht (im normalen Lauf schon) –
   die Variablen kommen dort über den Fehler `output-mocked`, nicht über das Abschliessen des Jobs.
+- Die Simulation kennt nur eine Test-Identität – eine andere Identität für eine Benutzeraufgabe oder
+  Nachricht fehlt, damit sie den Wechsel der Identität selbst prüfen könnte.

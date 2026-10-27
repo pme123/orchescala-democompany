@@ -11,10 +11,18 @@ object ApiProjectCreator extends CompanyApiCreator:
   val version = "0.1.0-SNAPSHOT"
 
   document(
-    initProcessApi
+    initProcessApi,
+    identityApi
   )
 
   private lazy val initProcessApi =
     import democompany.patterns.domain.initProcess.v1.*
     api(InitProcess.example)()
+
+  private lazy val identityApi =
+    import democompany.patterns.domain.identity.v1.*
+    api(Identity.example)(
+      ApproveRequestUT.example,
+      CloseRequestUT.example
+    )
 end ApiProjectCreator
