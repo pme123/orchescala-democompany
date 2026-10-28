@@ -775,6 +775,39 @@
           "description" : "Begründung - geht in die Absage an den Kunden"
         }
       ]
+    },
+    {
+      "id" : "democompany-patterns-initProcessV1",
+      "name" : "democompany-patterns-initProcessV1",
+      "group" : "democompany-patterns",
+      "description" : "Beispiel für das Pattern «Init Process»: der erste Schritt ist ein Service-Task mit der Prozess-ID als Topic.",
+      "kind" : "call",
+      "calledProcess" : "democompany-patterns-initProcessV1",
+      "inputs" : [
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "description" : "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "processStatus",
+          "expression" : "= processStatus",
+          "required" : true
+        },
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "required" : true
+        },
+        {
+          "name" : "greetingMessage",
+          "expression" : "= greetingMessage",
+          "required" : true
+        }
+      ]
     }
   ],
   "domainTypes" : [
@@ -2877,6 +2910,27 @@
       ]
     },
     {
+      "id" : "democompany.orchescala.helper.CompanyDeployHelper",
+      "name" : "CompanyDeployHelper",
+      "pkg" : "democompany.orchescala.helper",
+      "kind" : "case",
+      "importPath" : "democompany.orchescala.helper.CompanyDeployHelper",
+      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/04-helper/src/main/scala/democompany/orchescala/helper/CompanyDeployHelper.scala",
+      "imports" : [
+        "orchescala.engine.domain.EngineType",
+        "orchescala.helper.dev.deploy.DeployHelper",
+        "orchescala.helper.util.DevConfig",
+        "sttp.client3.*",
+        "scala.concurrent.duration.*"
+      ],
+      "fields" : [
+        {
+          "name" : "devConfig",
+          "type" : "DevConfig"
+        }
+      ]
+    },
+    {
       "id" : "democompany.orchescala.worker.IdentityCorrelation",
       "name" : "IdentityCorrelation",
       "pkg" : "democompany.orchescala.worker",
@@ -2937,6 +2991,128 @@
           "default" : "None"
         }
       ]
+    },
+    {
+      "id" : "democompany.patterns.domain.identity.v1.Identity.In",
+      "name" : "Identity.In",
+      "pkg" : "democompany.patterns.domain.identity.v1",
+      "kind" : "member",
+      "owner" : "Identity",
+      "importPath" : "democompany.patterns.domain.identity.v1.Identity",
+      "descr" : "Prozess «identityV1» aus democompany-patterns",
+      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+    },
+    {
+      "id" : "democompany.patterns.domain.identity.v1.Identity.Out",
+      "name" : "Identity.Out",
+      "pkg" : "democompany.patterns.domain.identity.v1",
+      "kind" : "member",
+      "owner" : "Identity",
+      "importPath" : "democompany.patterns.domain.identity.v1.Identity",
+      "descr" : "Prozess «identityV1» aus democompany-patterns",
+      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+    },
+    {
+      "id" : "democompany.patterns.domain.initProcess.v1.InitProcess.In",
+      "name" : "InitProcess.In",
+      "pkg" : "democompany.patterns.domain.initProcess.v1",
+      "kind" : "case",
+      "owner" : "InitProcess",
+      "importPath" : "democompany.patterns.domain.initProcess.v1.InitProcess",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/initProcess/v1/InitProcess.scala",
+      "fields" : [
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "description" : "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "example" : "\"Peter Muster\""
+        },
+        {
+          "name" : "inConfig",
+          "type" : "Option[InConfig]",
+          "default" : "None",
+          "description" : "A way to override process configuration.\n\n**SHOULD NOT BE USED on Production!**"
+        }
+      ],
+      "processName" : "democompany-patterns-initProcessV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Init Process»: der erste Schritt ist ein Service-Task mit der Prozess-ID als Topic.\nDer InitWorker prüft das In, setzt die Vorgaben aus dem InConfig und liefert gemockte Ausgaben -\nist der Prozess gemockt, endet er über den Pfad `output-mocked` mit `processStatus = output-mocked`."
+    },
+    {
+      "id" : "democompany.patterns.domain.initProcess.v1.InitProcess.InConfig",
+      "name" : "InitProcess.InConfig",
+      "pkg" : "democompany.patterns.domain.initProcess.v1",
+      "kind" : "case",
+      "owner" : "InitProcess",
+      "importPath" : "democompany.patterns.domain.initProcess.v1.InitProcess",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/initProcess/v1/InitProcess.scala",
+      "fields" : [
+        {
+          "name" : "greeting",
+          "type" : "String",
+          "default" : "\"Grüezi\"",
+          "description" : "Die Anrede, mit der der InitWorker die Begrüssung bildet.",
+          "example" : "\"Grüezi\""
+        }
+      ],
+      "processName" : "democompany-patterns-initProcessV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Init Process»: der erste Schritt ist ein Service-Task mit der Prozess-ID als Topic.\nDer InitWorker prüft das In, setzt die Vorgaben aus dem InConfig und liefert gemockte Ausgaben -\nist der Prozess gemockt, endet er über den Pfad `output-mocked` mit `processStatus = output-mocked`."
+    },
+    {
+      "id" : "democompany.patterns.domain.initProcess.v1.InitProcess.InitIn",
+      "name" : "InitProcess.InitIn",
+      "pkg" : "democompany.patterns.domain.initProcess.v1",
+      "kind" : "case",
+      "owner" : "InitProcess",
+      "importPath" : "democompany.patterns.domain.initProcess.v1.InitProcess",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/initProcess/v1/InitProcess.scala",
+      "fields" : [
+        {
+          "name" : "greetingMessage",
+          "type" : "String",
+          "description" : "Begrüssung aus der Anrede im InConfig und dem Namen des Kunden.",
+          "example" : "\"Grüezi Peter Muster\""
+        }
+      ],
+      "processName" : "democompany-patterns-initProcessV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Init Process»: der erste Schritt ist ein Service-Task mit der Prozess-ID als Topic.\nDer InitWorker prüft das In, setzt die Vorgaben aus dem InConfig und liefert gemockte Ausgaben -\nist der Prozess gemockt, endet er über den Pfad `output-mocked` mit `processStatus = output-mocked`."
+    },
+    {
+      "id" : "democompany.patterns.domain.initProcess.v1.InitProcess.Out",
+      "name" : "InitProcess.Out",
+      "pkg" : "democompany.patterns.domain.initProcess.v1",
+      "kind" : "case",
+      "owner" : "InitProcess",
+      "importPath" : "democompany.patterns.domain.initProcess.v1.InitProcess",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/initProcess/v1/InitProcess.scala",
+      "fields" : [
+        {
+          "name" : "processStatus",
+          "type" : "ProcessStatus",
+          "example" : "ProcessStatus.succeeded"
+        },
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "example" : "In.example.customerName"
+        },
+        {
+          "name" : "inConfig",
+          "type" : "InConfig",
+          "description" : "Die Vorgaben des InConfig - vom InitWorker gesetzt, wenn das In keine hat.",
+          "example" : "InConfig()"
+        },
+        {
+          "name" : "greetingMessage",
+          "type" : "String",
+          "example" : "InitIn.example.greetingMessage"
+        }
+      ],
+      "processName" : "democompany-patterns-initProcessV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Init Process»: der erste Schritt ist ein Service-Task mit der Prozess-ID als Topic.\nDer InitWorker prüft das In, setzt die Vorgaben aus dem InConfig und liefert gemockte Ausgaben -\nist der Prozess gemockt, endet er über den Pfad `output-mocked` mit `processStatus = output-mocked`."
     },
     {
       "id" : "democompany.services.domain.clients.v1.GetClientsClientId.In",
@@ -3001,7 +3177,7 @@
       "imports" : [
         "schema.*"
       ],
-      "target" : "NoInput // if no input is needed",
+      "target" : "NoInput",
       "topicName" : "democompany-services-clientsV1-GetClientsClientId",
       "ownerDescr" : "Get the Client by Id"
     },
@@ -3016,7 +3192,7 @@
       "imports" : [
         "schema.*"
       ],
-      "target" : "Client  // if no output is needed",
+      "target" : "Client",
       "topicName" : "democompany-services-clientsV1-GetClientsClientId",
       "ownerDescr" : "Get the Client by Id"
     },
@@ -3196,7 +3372,7 @@
       "owner" : "SendEmail",
       "importPath" : "democompany.services.domain.mails.v1.SendEmail",
       "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
-      "target" : "In       // just need to format the body to html",
+      "target" : "In",
       "topicName" : "democompany-services-mailsV1-SendEmail",
       "ownerDescr" : "Send an Email"
     },
@@ -3208,7 +3384,7 @@
       "owner" : "SendEmail",
       "importPath" : "democompany.services.domain.mails.v1.SendEmail",
       "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
-      "target" : "NoOutput // if no output is needed",
+      "target" : "NoOutput",
       "topicName" : "democompany-services-mailsV1-SendEmail",
       "ownerDescr" : "Send an Email"
     }
@@ -3243,30 +3419,42 @@
       "id" : "p-democompany-orchescala",
       "name" : "democompany-orchescala",
       "path" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala",
-      "types" : 2
+      "types" : 3,
+      "scannedAt" : "2026-10-28T09:48:30.177Z"
     },
     {
       "id" : "p-democompany-cards",
       "name" : "democompany-cards",
       "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-cards",
-      "types" : 25
+      "types" : 25,
+      "scannedAt" : "2026-10-28T09:48:30.182Z"
     },
     {
       "id" : "p-democompany-customer",
       "name" : "democompany-customer",
       "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-customer",
-      "types" : 48
+      "types" : 48,
+      "scannedAt" : "2026-10-28T09:48:30.186Z"
+    },
+    {
+      "id" : "p-democompany-patterns",
+      "name" : "democompany-patterns",
+      "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-patterns",
+      "types" : 4,
+      "scannedAt" : "2026-10-28T09:48:30.187Z"
     },
     {
       "id" : "p-democompany-services",
       "name" : "democompany-services",
       "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-services",
-      "types" : 11
+      "types" : 11,
+      "scannedAt" : "2026-10-28T09:48:30.188Z"
     }
   ],
   "projectColors" : {
     "democompany-cards" : "#c8feda",
     "democompany-customer" : "#d9d2f5",
+    "democompany-patterns" : "#dbe8fb",
     "democompany-services" : "#ffffcc"
   }
 }

@@ -1,0 +1,379 @@
+openapi: 3.1.0
+info:
+  title: Patterns
+  version: 0.1.0-SNAPSHOT
+  summary: "\n**This is for Postman - to have example requests. Be aware the Output\
+    \ is not provided!**\n\n\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns\
+    \ - je Pattern ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated\
+    \ at 10/27/26, 9:51 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
+    \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
+    **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
+    - **Authorization**: `Bearer Token` with the `{{access_token}}` from the `GetToken`\
+    \ request.\n- **Variables**: `tenantId`: `{{bank}}`\n- **Scripts - Pre-Request**:\n\
+    \n```javascript\n// Refresh the OAuth token if necessary\nlet tokenDate = new\
+    \ Date(2010, 1, 1);\nconst tokenTimestamp = pm.environment.get(\"OAuth_Timestamp\"\
+    );\nif (tokenTimestamp) {\n  tokenDate = Date.parse(tokenTimestamp);\n}\nlet expiresInTime\
+    \ = pm.environment.get(\"ExpiresInTime\");\nif (!expiresInTime) {\n  expiresInTime\
+    \ = 300000; // Set default expiration time to 5 minutes\n}\nif (new Date() - tokenDate\
+    \ >= expiresInTime) {\npm.sendRequest(\n{\n  url: `${pm.environment.get(\n   \
+    \   \"tokenService\"\n    )}/auth/realms/${pm.environment.get(\n      \"bank\"\
+    \n    )}/protocol/openid-connect/token`,\n  method: \"POST\",\n  header: {\n \
+    \   \"Content-Type\": \"application/x-www-form-urlencoded\",\n  },\n  body: {\n\
+    \    mode: \"urlencoded\",\n    urlencoded: [\n      { key: \"grant_type\", value:\
+    \ \"password\" },\n      { key: \"client_id\", value: pm.environment.get(\"clientId\"\
+    )},\n      { key: \"client_secret\", value: pm.environment.get(\"clientSecret\"\
+    )},\n      { key: \"username\", value: pm.environment.get(\"username\")},\n  \
+    \    { key: \"password\", value: pm.environment.get(\"pwd\") },\n      { key:\
+    \ \"scope\", value: pm.environment.get(\"scope\") },\n    ],\n  },\n},\n  (_,\
+    \ res) => {\n    pm.environment.set(\"access_token\", res.json().access_token);\n\
+    \    pm.environment.set(\"OAuth_Timestamp\", new Date());\n    // Set the ExpiresInTime\
+    \ variable to the time given in the response if it exists\n    if (res.json().expires_in)\
+    \ {\n      expiresInTime = res.json().expires_in * 1000;\n    }\n    pm.environment.set(\"\
+    ExpiresInTime\", expiresInTime);\n  });\n}\n  ```\n\n- **Scripts - Post-Response**:\n\
+    \n```javascript\n  // Collection-level test script\n  pm.test(\"Auto-set variables\"\
+    , function () {\n    const response = pm.response.json();\n\n    // Set processInstanceId\
+    \ if present\n    if (response.processInstanceId) {\n        const id = response.processInstanceId;\n\
+    \        pm.collectionVariables.set(\"processInstanceId\", id);\n        console.log(\"\
+    Set processInstanceId: \" + id);\n    }\n\n    // Set taskId for array responses\n\
+    \    if (pm.response.headers.get(\"userTaskId\")) {\n        const id = pm.response.headers.get(\"\
+    userTaskId\")\n        pm.collectionVariables.set(\"userTaskInstanceId\", id);\n\
+    \        console.log(\"userTaskInstanceId: \" + id)\n\n    }\n\n});\n  ```\n\n\
+    </p>\n</details>\n\n\n\n\n# Package Configuration\n**Check all dependency trees\
+    \ here: [democompany-patterns](../../dependencies/democompany-patterns.html)**\n\
+    \n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\
+    \nprojectName: democompany-patterns\nprojectVersion: 0.1.0-SNAPSHOT\nsubProjects:\
+    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n]\n\n```\n\n</p>\n\
+    </details>\n\n\nKatalog mit Beispielprozessen für die **Orchescala-Patterns**\
+    \ – kleine BPMN-Bausteine, die die\nOrch Spec in einen Prozess einfügt und wiedererkennt.\
+    \ Je Pattern gibt es einen Beispielprozess\nfür Camunda 7 und Camunda 8 und eine\
+    \ Simulation je Engine, die den Baustein auf einer echten Engine\ndurchspielt.\
+    \ Später sollen die BPMN auch als Testdaten für die Orch Spec dienen.\n\nBis jetzt:\
+    \ **«Init Process»**.\n\n## Init Process – `democompany-patterns-initProcessV1`\n\
+    \n```\nStart ─▶ [Init Process] ─▶ (succeeded)\n              │ output-mocked (Fehler-Boundary)\n\
+    \              ▼\n         ⇨ output-mocked (Link-Wurf)\n\n⇨ output-mocked (Link-Ziel)\
+    \ ─▶ (output-mocked)\n```\n\nDer erste Schritt des Prozesses ist ein Service-Task\
+    \ mit der **Prozess-ID als Topic**. Den Task\nbearbeitet der InitWorker (`InitProcessWorker`):\n\
+    \n- er **prüft das In** – ein leerer `customerName` ist ungültig (`validation-failed`),\n\
+    - er **setzt die Vorgaben aus dem InConfig** – fehlt `inConfig` im In, steht danach\n\
+    \  `inConfig = {\"greeting\": \"Grüezi\"}` im Prozess,\n- er setzt die Variablen\
+    \ aus `customInit` (hier `greetingMessage = \"Grüezi Peter Muster\"`),\n- ist\
+    \ der Prozess **gemockt** (`_mockedWorkers` enthält die Prozess-ID), liefert er\
+    \ die gemockte\n  Ausgabe als Fehler `output-mocked`. Dieser ist in `_handledErrors\
+    \ = output-mocked` freigegeben:\n  die Boundary springt über den Link `output-mocked`\
+    \ zum Ende mit `processStatus = output-mocked`.\n\n Datei | Inhalt |\n---|---|\n\
+    \ [`InitProcess.scala`](01-domain/src/main/scala/democompany/patterns/domain/initProcess/v1/InitProcess.scala)\
+    \ | `In`, `InConfig`, `InitIn`, `Out` |\n [`InitProcessWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/initProcess/v1/InitProcessWorker.scala)\
+    \ | InitWorker: Prüfung und `customInit` |\n [`camunda/patterns-initProcessV1.bpmn`](src/main/resources/camunda/patterns-initProcessV1.bpmn)\
+    \ | Camunda 7 |\n [`camunda8/patterns-initProcessV1.bpmn`](src/main/resources/camunda8/patterns-initProcessV1.bpmn)\
+    \ | Camunda 8 |\n [`InitProcessSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/InitProcessSimulation.scala)\
+    \ | die Szenarien, für beide Engines gleich |\n\nLayout und IDs des Pattern-Blocks\
+    \ (`OutputMockedBoundary`, `OutputMockedThrow`,\n`OutputmockedEvent`, `OutputmockedEndEvent`,\
+    \ `OutputMockedError`) stammen aus dem Pattern\n`init-process` der Orch Spec.\n\
+    \n### Was in Camunda 8 anders ist\n\n Camunda 7 | Camunda 8 |\n---|---|---|\n\
+    \ Topic | `camunda:type=\"external\" camunda:topic=\"<processId>\"` | `zeebe:taskDefinition\
+    \ type=\"<processId>\"` |\n `_handledErrors` | `camunda:inputParameter` | `zeebe:input\
+    \ source=\"=&quot;output-mocked&quot;\"` |\n `processStatus` am Ende | Execution\
+    \ Listener (`execution.setVariable(...)`) | Output-Mapping (`zeebe:output`) |\n\
+    \ `processInstanceId` | gibt es in der Engine (`execution.processInstanceId`)\
+    \ | setzt der InitWorker als Variable (der `processInstanceKey`) – nur im normalen\
+    \ Lauf, siehe unten |\n\nIn Camunda 8 landen die Variablen der gemockten Ausgabe\
+    \ (der Fehler `output-mocked`) zuerst im\nScope der Boundary (dort steht `processStatus\
+    \ = succeeded` aus dem gemockten `Out`); im Prozess\nsteht danach `processStatus\
+    \ = output-mocked` aus dem Output-Mapping des Endes.\n\n## Simulationen\n\nDrei\
+    \ Szenarien je Engine:\n\n1. **`InitProcess`** – normaler Lauf: endet mit `processStatus\
+    \ = succeeded`, `inConfig` mit den Vorgaben.\n2. **`InitProcess mocked`** – Prozess-Output\
+    \ gemockt: endet über den Pfad `output-mocked` mit\n   `processStatus = output-mocked`.\n\
+    3. **`InitProcess invalid In`** – `customerName = \" \"`: der InitWorker meldet\n\
+    \   `validation-failed: customerName must not be empty.` – nicht freigegeben,\
+    \ also ein Incident.\n\nDie Simulation startet den Prozess **ohne Prüfung über\
+    \ die Worker-App**\n(`config.validateProcess(false)`): sonst lehnt der Start ein\
+    \ ungültiges In schon vor dem Prozess ab,\nund Szenario 3 käme nie zum InitWorker\
+    \ in der Engine.\n\n### Engines\n\nBeide über die Firmen-Einstellung:\n\n- **Camunda\
+    \ 7**: `CAMUNDA_BASE_URL` (Standard `http://localhost:8080/engine-rest`, Token\
+    \ über `SSO_BASE_URL`).\n- **Camunda 8**: wie bei Valiant ein **lokales c8run\
+    \ ohne Anmeldung** – `CAMUNDA_C8_GRPC_URL`\n  (Standard `http://localhost:26500`),\
+    \ `CAMUNDA_C8_REST_URL` (Standard `http://localhost:8181`),\n  `CAMUNDA_C8_OPERATE_URL`.\n\
+    \nGateway und Worker-Apps nutzen die Engines aus `COMPANY_ENGINES` (Standard `C7,C8,Op`).\n\
+    \n### Starten\n\n1. Gateway der Firma starten – im Ordner `democompany-orchescala`\
+    \ (Port 8887, ein anderer mit\n   `GATEWAY_PORT`):\n   ```bash\n   COMPANY_ENGINES=C7,C8\
+    \ sbt gateway/run\n   ```\n2. Worker starten (C7 und C8 in einer App). `WORKER_APP_PORT`,\
+    \ wenn 5555 schon belegt ist:\n   ```bash\n   COMPANY_ENGINES=C7,C8 WORKER_APP_PORT=5556\
+    \ sbt \"worker/runMain democompany.patterns.worker.WorkerApp\"\n   ```\n3. Deployen\
+    \ und simulieren in einem Schritt – wie bei Valiant, nur über den Gateway statt\
+    \ BPF:\n   ```bash\n   ./helper.scala deploy InitProcessC7Simulation\n   ```\n\
+    \   ```bash\n   ./helper.scala deploy InitProcessC8Simulation\n   ```\n   Der\
+    \ Helper der Firma (`CompanyDeployHelper`) macht `sbt publishLocal`, schickt das\
+    \ Manifest\n   `democompany:democompany-patterns:0.1.0-SNAPSHOT` an `POST <GATEWAY_URL>/deployment?targetEngine=<C7|C8>`\n\
+    \   (die Engine aus dem Namen der Simulation; der Gateway liest die BPMN aus dem\
+    \ Jar in\n   `~/.ivy2/local`, Ordner `camunda` bzw. `camunda8`) und startet danach\
+    \ die Simulation.\n   `GATEWAY_URL` (Standard `http://localhost:8887`) für einen\
+    \ anderen Gateway; `GATEWAY_TOKEN` ist nur\n   nötig, wenn der Gateway Tokens\
+    \ prüft (`TOKEN_ISSUER`).\n\n## Nächste Patterns\n\n### Identität übernehmen /\
+    \ zurücksetzen\n\nZwei getrennte Patterns – wie in C7 opt-in: nur wo das Pattern\
+    \ steht, wechselt die Identität.\n\n- **«Identität übernehmen»** – an einer Benutzeraufgabe\
+    \ (beim Abschluss) oder am Empfang einer Nachricht.\n  - C7 heute: Listener mit\
+    \ Skript\n    `impersonateUserIdTemp = impersonateUserId; impersonateUserId =\
+    \ <angemeldeter Benutzer>`.\n  - Neu mit `_identityCorrelation`: `_identityCorrelationBefore\
+    \ = _identityCorrelation`,\n    `_identityCorrelation = <Identität der handelnden\
+    \ Person>`.\n- **«Identität zurücksetzen»** – überall möglich.\n  - C7 heute:\
+    \ `impersonateUserId = impersonateUserIdTemp`.\n  - Neu: Output-Mapping `_identityCorrelation\
+    \ = _identityCorrelationBefore`.\n\n**C8:** die Output-Mappings stehen auf einem\
+    \ leeren Zwischenereignis direkt danach – nicht auf der\nBenutzeraufgabe, dem\
+    \ Nachrichten-Ereignis oder dem Service-Task (mit einem Output-Mapping übernimmt\n\
+    Zeebe dort sonst nur noch die gemappten Variablen).\n\n**Voraussetzung in Orchescala\
+    \ (Gateway):** `_identityCorrelation` nur beim Start setzen; beim\nAbschluss einer\
+    \ Aufgabe und beim Senden einer Nachricht die signierte Identität der handelnden\
+    \ Person\nunter eigenem Namen mitgeben (Arbeitsname `_identityCorrelationOfActor`).\n\
+    Offen: Nachrichten mit Korrelation über den businessKey – das Gateway kennt die\
+    \ Instanz (für die\nSignatur) erst nach der Korrelation.\n\n## Offene Punkte\n\
+    \n- Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId` nicht (im\
+    \ normalen Lauf schon) –\n  die Variablen kommen dort über den Fehler `output-mocked`,\
+    \ nicht über das Abschliessen des Jobs.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
+    <p>\n\n\nAll notable changes to this project will be documented in this file.\n\
+    \n* Types of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
+    \ functionality\n  * Deprecated: soon-to-be-removed features\n  * Removed: now\
+    \ removed features\n  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\
+    \n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\n\
+    and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
+    \n\n</p>\n</details>\n\n\n<p/>\n<details>\n<summary>\n<b><i>General Variables</i></b>\n\
+    </summary>\n\n<p>\n\n### Mocking\n\n**_servicesMocked**:\n\nMock all the _ServiceWorkers_\
+    \ in your process with their default Mock:\n\n- DSL:\n```scala\nprocess(..)\n\
+    \  .mockServices\n```\n\n- Json\n```json\n...\n\"_servicesMocked\": true,\n...\n\
+    ```\n\n\n**_mockedWorkers**:\n\nMock any Process- and/or ExternalTask-Worker with\
+    \ their default Mocks.\nThis is a list of the _Worker topicNames or Process processNames_,\
+    \ you want to mock.\nIt is also possible to use a _comma separated_ String,\n\
+    like `\"mySubProcess,myOtherSubProcess,myService\"`\n\n_Be aware_: For Sub-Processes,\
+    \ this expects an _InitWorker_ where the _topicName_ is equal to the _processName_.\n\
+    \n\n- DSL:\n```scala\nprocess(..)\n  .mockedWorkers(\"mySubProcess1\", \"mySubProcess2\"\
+    ) // creates a list with SubProcessess\n  .mockedWorker(\"myOtherSubProcess\"\
+    ) // adds a SubProcess\n```\n\n- Json\n```json\n...\n\"mockedWorkers\": [\"mySubProcess\"\
+    , \"myOtherSubProcess, myService\"],\n...\n```\n\n\n**_outputMock**:\n\nMock the\
+    \ Process or ExternalTask (`Out`)\n - You find an example in every _Process_ and\
+    \ _ExternalTask_.\n\n\n- DSL:\n```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n\
+    \  .mockWith(outputMock)\n```\n\n- Json\n```json\n...\n\"outputMock\": {..},\n\
+    ...\n```\n\n\n**_outputServiceMock**:\n\nMock the Inner-Service (`MockedServiceResponse[ServiceOut]`)\n\
+    \ - You find an example in every _ServiceTask_.\n\n\n- DSL:\n```scala\nserviceTask(..)\n\
+    \  .mockServiceWith(MockedServiceResponse\n     .success200(inOut.defaultServiceOutMock))\n\
+    ```\n\n- Json\n```json\n...\n\"outputServiceMock\": {\n  \"respStatus\" : 200,\n\
+    \  \"respBody\" : \"Example String Body\",\n  \"respHeaders\" : [\n  ]\n},\n...\n\
+    ```\n\n### Mapping\n**_outputVariables**:\n\nYou can filter the Output with a\
+    \ list of variable names you are interested in.\nThis list may include all variables\
+    \ from the output (`Out`). We included an example for each Process or ExternalTask.\n\
+    It is also possible to use a _comma separated_ String,\nlike `\"name,firstName\"\
+    `\n\n\n- DSL:\n```scala\nprocess(..) // or serviceTask(..)/customTask(..)\n  .withOutputVariables(\"\
+    name\", \"firstName\") // creates a list with outputVariables\n  .withOutputVariable(\"\
+    nickname\") // adds a outputVariable\n```\n\n- Json\n```json\n...\n\"_outputVariables\"\
+    : [\"name\", \"firstName\"],\n...\n```\n\n\n**_manualOutMapping**:\n\nBy default\
+    \ all output Variables (`Out`) are on the Process for _External Tasks_.\nIf the\
+    \ filter __outputVariables_ is not enough,\nyou can set this variable - every\
+    \ output variable is then local.\n\n_Be aware_ that you must then manually have\
+    \ _output mappings_ for each output variable!\n\n\n- DSL:\n```scala\nserviceTask(..)\
+    \ // or customTask(..)\n  .manualOutMapping\n```\n\n- Json\n```json\n...\n\"_manualOutMapping\"\
+    : true,\n...\n```\n\n### Mocking\n**_handledErrors**:\n\nA list of error codes\
+    \ that are handled (`BpmnError`)\nIt is also possible to use a _comma separated_\
+    \ String,\nlike `\"validation-failed,404\"`\n\nAt the moment only _ServiceTasks_\
+    \ supported.\n\n\n- DSL:\n```scala\nserviceTask(..)\n  .handleErrors(ErrorCodes.`validation-failed`,\
+    \ \"404\") // create a list of handledErrors\n  .handleError(\"404\") // add a\
+    \ handledError\n```\n\n- Json\n```json\n...\n\"_handledErrors\": [\"validation-failed\"\
+    , \"404\"],\n...\n```\n\n\n**_regexHandledErrors**:\n\nYou can further filter\
+    \ Handled Errors with a list of Regex expressions that the body error message\
+    \ must match.\nIt is also possible to use a _comma separated_ String,\nlike `\"\
+    SQL exception,\"errorNr\":\"20000\"\"`\n\nAt the moment only _ServiceTasks_ supported.\n\
+    \n\n- DSL:\n```scala\nserviceTask(..)\n  .handleErrorWithRegex(\"SQL exception\"\
+    )\n  .handleErrorWithRegex(\"\\\"errorNr\\\":\\\"20000\\\"\")\n```\n\n- Json\n\
+    ```json\n...\n\"_regexHandledErrors\": [\"SQL exception\", \"\"errorNr\":\"20000\"\
+    \"],\n...\n```\n\n### Authorization\n**_identityCorrelation**:\n\nIdentity correlation\
+    \ for binding user identity to the process instance using HMAC-SHA256 signatures.\n\
+    This prevents replay attacks and tampering by cryptographically binding the user\
+    \ identity to a specific process instance.\nThe correlation is automatically signed\
+    \ with the process instance ID when starting a process or completing a user task.\n\
+    Configure the signing key via environment variable `ORCHESCALA_IDENTITY_SIGNING_KEY`\
+    \ or in `EngineConfig`.\n\n- DSL:\n```scala\nval identity = IdentityCorrelation(\n\
+    \  username = \"alice@example.com\",\n  email = Some(\"alice@example.com\"),\n\
+    \  impersonateProcessValue = Some(\"department-123\")\n)\nprocess(..) // or serviceTask(..)/customTask(..)\n\
+    \  .withIdentityCorrelation(identity)\n```\n\n- Json\n```json\n...\n\"_identityCorrelation\"\
+    : {\n  \"username\": \"alice@example.com\",\n  \"email\": \"alice@example.com\"\
+    ,\n  \"impersonateProcessValue\": \"department-123\",\n  \"issuedAt\": 1706371200000,\n\
+    \  \"processInstanceId\": \"12345\",\n  \"signature\": \"abc123...\"\n},\n...\n\
+    ```\n\n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api\
+    \ v0.9.0-SNAPSHOT](https://github.com/pme123/orchescala)\n> - democompany-orchescala-api\
+    \ 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\n\n"
+servers:
+- url: http://localhost:8080/engine-rest
+  description: Local Developer Server
+paths:
+  /process-definition/key/democompany-patterns-initProcessV1/start:
+    post:
+      tags:
+      - democompany-patterns-initProcessV1
+      summary: 'Bpmn: initProcessV1'
+      description: |2
+
+        Beispiel für das Pattern «Init Process»: der erste Schritt ist ein Service-Task mit der Prozess-ID als Topic.
+        Der InitWorker prüft das In, setzt die Vorgaben aus dem InConfig und liefert gemockte Ausgaben -
+        ist der Prozess gemockt, endet er über den Pfad `output-mocked` mit `processStatus = output-mocked`.
+
+
+        ---
+
+        - **Called Element**: `democompany-patterns-initProcessV1` (to define in the Call Activity)
+
+
+
+        ---
+
+
+
+
+        See API Doc: [Bpmn: initProcessV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20initProcessV1)
+      operationId: postProcess-definitionKeyDemocompany-patterns-initprocessv1Start
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-patterns-initProcessV1:
+                value:
+                  variables:
+                    customerName:
+                      value: Peter Muster
+                      type: String
+                  businessKey: democompany-patterns-initProcessV1
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+components:
+  schemas:
+    CBoolean:
+      title: CBoolean
+      type: object
+      required:
+      - value
+      - type
+      properties:
+        value:
+          type: boolean
+        type:
+          type: string
+    CDouble:
+      title: CDouble
+      type: object
+      required:
+      - value
+      - type
+      properties:
+        value:
+          type: number
+          format: double
+        type:
+          type: string
+    CFile:
+      title: CFile
+      type: object
+      required:
+      - value
+      - valueInfo
+      - type
+      properties:
+        value:
+          description: The File's content as Base64 encoded String.
+          type: string
+        valueInfo:
+          $ref: '#/components/schemas/CFileValueInfo'
+        type:
+          type: string
+    CFileValueInfo:
+      title: CFileValueInfo
+      type: object
+      required:
+      - filename
+      properties:
+        filename:
+          type: string
+        mimetype:
+          type: string
+    CInteger:
+      title: CInteger
+      type: object
+      required:
+      - value
+      - type
+      properties:
+        value:
+          type: integer
+          format: int32
+        type:
+          type: string
+    CJson:
+      title: CJson
+      type: object
+      required:
+      - value
+      - type
+      properties:
+        value:
+          type: string
+        type:
+          type: string
+    CLong:
+      title: CLong
+      type: object
+      required:
+      - value
+      - type
+      properties:
+        value:
+          type: integer
+          format: int64
+        type:
+          type: string
+    CNull:
+      title: CNull
+      type: object
+    CString:
+      title: CString
+      type: object
+      required:
+      - value
+      - type
+      properties:
+        value:
+          type: string
+        type:
+          type: string
+    CamundaVariable:
+      oneOf:
+      - $ref: '#/components/schemas/CBoolean'
+      - $ref: '#/components/schemas/CDouble'
+      - $ref: '#/components/schemas/CFile'
+      - $ref: '#/components/schemas/CInteger'
+      - $ref: '#/components/schemas/CJson'
+      - $ref: '#/components/schemas/CLong'
+      - $ref: '#/components/schemas/CNull'
+      - $ref: '#/components/schemas/CString'
+    Map_orchescala.domain.CamundaVariable:
+      title: Map_orchescala.domain.CamundaVariable
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/CamundaVariable'
+    StartProcessIn:
+      title: StartProcessIn
+      description: 'A JSON object with the following properties: (at least an empty
+        JSON object {} or an empty request body)'
+      type: object
+      required:
+      - variables
+      - withVariablesInReturn
+      properties:
+        variables:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+        businessKey:
+          description: The business key of the process instance.
+          type: string
+        withVariablesInReturn:
+          description: Set to false will not return the Process Variables.
+          type: boolean

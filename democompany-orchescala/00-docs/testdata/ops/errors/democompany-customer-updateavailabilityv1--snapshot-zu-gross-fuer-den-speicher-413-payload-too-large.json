@@ -1,0 +1,25 @@
+{
+  "id": "democompany-customer-updateavailabilityv1--snapshot-zu-gross-fuer-den-speicher-413-payload-too-large",
+  "process": "democompany-customer-updateAvailabilityV1",
+  "title": "Snapshot zu gross für den Speicher (413 Payload Too Large)",
+  "details": "Bei Beratern mit mehr als 500 Terminen pro Monat überschreitet der Snapshot das Limit von 1 MB.",
+  "activity": "Kalender-Snapshot speichern",
+  "reporter": "Carla Demo",
+  "status": [
+    "OFFEN"
+  ],
+  "ticket": "",
+  "workaround": "",
+  "count": 1,
+  "occurrences": [
+    {
+      "at": "2026-10-27T09:00:00.000Z",
+      "by": "Anna Muster"
+    }
+  ],
+  "createdAt": "2026-10-27T09:00:00.000Z",
+  "createdBy": "Carla Demo",
+  "updatedAt": "2026-10-27T09:00:00.000Z",
+  "updatedBy": "Anna Muster",
+  "lastAction": "created"
+}

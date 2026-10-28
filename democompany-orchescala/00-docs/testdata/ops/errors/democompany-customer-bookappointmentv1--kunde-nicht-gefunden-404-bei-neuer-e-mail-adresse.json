@@ -1,0 +1,49 @@
+{
+  "id": "democompany-customer-bookappointmentv1--kunde-nicht-gefunden-404-bei-neuer-e-mail-adresse",
+  "process": "democompany-customer-bookAppointmentV1",
+  "title": "Kunde nicht gefunden (404) bei neuer E-Mail-Adresse",
+  "details": "`GET /customers?email=…` liefert 404, wenn der Kunde seine E-Mail kürzlich geändert hat — der Kundenindex ist erst nach dem Nacht-Job aktuell.",
+  "activity": "Kunde zuordnen",
+  "reporter": "Beat Beispiel",
+  "status": [
+    "OFFEN"
+  ],
+  "ticket": "",
+  "workaround": "Kundennummer manuell in der Variable `customerId` setzen und Incident auflösen.",
+  "count": 7,
+  "occurrences": [
+    {
+      "at": "2026-10-26T21:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-10-25T15:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-10-24T09:00:00.000Z",
+      "by": "Anna Muster"
+    },
+    {
+      "at": "2026-10-23T03:00:00.000Z",
+      "by": "Ops-Team"
+    },
+    {
+      "at": "2026-10-21T21:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-10-20T15:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-10-19T09:00:00.000Z",
+      "by": "Anna Muster"
+    }
+  ],
+  "createdAt": "2026-10-19T09:00:00.000Z",
+  "createdBy": "Beat Beispiel",
+  "updatedAt": "2026-10-26T21:00:00.000Z",
+  "updatedBy": "Carla Demo",
+  "lastAction": "counted"
+}

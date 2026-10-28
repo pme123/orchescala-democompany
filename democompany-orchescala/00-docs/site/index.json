@@ -9,5 +9,6 @@
     }
   ],
   "orchescalaUrl" : "https://pme123.github.io/orchescala/",
-  "specUrl" : "spec/"
+  "specUrl" : "spec/",
+  "opsUrl" : "ops/"
 }

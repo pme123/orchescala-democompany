@@ -1,0 +1,81 @@
+{
+  "id": "democompany-customer-bookappointmentv1--kalender-einladung-ics-mit-falscher-zeitzone",
+  "process": "democompany-customer-bookAppointmentV1",
+  "title": "Kalender-Einladung (.ics) mit falscher Zeitzone",
+  "details": "Termine in der Einladung erscheinen eine Stunde zu früh — `DTSTART` ohne `TZID` nach der Umstellung auf Winterzeit.",
+  "activity": "Einladung senden",
+  "reporter": "Anna Muster",
+  "status": [
+    "GELÖST"
+  ],
+  "ticket": "[DEMO-120](https://jira.example.com/browse/DEMO-120) — behoben in Release 1.4.2",
+  "workaround": "",
+  "count": 15,
+  "occurrences": [
+    {
+      "at": "2026-09-05T09:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-09-04T21:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-09-04T09:00:00.000Z",
+      "by": "Anna Muster"
+    },
+    {
+      "at": "2026-09-03T21:00:00.000Z",
+      "by": "Ops-Team"
+    },
+    {
+      "at": "2026-09-03T09:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-09-02T21:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-09-02T09:00:00.000Z",
+      "by": "Anna Muster"
+    },
+    {
+      "at": "2026-09-01T21:00:00.000Z",
+      "by": "Ops-Team"
+    },
+    {
+      "at": "2026-09-01T09:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-08-31T21:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-08-31T09:00:00.000Z",
+      "by": "Anna Muster"
+    },
+    {
+      "at": "2026-08-30T21:00:00.000Z",
+      "by": "Ops-Team"
+    },
+    {
+      "at": "2026-08-30T09:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-08-29T21:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-08-29T09:00:00.000Z",
+      "by": "Anna Muster"
+    }
+  ],
+  "createdAt": "2026-08-29T09:00:00.000Z",
+  "createdBy": "Anna Muster",
+  "updatedAt": "2026-09-05T09:00:00.000Z",
+  "updatedBy": "Carla Demo",
+  "lastAction": "counted"
+}

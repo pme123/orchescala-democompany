@@ -4,7 +4,7 @@
   "release" : {
     "tag" : "2026-10",
     "released" : true,
-    "createdDay" : "19.10.2026",
+    "createdDay" : "28.10.2026",
     "jiraUrl" : "https://yourReleasePage/versions/64209",
     "notes" : "- **Kundentermine** (democompany-customer): Termine buchen ohne Login, Bestätigung durch den Berater, Einladung als .ics - auf Operaton, mit Seiten aus orch-spec und dem Gateway als einzigem Einstieg.\n- Orchescala 0.9: Gateway mit öffentlichem Zugang, `CustomError.refused`, der Renderer der Seiten.",
     "olderReleases" : [
@@ -47,6 +47,14 @@
       "color" : "#ffffcc",
       "version" : "0.1.0",
       "apiDocUrl" : "democompany-services/OpenApi.html",
+      "hasDependencies" : false
+    },
+    {
+      "name" : "democompany-patterns",
+      "group" : "general",
+      "color" : "#dbe8fb",
+      "version" : "0.1.0",
+      "apiDocUrl" : "democompany-patterns/OpenApi.html",
       "hasDependencies" : false
     }
   ],
@@ -112,6 +120,15 @@
           }
         },
         {
+          "project" : "democompany-patterns",
+          "version" : "0.1.0-SNAPSHOT",
+          "previousVersion" : "0.1.0",
+          "status" : "unchanged",
+          "uses" : {
+            
+          }
+        },
+        {
           "project" : "democompany-services",
           "version" : "0.1.0-SNAPSHOT",
           "previousVersion" : "0.1.0",
@@ -132,22 +149,22 @@
         {
           "kind" : "Bpmn",
           "name" : "orderCreditcardV1",
-          "url" : "/democompany/democompany-cards/OpenApi.html#operation/Bpmn:%20orderCreditcardV1"
+          "url" : "/site/democompany/democompany-cards/OpenApi.html#operation/Bpmn:%20orderCreditcardV1"
         },
         {
           "kind" : "Message",
           "name" : "ReceiveEmail",
-          "url" : "/democompany/democompany-cards/OpenApi.html#operation/Message:%20ReceiveEmail"
+          "url" : "/site/democompany/democompany-cards/OpenApi.html#operation/Message:%20ReceiveEmail"
         },
         {
           "kind" : "Signal",
           "name" : "{processInstanceId}.CancelOrderSignal",
-          "url" : "/democompany/democompany-cards/OpenApi.html#operation/Signal:%20{processInstanceId}.CancelOrderSignal"
+          "url" : "/site/democompany/democompany-cards/OpenApi.html#operation/Signal:%20{processInstanceId}.CancelOrderSignal"
         },
         {
           "kind" : "Worker",
           "name" : "EvalResponse",
-          "url" : "/democompany/democompany-cards/OpenApi.html#operation/Worker:%20EvalResponse"
+          "url" : "/site/democompany/democompany-cards/OpenApi.html#operation/Worker:%20EvalResponse"
         }
       ]
     },
@@ -211,11 +228,6 @@
         },
         {
           "kind" : "Worker",
-          "name" : "SendMail",
-          "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20SendMail"
-        },
-        {
-          "kind" : "Worker",
           "name" : "appointmentToConfirm",
           "url" : "/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20appointmentToConfirm"
         },
@@ -232,17 +244,42 @@
       ]
     },
     {
+      "title" : "Patterns",
+      "entries" : [
+        {
+          "kind" : "Bpmn",
+          "name" : "identityV1",
+          "url" : "/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20identityV1"
+        },
+        {
+          "kind" : "Bpmn",
+          "name" : "initProcessV1",
+          "url" : "/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20initProcessV1"
+        },
+        {
+          "kind" : "Worker",
+          "name" : "CheckIdentity",
+          "url" : "/site/democompany/democompany-patterns/OpenApi.html#operation/Worker:%20CheckIdentity"
+        }
+      ]
+    },
+    {
       "title" : "democompany-services",
       "entries" : [
         {
           "kind" : "Worker",
           "name" : "GetClientsClientId",
-          "url" : "None/democompany-services/OpenApi.html#operation/Worker:%20GetClientsClientId"
+          "url" : "/site/democompany/democompany-services/OpenApi.html#operation/Worker:%20GetClientsClientId"
         },
         {
           "kind" : "Worker",
           "name" : "SendEmail",
-          "url" : "None/democompany-services/OpenApi.html#operation/Worker:%20SendEmail"
+          "url" : "/site/democompany/democompany-services/OpenApi.html#operation/Worker:%20SendEmail"
+        },
+        {
+          "kind" : "Worker",
+          "name" : "SendMail",
+          "url" : "/site/democompany/democompany-services/OpenApi.html#operation/Worker:%20SendMail"
         }
       ]
     }
@@ -262,14 +299,19 @@
           "files" : 2
         },
         {
+          "project" : "democompany-patterns",
+          "lines" : 45,
+          "files" : 2
+        },
+        {
           "project" : "democompany-services",
           "lines" : 0,
           "files" : 0
         }
       ],
       "total" : {
-        "lines" : 107,
-        "files" : 3
+        "lines" : 152,
+        "files" : 5
       }
     },
     {
@@ -282,8 +324,13 @@
         },
         {
           "project" : "democompany-customer",
-          "lines" : 61,
-          "files" : 3
+          "lines" : 30,
+          "files" : 2
+        },
+        {
+          "project" : "democompany-patterns",
+          "lines" : 0,
+          "files" : 0
         },
         {
           "project" : "democompany-services",
@@ -292,8 +339,8 @@
         }
       ],
       "total" : {
-        "lines" : 80,
-        "files" : 4
+        "lines" : 49,
+        "files" : 3
       }
     },
     {
@@ -310,14 +357,19 @@
           "files" : 0
         },
         {
+          "project" : "democompany-patterns",
+          "lines" : 25,
+          "files" : 1
+        },
+        {
           "project" : "democompany-services",
           "lines" : 45,
           "files" : 2
         }
       ],
       "total" : {
-        "lines" : 45,
-        "files" : 2
+        "lines" : 70,
+        "files" : 3
       }
     },
     {
@@ -334,14 +386,19 @@
           "files" : 4
         },
         {
+          "project" : "democompany-patterns",
+          "lines" : 624,
+          "files" : 4
+        },
+        {
           "project" : "democompany-services",
           "lines" : 0,
           "files" : 0
         }
       ],
       "total" : {
-        "lines" : 2712,
-        "files" : 7
+        "lines" : 3336,
+        "files" : 11
       }
     },
     {
@@ -356,6 +413,11 @@
           "project" : "democompany-customer",
           "lines" : 468,
           "files" : 2
+        },
+        {
+          "project" : "democompany-patterns",
+          "lines" : 0,
+          "files" : 0
         },
         {
           "project" : "democompany-services",
@@ -378,18 +440,23 @@
         },
         {
           "project" : "democompany-customer",
-          "lines" : 2587,
-          "files" : 59
+          "lines" : 2612,
+          "files" : 58
+        },
+        {
+          "project" : "democompany-patterns",
+          "lines" : 777,
+          "files" : 21
         },
         {
           "project" : "democompany-services",
-          "lines" : 715,
-          "files" : 23
+          "lines" : 814,
+          "files" : 26
         }
       ],
       "total" : {
-        "lines" : 4403,
-        "files" : 112
+        "lines" : 5304,
+        "files" : 135
       }
     }
   ],

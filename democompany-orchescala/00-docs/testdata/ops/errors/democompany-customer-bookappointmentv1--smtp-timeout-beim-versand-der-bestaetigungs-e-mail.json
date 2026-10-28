@@ -1,0 +1,113 @@
+{
+  "id": "democompany-customer-bookappointmentv1--smtp-timeout-beim-versand-der-bestaetigungs-e-mail",
+  "process": "democompany-customer-bookAppointmentV1",
+  "title": "SMTP-Timeout beim Versand der Bestätigungs-E-Mail",
+  "details": "```\njava.net.SocketTimeoutException: Read timed out\n  at MailClient.send(MailClient.scala:88)\n```\nTritt vor allem morgens zwischen 07:30 und 08:30 auf (Mail-Relay ausgelastet).",
+  "activity": "E-Mail-Bestätigung senden",
+  "reporter": "Anna Muster",
+  "status": [
+    "IN BEARBEITUNG"
+  ],
+  "ticket": "[DEMO-142](https://jira.example.com/browse/DEMO-142)",
+  "workaround": "Incident im Cockpit mit **Retry** neu anstossen — beim zweiten Versuch klappt es meist.",
+  "count": 23,
+  "occurrences": [
+    {
+      "at": "2026-10-25T17:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-10-24T21:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-10-24T01:00:00.000Z",
+      "by": "Anna Muster"
+    },
+    {
+      "at": "2026-10-23T05:00:00.000Z",
+      "by": "Ops-Team"
+    },
+    {
+      "at": "2026-10-22T09:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-10-21T13:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-10-20T17:00:00.000Z",
+      "by": "Anna Muster"
+    },
+    {
+      "at": "2026-10-19T21:00:00.000Z",
+      "by": "Ops-Team"
+    },
+    {
+      "at": "2026-10-19T01:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-10-18T05:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-10-17T09:00:00.000Z",
+      "by": "Anna Muster"
+    },
+    {
+      "at": "2026-10-16T13:00:00.000Z",
+      "by": "Ops-Team"
+    },
+    {
+      "at": "2026-10-15T17:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-10-14T21:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-10-14T01:00:00.000Z",
+      "by": "Anna Muster"
+    },
+    {
+      "at": "2026-10-13T05:00:00.000Z",
+      "by": "Ops-Team"
+    },
+    {
+      "at": "2026-10-12T09:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-10-11T13:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-10-10T17:00:00.000Z",
+      "by": "Anna Muster"
+    },
+    {
+      "at": "2026-10-09T21:00:00.000Z",
+      "by": "Ops-Team"
+    },
+    {
+      "at": "2026-10-09T01:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-10-08T05:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-10-07T09:00:00.000Z",
+      "by": "Anna Muster"
+    }
+  ],
+  "createdAt": "2026-10-07T09:00:00.000Z",
+  "createdBy": "Anna Muster",
+  "updatedAt": "2026-10-25T17:00:00.000Z",
+  "updatedBy": "Carla Demo",
+  "lastAction": "counted"
+}

@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "company": "Demo Company",
+  "statuses": [
+    {
+      "label": "OFFEN",
+      "color": "neutral"
+    },
+    {
+      "label": "IN BEARBEITUNG",
+      "color": "blue"
+    },
+    {
+      "label": "FINANZIERUNG NOTWENDIG",
+      "color": "yellow"
+    },
+    {
+      "label": "UNLÖSBAR",
+      "color": "red"
+    },
+    {
+      "label": "GELÖST",
+      "color": "green",
+      "done": true
+    }
+  ],
+  "howto": ""
+}

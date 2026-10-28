@@ -2,7 +2,9 @@
   "path": "appointments/verified",
   "title": "E-Mail bestätigt",
   "access": "public",
-  "state": { "step": "checking" },
+  "state": {
+    "step": "checking"
+  },
   "load": [
     {
       "do": "message",
@@ -10,18 +12,39 @@
       "public": true,
       "businessKey": "{{query.token}}",
       "input": {},
-      "errors": { "default": "Dieser Link gilt nicht (mehr) – er ist abgelaufen oder schon bestätigt. Einen neuen Termin können Sie jederzeit buchen." }
+      "errors": {
+        "default": "Dieser Link gilt nicht (mehr) – er ist abgelaufen oder schon bestätigt. Einen neuen Termin können Sie jederzeit buchen."
+      }
     },
-    { "do": "set", "path": "step", "value": "done" }
+    {
+      "do": "set",
+      "path": "step",
+      "value": "done"
+    }
   ],
   "body": [
-    { "type": "heading", "text": "E-Mail bestätigen" },
-    { "type": "loading", "text": "Wir bestätigen Ihre Adresse …" },
+    {
+      "type": "heading",
+      "text": "E-Mail bestätigen",
+      "id": "b-77226ab872"
+    },
+    {
+      "type": "loading",
+      "text": "Wir bestätigen Ihre Adresse …",
+      "id": "b-c50dd5e8a6"
+    },
     {
       "type": "text",
       "tone": "success",
       "visible": "step == 'done'",
-      "text": "Danke – Ihre E-Mail-Adresse ist bestätigt und der Termin angefragt. Die Einladung kommt per E-Mail; bei einigen Themen, sobald Ihre Beraterin oder Ihr Berater den Termin bestätigt hat."
+      "text": "Danke – Ihre E-Mail-Adresse ist bestätigt und der Termin angefragt. Die Einladung kommt per E-Mail; bei einigen Themen, sobald Ihre Beraterin oder Ihr Berater den Termin bestätigt hat.",
+      "id": "b-2980e71a51"
     }
-  ]
+  ],
+  "spec": {
+    "epics": [
+      "kundentermin"
+    ],
+    "project": "democompany-customer"
+  }
 }

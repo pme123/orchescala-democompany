@@ -1,0 +1,2 @@
+{"id":"au-0cdda4069e","at":"2026-10-22T16:48:27+02:00","author":"Ich","source":"manual","changes":[{"target":"page","label":"Seite Termin bestätigen","op":"change","field":"Projekt","after":"democompany-customer"}]}
+{"id":"au-50d321003d","at":"2026-10-22T16:48:29+02:00","author":"Ich","source":"manual","changes":[{"target":"page","label":"Seite Termin bestätigen","op":"change","field":"Epics","after":"[\"kundentermin\"]"}]}

@@ -16,6 +16,7 @@ _Updated for Release ${release.tag} - created on ${created.day}_
 |----| :----:  | :----:  | :----: |
 | **democompany-cards** | 0.1.0-SNAPSHOT | 0.1.0 | 0.1.0-SNAPSHOT |
 | **democompany-customer** | 0.1.0-SNAPSHOT | 0.1.0 | 0.1.0-SNAPSHOT |
+| **democompany-patterns** | 0.1.0-SNAPSHOT | 0.1.0 |  |
 | **democompany-services** | 0.1.0-SNAPSHOT | 0.1.0 |  |
 
 (\*) New in this Release / (\*\*) Patched in this Release - check below for the details

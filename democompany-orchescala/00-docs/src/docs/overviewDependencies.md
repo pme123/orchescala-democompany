@@ -33,6 +33,11 @@ flowchart TB
    style democompany-cards fill:#c8feda
 
 
+   democompany-patterns
+   
+   style democompany-patterns fill:#dbe8fb
+
+
    democompany-customer --> democompany-services
    click democompany-customer href "./dependencies/democompany-customer.html" "democompany-customer Dependencies"
    style democompany-customer fill:#d9d2f5
@@ -45,7 +50,7 @@ flowchart TB
 
 
     subgraph general
-    democompany-services(democompany-services)
+    democompany-services(democompany-services) & democompany-patterns(democompany-patterns)
     end
     
    style customer fill:#efeafb,color:#7252ac,stroke:#7252ac;
@@ -63,6 +68,7 @@ flowchart TB
   <ul>
 <li style="background: #c8feda;">democompany-cards: #c8feda</li>
 <li style="background: #d9d2f5;">democompany-customer: #d9d2f5</li>
+<li style="background: #dbe8fb;">democompany-patterns: #dbe8fb</li>
 <li style="background: #ffffcc;">democompany-services: #ffffcc</li>
   </ul>
 </div>
@@ -76,4 +82,5 @@ flowchart TB
 
 ## general
 - **democompany-services:** [API Doc](../democompany-services/OpenApi.html "democompany-services API Documentation") 
+- **democompany-patterns:** [API Doc](../democompany-patterns/OpenApi.html "democompany-patterns API Documentation") 
 

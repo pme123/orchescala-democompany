@@ -27,12 +27,14 @@
   "body": [
     {
       "type": "heading",
-      "text": "Termin vereinbaren"
+      "text": "Termin vereinbaren",
+      "id": "b-db718612c5"
     },
     {
       "type": "text",
       "visible": "step == 'choose'",
-      "text": "Wählen Sie Thema, Kanal und einen freien Termin. Wir schicken Ihnen danach eine E-Mail – mit Ihrer Bestätigung ist der Termin angefragt."
+      "text": "Wählen Sie Thema, Kanal und einen freien Termin. Wir schicken Ihnen danach eine E-Mail – mit Ihrer Bestätigung ist der Termin angefragt.",
+      "id": "b-92f62d43b4"
     },
     {
       "type": "section",
@@ -87,7 +89,8 @@
               },
               "result": "slots"
             }
-          ]
+          ],
+          "id": "b-96a0c58ee2"
         },
         {
           "type": "choice",
@@ -129,9 +132,11 @@
               },
               "result": "slots"
             }
-          ]
+          ],
+          "id": "b-7cfd59b3cb"
         }
-      ]
+      ],
+      "id": "b-5ebe792ae1"
     },
     {
       "type": "section",
@@ -150,9 +155,11 @@
           },
           "itemLabel": "{{start|time}}–{{end|time}}",
           "itemHint": "{{advisorName}}",
-          "empty": "In den nächsten zwei Wochen ist leider nichts frei – bitte ein anderes Thema oder einen anderen Kanal wählen."
+          "empty": "In den nächsten zwei Wochen ist leider nichts frei – bitte ein anderes Thema oder einen anderen Kanal wählen.",
+          "id": "b-2802dd7c0b"
         }
-      ]
+      ],
+      "id": "b-dd7285aae6"
     },
     {
       "type": "section",
@@ -193,7 +200,8 @@
               "input": "textarea",
               "placeholder": "z.B. Thema genauer, Parkplatz, Begleitung"
             }
-          ]
+          ],
+          "id": "b-6c67fc5fd2"
         },
         {
           "type": "summary",
@@ -212,7 +220,8 @@
               "label": "Thema",
               "value": "{{appointment.topic|label:topic}}, {{appointment.channel|label:channel}}"
             }
-          ]
+          ],
+          "id": "b-88d52c8873"
         },
         {
           "type": "button",
@@ -274,9 +283,11 @@
               "path": "step",
               "value": "sent"
             }
-          ]
+          ],
+          "id": "b-a922bd3773"
         }
-      ]
+      ],
+      "id": "b-c340962145"
     },
     {
       "type": "section",
@@ -285,7 +296,8 @@
         {
           "type": "text",
           "tone": "success",
-          "text": "Fast geschafft: Wir haben Ihnen eine E-Mail an {{contact.email}} geschickt. Bitte bestätigen Sie darin Ihre Adresse innerhalb von 30 Minuten – sonst geben wir den Termin wieder frei."
+          "text": "Fast geschafft: Wir haben Ihnen eine E-Mail an {{contact.email}} geschickt. Bitte bestätigen Sie darin Ihre Adresse innerhalb von 30 Minuten – sonst geben wir den Termin wieder frei.",
+          "id": "b-dc0e2d3502"
         },
         {
           "type": "summary",
@@ -302,9 +314,17 @@
               "label": "Thema",
               "value": "{{appointment.topic|label:topic}}, {{appointment.channel|label:channel}}"
             }
-          ]
+          ],
+          "id": "b-fe766e997c"
         }
-      ]
+      ],
+      "id": "b-f24c2f153d"
     }
-  ]
+  ],
+  "spec": {
+    "project": "democompany-customer",
+    "epics": [
+      "kundentermin"
+    ]
+  }
 }

@@ -63,6 +63,7 @@ flowchart TB
   <ul>
 <li style="background: #c8feda;">democompany-cards: #c8feda</li>
 <li style="background: #d9d2f5;">democompany-customer: #d9d2f5</li>
+<li style="background: #dbe8fb;">democompany-patterns: #dbe8fb</li>
 <li style="background: #ffffcc;">democompany-services: #ffffcc</li>
   </ul>
 </div>

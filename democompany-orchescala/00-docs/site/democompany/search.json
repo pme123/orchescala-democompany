@@ -310,5 +310,33 @@
     "tag" : "Mails 1.0",
     "path" : "/Worker/Mails1.0/mailsV1-SendEmail/democompany-services-mailsV1-SendEmail",
     "summary" : "Worker: SendEmail"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Process start",
+    "operationId" : "Process start",
+    "tag" : "Init Process V1",
+    "path" : "/process/democompany-patterns-initProcessV1/async",
+    "summary" : "Process start"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Process variables",
+    "operationId" : "Process variables",
+    "tag" : "Init Process V1",
+    "path" : "/process/democompany-patterns-initProcessV1/{processInstanceId}/variables",
+    "summary" : "Process variables"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Init Worker",
+    "operationId" : "Init Worker",
+    "tag" : "Init Process V1",
+    "path" : "/worker/democompany-patterns-initProcessV1",
+    "topic" : "democompany-patterns-initProcessV1",
+    "summary" : "Init Worker"
   }
 ]

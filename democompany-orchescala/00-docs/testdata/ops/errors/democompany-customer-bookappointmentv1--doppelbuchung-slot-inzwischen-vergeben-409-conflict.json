@@ -1,0 +1,65 @@
+{
+  "id": "democompany-customer-bookappointmentv1--doppelbuchung-slot-inzwischen-vergeben-409-conflict",
+  "process": "democompany-customer-bookAppointmentV1",
+  "title": "Doppelbuchung: Slot inzwischen vergeben (409 Conflict)",
+  "details": "Zwei Kunden buchen denselben Slot fast gleichzeitig. Der zweite erhält `409 Conflict` vom Kalender-Service.",
+  "activity": "Termin buchen",
+  "reporter": "Ops-Team",
+  "status": [
+    "UNLÖSBAR"
+  ],
+  "ticket": "[DEMO-131](https://jira.example.com/browse/DEMO-131)",
+  "workaround": "Kunde telefonisch kontaktieren und neuen Termin vorschlagen. Fachlich so akzeptiert.",
+  "count": 11,
+  "occurrences": [
+    {
+      "at": "2026-10-13T09:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-10-10T21:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-10-08T09:00:00.000Z",
+      "by": "Anna Muster"
+    },
+    {
+      "at": "2026-10-05T21:00:00.000Z",
+      "by": "Ops-Team"
+    },
+    {
+      "at": "2026-10-03T09:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-09-30T21:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-09-28T09:00:00.000Z",
+      "by": "Anna Muster"
+    },
+    {
+      "at": "2026-09-25T21:00:00.000Z",
+      "by": "Ops-Team"
+    },
+    {
+      "at": "2026-09-23T09:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-09-20T21:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-09-18T09:00:00.000Z",
+      "by": "Anna Muster"
+    }
+  ],
+  "createdAt": "2026-09-18T09:00:00.000Z",
+  "createdBy": "Ops-Team",
+  "updatedAt": "2026-10-13T09:00:00.000Z",
+  "updatedBy": "Carla Demo",
+  "lastAction": "counted"
+}

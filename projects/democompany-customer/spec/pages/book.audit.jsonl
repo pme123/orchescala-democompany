@@ -1,0 +1,4 @@
+{"id":"au-b60767a05f","at":"2026-10-22T16:47:37+02:00","author":"Ich","source":"manual","changes":[{"target":"page","label":"Seite Termin buchen","op":"change","field":"Projekt","after":"democompany-customer"}]}
+{"id":"au-b9748fcfe0","at":"2026-10-22T16:48:17+02:00","author":"Ich","source":"manual","changes":[{"target":"page","label":"Seite Termin buchen","op":"change","field":"Epics","after":"[\"kundentermin\"]"}]}
+{"id":"au-4ba94044d2","at":"2026-10-22T16:52:54+02:00","author":"Ich","source":"manual","changes":[{"target":"block:b-a922bd3773","label":"Button «Termin anfragen ok»","op":"change","field":"Bezeichnung","before":"Termin anfragen","after":"Termin anfragen ok"}]}
+{"id":"au-8a8e7c16d4","at":"2026-10-22T16:53:29+02:00","author":"Ich","source":"manual","changes":[{"target":"block:b-a922bd3773","label":"Button «Termin anfragen»","op":"change","field":"Bezeichnung","before":"Termin anfragen ok","after":"Termin anfragen"}]}

@@ -1,0 +1,37 @@
+{
+  "id": "democompany-customer-bookappointmentv1--dmn-keine-regel-trifft-zu-fuer-beratungsart-hypothek-online",
+  "process": "democompany-customer-bookAppointmentV1",
+  "title": "DMN: keine Regel trifft zu für Beratungsart «Hypothek-Online»",
+  "details": "```\nDmnHitPolicyException: no rule matched for input 'Hypothek-Online'\n```\nNeue Beratungsart ist im Frontend schon aktiv, in der Entscheidungstabelle `AppointmentRules` fehlt sie.",
+  "activity": "Terminregeln",
+  "reporter": "Carla Demo",
+  "status": [
+    "FINANZIERUNG NOTWENDIG"
+  ],
+  "ticket": "[DEMO-155](https://jira.example.com/browse/DEMO-155)",
+  "workaround": "Bis zur Anpassung der DMN: Termin als «Hypothek» erfassen lassen.",
+  "count": 4,
+  "occurrences": [
+    {
+      "at": "2026-10-25T15:00:00.000Z",
+      "by": "Ops-Team"
+    },
+    {
+      "at": "2026-10-24T13:00:00.000Z",
+      "by": "Carla Demo"
+    },
+    {
+      "at": "2026-10-23T11:00:00.000Z",
+      "by": "Beat Beispiel"
+    },
+    {
+      "at": "2026-10-22T09:00:00.000Z",
+      "by": "Anna Muster"
+    }
+  ],
+  "createdAt": "2026-10-22T09:00:00.000Z",
+  "createdBy": "Carla Demo",
+  "updatedAt": "2026-10-25T15:00:00.000Z",
+  "updatedBy": "Ops-Team",
+  "lastAction": "counted"
+}

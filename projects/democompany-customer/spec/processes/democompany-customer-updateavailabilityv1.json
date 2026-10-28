@@ -9,7 +9,7 @@
   "status": "draft",
   "description": "",
   "createdAt": "2026-10-06",
-  "updatedAt": "2026-10-21T10:56:24+02:00",
+  "updatedAt": "2026-10-22T16:48:46+02:00",
   "variables": [],
   "timeToLive": "5",
   "steps": [
@@ -378,5 +378,8 @@
       "outTypeId": "t-46a51909f4",
       "descr": "Speichert die belegten Zeiten des Beraters (ersetzt den letzten Stand)."
     }
+  ],
+  "epics": [
+    "kundentermin"
   ]
 }
