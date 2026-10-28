@@ -22,7 +22,7 @@ object CompanyOrchescalaDevHelper
   lazy val engineConfig: EngineConfig = companyEngineConfig
   lazy val devConfig: DevConfig       = CompanyDevConfig.companyConfig
 
-  // 3004 (the default) is used by Valiant's preview - keep both runnable side by side
+  // 3004 (the default) is used by another company's preview - keep both runnable side by side
   override protected def docsPreviewPort: Int = 3003
 
 end CompanyOrchescalaDevHelper

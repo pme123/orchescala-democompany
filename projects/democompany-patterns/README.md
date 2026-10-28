@@ -73,7 +73,7 @@ und Szenario 3 käme nie zum InitWorker in der Engine.
 Beide über die Firmen-Einstellung:
 
 - **Camunda 7**: `CAMUNDA_BASE_URL` (Standard `http://localhost:8080/engine-rest`, Token über `SSO_BASE_URL`).
-- **Camunda 8**: wie bei Valiant ein **lokales c8run ohne Anmeldung** – `CAMUNDA_C8_GRPC_URL`
+- **Camunda 8**: ein **lokales c8run ohne Anmeldung** – `CAMUNDA_C8_GRPC_URL`
   (Standard `http://localhost:26500`), `CAMUNDA_C8_REST_URL` (Standard `http://localhost:8181`),
   `CAMUNDA_C8_OPERATE_URL`.
 
@@ -90,7 +90,7 @@ Gateway und Worker-Apps nutzen die Engines aus `COMPANY_ENGINES` (Standard `C7,C
    ```bash
    COMPANY_ENGINES=C7,C8 WORKER_APP_PORT=5556 sbt "worker/runMain democompany.patterns.worker.WorkerApp"
    ```
-3. Deployen und simulieren in einem Schritt – wie bei Valiant, nur über den Gateway statt BPF:
+3. Deployen und simulieren in einem Schritt – über den Gateway:
    ```bash
    ./helper.scala deploy InitProcessC7Simulation
    ```
