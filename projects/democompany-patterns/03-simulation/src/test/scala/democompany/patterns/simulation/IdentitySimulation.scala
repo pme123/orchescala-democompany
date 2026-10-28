@@ -32,13 +32,11 @@ abstract class IdentitySimulation extends CompanySimulation:
 
   // all three identities are there at the end: the actor of the last user task, the one before
   // the take-over and the one set again by the reset.
-  // `exists` turns the process into a scenario named after `example` - so the name is set here.
-  private lazy val `Identity approved`: ProcessScenario =
+  private lazy val `Identity approved` =
     example
       .exists("_identityCorrelationOfActor")
       .exists("_identityCorrelationBefore")
       .exists("_identityCorrelation")
-      .copy(scenarioName = "Identity approved")
 
   private lazy val `Identity mocked` =
     example

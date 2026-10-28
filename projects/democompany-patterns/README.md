@@ -183,6 +183,9 @@ lokales Gateway gestartet als `starter`, «Antrag freigeben» erledigt als `appr
 Gateway überschreibt der Abschluss einer Aufgabe die Identität selbst: C8 immer, C7 nur mit
 `doOverrideImpersonation = true`.
 
+Dass `example.exists(...)` das Szenario nach dem `val` benennt (`Identity approved`), braucht
+Orchescala ab pme123/orchescala#87 (in develop) – vorher hiess es `example`.
+
 ## Offene Punkte
 
 - Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId` nicht (im normalen Lauf schon) –
