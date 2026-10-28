@@ -9,8 +9,9 @@ import democompany.patterns.domain.identity.v1.Identity.*
 abstract class IdentitySimulation extends CompanySimulation:
 
   simulate(
-    // 1. the user task is completed through the engine service with the test identity - the
-    //    process takes it over for «Antrag abschliessen» and then sets the identity of the start again
+    // 1. «Antrag freigeben» is completed by another identity (`actor`) - the process takes it over
+    //    for the next check, «Antrag abschliessen» is completed by the starter (`admin`) and the
+    //    reset sets the identity of the start again: CheckIdentity sees `actor`, then `admin`.
     scenario(`Identity approved`)(
       `Approve Request UT`,
       `Close Request UT`
@@ -30,10 +31,16 @@ abstract class IdentitySimulation extends CompanySimulation:
     super.config
       .validateProcess(false)
 
-  // all three identities are there at the end: the actor of the last user task, the one before
-  // the take-over and the one set again by the reset.
+  // CheckIdentity saw `actor` after the take-over and `admin` after the reset. And all three
+  // identities are there at the end: the actor of the last user task, the one before the take-over
+  // and the one set again by the reset.
+  // With checks like these the simulation checks only them - not the Out of `example`.
   private lazy val `Identity approved` =
     example
+      .isEquals(
+        "checkedUsernames",
+        Seq(testActorIdentityCorrelation.username, testIdentityCorrelation.username)
+      )
       .exists("_identityCorrelationOfActor")
       .exists("_identityCorrelationBefore")
       .exists("_identityCorrelation")
@@ -48,7 +55,7 @@ abstract class IdentitySimulation extends CompanySimulation:
       .withIn(In.example.copy(customerName = " "))
 
   private lazy val `Approve Request UT` =
-    ApproveRequestUT.example
+    ApproveRequestUT.example.actingAs(testActorIdentityCorrelation)
 
   private lazy val `Close Request UT` =
     CloseRequestUT.example

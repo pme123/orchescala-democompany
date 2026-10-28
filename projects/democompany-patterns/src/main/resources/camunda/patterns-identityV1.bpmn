@@ -29,6 +29,7 @@
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="_servicesMocked">${true}</camunda:inputParameter>
+          <camunda:inputParameter name="identityUsername">${_identityCorrelation.prop("username").stringValue()}</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>TakeOverIdentityFlow</bpmn:incoming>
@@ -49,6 +50,7 @@
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="_servicesMocked">${true}</camunda:inputParameter>
+          <camunda:inputParameter name="identityUsername">${_identityCorrelation.prop("username").stringValue()}</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>ResetIdentityFlow</bpmn:incoming>

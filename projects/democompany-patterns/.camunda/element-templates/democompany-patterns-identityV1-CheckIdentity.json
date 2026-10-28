@@ -21,12 +21,42 @@
       "type" : "Hidden"
     },
     {
+      "value" : "#{identityUsername}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "identityUsername"
+      },
+      "label" : "identityUsername",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "#{execution.getVariable('checkedUsernames')}",
+      "binding" : {
+        "type" : "camunda:inputParameter",
+        "name" : "checkedUsernames"
+      },
+      "label" : "checkedUsernames",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
       "value" : "identityChecked",
       "binding" : {
         "type" : "camunda:outputParameter",
         "source" : "#{identityChecked}"
       },
       "label" : "identityChecked",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "checkedUsernames",
+      "binding" : {
+        "type" : "camunda:outputParameter",
+        "source" : "#{checkedUsernames}"
+      },
+      "label" : "checkedUsernames",
       "description" : "",
       "type" : "Hidden"
     },
@@ -71,7 +101,7 @@
       "type" : "Hidden"
     },
     {
-      "value" : "identityChecked",
+      "value" : "identityChecked, checkedUsernames",
       "binding" : {
         "type" : "camunda:inputParameter",
         "name" : "_outputVariables"

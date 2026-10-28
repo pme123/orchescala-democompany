@@ -128,7 +128,10 @@ entscheidet das BPMN (siehe «Voraussetzung: Orchescala»).
 Die Signatur bindet die Identität an die Prozessinstanz, nicht an den Namen der Variable – nach dem
 Kopieren prüfen die Worker sie wie bisher. Das zeigt **«Identität prüfen»**: ein ServiceWorker nach dem
 Übernehmen und nach dem Zurücksetzen. Er ist im BPMN gemockt (`_servicesMocked = true`), prüft aber
-vorher die Signatur von `_identityCorrelation` – eine ungültige lässt den Job scheitern.
+vorher die Signatur von `_identityCorrelation` – eine ungültige lässt den Job scheitern. Den
+Benutzernamen dieser Identität hängt er an `checkedUsernames` an; das BPMN mappt ihn als Input
+`identityUsername` (C7 `${_identityCorrelation.prop("username").stringValue()}`, C8
+`=_identityCorrelation.username`), denn ein ServiceWorker kommt selbst nicht an die Identität.
 
 | | Camunda 7 | Camunda 8 |
 |---|---|---|
@@ -152,8 +155,11 @@ vorher die Signatur von `_identityCorrelation` – eine ungültige lässt den Jo
 
 ### Simulationen
 
-1. **`Identity approved`** – beide Benutzeraufgaben, «Identität prüfen» zweimal ohne Fehler; am Ende
-   gibt es `_identityCorrelation`, `_identityCorrelationBefore` und `_identityCorrelationOfActor`.
+1. **`Identity approved`** – gestartet als `admin`, «Antrag freigeben» erledigt als `actor`
+   (`.actingAs(testActorIdentityCorrelation)`), «Antrag abschliessen» wieder als `admin`.
+   «Identität prüfen» sieht zuerst `actor` (übernommen), dann `admin` (zurückgesetzt):
+   `checkedUsernames = [actor, admin]`. Am Ende gibt es `_identityCorrelation`,
+   `_identityCorrelationBefore` und `_identityCorrelationOfActor`.
 2. **`Identity mocked`** – endet über `output-mocked`, ohne Benutzeraufgabe.
 3. **`Identity invalid In`** – `customerName = " "`: Incident `validation-failed`.
 
@@ -164,9 +170,12 @@ vorher die Signatur von `_identityCorrelation` – eine ungültige lässt den Jo
 ./helper.scala deploy IdentityC8Simulation
 ```
 
-Die Simulation startet und erledigt alles mit **derselben** Test-Identität (`admin`) – sie zeigt, dass
-die Variablen gesetzt werden, aber nicht den Wechsel. Den Wechsel geprüft (C7 und C8): über ein
-lokales Gateway gestartet als `starter`, «Antrag freigeben» erledigt als `approver`:
+Mit Prüfungen wie `isEquals` oder `exists` vergleicht die Simulation nur diese – nicht das `Out` von
+`example`. Ohne Zurücksetzen wäre `checkedUsernames = [actor, actor]` – das lässt das Szenario
+scheitern (so geprüft).
+
+Vor `actingAs` von Hand geprüft (C7 und C8): über ein lokales Gateway gestartet als `starter`,
+«Antrag freigeben» erledigt als `approver`:
 
 | wann | `_identityCorrelation` |
 |---|---|
@@ -186,9 +195,10 @@ Gateway überschreibt der Abschluss einer Aufgabe die Identität selbst: C8 imme
 Dass `example.exists(...)` das Szenario nach dem `val` benennt (`Identity approved`), braucht
 Orchescala ab pme123/orchescala#87 (in develop) – vorher hiess es `example`.
 
+`actingAs` und die zweite Test-Identität `testActorIdentityCorrelation` gibt es ab dem
+Orchescala-Branch `feat/simulation-second-test-identity` (0.9.0-SNAPSHOT, noch nicht gemergt).
+
 ## Offene Punkte
 
 - Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId` nicht (im normalen Lauf schon) –
   die Variablen kommen dort über den Fehler `output-mocked`, nicht über das Abschliessen des Jobs.
-- Die Simulation kennt nur eine Test-Identität – eine andere Identität für eine Benutzeraufgabe oder
-  Nachricht fehlt, damit sie den Wechsel der Identität selbst prüfen könnte.

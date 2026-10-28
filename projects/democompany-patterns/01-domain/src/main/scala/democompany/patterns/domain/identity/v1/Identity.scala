@@ -32,7 +32,9 @@ object Identity extends CompanyBpmnProcessDsl:
       processStatus: ProcessStatus,
       customerName: String,
       @description("Antrag freigegeben - aus der Benutzeraufgabe «Antrag freigeben».")
-      approved: Boolean
+      approved: Boolean,
+      @description("Die Benutzernamen, mit denen «Identität prüfen» lief - nach der Übernahme der Freigebende, nach dem Zurücksetzen wieder der Starter.")
+      checkedUsernames: Seq[String]
   )
   object Out:
     given ApiSchema[Out]  = deriveApiSchema
@@ -40,7 +42,8 @@ object Identity extends CompanyBpmnProcessDsl:
     lazy val example      = Out(
       processStatus = ProcessStatus.succeeded,
       customerName = In.example.customerName,
-      approved = ApproveRequestUT.Out.example.approved
+      approved = ApproveRequestUT.Out.example.approved,
+      checkedUsernames = Seq("actor", "admin")
     )
   end Out
 

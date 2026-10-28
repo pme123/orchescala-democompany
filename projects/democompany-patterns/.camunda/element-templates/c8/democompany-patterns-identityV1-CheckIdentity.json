@@ -22,12 +22,42 @@
         "type" : "Hidden"
       },
       {
+        "value" : "identityUsername",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "identityUsername"
+        },
+        "label" : "identityUsername",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "checkedUsernames",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "checkedUsernames"
+        },
+        "label" : "checkedUsernames",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
         "value" : "identityChecked",
         "binding" : {
           "type" : "zeebe:output",
           "source" : "identityChecked"
         },
         "label" : "identityChecked",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "checkedUsernames",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "checkedUsernames"
+        },
+        "label" : "checkedUsernames",
         "description" : "",
         "type" : "Hidden"
       },
@@ -72,7 +102,7 @@
         "type" : "Hidden"
       },
       {
-        "value" : "[ \"identityChecked\" ]",
+        "value" : "[ \"identityChecked\", \"checkedUsernames\" ]",
         "binding" : {
           "type" : "zeebe:input",
           "name" : "_outputVariables"

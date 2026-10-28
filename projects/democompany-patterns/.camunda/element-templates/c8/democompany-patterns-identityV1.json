@@ -52,6 +52,16 @@
         "type" : "Hidden"
       },
       {
+        "value" : "checkedUsernames",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "checkedUsernames"
+        },
+        "label" : "checkedUsernames",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
         "value" : "_servicesMocked",
         "binding" : {
           "type" : "zeebe:input",

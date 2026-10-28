@@ -55,6 +55,17 @@
       "type" : "Hidden"
     },
     {
+      "value" : "checkedUsernames",
+      "binding" : {
+        "type" : "camunda:out",
+        "source" : "checkedUsernames",
+        "expression" : false
+      },
+      "label" : "checkedUsernames",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
       "value" : "democompany-patterns-identityV1",
       "binding" : {
         "type" : "property",

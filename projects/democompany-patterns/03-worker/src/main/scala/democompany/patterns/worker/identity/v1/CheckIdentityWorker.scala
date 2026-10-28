@@ -20,6 +20,6 @@ class CheckIdentityWorker extends CompanyServiceWorkerDsl[In, Out, ServiceIn, Se
       out: ServiceResponse[ServiceOut],
       in: In
   ) =
-    Right(Out())
+    Right(Out(checkedUsernames = in.checkedUsernames.getOrElse(Seq.empty) :+ in.identityUsername))
 
 end CheckIdentityWorker
