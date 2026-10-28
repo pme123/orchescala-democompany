@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_patternsIdentityV1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.34.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
+  <bpmn:process id="democompany-patterns-identityV1" name="democompany-patterns-identityV1" isExecutable="true">
+    <bpmn:startEvent id="StartEvent" name="Start">
+      <bpmn:outgoing>StartFlow</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="InitProcessTask" name="Init Process">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="democompany-patterns-identityV1" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=&#34;output-mocked&#34;" target="_handledErrors" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>StartFlow</bpmn:incoming>
+      <bpmn:outgoing>InitProcessFlow</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="ApproveRequestUT" name="Antrag freigeben">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+      </bpmn:extensionElements>
+      <bpmn:incoming>InitProcessFlow</bpmn:incoming>
+      <bpmn:outgoing>ApproveRequestFlow</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateThrowEvent id="TakeOverIdentityEvent" name="Identität übernehmen">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=_identityCorrelation" target="_identityCorrelationBefore" />
+          <zeebe:output source="=if _identityCorrelationOfActor = null then _identityCorrelation else _identityCorrelationOfActor" target="_identityCorrelation" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>ApproveRequestFlow</bpmn:incoming>
+      <bpmn:outgoing>TakeOverIdentityFlow</bpmn:outgoing>
+    </bpmn:intermediateThrowEvent>
+    <bpmn:serviceTask id="CheckIdentityAsActorTask" name="Identität prüfen (übernommen)">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="democompany-patterns-identityV1-CheckIdentity" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=true" target="_servicesMocked" />
+          <zeebe:input source="=_identityCorrelation.username" target="identityUsername" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>TakeOverIdentityFlow</bpmn:incoming>
+      <bpmn:outgoing>CheckIdentityAsActorFlow</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="CloseRequestUT" name="Antrag abschliessen">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+      </bpmn:extensionElements>
+      <bpmn:incoming>CheckIdentityAsActorFlow</bpmn:incoming>
+      <bpmn:outgoing>CloseRequestFlow</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateThrowEvent id="ResetIdentityEvent" name="Identität zurücksetzen">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=_identityCorrelationBefore" target="_identityCorrelation" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>CloseRequestFlow</bpmn:incoming>
+      <bpmn:outgoing>ResetIdentityFlow</bpmn:outgoing>
+    </bpmn:intermediateThrowEvent>
+    <bpmn:serviceTask id="CheckIdentityAsStarterTask" name="Identität prüfen (zurückgesetzt)">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="democompany-patterns-identityV1-CheckIdentity" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=true" target="_servicesMocked" />
+          <zeebe:input source="=_identityCorrelation.username" target="identityUsername" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>ResetIdentityFlow</bpmn:incoming>
+      <bpmn:outgoing>CheckIdentityAsStarterFlow</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="SucceededEndEvent" name="succeeded">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=&#34;succeeded&#34;" target="processStatus" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>CheckIdentityAsStarterFlow</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="OutputMockedBoundary" attachedToRef="InitProcessTask">
+      <bpmn:outgoing>OutputMockedBoundaryFlow</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="OutputMockedBoundaryDef" errorRef="OutputMockedError" />
+    </bpmn:boundaryEvent>
+    <bpmn:intermediateThrowEvent id="OutputMockedThrow" name="output-mocked">
+      <bpmn:incoming>OutputMockedBoundaryFlow</bpmn:incoming>
+      <bpmn:linkEventDefinition id="OutputMockedThrowDef" name="output-mocked" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateCatchEvent id="OutputmockedEvent" name="output-mocked">
+      <bpmn:outgoing>OutputmockedFlow</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="OutputmockedEventDef" name="output-mocked" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="OutputmockedEndEvent" name="output-mocked">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=&#34;output-mocked&#34;" target="processStatus" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>OutputmockedFlow</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="StartFlow" sourceRef="StartEvent" targetRef="InitProcessTask" />
+    <bpmn:sequenceFlow id="InitProcessFlow" sourceRef="InitProcessTask" targetRef="ApproveRequestUT" />
+    <bpmn:sequenceFlow id="ApproveRequestFlow" sourceRef="ApproveRequestUT" targetRef="TakeOverIdentityEvent" />
+    <bpmn:sequenceFlow id="TakeOverIdentityFlow" sourceRef="TakeOverIdentityEvent" targetRef="CheckIdentityAsActorTask" />
+    <bpmn:sequenceFlow id="CheckIdentityAsActorFlow" sourceRef="CheckIdentityAsActorTask" targetRef="CloseRequestUT" />
+    <bpmn:sequenceFlow id="CloseRequestFlow" sourceRef="CloseRequestUT" targetRef="ResetIdentityEvent" />
+    <bpmn:sequenceFlow id="ResetIdentityFlow" sourceRef="ResetIdentityEvent" targetRef="CheckIdentityAsStarterTask" />
+    <bpmn:sequenceFlow id="CheckIdentityAsStarterFlow" sourceRef="CheckIdentityAsStarterTask" targetRef="SucceededEndEvent" />
+    <bpmn:sequenceFlow id="OutputMockedBoundaryFlow" sourceRef="OutputMockedBoundary" targetRef="OutputMockedThrow" />
+    <bpmn:sequenceFlow id="OutputmockedFlow" sourceRef="OutputmockedEvent" targetRef="OutputmockedEndEvent" />
+  </bpmn:process>
+  <bpmn:error id="OutputMockedError" name="output-mocked" errorCode="output-mocked" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="democompany-patterns-identityV1">
+      <bpmndi:BPMNShape id="StartEvent_di" bpmnElement="StartEvent">
+        <dc:Bounds x="112" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="118" y="165" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="InitProcessTask_di" bpmnElement="InitProcessTask" color:background-color="#D5D5D5">
+        <dc:Bounds x="200" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ApproveRequestUT_di" bpmnElement="ApproveRequestUT">
+        <dc:Bounds x="360" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TakeOverIdentityEvent_di" bpmnElement="TakeOverIdentityEvent" color:background-color="#D5D5D5">
+        <dc:Bounds x="522" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="505" y="165" width="70" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CheckIdentityAsActorTask_di" bpmnElement="CheckIdentityAsActorTask">
+        <dc:Bounds x="620" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CloseRequestUT_di" bpmnElement="CloseRequestUT">
+        <dc:Bounds x="780" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ResetIdentityEvent_di" bpmnElement="ResetIdentityEvent" color:background-color="#D5D5D5">
+        <dc:Bounds x="942" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="925" y="165" width="70" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CheckIdentityAsStarterTask_di" bpmnElement="CheckIdentityAsStarterTask">
+        <dc:Bounds x="1040" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SucceededEndEvent_di" bpmnElement="SucceededEndEvent">
+        <dc:Bounds x="1202" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1194" y="165" width="52" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputMockedThrow_di" bpmnElement="OutputMockedThrow" color:background-color="#D5D5D5">
+        <dc:Bounds x="262" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="244" y="285" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedEvent_di" bpmnElement="OutputmockedEvent" color:background-color="#D5D5D5">
+        <dc:Bounds x="1102" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1084" y="385" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedEndEvent_di" bpmnElement="OutputmockedEndEvent" color:background-color="#D5D5D5">
+        <dc:Bounds x="1202" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1184" y="385" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputMockedBoundary_di" bpmnElement="OutputMockedBoundary" color:background-color="#D5D5D5">
+        <dc:Bounds x="262" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="StartFlow_di" bpmnElement="StartFlow">
+        <di:waypoint x="148" y="140" />
+        <di:waypoint x="200" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="InitProcessFlow_di" bpmnElement="InitProcessFlow">
+        <di:waypoint x="300" y="140" />
+        <di:waypoint x="360" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="ApproveRequestFlow_di" bpmnElement="ApproveRequestFlow">
+        <di:waypoint x="460" y="140" />
+        <di:waypoint x="522" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="TakeOverIdentityFlow_di" bpmnElement="TakeOverIdentityFlow">
+        <di:waypoint x="558" y="140" />
+        <di:waypoint x="620" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CheckIdentityAsActorFlow_di" bpmnElement="CheckIdentityAsActorFlow">
+        <di:waypoint x="720" y="140" />
+        <di:waypoint x="780" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CloseRequestFlow_di" bpmnElement="CloseRequestFlow">
+        <di:waypoint x="880" y="140" />
+        <di:waypoint x="942" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="ResetIdentityFlow_di" bpmnElement="ResetIdentityFlow">
+        <di:waypoint x="978" y="140" />
+        <di:waypoint x="1040" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CheckIdentityAsStarterFlow_di" bpmnElement="CheckIdentityAsStarterFlow">
+        <di:waypoint x="1140" y="140" />
+        <di:waypoint x="1202" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="OutputMockedBoundaryFlow_di" bpmnElement="OutputMockedBoundaryFlow">
+        <di:waypoint x="280" y="198" />
+        <di:waypoint x="280" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="OutputmockedFlow_di" bpmnElement="OutputmockedFlow">
+        <di:waypoint x="1138" y="360" />
+        <di:waypoint x="1202" y="360" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

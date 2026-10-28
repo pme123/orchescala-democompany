@@ -777,6 +777,86 @@
       ]
     },
     {
+      "id" : "democompany-patterns-identityV1",
+      "name" : "democompany-patterns-identityV1",
+      "group" : "democompany-patterns",
+      "description" : "Beispiel für die Patterns «Identität übernehmen» und «Identität zurücksetzen».",
+      "kind" : "call",
+      "calledProcess" : "democompany-patterns-identityV1",
+      "inputs" : [
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "description" : "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "processStatus",
+          "expression" : "= processStatus",
+          "required" : true
+        },
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "required" : true
+        },
+        {
+          "name" : "approved",
+          "expression" : "= approved",
+          "description" : "Antrag freigegeben - aus der Benutzeraufgabe «Antrag freigeben».",
+          "required" : true
+        },
+        {
+          "name" : "checkedUsernames",
+          "expression" : "= checkedUsernames",
+          "description" : "Die Benutzernamen, mit denen «Identität prüfen» lief - nach der Übernahme der Freigebende, nach dem Zurücksetzen wieder der Starter.",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-patterns-identityV1-CheckIdentity",
+      "name" : "CheckIdentity",
+      "group" : "democompany-patterns",
+      "description" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.",
+      "topic" : "democompany-patterns-identityV1-CheckIdentity",
+      "kind" : "service",
+      "inputs" : [
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "required" : true
+        },
+        {
+          "name" : "identityUsername",
+          "expression" : "= identityUsername",
+          "description" : "Benutzername der Identität des Prozesses - das BPMN mappt ihn aus `_identityCorrelation`.",
+          "required" : true
+        },
+        {
+          "name" : "checkedUsernames",
+          "expression" : "= checkedUsernames",
+          "description" : "Die Benutzernamen der bisherigen Prüfungen."
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "identityChecked",
+          "expression" : "= identityChecked",
+          "description" : "Der Service wurde mit der (geprüften) Identität des Prozesses aufgerufen.",
+          "required" : true
+        },
+        {
+          "name" : "checkedUsernames",
+          "expression" : "= checkedUsernames",
+          "description" : "Die Benutzernamen aller Prüfungen bis hier, in ihrer Reihenfolge.",
+          "required" : true
+        }
+      ]
+    },
+    {
       "id" : "democompany-patterns-initProcessV1",
       "name" : "democompany-patterns-initProcessV1",
       "group" : "democompany-patterns",
@@ -805,6 +885,53 @@
         {
           "name" : "greetingMessage",
           "expression" : "= greetingMessage",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-patterns.userTask.ApproveRequestUT",
+      "name" : "ApproveRequestUT",
+      "group" : "democompany-patterns",
+      "kind" : "user",
+      "inputs" : [
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "approved",
+          "expression" : "= approved",
+          "description" : "Antrag freigegeben?",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-patterns.userTask.CloseRequestUT",
+      "name" : "CloseRequestUT",
+      "group" : "democompany-patterns",
+      "kind" : "user",
+      "inputs" : [
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "required" : true
+        },
+        {
+          "name" : "approved",
+          "expression" : "= approved",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "closed",
+          "expression" : "= closed",
+          "description" : "Antrag abgeschlossen?",
           "required" : true
         }
       ]
@@ -2993,24 +3120,234 @@
       ]
     },
     {
+      "id" : "democompany.patterns.domain.identity.v1.ApproveRequestUT.In",
+      "name" : "ApproveRequestUT.In",
+      "pkg" : "democompany.patterns.domain.identity.v1",
+      "kind" : "case",
+      "owner" : "ApproveRequestUT",
+      "importPath" : "democompany.patterns.domain.identity.v1.ApproveRequestUT",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/ApproveRequestUT.scala",
+      "fields" : [
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "example" : "Identity.In.example.customerName"
+        }
+      ],
+      "dsl" : "UserTask",
+      "keyName" : "name",
+      "key" : "ApproveRequestUT",
+      "ownerDescr" : "Antrag freigeben - wer die Aufgabe erledigt, steht danach als `_identityCorrelationOfActor` im Prozess."
+    },
+    {
+      "id" : "democompany.patterns.domain.identity.v1.ApproveRequestUT.Out",
+      "name" : "ApproveRequestUT.Out",
+      "pkg" : "democompany.patterns.domain.identity.v1",
+      "kind" : "case",
+      "owner" : "ApproveRequestUT",
+      "importPath" : "democompany.patterns.domain.identity.v1.ApproveRequestUT",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/ApproveRequestUT.scala",
+      "fields" : [
+        {
+          "name" : "approved",
+          "type" : "Boolean",
+          "default" : "true",
+          "description" : "Antrag freigegeben?",
+          "example" : "true"
+        }
+      ],
+      "dsl" : "UserTask",
+      "keyName" : "name",
+      "key" : "ApproveRequestUT",
+      "ownerDescr" : "Antrag freigeben - wer die Aufgabe erledigt, steht danach als `_identityCorrelationOfActor` im Prozess."
+    },
+    {
+      "id" : "democompany.patterns.domain.identity.v1.CheckIdentity.In",
+      "name" : "CheckIdentity.In",
+      "pkg" : "democompany.patterns.domain.identity.v1",
+      "kind" : "case",
+      "owner" : "CheckIdentity",
+      "importPath" : "democompany.patterns.domain.identity.v1.CheckIdentity",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala",
+      "fields" : [
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "example" : "Identity.In.example.customerName"
+        },
+        {
+          "name" : "identityUsername",
+          "type" : "String",
+          "description" : "Benutzername der Identität des Prozesses - das BPMN mappt ihn aus `_identityCorrelation`.",
+          "example" : "\"actor\""
+        },
+        {
+          "name" : "checkedUsernames",
+          "type" : "Option[Seq[String]]",
+          "default" : "None",
+          "description" : "Die Benutzernamen der bisherigen Prüfungen."
+        }
+      ],
+      "topicName" : "democompany-patterns-identityV1-CheckIdentity",
+      "dsl" : "ServiceTask",
+      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`."
+    },
+    {
+      "id" : "democompany.patterns.domain.identity.v1.CheckIdentity.Out",
+      "name" : "CheckIdentity.Out",
+      "pkg" : "democompany.patterns.domain.identity.v1",
+      "kind" : "case",
+      "owner" : "CheckIdentity",
+      "importPath" : "democompany.patterns.domain.identity.v1.CheckIdentity",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala",
+      "fields" : [
+        {
+          "name" : "identityChecked",
+          "type" : "Boolean",
+          "default" : "true",
+          "description" : "Der Service wurde mit der (geprüften) Identität des Prozesses aufgerufen.",
+          "example" : "true"
+        },
+        {
+          "name" : "checkedUsernames",
+          "type" : "Seq[String]",
+          "default" : "Seq(\"actor\")",
+          "description" : "Die Benutzernamen aller Prüfungen bis hier, in ihrer Reihenfolge.",
+          "example" : "Seq(\"actor\")"
+        }
+      ],
+      "topicName" : "democompany-patterns-identityV1-CheckIdentity",
+      "dsl" : "ServiceTask",
+      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`."
+    },
+    {
+      "id" : "democompany.patterns.domain.identity.v1.CheckIdentity.ServiceIn",
+      "name" : "CheckIdentity.ServiceIn",
+      "pkg" : "democompany.patterns.domain.identity.v1",
+      "kind" : "alias",
+      "owner" : "CheckIdentity",
+      "importPath" : "democompany.patterns.domain.identity.v1.CheckIdentity",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala",
+      "target" : "NoInput",
+      "topicName" : "democompany-patterns-identityV1-CheckIdentity",
+      "dsl" : "ServiceTask",
+      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`."
+    },
+    {
+      "id" : "democompany.patterns.domain.identity.v1.CheckIdentity.ServiceOut",
+      "name" : "CheckIdentity.ServiceOut",
+      "pkg" : "democompany.patterns.domain.identity.v1",
+      "kind" : "alias",
+      "owner" : "CheckIdentity",
+      "importPath" : "democompany.patterns.domain.identity.v1.CheckIdentity",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala",
+      "target" : "NoOutput",
+      "topicName" : "democompany-patterns-identityV1-CheckIdentity",
+      "dsl" : "ServiceTask",
+      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`."
+    },
+    {
+      "id" : "democompany.patterns.domain.identity.v1.CloseRequestUT.In",
+      "name" : "CloseRequestUT.In",
+      "pkg" : "democompany.patterns.domain.identity.v1",
+      "kind" : "case",
+      "owner" : "CloseRequestUT",
+      "importPath" : "democompany.patterns.domain.identity.v1.CloseRequestUT",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala",
+      "fields" : [
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "example" : "Identity.In.example.customerName"
+        },
+        {
+          "name" : "approved",
+          "type" : "Boolean",
+          "example" : "ApproveRequestUT.Out.example.approved"
+        }
+      ],
+      "dsl" : "UserTask",
+      "keyName" : "name",
+      "key" : "CloseRequestUT",
+      "ownerDescr" : "Antrag abschliessen - der Prozess hat hier die Identität der Person, die den Antrag freigegeben hat."
+    },
+    {
+      "id" : "democompany.patterns.domain.identity.v1.CloseRequestUT.Out",
+      "name" : "CloseRequestUT.Out",
+      "pkg" : "democompany.patterns.domain.identity.v1",
+      "kind" : "case",
+      "owner" : "CloseRequestUT",
+      "importPath" : "democompany.patterns.domain.identity.v1.CloseRequestUT",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala",
+      "fields" : [
+        {
+          "name" : "closed",
+          "type" : "Boolean",
+          "default" : "true",
+          "description" : "Antrag abgeschlossen?",
+          "example" : "true"
+        }
+      ],
+      "dsl" : "UserTask",
+      "keyName" : "name",
+      "key" : "CloseRequestUT",
+      "ownerDescr" : "Antrag abschliessen - der Prozess hat hier die Identität der Person, die den Antrag freigegeben hat."
+    },
+    {
       "id" : "democompany.patterns.domain.identity.v1.Identity.In",
       "name" : "Identity.In",
       "pkg" : "democompany.patterns.domain.identity.v1",
-      "kind" : "member",
+      "kind" : "case",
       "owner" : "Identity",
       "importPath" : "democompany.patterns.domain.identity.v1.Identity",
-      "descr" : "Prozess «identityV1» aus democompany-patterns",
-      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/Identity.scala",
+      "fields" : [
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "description" : "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "example" : "\"Peter Muster\""
+        }
+      ],
+      "processName" : "democompany-patterns-identityV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für die Patterns «Identität übernehmen» und «Identität zurücksetzen».\nNach der Benutzeraufgabe übernimmt der Prozess die Identität der Person, die sie erledigt hat\n(`_identityCorrelation = _identityCorrelationOfActor`, die bisherige in `_identityCorrelationBefore`) -\n«Identität zurücksetzen» setzt danach wieder die Identität vom Start."
     },
     {
       "id" : "democompany.patterns.domain.identity.v1.Identity.Out",
       "name" : "Identity.Out",
       "pkg" : "democompany.patterns.domain.identity.v1",
-      "kind" : "member",
+      "kind" : "case",
       "owner" : "Identity",
       "importPath" : "democompany.patterns.domain.identity.v1.Identity",
-      "descr" : "Prozess «identityV1» aus democompany-patterns",
-      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/Identity.scala",
+      "fields" : [
+        {
+          "name" : "processStatus",
+          "type" : "ProcessStatus",
+          "example" : "ProcessStatus.succeeded"
+        },
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "example" : "In.example.customerName"
+        },
+        {
+          "name" : "approved",
+          "type" : "Boolean",
+          "description" : "Antrag freigegeben - aus der Benutzeraufgabe «Antrag freigeben».",
+          "example" : "ApproveRequestUT.Out.example.approved"
+        },
+        {
+          "name" : "checkedUsernames",
+          "type" : "Seq[String]",
+          "description" : "Die Benutzernamen, mit denen «Identität prüfen» lief - nach der Übernahme der Freigebende, nach dem Zurücksetzen wieder der Starter.",
+          "example" : "Seq(\"actor\", \"admin\")"
+        }
+      ],
+      "processName" : "democompany-patterns-identityV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für die Patterns «Identität übernehmen» und «Identität zurücksetzen».\nNach der Benutzeraufgabe übernimmt der Prozess die Identität der Person, die sie erledigt hat\n(`_identityCorrelation = _identityCorrelationOfActor`, die bisherige in `_identityCorrelationBefore`) -\n«Identität zurücksetzen» setzt danach wieder die Identität vom Start."
     },
     {
       "id" : "democompany.patterns.domain.initProcess.v1.InitProcess.In",
@@ -3420,35 +3757,35 @@
       "name" : "democompany-orchescala",
       "path" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala",
       "types" : 3,
-      "scannedAt" : "2026-10-28T09:48:30.177Z"
+      "scannedAt" : "2026-10-28T13:19:29.114Z"
     },
     {
       "id" : "p-democompany-cards",
       "name" : "democompany-cards",
       "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-cards",
       "types" : 25,
-      "scannedAt" : "2026-10-28T09:48:30.182Z"
+      "scannedAt" : "2026-10-28T13:19:29.120Z"
     },
     {
       "id" : "p-democompany-customer",
       "name" : "democompany-customer",
       "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-customer",
       "types" : 48,
-      "scannedAt" : "2026-10-28T09:48:30.186Z"
+      "scannedAt" : "2026-10-28T13:19:29.125Z"
     },
     {
       "id" : "p-democompany-patterns",
       "name" : "democompany-patterns",
       "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-patterns",
-      "types" : 4,
-      "scannedAt" : "2026-10-28T09:48:30.187Z"
+      "types" : 14,
+      "scannedAt" : "2026-10-28T13:19:29.128Z"
     },
     {
       "id" : "p-democompany-services",
       "name" : "democompany-services",
       "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-services",
       "types" : 11,
-      "scannedAt" : "2026-10-28T09:48:30.188Z"
+      "scannedAt" : "2026-10-28T13:19:29.130Z"
     }
   ],
   "projectColors" : {

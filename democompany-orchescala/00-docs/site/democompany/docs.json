@@ -30,6 +30,7 @@
       "group" : "customer",
       "color" : "#c8feda",
       "version" : "0.1.0",
+      "workerVersion" : "0.1.0",
       "apiDocUrl" : "democompany-cards/OpenApi.html",
       "hasDependencies" : true
     },
@@ -38,6 +39,7 @@
       "group" : "customer",
       "color" : "#d9d2f5",
       "version" : "0.1.0",
+      "workerVersion" : "0.1.0",
       "apiDocUrl" : "democompany-customer/OpenApi.html",
       "hasDependencies" : true
     },
@@ -45,7 +47,7 @@
       "name" : "democompany-services",
       "group" : "general",
       "color" : "#ffffcc",
-      "version" : "0.1.0",
+      "workerVersion" : "0.1.0",
       "apiDocUrl" : "democompany-services/OpenApi.html",
       "hasDependencies" : false
     },
@@ -53,7 +55,8 @@
       "name" : "democompany-patterns",
       "group" : "general",
       "color" : "#dbe8fb",
-      "version" : "0.1.0",
+      "version" : "0.2.0",
+      "workerVersion" : "0.2.0",
       "apiDocUrl" : "democompany-patterns/OpenApi.html",
       "hasDependencies" : false
     }
@@ -96,6 +99,45 @@
       "title" : "Camunda Dependencies",
       "columns" : [
         {
+          "project" : "",
+          "version" : ""
+        }
+      ],
+      "rows" : [
+        {
+          "project" : "democompany-cards",
+          "version" : "0.1.0-SNAPSHOT",
+          "previousVersion" : "0.1.0",
+          "status" : "unchanged",
+          "uses" : {
+            
+          }
+        },
+        {
+          "project" : "democompany-customer",
+          "version" : "0.1.0-SNAPSHOT",
+          "previousVersion" : "0.1.0",
+          "status" : "unchanged",
+          "uses" : {
+            
+          }
+        },
+        {
+          "project" : "democompany-patterns",
+          "version" : "0.1.0-SNAPSHOT",
+          "previousVersion" : "0.2.0",
+          "status" : "new",
+          "uses" : {
+            
+          }
+        }
+      ]
+    },
+    {
+      "kind" : "worker",
+      "title" : "Worker Dependencies",
+      "columns" : [
+        {
           "project" : "democompany-services",
           "version" : "0.1.0"
         }
@@ -122,8 +164,8 @@
         {
           "project" : "democompany-patterns",
           "version" : "0.1.0-SNAPSHOT",
-          "previousVersion" : "0.1.0",
-          "status" : "unchanged",
+          "previousVersion" : "0.2.0",
+          "status" : "new",
           "uses" : {
             
           }
@@ -141,6 +183,12 @@
     }
   ],
   "releaseNotes" : [
+    {
+      "project" : "democompany-patterns",
+      "apiDocUrl" : "democompany-patterns/OpenApi.html",
+      "groups" : [
+      ]
+    }
   ],
   "catalog" : [
     {

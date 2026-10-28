@@ -314,7 +314,7 @@
   {
     "company" : "democompany",
     "project" : "democompany-patterns",
-    "id" : "Process start",
+    "id" : "Init Process V1 · Process start",
     "operationId" : "Process start",
     "tag" : "Init Process V1",
     "path" : "/process/democompany-patterns-initProcessV1/async",
@@ -323,7 +323,7 @@
   {
     "company" : "democompany",
     "project" : "democompany-patterns",
-    "id" : "Process variables",
+    "id" : "Init Process V1 · Process variables",
     "operationId" : "Process variables",
     "tag" : "Init Process V1",
     "path" : "/process/democompany-patterns-initProcessV1/{processInstanceId}/variables",
@@ -332,11 +332,85 @@
   {
     "company" : "democompany",
     "project" : "democompany-patterns",
-    "id" : "Init Worker",
+    "id" : "Init Process V1 · Init Worker",
     "operationId" : "Init Worker",
     "tag" : "Init Process V1",
     "path" : "/worker/democompany-patterns-initProcessV1",
     "topic" : "democompany-patterns-initProcessV1",
     "summary" : "Init Worker"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Identity V1 · Process start",
+    "operationId" : "Process start",
+    "tag" : "Identity V1",
+    "path" : "/process/democompany-patterns-identityV1/async",
+    "summary" : "Process start"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Identity V1 · Process variables",
+    "operationId" : "Process variables",
+    "tag" : "Identity V1",
+    "path" : "/process/democompany-patterns-identityV1/{processInstanceId}/variables",
+    "summary" : "Process variables"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Identity V1 · Init Worker",
+    "operationId" : "Init Worker",
+    "tag" : "Identity V1",
+    "path" : "/worker/democompany-patterns-identityV1",
+    "topic" : "democompany-patterns-identityV1",
+    "summary" : "Init Worker"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "UserTask variables: ApproveRequestUT",
+    "operationId" : "UserTask variables: ApproveRequestUT",
+    "tag" : "Identity V1",
+    "path" : "/process/{processInstanceId}/userTask/ApproveRequestUT/variables",
+    "summary" : "UserTask variables: ApproveRequestUT"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "UserTask complete: ApproveRequestUT",
+    "operationId" : "UserTask complete: ApproveRequestUT",
+    "tag" : "Identity V1",
+    "path" : "/userTask/ApproveRequestUT/{userTaskInstanceId}/complete",
+    "summary" : "UserTask complete: ApproveRequestUT"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Worker: CheckIdentity",
+    "operationId" : "Worker: CheckIdentity",
+    "tag" : "Identity V1",
+    "path" : "/worker/democompany-patterns-identityV1-CheckIdentity",
+    "topic" : "democompany-patterns-identityV1-CheckIdentity",
+    "summary" : "Worker: CheckIdentity"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "UserTask variables: CloseRequestUT",
+    "operationId" : "UserTask variables: CloseRequestUT",
+    "tag" : "Identity V1",
+    "path" : "/process/{processInstanceId}/userTask/CloseRequestUT/variables",
+    "summary" : "UserTask variables: CloseRequestUT"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "UserTask complete: CloseRequestUT",
+    "operationId" : "UserTask complete: CloseRequestUT",
+    "tag" : "Identity V1",
+    "path" : "/userTask/CloseRequestUT/{userTaskInstanceId}/complete",
+    "summary" : "UserTask complete: CloseRequestUT"
   }
 ]

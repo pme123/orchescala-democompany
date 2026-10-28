@@ -3,8 +3,8 @@ info:
   title: Patterns
   version: 0.1.0-SNAPSHOT
   summary: "\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns - je Pattern\
-    \ ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated at 10/27/26,\
-    \ 9:51 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated at 10/28/26,\
+    \ 1:52 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -48,10 +48,11 @@ info:
     \ Je Pattern gibt es einen Beispielprozess\nfür Camunda 7 und Camunda 8 und eine\
     \ Simulation je Engine, die den Baustein auf einer echten Engine\ndurchspielt.\
     \ Später sollen die BPMN auch als Testdaten für die Orch Spec dienen.\n\nBis jetzt:\
-    \ **«Init Process»**.\n\n## Init Process – `democompany-patterns-initProcessV1`\n\
-    \n```\nStart ─▶ [Init Process] ─▶ (succeeded)\n              │ output-mocked (Fehler-Boundary)\n\
-    \              ▼\n         ⇨ output-mocked (Link-Wurf)\n\n⇨ output-mocked (Link-Ziel)\
-    \ ─▶ (output-mocked)\n```\n\nDer erste Schritt des Prozesses ist ein Service-Task\
+    \ **«Init Process»** und **«Identität übernehmen / zurücksetzen»**.\n\n## Init\
+    \ Process – `democompany-patterns-initProcessV1`\n\n```\nStart ─▶ [Init Process]\
+    \ ─▶ (succeeded)\n              │ output-mocked (Fehler-Boundary)\n          \
+    \    ▼\n         ⇨ output-mocked (Link-Wurf)\n\n⇨ output-mocked (Link-Ziel) ─▶\
+    \ (output-mocked)\n```\n\nDer erste Schritt des Prozesses ist ein Service-Task\
     \ mit der **Prozess-ID als Topic**. Den Task\nbearbeitet der InitWorker (`InitProcessWorker`):\n\
     \n- er **prüft das In** – ein leerer `customerName` ist ungültig (`validation-failed`),\n\
     - er **setzt die Vorgaben aus dem InConfig** – fehlt `inConfig` im In, steht danach\n\
@@ -90,47 +91,94 @@ info:
     \ ungültiges In schon vor dem Prozess ab,\nund Szenario 3 käme nie zum InitWorker\
     \ in der Engine.\n\n### Engines\n\nBeide über die Firmen-Einstellung:\n\n- **Camunda\
     \ 7**: `CAMUNDA_BASE_URL` (Standard `http://localhost:8080/engine-rest`, Token\
-    \ über `SSO_BASE_URL`).\n- **Camunda 8**: wie bei Valiant ein **lokales c8run\
-    \ ohne Anmeldung** – `CAMUNDA_C8_GRPC_URL`\n  (Standard `http://localhost:26500`),\
-    \ `CAMUNDA_C8_REST_URL` (Standard `http://localhost:8181`),\n  `CAMUNDA_C8_OPERATE_URL`.\n\
-    \nGateway und Worker-Apps nutzen die Engines aus `COMPANY_ENGINES` (Standard `C7,C8,Op`).\n\
+    \ über `SSO_BASE_URL`).\n- **Camunda 8**: ein **lokales c8run ohne Anmeldung**\
+    \ – `CAMUNDA_C8_GRPC_URL`\n  (Standard `http://localhost:26500`), `CAMUNDA_C8_REST_URL`\
+    \ (Standard `http://localhost:8181`),\n  `CAMUNDA_C8_OPERATE_URL`.\n\nGateway\
+    \ und Worker-Apps nutzen die Engines aus `COMPANY_ENGINES` (Standard `C7,C8,Op`).\n\
     \n### Starten\n\n1. Gateway der Firma starten – im Ordner `democompany-orchescala`\
     \ (Port 8887, ein anderer mit\n   `GATEWAY_PORT`):\n   ```bash\n   COMPANY_ENGINES=C7,C8\
     \ sbt gateway/run\n   ```\n2. Worker starten (C7 und C8 in einer App). `WORKER_APP_PORT`,\
     \ wenn 5555 schon belegt ist:\n   ```bash\n   COMPANY_ENGINES=C7,C8 WORKER_APP_PORT=5556\
     \ sbt \"worker/runMain democompany.patterns.worker.WorkerApp\"\n   ```\n3. Deployen\
-    \ und simulieren in einem Schritt – wie bei Valiant, nur über den Gateway statt\
-    \ BPF:\n   ```bash\n   ./helper.scala deploy InitProcessC7Simulation\n   ```\n\
-    \   ```bash\n   ./helper.scala deploy InitProcessC8Simulation\n   ```\n   Der\
-    \ Helper der Firma (`CompanyDeployHelper`) macht `sbt publishLocal`, schickt das\
-    \ Manifest\n   `democompany:democompany-patterns:0.1.0-SNAPSHOT` an `POST <GATEWAY_URL>/deployment?targetEngine=<C7|C8>`\n\
-    \   (die Engine aus dem Namen der Simulation; der Gateway liest die BPMN aus dem\
-    \ Jar in\n   `~/.ivy2/local`, Ordner `camunda` bzw. `camunda8`) und startet danach\
-    \ die Simulation.\n   `GATEWAY_URL` (Standard `http://localhost:8887`) für einen\
-    \ anderen Gateway; `GATEWAY_TOKEN` ist nur\n   nötig, wenn der Gateway Tokens\
-    \ prüft (`TOKEN_ISSUER`).\n\n## Nächste Patterns\n\n### Identität übernehmen /\
-    \ zurücksetzen\n\nZwei getrennte Patterns – wie in C7 opt-in: nur wo das Pattern\
-    \ steht, wechselt die Identität.\n\n- **«Identität übernehmen»** – an einer Benutzeraufgabe\
-    \ (beim Abschluss) oder am Empfang einer Nachricht.\n  - C7 heute: Listener mit\
-    \ Skript\n    `impersonateUserIdTemp = impersonateUserId; impersonateUserId =\
-    \ <angemeldeter Benutzer>`.\n  - Neu mit `_identityCorrelation`: `_identityCorrelationBefore\
-    \ = _identityCorrelation`,\n    `_identityCorrelation = <Identität der handelnden\
-    \ Person>`.\n- **«Identität zurücksetzen»** – überall möglich.\n  - C7 heute:\
-    \ `impersonateUserId = impersonateUserIdTemp`.\n  - Neu: Output-Mapping `_identityCorrelation\
-    \ = _identityCorrelationBefore`.\n\n**C8:** die Output-Mappings stehen auf einem\
-    \ leeren Zwischenereignis direkt danach – nicht auf der\nBenutzeraufgabe, dem\
-    \ Nachrichten-Ereignis oder dem Service-Task (mit einem Output-Mapping übernimmt\n\
-    Zeebe dort sonst nur noch die gemappten Variablen).\n\n**Voraussetzung in Orchescala\
-    \ (Gateway):** `_identityCorrelation` nur beim Start setzen; beim\nAbschluss einer\
-    \ Aufgabe und beim Senden einer Nachricht die signierte Identität der handelnden\
-    \ Person\nunter eigenem Namen mitgeben (Arbeitsname `_identityCorrelationOfActor`).\n\
-    Offen: Nachrichten mit Korrelation über den businessKey – das Gateway kennt die\
-    \ Instanz (für die\nSignatur) erst nach der Korrelation.\n\n## Offene Punkte\n\
-    \n- Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId` nicht (im\
-    \ normalen Lauf schon) –\n  die Variablen kommen dort über den Fehler `output-mocked`,\
-    \ nicht über das Abschliessen des Jobs.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
-    <p>\n\n\nAll notable changes to this project will be documented in this file.\n\
-    \n* Types of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
+    \ und simulieren in einem Schritt – über den Gateway:\n   ```bash\n   ./helper.scala\
+    \ deploy InitProcessC7Simulation\n   ```\n   ```bash\n   ./helper.scala deploy\
+    \ InitProcessC8Simulation\n   ```\n   Der Helper der Firma (`CompanyDeployHelper`)\
+    \ macht `sbt publishLocal`, schickt das Manifest\n   `democompany:democompany-patterns:0.1.0-SNAPSHOT`\
+    \ an `POST <GATEWAY_URL>/deployment?targetEngine=<C7|C8>`\n   (die Engine aus\
+    \ dem Namen der Simulation; der Gateway liest die BPMN aus dem Jar in\n   `~/.ivy2/local`,\
+    \ Ordner `camunda` bzw. `camunda8`) und startet danach die Simulation.\n   `GATEWAY_URL`\
+    \ (Standard `http://localhost:8887`) für einen anderen Gateway; `GATEWAY_TOKEN`\
+    \ ist nur\n   nötig, wenn der Gateway Tokens prüft (`TOKEN_ISSUER`).\n\n## Identitä\
+    t übernehmen / zurücksetzen – `democompany-patterns-identityV1`\n\n```\nStart\
+    \ ─▶ [Init Process] ─▶ [Antrag freigeben] ─▶ ◯ Identität übernehmen ─▶ [Identitä\
+    t prüfen]\n      ─▶ [Antrag abschliessen] ─▶ ◯ Identität zurücksetzen ─▶ [Identitä\
+    t prüfen] ─▶ (succeeded)\n```\n\nZwei getrennte Patterns – opt-in wie in C7: nur\
+    \ wo das Pattern steht, wechselt die Identität.\n\nDas Gateway setzt `_identityCorrelation`\
+    \ nur beim **Start**. Schliesst jemand eine Benutzeraufgabe ab\n(oder sendet eine\
+    \ Nachricht mit `processInstanceId`), gibt es dessen signierte Identität als\n\
+    **`_identityCorrelationOfActor`** mit – `_identityCorrelation` bleibt. Ob der\
+    \ Prozess sie übernimmt,\nentscheidet das BPMN (siehe «Voraussetzung: Orchescala»\
+    ).\n\n- **«Identität übernehmen»** – ein leeres Zwischenereignis direkt nach der\
+    \ Benutzeraufgabe (oder dem\n  Empfang der Nachricht):\n  `_identityCorrelationBefore\
+    \ = _identityCorrelation`, dann\n  `_identityCorrelation = _identityCorrelationOfActor`\
+    \ (fehlt sie, bleibt die bisherige).\n- **«Identität zurücksetzen»** – ein leeres\
+    \ Zwischenereignis, überall möglich:\n  `_identityCorrelation = _identityCorrelationBefore`.\n\
+    \nDie Signatur bindet die Identität an die Prozessinstanz, nicht an den Namen\
+    \ der Variable – nach dem\nKopieren prüfen die Worker sie wie bisher. Das zeigt\
+    \ **«Identität prüfen»**: ein ServiceWorker nach dem\nÜbernehmen und nach dem\
+    \ Zurücksetzen. Er ist im BPMN gemockt (`_servicesMocked = true`), prüft aber\n\
+    vorher die Signatur von `_identityCorrelation` – eine ungültige lässt den Job\
+    \ scheitern. Den\nBenutzernamen dieser Identität hängt er an `checkedUsernames`\
+    \ an; das BPMN mappt ihn als Input\n`identityUsername` (C7 `${_identityCorrelation.prop(\"\
+    username\").stringValue()}`, C8\n`=_identityCorrelation.username`), denn ein ServiceWorker\
+    \ kommt selbst nicht an die Identität.\n\n | Camunda 7 | Camunda 8 |\n---|---|---|\n\
+    \ übernehmen | zwei Execution Listener (`start`) mit `execution.setVariable(...)`\
+    \ und `execution.getVariableTyped(...)` | Output-Mappings – die Quellen werden\
+    \ alle vor dem Setzen gelesen |\n zurücksetzen | ein Execution Listener | ein\
+    \ Output-Mapping |\n\n**C8:** die Output-Mappings stehen auf dem leeren Zwischenereignis\
+    \ – nicht auf der Benutzeraufgabe\n(mit einem Output-Mapping übernimmt Zeebe dort\
+    \ sonst nur noch die gemappten Variablen).\n\n Datei | Inhalt |\n---|---|\n [`Identity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/Identity.scala)\
+    \ | `In`, `Out` |\n [`ApproveRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/ApproveRequestUT.scala)\
+    \ | «Antrag freigeben» – wer sie erledigt, wird übernommen |\n [`CheckIdentity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala)\
+    \ | «Identität prüfen» – Service-Aufruf mit der Identität des Prozesses |\n [`CheckIdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/CheckIdentityWorker.scala)\
+    \ | der ServiceWorker dazu (gemockt) |\n [`CloseRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala)\
+    \ | «Antrag abschliessen» – hier hat der Prozess die übernommene Identität |\n\
+    \ [`IdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/IdentityWorker.scala)\
+    \ | InitWorker: Prüfung des In |\n [`camunda/patterns-identityV1.bpmn`](src/main/resources/camunda/patterns-identityV1.bpmn)\
+    \ | Camunda 7 |\n [`camunda8/patterns-identityV1.bpmn`](src/main/resources/camunda8/patterns-identityV1.bpmn)\
+    \ | Camunda 8 |\n [`IdentitySimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/IdentitySimulation.scala)\
+    \ | die Szenarien, für beide Engines gleich |\n\n### Simulationen\n\n1. **`Identity\
+    \ approved`** – gestartet als `admin`, «Antrag freigeben» erledigt als `actor`\n\
+    \   (`.actingAs(testActorIdentityCorrelation)`), «Antrag abschliessen» wieder\
+    \ als `admin`.\n   «Identität prüfen» sieht zuerst `actor` (übernommen), dann\
+    \ `admin` (zurückgesetzt):\n   `checkedUsernames = [actor, admin]`. Am Ende gibt\
+    \ es `_identityCorrelation`,\n   `_identityCorrelationBefore` und `_identityCorrelationOfActor`.\n\
+    2. **`Identity mocked`** – endet über `output-mocked`, ohne Benutzeraufgabe.\n\
+    3. **`Identity invalid In`** – `customerName = \" \"`: Incident `validation-failed`.\n\
+    \n```bash\n./helper.scala deploy IdentityC7Simulation\n```\n```bash\n./helper.scala\
+    \ deploy IdentityC8Simulation\n```\n\nMit Prüfungen wie `isEquals` oder `exists`\
+    \ vergleicht die Simulation nur diese – nicht das `Out` von\n`example`. Ohne Zurü\
+    cksetzen wäre `checkedUsernames = [actor, actor]` – das lässt das Szenario\nscheitern\
+    \ (so geprüft).\n\nVor `actingAs` von Hand geprüft (C7 und C8): über ein lokales\
+    \ Gateway gestartet als `starter`,\n«Antrag freigeben» erledigt als `approver`:\n\
+    \n wann | `_identityCorrelation` |\n---|---|\n bei «Antrag freigeben» | `starter`\
+    \ |\n bei «Antrag abschliessen» | `approver` (übernommen) |\n am Ende | `starter`\
+    \ (zurückgesetzt) – `_identityCorrelationBefore = starter` |\n\n«Identität prü\
+    fen» hat dabei beide Male die Signatur des Gateways akzeptiert (`approver`, dann\
+    \ `starter`).\n\n### Voraussetzung: Orchescala\n\n`_identityCorrelationOfActor`\
+    \ setzt das Gateway erst ab dem Orchescala-Branch\n`claude/gateway-actor-identity-b424f0`\
+    \ (0.9.0-SNAPSHOT, noch nicht gemergt). Mit einem älteren\nGateway überschreibt\
+    \ der Abschluss einer Aufgabe die Identität selbst: C8 immer, C7 nur mit\n`doOverrideImpersonation\
+    \ = true`.\n\nDass `example.exists(...)` das Szenario nach dem `val` benennt (`Identity\
+    \ approved`), braucht\nOrchescala ab pme123/orchescala#87 (in develop) – vorher\
+    \ hiess es `example`.\n\n`actingAs` und die zweite Test-Identität `testActorIdentityCorrelation`\
+    \ gibt es ab dem\nOrchescala-Branch `feat/simulation-second-test-identity` (0.9.0-SNAPSHOT,\
+    \ noch nicht gemergt).\n\n## Offene Punkte\n\n- Im gemockten Lauf auf C8 setzt\
+    \ der InitWorker `processInstanceId` nicht (im normalen Lauf schon) –\n  die Variablen\
+    \ kommen dort über den Fehler `output-mocked`, nicht über das Abschliessen des\
+    \ Jobs.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n<p>\n\n\
+    \nAll notable changes to this project will be documented in this file.\n\n* Types\
+    \ of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
     \ functionality\n  * Deprecated: soon-to-be-removed features\n  * Removed: now\
     \ removed features\n  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\
     \n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\n\
@@ -186,7 +234,8 @@ info:
     \ for binding user identity to the process instance using HMAC-SHA256 signatures.\n\
     This prevents replay attacks and tampering by cryptographically binding the user\
     \ identity to a specific process instance.\nThe correlation is automatically signed\
-    \ with the process instance ID when starting a process or completing a user task.\n\
+    \ with the process instance ID when starting a process.\nCompleting a user task\
+    \ or sending a message does not change it - see `_identityCorrelationOfActor`.\n\
     Configure the signing key via environment variable `ORCHESCALA_IDENTITY_SIGNING_KEY`\
     \ or in `EngineConfig`.\n\n- DSL:\n```scala\nval identity = IdentityCorrelation(\n\
     \  username = \"alice@example.com\",\n  email = Some(\"alice@example.com\"),\n\
@@ -195,9 +244,21 @@ info:
     : {\n  \"username\": \"alice@example.com\",\n  \"email\": \"alice@example.com\"\
     ,\n  \"impersonateProcessValue\": \"department-123\",\n  \"issuedAt\": 1706371200000,\n\
     \  \"processInstanceId\": \"12345\",\n  \"signature\": \"abc123...\"\n},\n...\n\
-    ```\n\n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api\
-    \ v0.9.0-SNAPSHOT](https://github.com/pme123/orchescala)\n> - democompany-orchescala-api\
-    \ 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\n"
+    ```\n\n\n**_identityCorrelationOfActor**:\n\nSet by the engine only: the signed\
+    \ identity of the person who completed a user task or sent a message\n(only with\
+    \ a `processInstanceId` - the signature needs the process instance).\n`_identityCorrelation`\
+    \ stays as set at the start - the BPMN decides whether the process takes over\
+    \ the actor's identity.\nThe signature is valid for `_identityCorrelation` as\
+    \ well, so a worker can verify it after the copy.\n\n- DSL:\n```scala\n// in the\
+    \ BPMN, e.g. output mappings of an empty intermediate event right after the user\
+    \ task:\n//   _identityCorrelationBefore = _identityCorrelation\n//   _identityCorrelation\
+    \       = _identityCorrelationOfActor\n// and to reset:\n//   _identityCorrelation\
+    \       = _identityCorrelationBefore\n```\n\n- Json\n```json\n...\n\"_identityCorrelationOfActor\"\
+    : {\n  \"username\": \"bob@example.com\",\n  \"issuedAt\": 1706371200000,\n  \"\
+    processInstanceId\": \"12345\",\n  \"signature\": \"def456...\"\n},\n...\n```\n\
+    \n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api v0.9.0-SNAPSHOT](https://github.com/pme123/orchescala)\n\
+    > - democompany-orchescala-api 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\
+    \n"
 paths:
   /process/democompany-patterns-initProcessV1/async:
     post:
@@ -212,11 +273,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > In`\n- Output: `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-initProcessV1-64452\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-initProcessV1-64452'), height: '95%',\
+        \ id=\"patterns-initProcessV1-82058\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-initProcessV1-82058'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-initProcessV1.bpmn](diagrams/patterns-initProcessV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-64452')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-82058')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -371,8 +432,574 @@ paths:
                 InitIn:
                   value:
                     greetingMessage: Grüezi Peter Muster
+  /process/democompany-patterns-identityV1/async:
+    post:
+      tags:
+      - Identity V1
+      summary: Process start
+      description: "\nBeispiel für die Patterns «Identität übernehmen» und «Identitä\
+        t zurücksetzen».\nNach der Benutzeraufgabe übernimmt der Prozess die Identitä\
+        t der Person, die sie erledigt hat\n(`_identityCorrelation = _identityCorrelationOfActor`,\
+        \ die bisherige in `_identityCorrelationBefore`) -\n«Identität zurücksetzen»\
+        \ setzt danach wieder die Identität vom Start.\n\n\n---\n\n- **Called Element**:\
+        \ `democompany-patterns-identityV1` (to define in the Call Activity)\n\n\n\
+        \n---\n\n\n\n\n- Input:  `democompany.patterns.domain.identity.v1.Identity\
+        \ > In`\n- Output: `democompany.patterns.domain.identity.v1.Identity > Out`\n\
+        \n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"patterns-identityV1-99010\"\
+        >\n    <img onLoad=\"openFromUrl('patterns-identityV1.bpmn', new BpmnJS({\
+        \ container: $('#patterns-identityV1-99010'), height: '95%', width: '95%'\
+        \ }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [patterns-identityV1.bpmn](diagrams/patterns-identityV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-identityV1-99010')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
+        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"processStatus,customerName,approved,checkedUsernames\",\n...\n```\n\n\
+        **outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\" :\
+        \ \"succeeded\",\n  \"customerName\" : \"Peter Muster\",\n  \"approved\" :\
+        \ true,\n  \"checkedUsernames\" : [\n    \"actor\",\n    \"admin\"\n  ]\n\
+        },\n...\n```\n\n</p>\n</details>\n</p>\n      \n\n\n**Used in no other Process.**\n\
+        \n**Uses no other Processes.**\n<p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Input</b> to start the Process with.\n\nBe aware\
+        \ that running this request with Postman,\nyou will not get the <b>Output</b>\
+        \ but the <i>processInstanceId</i>, as starting a process is asynchronous.\n\
+        \nTo get the <b>Output</b> you need to use the `Process variables` request.\n\
+        \n</p>\n</details>"
+      operationId: Process start
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Identity.In'
+            examples:
+              democompany-patterns-identityV1:
+                value:
+                  customerName: Peter Muster
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessInfo'
+              example:
+                processInstanceId: f150c3f1-13f5-11ec-936e-0242ac1d0007
+                businessKey: ORDER-2025-12345
+                status: Active
+                engineType: C7
+  /process/democompany-patterns-identityV1/{processInstanceId}/variables:
+    get:
+      tags:
+      - Identity V1
+      summary: Process variables
+      description: "\nBeispiel für die Patterns «Identität übernehmen» und «Identitä\
+        t zurücksetzen».\nNach der Benutzeraufgabe übernimmt der Prozess die Identitä\
+        t der Person, die sie erledigt hat\n(`_identityCorrelation = _identityCorrelationOfActor`,\
+        \ die bisherige in `_identityCorrelationBefore`) -\n«Identität zurücksetzen»\
+        \ setzt danach wieder die Identität vom Start.\n\n\n---\n\n- **Called Element**:\
+        \ `democompany-patterns-identityV1` (to define in the Call Activity)\n\n\n\
+        \n---\n\n\n\n\n- Input:  `democompany.patterns.domain.identity.v1.Identity\
+        \ > In`\n- Output: `democompany.patterns.domain.identity.v1.Identity > Out`\n\
+        \n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n</summary>\n\
+        \n<p>\n\n**outputVariables**:\n\nJust take the variable you need in your process!\n\
+        ```json\n...\n\"outputVariables\": \"processStatus,customerName,approved,checkedUsernames\"\
+        ,\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ : \"succeeded\",\n  \"customerName\" : \"Peter Muster\",\n  \"approved\"\
+        \ : true,\n  \"checkedUsernames\" : [\n    \"actor\",\n    \"admin\"\n  ]\n\
+        },\n...\n```\n\n</p>\n</details>\n</p>\n      <p/>\n<details>\n<summary><b><i>General\
+        \ Information</i></b></summary>\n<p>\n\nThis describes the <b>Output</b> of\
+        \ the Process you get. Be aware this does not check if the process is finished\
+        \ (TODO).\n\n  \n</p>\n</details>"
+      operationId: Process variables
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: processStatus,customerName,approved,checkedUsernames
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Identity.Out'
+              examples:
+                democompany-patterns-identityV1:
+                  value:
+                    processStatus: succeeded
+                    customerName: Peter Muster
+                    approved: true
+                    checkedUsernames:
+                    - actor
+                    - admin
+  /worker/democompany-patterns-identityV1:
+    post:
+      tags:
+      - Identity V1
+      summary: Init Worker
+      description: |2
+
+        <details>
+        <summary><b>General Information</b></summary>
+
+        The Init Worker has the following responsibilities:
+
+          - Validates the Process Input (`In`). -> by Orchescala
+          - Maps the Configuration to Process Variables (`InConfig`). -> by Orchescala
+          - Custom validation the Process Input (`In`, e.g. combining 2 variables). -> Process Specific
+          - Initializes the default Variables with `In` as input (see _Process_ description) and `InitIn` as output. -> Process Specific
+
+        The Input is the same as the `In` object of the _Process_.
+
+        `NoInput` means there is no initialization needed.
+        </details>
+      operationId: Init Worker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Identity.In'
+            examples:
+              democompany-patterns-identityV1:
+                value:
+                  customerName: Peter Muster
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoInput'
+              examples:
+                InitIn:
+                  value: {}
+  /process/{processInstanceId}/userTask/ApproveRequestUT/variables:
+    get:
+      tags:
+      - Identity V1
+      summary: 'UserTask variables: ApproveRequestUT'
+      description: |2-
+
+        Antrag freigeben - wer die Aufgabe erledigt, steht danach als `_identityCorrelationOfActor` im Prozess.
+
+        - _taskDefinitionKey_: `ApproveRequestUT`
+
+        ---
+
+
+
+
+        - Input:  `democompany.patterns.domain.identity.v1.ApproveRequestUT > In`
+        - Output: `democompany.patterns.domain.identity.v1.ApproveRequestUT > Out`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        A <b>UserTask</b> consists of two steps (variables and complete).
+        This is the <b>first step</b>:
+
+        1. Wait for the UserTask and get then the Variables.
+
+        The <b>Output</b> are the Variables you want for your UserTask Form.
+
+
+        </p>
+        </details>
+      operationId: 'UserTask variables: ApproveRequestUT'
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: customerName
+      - name: timeoutInSec
+        in: query
+        description: The maximum number of seconds to wait for the user task to become
+          active (0 - 60). If not provided, it will wait 10 seconds.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 60
+        example: 10
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApproveRequestUT.In'
+              examples:
+                ApproveRequestUT:
+                  value:
+                    customerName: Peter Muster
+  /userTask/ApproveRequestUT/{userTaskInstanceId}/complete:
+    post:
+      tags:
+      - Identity V1
+      summary: 'UserTask complete: ApproveRequestUT'
+      description: |2-
+
+        Antrag freigeben - wer die Aufgabe erledigt, steht danach als `_identityCorrelationOfActor` im Prozess.
+
+        - _taskDefinitionKey_: `ApproveRequestUT`
+
+        ---
+
+
+
+
+        - Input:  `democompany.patterns.domain.identity.v1.ApproveRequestUT > In`
+        - Output: `democompany.patterns.domain.identity.v1.ApproveRequestUT > Out`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        A <b>UserTask</b> consists of two steps (variables and complete).
+        This is the <b>second step</b>:
+
+        2. Complete the UserTask
+
+        The <b>Input</b> are the Variables you want to set when completing the task.
+
+
+        </p>
+        </details>
+      operationId: 'UserTask complete: ApproveRequestUT'
+      parameters:
+      - name: userTaskInstanceId
+        in: path
+        description: User task instance ID (obtained from getUserTaskVariables)
+        required: true
+        schema:
+          type: string
+        example: '{{userTaskInstanceId}}'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApproveRequestUT.Out'
+            examples:
+              ApproveRequestUT:
+                value:
+                  approved: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /worker/democompany-patterns-identityV1-CheckIdentity:
+    post:
+      tags:
+      - Identity V1
+      summary: 'Worker: CheckIdentity'
+      description: "\n\n\n**Topic:** `democompany-patterns-identityV1-CheckIdentity`\
+        \ (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_\
+        \ of type _External_)\n\nIdentität prüfen - ein Service-Aufruf mit der Identitä\
+        t des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.\n\
+        \n---\n\n\n\n<details>\n<summary><b>Wrapped Service:</b>\n\n(Patterns Identity\
+        \ 1.0 - v1.0 - GET: identity)\n</summary>\n<p>\nInput Body: `orchescala.domain.NoInput`:\n\
+        \n\nExample Response: `orchescala.domain.NoOutput`:\n\n```json\n{\n  \"respStatus\"\
+        \ : 204,\n  \"respBody\" : {\n    \n  },\n  \"respHeaders\" : [\n  ]\n}\n\
+        ```\n</p>\n</details>\n</p>\n\n---\n\n\n- Input:  `democompany.patterns.domain.identity.v1.CheckIdentity\
+        \ > In`\n- Output: `democompany.patterns.domain.identity.v1.CheckIdentity\
+        \ > Out`\n\n\n\nYou can test this worker using the generic process _**orchescala-externalTask-generic**_\
+        \ (e.g. with Postman).\n\n- ServiceOut:  `orchescala.domain.MockedServiceResponse`\n\
+        \n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n</summary>\n\n\
+        <p>\n\n**outputVariables**:\n\nJust take the variable you need in your process!\n\
+        ```json\n...\n\"outputVariables\": \"identityChecked,checkedUsernames\",\n\
+        ...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"identityChecked\"\
+        \ : true,\n  \"checkedUsernames\" : [\n    \"actor\"\n  ]\n},\n...\n```\n\n\
+        **outputServiceMock**:\n```json\n...\n\"outputServiceMock\": {\n  \"respStatus\"\
+        \ : 200,\n  \"respBody\" : {\n    \"respStatus\" : 204,\n    \"respBody\"\
+        \ : {\n      \n    },\n    \"respHeaders\" : [\n    ]\n  },\n  \"respHeaders\"\
+        \ : [\n  ]\n},\n...\n```\n</p>\n</details>\n</p>\n      \n    \n\n\n**Used\
+        \ in no other Process.**\n\n**Uses no other Processes.**\n<p/>\n<details>\n\
+        <summary><b><i>General Information</i></b></summary>\n<p>\n\nThis describes\
+        \ the <b>Input</b> and the <b>Output</b> of the Worker.\n\nRunning this request\
+        \ with Postman, it will run the Worker directly, no Process will be started.\n\
+        \n</p>\n</details>"
+      operationId: 'Worker: CheckIdentity'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckIdentity.In'
+            examples:
+              democompany-patterns-identityV1-CheckIdentity:
+                value:
+                  customerName: Peter Muster
+                  identityUsername: actor
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckIdentity.Out'
+              examples:
+                democompany-patterns-identityV1-CheckIdentity:
+                  value:
+                    identityChecked: true
+                    checkedUsernames:
+                    - actor
+  /process/{processInstanceId}/userTask/CloseRequestUT/variables:
+    get:
+      tags:
+      - Identity V1
+      summary: 'UserTask variables: CloseRequestUT'
+      description: |2-
+
+        Antrag abschliessen - der Prozess hat hier die Identität der Person, die den Antrag freigegeben hat.
+
+        - _taskDefinitionKey_: `CloseRequestUT`
+
+        ---
+
+
+
+
+        - Input:  `democompany.patterns.domain.identity.v1.CloseRequestUT > In`
+        - Output: `democompany.patterns.domain.identity.v1.CloseRequestUT > Out`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        A <b>UserTask</b> consists of two steps (variables and complete).
+        This is the <b>first step</b>:
+
+        1. Wait for the UserTask and get then the Variables.
+
+        The <b>Output</b> are the Variables you want for your UserTask Form.
+
+
+        </p>
+        </details>
+      operationId: 'UserTask variables: CloseRequestUT'
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: customerName,approved
+      - name: timeoutInSec
+        in: query
+        description: The maximum number of seconds to wait for the user task to become
+          active (0 - 60). If not provided, it will wait 10 seconds.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 60
+        example: 10
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CloseRequestUT.In'
+              examples:
+                CloseRequestUT:
+                  value:
+                    customerName: Peter Muster
+                    approved: true
+  /userTask/CloseRequestUT/{userTaskInstanceId}/complete:
+    post:
+      tags:
+      - Identity V1
+      summary: 'UserTask complete: CloseRequestUT'
+      description: |2-
+
+        Antrag abschliessen - der Prozess hat hier die Identität der Person, die den Antrag freigegeben hat.
+
+        - _taskDefinitionKey_: `CloseRequestUT`
+
+        ---
+
+
+
+
+        - Input:  `democompany.patterns.domain.identity.v1.CloseRequestUT > In`
+        - Output: `democompany.patterns.domain.identity.v1.CloseRequestUT > Out`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        A <b>UserTask</b> consists of two steps (variables and complete).
+        This is the <b>second step</b>:
+
+        2. Complete the UserTask
+
+        The <b>Input</b> are the Variables you want to set when completing the task.
+
+
+        </p>
+        </details>
+      operationId: 'UserTask complete: CloseRequestUT'
+      parameters:
+      - name: userTaskInstanceId
+        in: path
+        description: User task instance ID (obtained from getUserTaskVariables)
+        required: true
+        schema:
+          type: string
+        example: '{{userTaskInstanceId}}'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CloseRequestUT.Out'
+            examples:
+              CloseRequestUT:
+                value:
+                  closed: true
+        required: true
+      responses:
+        '200':
+          description: ''
 components:
   schemas:
+    ApproveRequestUT.In:
+      title: ApproveRequestUT.In
+      type: object
+      required:
+      - customerName
+      properties:
+        customerName:
+          type: string
+    ApproveRequestUT.Out:
+      title: ApproveRequestUT.Out
+      type: object
+      required:
+      - approved
+      properties:
+        approved:
+          description: Antrag freigegeben?
+          type: boolean
+    CheckIdentity.In:
+      title: CheckIdentity.In
+      type: object
+      required:
+      - customerName
+      - identityUsername
+      properties:
+        customerName:
+          type: string
+        identityUsername:
+          description: Benutzername der Identität des Prozesses - das BPMN mappt ihn
+            aus `_identityCorrelation`.
+          type: string
+        checkedUsernames:
+          description: Die Benutzernamen der bisherigen Prüfungen.
+          type: array
+          items:
+            type: string
+    CheckIdentity.Out:
+      title: CheckIdentity.Out
+      type: object
+      required:
+      - identityChecked
+      - checkedUsernames
+      properties:
+        identityChecked:
+          description: Der Service wurde mit der (geprüften) Identität des Prozesses
+            aufgerufen.
+          type: boolean
+        checkedUsernames:
+          description: Die Benutzernamen aller Prüfungen bis hier, in ihrer Reihenfolge.
+          type: array
+          items:
+            type: string
+    CloseRequestUT.In:
+      title: CloseRequestUT.In
+      type: object
+      required:
+      - customerName
+      - approved
+      properties:
+        customerName:
+          type: string
+        approved:
+          type: boolean
+    CloseRequestUT.Out:
+      title: CloseRequestUT.Out
+      type: object
+      required:
+      - closed
+      properties:
+        closed:
+          description: Antrag abgeschlossen?
+          type: boolean
     EngineType:
       title: EngineType
       description: Type of the engine
@@ -382,6 +1009,38 @@ components:
       - C8
       - Gateway
       - Op
+    Identity.In:
+      title: Identity.In
+      type: object
+      required:
+      - customerName
+      properties:
+        customerName:
+          description: Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker
+            `validation-failed`).
+          type: string
+    Identity.Out:
+      title: Identity.Out
+      type: object
+      required:
+      - processStatus
+      - customerName
+      - approved
+      - checkedUsernames
+      properties:
+        processStatus:
+          $ref: '#/components/schemas/ProcessStatus1'
+        customerName:
+          type: string
+        approved:
+          description: Antrag freigegeben - aus der Benutzeraufgabe «Antrag freigeben».
+          type: boolean
+        checkedUsernames:
+          description: Die Benutzernamen, mit denen «Identität prüfen» lief - nach
+            der Übernahme der Freigebende, nach dem Zurücksetzen wieder der Starter.
+          type: array
+          items:
+            type: string
     InitProcess.In:
       title: InitProcess.In
       type: object
@@ -435,6 +1094,9 @@ components:
             In keine hat.
         greetingMessage:
           type: string
+    NoInput:
+      title: NoInput
+      type: object
     ProcessInfo:
       title: ProcessInfo
       description: Contains information about a process instance or execution
