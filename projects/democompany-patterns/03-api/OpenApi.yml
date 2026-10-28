@@ -91,7 +91,7 @@ info:
     \ ungültiges In schon vor dem Prozess ab,\nund Szenario 3 käme nie zum InitWorker\
     \ in der Engine.\n\n### Engines\n\nBeide über die Firmen-Einstellung:\n\n- **Camunda\
     \ 7**: `CAMUNDA_BASE_URL` (Standard `http://localhost:8080/engine-rest`, Token\
-    \ über `SSO_BASE_URL`).\n- **Camunda 8**: wie bei Valiant ein **lokales c8run\
+    \ über `SSO_BASE_URL`).\n- **Camunda 8**: ein **lokales c8run\
     \ ohne Anmeldung** – `CAMUNDA_C8_GRPC_URL`\n  (Standard `http://localhost:26500`),\
     \ `CAMUNDA_C8_REST_URL` (Standard `http://localhost:8181`),\n  `CAMUNDA_C8_OPERATE_URL`.\n\
     \nGateway und Worker-Apps nutzen die Engines aus `COMPANY_ENGINES` (Standard `C7,C8,Op`).\n\
@@ -100,8 +100,7 @@ info:
     \ sbt gateway/run\n   ```\n2. Worker starten (C7 und C8 in einer App). `WORKER_APP_PORT`,\
     \ wenn 5555 schon belegt ist:\n   ```bash\n   COMPANY_ENGINES=C7,C8 WORKER_APP_PORT=5556\
     \ sbt \"worker/runMain democompany.patterns.worker.WorkerApp\"\n   ```\n3. Deployen\
-    \ und simulieren in einem Schritt – wie bei Valiant, nur über den Gateway statt\
-    \ BPF:\n   ```bash\n   ./helper.scala deploy InitProcessC7Simulation\n   ```\n\
+    \ und simulieren in einem Schritt – über den Gateway:\n   ```bash\n   ./helper.scala deploy InitProcessC7Simulation\n   ```\n\
     \   ```bash\n   ./helper.scala deploy InitProcessC8Simulation\n   ```\n   Der\
     \ Helper der Firma (`CompanyDeployHelper`) macht `sbt publishLocal`, schickt das\
     \ Manifest\n   `democompany:democompany-patterns:0.1.0-SNAPSHOT` an `POST <GATEWAY_URL>/deployment?targetEngine=<C7|C8>`\n\

@@ -42,7 +42,7 @@ OPERATON_COCKPIT_URL=http://localhost:8080/camunda/app/cockpit/default/
 CAMUNDA_BASE_URL=http://localhost:8080/engine-rest
 CAMUNDA_COCKPIT_URL=http://localhost:8080/camunda/app/cockpit/default/
 
-# Camunda 8 - a local c8run without authentication (like at Valiant); the defaults:
+# Camunda 8 - a local c8run without authentication; the defaults:
 CAMUNDA_C8_GRPC_URL=http://localhost:26500
 CAMUNDA_C8_REST_URL=http://localhost:8181
 CAMUNDA_C8_OPERATE_URL=http://localhost:8181/operate/processes/
