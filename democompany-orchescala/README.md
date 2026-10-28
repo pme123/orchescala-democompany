@@ -155,6 +155,21 @@ Full documentation is available in the `00-docs/` directory:
 - [Process Patterns](00-docs/src/docs/pattern.md) - Design patterns and best practices
 - [Release Instructions](00-docs/src/docs/instructions.md) - How to create releases
 
+### Demo site
+
+The docs site (catalog, APIs, orch-spec, orch-ops) is published as a demo on
+GitHub Pages: <https://pme123.github.io/orchescala-democompany/>
+
+- Nothing is built in CI. The workflow `.github/workflows/deploy-pages.yml` publishes the
+  committed `00-docs/site` on every push to `develop` that changes it (or by hand from the
+  Actions tab). The demo is as current as the last `./helper.scala prepareDocs` + commit.
+- Links in the docs that point to `localhost` (engine, cockpit, gateway) only work with a
+  local setup.
+- orch-spec and orch-ops start without data on Pages - link a folder, e.g. a checkout of
+  `00-docs/testdata/spec` or `00-docs/testdata/ops`.
+- One-time setup in the repository settings: Pages → Source: *GitHub Actions*, and allow
+  `develop` under Environments → `github-pages` → Deployment branches.
+
 ## Examples
 
 See the `projects/` directory for complete examples:
