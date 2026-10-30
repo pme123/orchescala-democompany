@@ -127,12 +127,13 @@ entscheidet das BPMN (siehe «Voraussetzung: Orchescala»).
   `_identityCorrelation = _identityCorrelationBefore`.
 
 Die Signatur bindet die Identität an die Prozessinstanz, nicht an den Namen der Variable – nach dem
-Kopieren prüfen die Worker sie wie bisher. Das zeigt **«Identität prüfen»**: ein ServiceWorker nach dem
-Übernehmen und nach dem Zurücksetzen. Er ist im BPMN gemockt (`_servicesMocked = true`), prüft aber
-vorher die Signatur von `_identityCorrelation` – eine ungültige lässt den Job scheitern. Den
-Benutzernamen dieser Identität hängt er an `checkedUsernames` an; das BPMN mappt ihn als Input
+Kopieren prüfen die ServiceWorker sie wie bisher. Welche Identität der Prozess gerade hat, zeigt
+**«Identität prüfen»**: ein CustomTask nach dem Übernehmen und nach dem Zurücksetzen. Er hängt den
+Benutzernamen dieser Identität an `checkedUsernames` an; das BPMN mappt ihn als Input
 `identityUsername` (C7 `${_identityCorrelation.prop("username").stringValue()}`, C8
-`=_identityCorrelation.username`), denn ein ServiceWorker kommt selbst nicht an die Identität.
+`=_identityCorrelation.username`). Die Signatur prüft ein CustomWorker nicht – das tun nur
+ServiceWorker (siehe «Mocks und Identität weitergeben»). Ein CustomTask ist er, damit die Orch Spec
+ihn als Worker des Prozesses mit seinem In/Out erkennt.
 
 | | Camunda 7 | Camunda 8 |
 |---|---|---|
@@ -146,8 +147,8 @@ Benutzernamen dieser Identität hängt er an `checkedUsernames` an; das BPMN map
 |---|---|
 | [`Identity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/Identity.scala) | `In`, `Out` |
 | [`ApproveRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/ApproveRequestUT.scala) | «Antrag freigeben» – wer sie erledigt, wird übernommen |
-| [`CheckIdentity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala) | «Identität prüfen» – Service-Aufruf mit der Identität des Prozesses |
-| [`CheckIdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/CheckIdentityWorker.scala) | der ServiceWorker dazu (gemockt) |
+| [`CheckIdentity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala) | «Identität prüfen» – CustomTask: Benutzername der Identität des Prozesses |
+| [`CheckIdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/CheckIdentityWorker.scala) | der CustomWorker dazu |
 | [`CloseRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala) | «Antrag abschliessen» – hier hat der Prozess die übernommene Identität |
 | [`IdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/IdentityWorker.scala) | InitWorker: Prüfung des In |
 | [`camunda/patterns-identityV1.bpmn`](src/main/resources/camunda/patterns-identityV1.bpmn) | Camunda 7 |
@@ -184,7 +185,8 @@ Vor `actingAs` von Hand geprüft (C7 und C8): über ein lokales Gateway gestarte
 | bei «Antrag abschliessen» | `approver` (übernommen) |
 | am Ende | `starter` (zurückgesetzt) – `_identityCorrelationBefore = starter` |
 
-«Identität prüfen» hat dabei beide Male die Signatur des Gateways akzeptiert (`approver`, dann `starter`).
+«Identität prüfen» – damals noch ein ServiceWorker – hat dabei beide Male die Signatur des Gateways
+akzeptiert (`approver`, dann `starter`).
 
 ### Voraussetzung: Orchescala
 

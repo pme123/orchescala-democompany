@@ -5,7 +5,7 @@ info:
   summary: "\n**This is for Postman - to have example requests. Be aware the Output\
     \ is not provided!**\n\n\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns\
     \ - je Pattern ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated\
-    \ at 10/30/26, 11:24 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ at 10/30/26, 11:35 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -125,15 +125,15 @@ info:
     \ (fehlt sie, bleibt die bisherige).\n- **«Identität zurücksetzen»** – ein leeres\
     \ Zwischenereignis, überall möglich:\n  `_identityCorrelation = _identityCorrelationBefore`.\n\
     \nDie Signatur bindet die Identität an die Prozessinstanz, nicht an den Namen\
-    \ der Variable – nach dem\nKopieren prüfen die Worker sie wie bisher. Das zeigt\
-    \ **«Identität prüfen»**: ein ServiceWorker nach dem\nÜbernehmen und nach dem\
-    \ Zurücksetzen. Er ist im BPMN gemockt (`_servicesMocked = true`), prüft aber\n\
-    vorher die Signatur von `_identityCorrelation` – eine ungültige lässt den Job\
-    \ scheitern. Den\nBenutzernamen dieser Identität hängt er an `checkedUsernames`\
-    \ an; das BPMN mappt ihn als Input\n`identityUsername` (C7 `${_identityCorrelation.prop(\"\
-    username\").stringValue()}`, C8\n`=_identityCorrelation.username`), denn ein ServiceWorker\
-    \ kommt selbst nicht an die Identität.\n\n Camunda 7 | Camunda 8 |\n---|---|---|\n\
-    \ übernehmen | zwei Execution Listener (`start`) mit `execution.setVariable(...)`\
+    \ der Variable – nach dem\nKopieren prüfen die ServiceWorker sie wie bisher. Welche\
+    \ Identität der Prozess gerade hat, zeigt\n**«Identität prüfen»**: ein CustomTask\
+    \ nach dem Übernehmen und nach dem Zurücksetzen. Er hängt den\nBenutzernamen dieser\
+    \ Identität an `checkedUsernames` an; das BPMN mappt ihn als Input\n`identityUsername`\
+    \ (C7 `${_identityCorrelation.prop(\"username\").stringValue()}`, C8\n`=_identityCorrelation.username`).\
+    \ Die Signatur prüft ein CustomWorker nicht – das tun nur\nServiceWorker (siehe\
+    \ «Mocks und Identität weitergeben»). Ein CustomTask ist er, damit die Orch Spec\n\
+    ihn als Worker des Prozesses mit seinem In/Out erkennt.\n\n Camunda 7 | Camunda\
+    \ 8 |\n---|---|---|\n übernehmen | zwei Execution Listener (`start`) mit `execution.setVariable(...)`\
     \ und `execution.getVariableTyped(...)` | Output-Mappings – die Quellen werden\
     \ alle vor dem Setzen gelesen |\n zurücksetzen | ein Execution Listener | ein\
     \ Output-Mapping |\n\n**C8:** die Output-Mappings stehen auf dem leeren Zwischenereignis\
@@ -141,8 +141,9 @@ info:
     \ sonst nur noch die gemappten Variablen).\n\n Datei | Inhalt |\n---|---|\n [`Identity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/Identity.scala)\
     \ | `In`, `Out` |\n [`ApproveRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/ApproveRequestUT.scala)\
     \ | «Antrag freigeben» – wer sie erledigt, wird übernommen |\n [`CheckIdentity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala)\
-    \ | «Identität prüfen» – Service-Aufruf mit der Identität des Prozesses |\n [`CheckIdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/CheckIdentityWorker.scala)\
-    \ | der ServiceWorker dazu (gemockt) |\n [`CloseRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala)\
+    \ | «Identität prüfen» – CustomTask: Benutzername der Identität des Prozesses\
+    \ |\n [`CheckIdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/CheckIdentityWorker.scala)\
+    \ | der CustomWorker dazu |\n [`CloseRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala)\
     \ | «Antrag abschliessen» – hier hat der Prozess die übernommene Identität |\n\
     \ [`IdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/IdentityWorker.scala)\
     \ | InitWorker: Prüfung des In |\n [`camunda/patterns-identityV1.bpmn`](src/main/resources/camunda/patterns-identityV1.bpmn)\
@@ -165,16 +166,17 @@ info:
     \n wann | `_identityCorrelation` |\n---|---|\n bei «Antrag freigeben» | `starter`\
     \ |\n bei «Antrag abschliessen» | `approver` (übernommen) |\n am Ende | `starter`\
     \ (zurückgesetzt) – `_identityCorrelationBefore = starter` |\n\n«Identität prü\
-    fen» hat dabei beide Male die Signatur des Gateways akzeptiert (`approver`, dann\
-    \ `starter`).\n\n### Voraussetzung: Orchescala\n\n`_identityCorrelationOfActor`\
-    \ setzt das Gateway erst ab dem Orchescala-Branch\n`claude/gateway-actor-identity-b424f0`\
-    \ (0.9.0-SNAPSHOT, noch nicht gemergt). Mit einem älteren\nGateway überschreibt\
-    \ der Abschluss einer Aufgabe die Identität selbst: C8 immer, C7 nur mit\n`doOverrideImpersonation\
-    \ = true`.\n\nDass `example.exists(...)` das Szenario nach dem `val` benennt (`Identity\
-    \ approved`), braucht\nOrchescala ab pme123/orchescala#87 (in develop) – vorher\
-    \ hiess es `example`.\n\n`actingAs` und die zweite Test-Identität `testActorIdentityCorrelation`\
-    \ gibt es ab dem\nOrchescala-Branch `feat/simulation-second-test-identity` (0.9.0-SNAPSHOT,\
-    \ noch nicht gemergt).\n\n## Mocks und Identität weitergeben – `democompany-patterns-propagateMocksV1`\n\
+    fen» – damals noch ein ServiceWorker – hat dabei beide Male die Signatur des Gateways\n\
+    akzeptiert (`approver`, dann `starter`).\n\n### Voraussetzung: Orchescala\n\n\
+    `_identityCorrelationOfActor` setzt das Gateway erst ab dem Orchescala-Branch\n\
+    `claude/gateway-actor-identity-b424f0` (0.9.0-SNAPSHOT, noch nicht gemergt). Mit\
+    \ einem älteren\nGateway überschreibt der Abschluss einer Aufgabe die Identitä\
+    t selbst: C8 immer, C7 nur mit\n`doOverrideImpersonation = true`.\n\nDass `example.exists(...)`\
+    \ das Szenario nach dem `val` benennt (`Identity approved`), braucht\nOrchescala\
+    \ ab pme123/orchescala#87 (in develop) – vorher hiess es `example`.\n\n`actingAs`\
+    \ und die zweite Test-Identität `testActorIdentityCorrelation` gibt es ab dem\n\
+    Orchescala-Branch `feat/simulation-second-test-identity` (0.9.0-SNAPSHOT, noch\
+    \ nicht gemergt).\n\n## Mocks und Identität weitergeben – `democompany-patterns-propagateMocksV1`\n\
     \n```\nStart ─▶ [Init Process] ─▶ [Teilprozess aufrufen] ─▶ (succeeded)\n    \
     \                              │\n                                  ▼  democompany-patterns-propagateMocksSubV1\n\
     \                    Start ─▶ [Init Process] ─▶ [Kunde laden] ─▶ (succeeded)\n\
@@ -543,13 +545,10 @@ paths:
       tags:
       - democompany-patterns-identityV1
       summary: 'Worker: CheckIdentity'
-      description: "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses;\
-        \ der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.\n\
-        \n---\n\n\n\n<details>\n<summary><b>Wrapped Service:</b>\n\n(Patterns Identity\
-        \ 1.0 - v1.0 - GET: identity)\n</summary>\n<p>\nInput Body: `orchescala.domain.NoInput`:\n\
-        \n\nExample Response: `orchescala.domain.NoOutput`:\n\n```json\n{\n  \"respStatus\"\
-        \ : 204,\n  \"respBody\" : {\n    \n  },\n  \"respHeaders\" : [\n  ]\n}\n\
-        ```\n</p>\n</details>\n</p>\n\n---\n\n\nSee API Doc: [Worker: CheckIdentity](/site/democompany/democompany-patterns/OpenApi.html#operation/Worker:%20CheckIdentity)\n"
+      description: |
+        Identität prüfen - hängt den Benutzernamen der Identität des Prozesses an `checkedUsernames` an.
+
+        See API Doc: [Worker: CheckIdentity](/site/democompany/democompany-patterns/OpenApi.html#operation/Worker:%20CheckIdentity)
       operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-patterns-identityv1-checkidentity--
       requestBody:
         content:

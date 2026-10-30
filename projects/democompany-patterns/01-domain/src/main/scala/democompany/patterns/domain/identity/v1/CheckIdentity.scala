@@ -1,24 +1,18 @@
 package democompany.patterns
 package domain.identity.v1
 
-/** A service call with the identity the process has at that point - in the example always mocked
-  * (`_servicesMocked`): what counts is that the ServiceWorker verifies the signature of
-  * `_identityCorrelation` first (after «Identität übernehmen» it is the copied actor).
+/** Shows which identity the process has at that point: it adds the username of
+  * `_identityCorrelation` to `checkedUsernames` - after «Identität übernehmen» it is the copied
+  * actor, after «Identität zurücksetzen» the one of the start.
   *
-  * It also adds the username of that identity to `checkedUsernames` - so the process shows which
-  * identity each check had. The BPMN maps the username in, as a ServiceWorker can't read the
-  * identity itself.
+  * A CustomTask: a worker of this process that the Orch Spec recognizes. Unlike a ServiceWorker it
+  * does not verify the signature of `_identityCorrelation`. The BPMN maps the username in.
   */
-object CheckIdentity extends CompanyBpmnServiceTaskDsl:
+object CheckIdentity extends CompanyBpmnCustomTaskDsl:
 
   val topicName     = "democompany-patterns-identityV1-CheckIdentity"
   val descr: String =
-    "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`."
-
-  final val serviceLabel = "Patterns Identity 1.0"
-  val serviceVersion     = "1.0"
-
-  val path = "GET: identity"
+    "Identität prüfen - hängt den Benutzernamen der Identität des Prozesses an `checkedUsernames` an."
 
   case class In(
       customerName: String,
@@ -37,7 +31,7 @@ object CheckIdentity extends CompanyBpmnServiceTaskDsl:
   end In
 
   case class Out(
-      @description("Der Service wurde mit der (geprüften) Identität des Prozesses aufgerufen.")
+      @description("Die Identität des Prozesses wurde geprüft.")
       identityChecked: Boolean = true,
       @description("Die Benutzernamen aller Prüfungen bis hier, in ihrer Reihenfolge.")
       checkedUsernames: Seq[String] = Seq("actor")
@@ -48,21 +42,8 @@ object CheckIdentity extends CompanyBpmnServiceTaskDsl:
     lazy val example      = Out()
   end Out
 
-  type ServiceIn  = NoInput
-  type ServiceOut = NoOutput
-
-  object ServiceIn:
-    lazy val example = NoInput()
-
-  object ServiceOut:
-    lazy val example = NoOutput()
-    lazy val mock    = MockedServiceResponse.success204
-  end ServiceOut
-
-  lazy val example = serviceTask(
+  lazy val example = customTask(
     In.example,
-    Out.example,
-    ServiceOut.mock,
-    ServiceIn.example
+    Out.example
   )
 end CheckIdentity

@@ -4,7 +4,7 @@ info:
   version: 0.1.0-SNAPSHOT
   summary: "\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns - je Pattern\
     \ ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated at 10/30/26,\
-    \ 11:24 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ 11:35 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -124,15 +124,15 @@ info:
     \ (fehlt sie, bleibt die bisherige).\n- **«Identität zurücksetzen»** – ein leeres\
     \ Zwischenereignis, überall möglich:\n  `_identityCorrelation = _identityCorrelationBefore`.\n\
     \nDie Signatur bindet die Identität an die Prozessinstanz, nicht an den Namen\
-    \ der Variable – nach dem\nKopieren prüfen die Worker sie wie bisher. Das zeigt\
-    \ **«Identität prüfen»**: ein ServiceWorker nach dem\nÜbernehmen und nach dem\
-    \ Zurücksetzen. Er ist im BPMN gemockt (`_servicesMocked = true`), prüft aber\n\
-    vorher die Signatur von `_identityCorrelation` – eine ungültige lässt den Job\
-    \ scheitern. Den\nBenutzernamen dieser Identität hängt er an `checkedUsernames`\
-    \ an; das BPMN mappt ihn als Input\n`identityUsername` (C7 `${_identityCorrelation.prop(\"\
-    username\").stringValue()}`, C8\n`=_identityCorrelation.username`), denn ein ServiceWorker\
-    \ kommt selbst nicht an die Identität.\n\n | Camunda 7 | Camunda 8 |\n---|---|---|\n\
-    \ übernehmen | zwei Execution Listener (`start`) mit `execution.setVariable(...)`\
+    \ der Variable – nach dem\nKopieren prüfen die ServiceWorker sie wie bisher. Welche\
+    \ Identität der Prozess gerade hat, zeigt\n**«Identität prüfen»**: ein CustomTask\
+    \ nach dem Übernehmen und nach dem Zurücksetzen. Er hängt den\nBenutzernamen dieser\
+    \ Identität an `checkedUsernames` an; das BPMN mappt ihn als Input\n`identityUsername`\
+    \ (C7 `${_identityCorrelation.prop(\"username\").stringValue()}`, C8\n`=_identityCorrelation.username`).\
+    \ Die Signatur prüft ein CustomWorker nicht – das tun nur\nServiceWorker (siehe\
+    \ «Mocks und Identität weitergeben»). Ein CustomTask ist er, damit die Orch Spec\n\
+    ihn als Worker des Prozesses mit seinem In/Out erkennt.\n\n | Camunda 7 | Camunda\
+    \ 8 |\n---|---|---|\n übernehmen | zwei Execution Listener (`start`) mit `execution.setVariable(...)`\
     \ und `execution.getVariableTyped(...)` | Output-Mappings – die Quellen werden\
     \ alle vor dem Setzen gelesen |\n zurücksetzen | ein Execution Listener | ein\
     \ Output-Mapping |\n\n**C8:** die Output-Mappings stehen auf dem leeren Zwischenereignis\
@@ -140,8 +140,9 @@ info:
     \ sonst nur noch die gemappten Variablen).\n\n Datei | Inhalt |\n---|---|\n [`Identity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/Identity.scala)\
     \ | `In`, `Out` |\n [`ApproveRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/ApproveRequestUT.scala)\
     \ | «Antrag freigeben» – wer sie erledigt, wird übernommen |\n [`CheckIdentity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala)\
-    \ | «Identität prüfen» – Service-Aufruf mit der Identität des Prozesses |\n [`CheckIdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/CheckIdentityWorker.scala)\
-    \ | der ServiceWorker dazu (gemockt) |\n [`CloseRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala)\
+    \ | «Identität prüfen» – CustomTask: Benutzername der Identität des Prozesses\
+    \ |\n [`CheckIdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/CheckIdentityWorker.scala)\
+    \ | der CustomWorker dazu |\n [`CloseRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala)\
     \ | «Antrag abschliessen» – hier hat der Prozess die übernommene Identität |\n\
     \ [`IdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/IdentityWorker.scala)\
     \ | InitWorker: Prüfung des In |\n [`camunda/patterns-identityV1.bpmn`](src/main/resources/camunda/patterns-identityV1.bpmn)\
@@ -164,16 +165,17 @@ info:
     \n wann | `_identityCorrelation` |\n---|---|\n bei «Antrag freigeben» | `starter`\
     \ |\n bei «Antrag abschliessen» | `approver` (übernommen) |\n am Ende | `starter`\
     \ (zurückgesetzt) – `_identityCorrelationBefore = starter` |\n\n«Identität prü\
-    fen» hat dabei beide Male die Signatur des Gateways akzeptiert (`approver`, dann\
-    \ `starter`).\n\n### Voraussetzung: Orchescala\n\n`_identityCorrelationOfActor`\
-    \ setzt das Gateway erst ab dem Orchescala-Branch\n`claude/gateway-actor-identity-b424f0`\
-    \ (0.9.0-SNAPSHOT, noch nicht gemergt). Mit einem älteren\nGateway überschreibt\
-    \ der Abschluss einer Aufgabe die Identität selbst: C8 immer, C7 nur mit\n`doOverrideImpersonation\
-    \ = true`.\n\nDass `example.exists(...)` das Szenario nach dem `val` benennt (`Identity\
-    \ approved`), braucht\nOrchescala ab pme123/orchescala#87 (in develop) – vorher\
-    \ hiess es `example`.\n\n`actingAs` und die zweite Test-Identität `testActorIdentityCorrelation`\
-    \ gibt es ab dem\nOrchescala-Branch `feat/simulation-second-test-identity` (0.9.0-SNAPSHOT,\
-    \ noch nicht gemergt).\n\n## Mocks und Identität weitergeben – `democompany-patterns-propagateMocksV1`\n\
+    fen» – damals noch ein ServiceWorker – hat dabei beide Male die Signatur des Gateways\n\
+    akzeptiert (`approver`, dann `starter`).\n\n### Voraussetzung: Orchescala\n\n\
+    `_identityCorrelationOfActor` setzt das Gateway erst ab dem Orchescala-Branch\n\
+    `claude/gateway-actor-identity-b424f0` (0.9.0-SNAPSHOT, noch nicht gemergt). Mit\
+    \ einem älteren\nGateway überschreibt der Abschluss einer Aufgabe die Identitä\
+    t selbst: C8 immer, C7 nur mit\n`doOverrideImpersonation = true`.\n\nDass `example.exists(...)`\
+    \ das Szenario nach dem `val` benennt (`Identity approved`), braucht\nOrchescala\
+    \ ab pme123/orchescala#87 (in develop) – vorher hiess es `example`.\n\n`actingAs`\
+    \ und die zweite Test-Identität `testActorIdentityCorrelation` gibt es ab dem\n\
+    Orchescala-Branch `feat/simulation-second-test-identity` (0.9.0-SNAPSHOT, noch\
+    \ nicht gemergt).\n\n## Mocks und Identität weitergeben – `democompany-patterns-propagateMocksV1`\n\
     \n```\nStart ─▶ [Init Process] ─▶ [Teilprozess aufrufen] ─▶ (succeeded)\n    \
     \                              │\n                                  ▼  democompany-patterns-propagateMocksSubV1\n\
     \                    Start ─▶ [Init Process] ─▶ [Kunde laden] ─▶ (succeeded)\n\
@@ -324,11 +326,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > In`\n- Output: `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-initProcessV1-20666\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-initProcessV1-20666'), height: '95%',\
+        \ id=\"patterns-initProcessV1-7526\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-initProcessV1-7526'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-initProcessV1.bpmn](diagrams/patterns-initProcessV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-20666')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-7526')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -496,13 +498,13 @@ paths:
         \ `democompany-patterns-identityV1` (to define in the Call Activity)\n\n\n\
         \n---\n\n\n\n\n- Input:  `democompany.patterns.domain.identity.v1.Identity\
         \ > In`\n- Output: `democompany.patterns.domain.identity.v1.Identity > Out`\n\
-        \n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"patterns-identityV1-9718\"\
+        \n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"patterns-identityV1-33313\"\
         >\n    <img onLoad=\"openFromUrl('patterns-identityV1.bpmn', new BpmnJS({\
-        \ container: $('#patterns-identityV1-9718'), height: '95%', width: '95%' }));\"\
-        \ src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ container: $('#patterns-identityV1-33313'), height: '95%', width: '95%'\
+        \ }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-identityV1.bpmn](diagrams/patterns-identityV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-identityV1-9718')\">Download\
-        \ Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-identityV1-33313')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
         : \"processStatus,customerName,approved,checkedUsernames\",\n...\n```\n\n\
@@ -794,32 +796,35 @@ paths:
       tags:
       - Identity V1
       summary: 'Worker: CheckIdentity'
-      description: "\n\n\n**Topic:** `democompany-patterns-identityV1-CheckIdentity`\
-        \ (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_\
-        \ of type _External_)\n\nIdentität prüfen - ein Service-Aufruf mit der Identitä\
-        t des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.\n\
-        \n---\n\n\n\n<details>\n<summary><b>Wrapped Service:</b>\n\n(Patterns Identity\
-        \ 1.0 - v1.0 - GET: identity)\n</summary>\n<p>\nInput Body: `orchescala.domain.NoInput`:\n\
-        \n\nExample Response: `orchescala.domain.NoOutput`:\n\n```json\n{\n  \"respStatus\"\
-        \ : 204,\n  \"respBody\" : {\n    \n  },\n  \"respHeaders\" : [\n  ]\n}\n\
-        ```\n</p>\n</details>\n</p>\n\n---\n\n\n- Input:  `democompany.patterns.domain.identity.v1.CheckIdentity\
-        \ > In`\n- Output: `democompany.patterns.domain.identity.v1.CheckIdentity\
-        \ > Out`\n\n\n\nYou can test this worker using the generic process _**orchescala-externalTask-generic**_\
-        \ (e.g. with Postman).\n\n- ServiceOut:  `orchescala.domain.MockedServiceResponse`\n\
-        \n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n</summary>\n\n\
-        <p>\n\n**outputVariables**:\n\nJust take the variable you need in your process!\n\
-        ```json\n...\n\"outputVariables\": \"identityChecked,checkedUsernames\",\n\
-        ...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"identityChecked\"\
-        \ : true,\n  \"checkedUsernames\" : [\n    \"actor\"\n  ]\n},\n...\n```\n\n\
-        **outputServiceMock**:\n```json\n...\n\"outputServiceMock\": {\n  \"respStatus\"\
-        \ : 200,\n  \"respBody\" : {\n    \"respStatus\" : 204,\n    \"respBody\"\
-        \ : {\n      \n    },\n    \"respHeaders\" : [\n    ]\n  },\n  \"respHeaders\"\
-        \ : [\n  ]\n},\n...\n```\n</p>\n</details>\n</p>\n      \n    \n\n\n**Used\
-        \ in no other Process.**\n\n**Uses no other Processes.**\n<p/>\n<details>\n\
-        <summary><b><i>General Information</i></b></summary>\n<p>\n\nThis describes\
-        \ the <b>Input</b> and the <b>Output</b> of the Worker.\n\nRunning this request\
-        \ with Postman, it will run the Worker directly, no Process will be started.\n\
-        \n</p>\n</details>"
+      description: |2-
+
+        **Topic:** `democompany-patterns-identityV1-CheckIdentity` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
+
+        Identität prüfen - hängt den Benutzernamen der Identität des Prozesses an `checkedUsernames` an.
+
+        - Input:  `democompany.patterns.domain.identity.v1.CheckIdentity > In`
+        - Output: `democompany.patterns.domain.identity.v1.CheckIdentity > Out`
+
+
+
+        You can test this worker using the generic process _**orchescala-externalTask-generic**_ (e.g. with Postman).
+
+
+
+        **Used in no other Process.**
+
+        **Uses no other Processes.**
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        This describes the <b>Input</b> and the <b>Output</b> of the Worker.
+
+        Running this request with Postman, it will run the Worker directly, no Process will be started.
+
+        </p>
+        </details>
       operationId: 'Worker: CheckIdentity'
       requestBody:
         content:
@@ -990,11 +995,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
         \ > In`\n- Output: `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-propagateMocksV1-26730\">\n    <img onLoad=\"openFromUrl('patterns-propagateMocksV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-propagateMocksV1-26730'), height: '95%',\
+        \ id=\"patterns-propagateMocksV1-93252\">\n    <img onLoad=\"openFromUrl('patterns-propagateMocksV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-propagateMocksV1-93252'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-propagateMocksV1.bpmn](diagrams/patterns-propagateMocksV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-propagateMocksV1-26730')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-propagateMocksV1-93252')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -1327,8 +1332,7 @@ components:
       - checkedUsernames
       properties:
         identityChecked:
-          description: Der Service wurde mit der (geprüften) Identität des Prozesses
-            aufgerufen.
+          description: Die Identität des Prozesses wurde geprüft.
           type: boolean
         checkedUsernames:
           description: Die Benutzernamen aller Prüfungen bis hier, in ihrer Reihenfolge.
