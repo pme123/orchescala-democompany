@@ -1,6 +1,9 @@
 package democompany.patterns
 package domain.propagateMocks.v1
 
+import democompany.services.domain.clients.v1.defaultClientId
+import democompany.services.domain.clients.v1.schema.Client
+
 /** Example process for the pattern «Mocks und Identität weitergeben».
   *
   * The call activity «Teilprozess aufrufen» passes `_servicesMocked`, `_mockedWorkers` and
@@ -19,12 +22,14 @@ object PropagateMocks extends CompanyBpmnProcessDsl:
 
   case class In(
       @description("Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).")
-      customerName: String
+      customerName: String,
+      @description("Id des Kunden - der Teilprozess lädt ihn mit dem Service `GetClientsClientId`.")
+      clientId: Long
   )
   object In:
     given ApiSchema[In]  = deriveApiSchema
     given InOutCodec[In] = deriveInOutCodec
-    lazy val example     = In(customerName = "Peter Muster")
+    lazy val example     = In(customerName = "Peter Muster", clientId = defaultClientId)
   end In
 
   case class Out(
@@ -32,8 +37,8 @@ object PropagateMocks extends CompanyBpmnProcessDsl:
       customerName: String,
       @description("Der `processStatus`, mit dem der Teilprozess endete.")
       subProcessStatus: ProcessStatus,
-      @description("Der Teilprozess hat den Kunden geprüft (fehlt, wenn er über `output-mocked` endete).")
-      customerChecked: Option[Boolean] = None
+      @description("Der Kunde, den der Teilprozess geladen hat.")
+      client: Option[Client] = None
   )
   object Out:
     given ApiSchema[Out]  = deriveApiSchema
@@ -42,7 +47,7 @@ object PropagateMocks extends CompanyBpmnProcessDsl:
       processStatus = ProcessStatus.succeeded,
       customerName = In.example.customerName,
       subProcessStatus = PropagateMocksSub.Out.example.processStatus,
-      customerChecked = Some(PropagateMocksSub.Out.example.customerChecked)
+      client = Some(PropagateMocksSub.Out.example.client)
     )
   end Out
 

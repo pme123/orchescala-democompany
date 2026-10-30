@@ -19,8 +19,9 @@
         <camunda:in source="_mockedWorkers" target="_mockedWorkers" />
         <camunda:in source="_identityCorrelation" target="_identityCorrelation" />
         <camunda:in source="customerName" target="customerName" />
+        <camunda:in source="clientId" target="clientId" />
         <camunda:out source="processStatus" target="subProcessStatus" />
-        <camunda:out source="customerChecked" target="customerChecked" />
+        <camunda:out source="client" target="client" />
       </bpmn:extensionElements>
       <bpmn:incoming>InitProcessFlow</bpmn:incoming>
       <bpmn:outgoing>MiddleFlow</bpmn:outgoing>

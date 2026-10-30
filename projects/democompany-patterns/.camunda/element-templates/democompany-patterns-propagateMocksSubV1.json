@@ -1,7 +1,7 @@
 {
   "name" : "democompany-patterns-propagateMocksSubV1",
   "id" : "democompany-patterns-propagateMocksSubV1",
-  "description" : "\nTeilprozess zum Pattern «Mocks und Identität weitergeben».\n«Kunde prüfen» ruft einen Service auf, den es nicht gibt - er gelingt nur, wenn\n`_servicesMocked` vom Aufrufer kommt; vorher prüft der ServiceWorker die weitergegebene\n`_identityCorrelation`.\n\n\n",
+  "description" : "\nTeilprozess zum Pattern «Mocks und Identität weitergeben».\n«Kunde laden» ruft den Service `GetClientsClientId` (democompany-services) auf - gemockt,\nwenn `_servicesMocked` vom Aufrufer kommt; vorher prüft der ServiceWorker die weitergegebene\n`_identityCorrelation`.\n\n\n",
   "version" : 0,
   "appliesTo" : [
     "bpmn:Activity"
@@ -18,6 +18,17 @@
         "expression" : false
       },
       "label" : "customerName",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
+      "value" : "clientId",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "clientId",
+        "expression" : false
+      },
+      "label" : "clientId",
       "description" : "",
       "type" : "Hidden"
     },
@@ -44,13 +55,13 @@
       "type" : "Hidden"
     },
     {
-      "value" : "customerChecked",
+      "value" : "client",
       "binding" : {
         "type" : "camunda:out",
-        "source" : "customerChecked",
+        "source" : "client",
         "expression" : false
       },
-      "label" : "customerChecked",
+      "label" : "client",
       "description" : "",
       "type" : "Hidden"
     },

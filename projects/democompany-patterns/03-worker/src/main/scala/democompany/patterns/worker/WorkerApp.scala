@@ -8,7 +8,9 @@ object WorkerApp extends CompanyWorkerApp:
     identityWorkers,
     propagateMocksWorkers
   )
+  // «Kunde laden» (GetClientsClientId) is a service of democompany-services - run by this app
   dependencies(
+    democompany.services.worker.WorkerApp
   )
 
   // WORKER_APP_PORT - if 5555 is taken by another worker app
@@ -34,8 +36,7 @@ object WorkerApp extends CompanyWorkerApp:
     import democompany.patterns.worker.propagateMocks.v1.*
     Seq(
       new PropagateMocksWorker(),
-      new PropagateMocksSubWorker(),
-      new CheckCustomerWorker()
+      new PropagateMocksSubWorker()
     )
   end propagateMocksWorkers
 end WorkerApp

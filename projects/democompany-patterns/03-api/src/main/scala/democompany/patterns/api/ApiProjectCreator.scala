@@ -31,7 +31,6 @@ object ApiProjectCreator extends CompanyApiCreator:
   private lazy val propagateMocksApi =
     import democompany.patterns.domain.propagateMocks.v1.*
     api(PropagateMocks.example)(
-      PropagateMocksSub.example,
-      CheckCustomer.example
+      PropagateMocksSub.example
     )
 end ApiProjectCreator

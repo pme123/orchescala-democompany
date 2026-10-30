@@ -5,7 +5,7 @@ info:
   summary: "\n**This is for Postman - to have example requests. Be aware the Output\
     \ is not provided!**\n\n\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns\
     \ - je Pattern ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated\
-    \ at 10/30/26, 10:11 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ at 10/30/26, 11:24 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -43,8 +43,8 @@ info:
     \ here: [democompany-patterns](../../dependencies/democompany-patterns.html)**\n\
     \n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\
     \nprojectName: democompany-patterns\nprojectVersion: 0.1.0-SNAPSHOT\nsubProjects:\
-    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n]\n\n```\n\n</p>\n\
-    </details>\n\n\nKatalog mit Beispielprozessen für die **Orchescala-Patterns**\
+    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n  democompany-services\n\
+    ]\n\n```\n\n</p>\n</details>\n\n\nKatalog mit Beispielprozessen für die **Orchescala-Patterns**\
     \ – kleine BPMN-Bausteine, die die\nOrch Spec in einen Prozess einfügt und wiedererkennt.\
     \ Je Pattern gibt es einen Beispielprozess\nfür Camunda 7 und Camunda 8 und eine\
     \ Simulation je Engine, die den Baustein auf einer echten Engine\ndurchspielt.\
@@ -177,19 +177,24 @@ info:
     \ noch nicht gemergt).\n\n## Mocks und Identität weitergeben – `democompany-patterns-propagateMocksV1`\n\
     \n```\nStart ─▶ [Init Process] ─▶ [Teilprozess aufrufen] ─▶ (succeeded)\n    \
     \                              │\n                                  ▼  democompany-patterns-propagateMocksSubV1\n\
-    \                    Start ─▶ [Init Process] ─▶ [Kunde prüfen] ─▶ (succeeded)\n\
+    \                    Start ─▶ [Init Process] ─▶ [Kunde laden] ─▶ (succeeded)\n\
     ```\n\nEin Teilprozess (Call Activity) sieht nur die Variablen, die ihm der Aufruf\
     \ mitgibt. Damit Mocks\nund Identität auch dort gelten, gibt die Call Activity\
     \ diese drei weiter:\n\n- **`_servicesMocked`** – die Services im Teilprozess\
     \ sind gemockt,\n- **`_mockedWorkers`** – gemockte Worker, auch der InitWorker\
     \ des Teilprozesses (dessen Prozess-ID),\n- **`_identityCorrelation`** – die signierte\
-    \ Identität des Starts.\n\nDazu das In (`customerName`); zurück kommen `processStatus`\
-    \ des Teilprozesses als `subProcessStatus`\nund `customerChecked`.\n\n**«Kunde\
-    \ prüfen»** zeigt, dass beides ankommt: ein ServiceWorker, dessen Service es nicht\
-    \ gibt\n(`http://localhost:1/...`). Er gelingt nur, wenn `_servicesMocked` im\
-    \ Teilprozess angekommen ist –\nund vorher prüft er die Signatur von `_identityCorrelation`.\
-    \ Die Identität ist an die\nProzessinstanz des **Starts** gebunden; im Teilprozess\
-    \ akzeptiert der Worker sie, weil das die\nRoot-Instanz seines Jobs ist.\n\n Camunda\
+    \ Identität des Starts.\n\nDazu das In (`customerName`, `clientId`); zurück kommen\
+    \ `processStatus` des Teilprozesses als\n`subProcessStatus` und `client`.\n\n\
+    **«Kunde laden»** zeigt, dass beides ankommt: der Service `GetClientsClientId`\
+    \ aus\n**democompany-services** (Topic `democompany-services-clientsV1-GetClientsClientId`,\
+    \ wie in\ndemocompany-cards). Seinen ServiceWorker führt die Worker-App dieses\
+    \ Projekts mit\n(`dependencies(democompany.services.worker.WorkerApp)`, die Abhä\
+    ngigkeit steht in `PROJECT.conf`).\nGemockt ist er nur, wenn `_servicesMocked`\
+    \ im Teilprozess angekommen ist – und vorher prüft er die\nSignatur von `_identityCorrelation`.\
+    \ Die Identität ist an die Prozessinstanz des **Starts**\ngebunden; im Teilprozess\
+    \ akzeptiert der Worker sie, weil das die Root-Instanz seines Jobs ist.\n\nWeil\
+    \ das Topic nicht mit der Prozess-ID beginnt, sieht die Orch Spec den Schritt\
+    \ als Service aus dem\nKatalog – nicht als eigenen Worker des Prozesses.\n\n Camunda\
     \ 7 | Camunda 8 |\n---|---|---|\n Aufruf | `calledElement=\"<processId>\"` | `zeebe:calledElement\
     \ processId=\"<processId>\"` mit `propagateAllChildVariables=\"false\"` und `propagateAllParentVariables=\"\
     false\"` |\n hinein | `camunda:in source=… target=…` | `zeebe:input` |\n zurü\
@@ -198,19 +203,17 @@ info:
     \ dann fragt der Worker die Engine (siehe unten) |\n\n Datei | Inhalt |\n---|---|\n\
     \ [`PropagateMocks.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocks.scala)\
     \ | `In`, `Out` des aufrufenden Prozesses |\n [`PropagateMocksSub.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocksSub.scala)\
-    \ | `In`, `Out` des Teilprozesses |\n [`CheckCustomer.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/CheckCustomer.scala)\
-    \ | «Kunde prüfen» – Service-Aufruf im Teilprozess |\n [`PropagateMocksWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksWorker.scala)\
+    \ | `In`, `Out` des Teilprozesses |\n [`PropagateMocksWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksWorker.scala)\
     \ | InitWorker: Prüfung des In |\n [`PropagateMocksSubWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksSubWorker.scala)\
-    \ | InitWorker des Teilprozesses |\n [`CheckCustomerWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/CheckCustomerWorker.scala)\
-    \ | der ServiceWorker dazu |\n [`camunda/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksV1.bpmn),\
+    \ | InitWorker des Teilprozesses |\n [`camunda/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksV1.bpmn),\
     \ [`camunda/patterns-propagateMocksSubV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksSubV1.bpmn)\
     \ | Camunda 7 |\n [`camunda8/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda8/patterns-propagateMocksV1.bpmn),\
     \ [`camunda8/patterns-propagateMocksSubV1.bpmn`](src/main/resources/camunda8/patterns-propagateMocksSubV1.bpmn)\
     \ | Camunda 8 |\n [`PropagateMocksSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/PropagateMocksSimulation.scala)\
     \ | die Szenarien, für beide Engines gleich |\n\n### Simulationen\n\n1. **`PropagateMocks\
-    \ services mocked`** – `.mockServices`: «Kunde prüfen» ist im Teilprozess\n  \
-    \ gemockt und akzeptiert die Identität des Starts; endet mit `subProcessStatus\
-    \ = succeeded`,\n   `customerChecked = true`.\n2. **`PropagateMocks sub worker\
+    \ services mocked`** – `.mockServices`: «Kunde laden» ist im Teilprozess\n   gemockt\
+    \ und akzeptiert die Identität des Starts; endet mit `subProcessStatus = succeeded`\
+    \ und dem\n   Kunden aus dem Mock (`client`).\n2. **`PropagateMocks sub worker\
     \ mocked`** – zusätzlich `.mockWorker(PropagateMocksSub.processName)`:\n   der\
     \ Teilprozess endet über `output-mocked` (`subProcessStatus = output-mocked`),\
     \ der aufrufende\n   Prozess mit `processStatus = succeeded`.\n3. **`PropagateMocks\
@@ -742,6 +745,9 @@ paths:
                     customerName:
                       value: Peter Muster
                       type: String
+                    clientId:
+                      value: 1234
+                      type: Long
                   businessKey: democompany-patterns-propagateMocksV1
                   withVariablesInReturn: true
         required: true
@@ -756,8 +762,8 @@ paths:
       description: |2
 
         Teilprozess zum Pattern «Mocks und Identität weitergeben».
-        «Kunde prüfen» ruft einen Service auf, den es nicht gibt - er gelingt nur, wenn
-        `_servicesMocked` vom Aufrufer kommt; vorher prüft der ServiceWorker die weitergegebene
+        «Kunde laden» ruft den Service `GetClientsClientId` (democompany-services) auf - gemockt,
+        wenn `_servicesMocked` vom Aufrufer kommt; vorher prüft der ServiceWorker die weitergegebene
         `_identityCorrelation`.
 
 
@@ -786,38 +792,10 @@ paths:
                     customerName:
                       value: Peter Muster
                       type: String
+                    clientId:
+                      value: 1234
+                      type: Long
                   businessKey: democompany-patterns-propagateMocksSubV1
-                  withVariablesInReturn: true
-        required: true
-      responses:
-        '200':
-          description: ''
-  ? /process-definition/key/orchescala-externalTask-generic/start--REMOVE:democompany-patterns-propagateMocksSubV1-CheckCustomer--
-  : post:
-      tags:
-      - democompany-patterns-propagateMocksV1
-      summary: 'Worker: CheckCustomer'
-      description: "Kunde prüfen - ein Service-Aufruf im Teilprozess; gelingt nur\
-        \ mit `_servicesMocked` vom Aufrufer.\n\n---\n\n\n\n<details>\n<summary><b>Wrapped\
-        \ Service:</b>\n\n(Patterns Customer 1.0 - v1.0 - GET: customer)\n</summary>\n\
-        <p>\nInput Body: `orchescala.domain.NoInput`:\n\n\nExample Response: `orchescala.domain.NoOutput`:\n\
-        \n```json\n{\n  \"respStatus\" : 204,\n  \"respBody\" : {\n    \n  },\n  \"\
-        respHeaders\" : [\n  ]\n}\n```\n</p>\n</details>\n</p>\n\n---\n\n\nSee API\
-        \ Doc: [Worker: CheckCustomer](/site/democompany/democompany-patterns/OpenApi.html#operation/Worker:%20CheckCustomer)\n"
-      operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-patterns-propagatemockssubv1-checkcustomer--
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/StartProcessIn'
-            examples:
-              democompany-patterns-propagateMocksSubV1-CheckCustomer:
-                value:
-                  variables:
-                    customerName:
-                      value: Peter Muster
-                      type: String
-                  businessKey: democompany-patterns-propagateMocksSubV1-CheckCustomer
                   withVariablesInReturn: true
         required: true
       responses:

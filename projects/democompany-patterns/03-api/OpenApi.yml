@@ -4,7 +4,7 @@ info:
   version: 0.1.0-SNAPSHOT
   summary: "\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns - je Pattern\
     \ ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated at 10/30/26,\
-    \ 10:11 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ 11:24 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -42,8 +42,8 @@ info:
     \ here: [democompany-patterns](../../dependencies/democompany-patterns.html)**\n\
     \n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\
     \nprojectName: democompany-patterns\nprojectVersion: 0.1.0-SNAPSHOT\nsubProjects:\
-    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n]\n\n```\n\n</p>\n\
-    </details>\n\n\nKatalog mit Beispielprozessen für die **Orchescala-Patterns**\
+    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n  democompany-services\n\
+    ]\n\n```\n\n</p>\n</details>\n\n\nKatalog mit Beispielprozessen für die **Orchescala-Patterns**\
     \ – kleine BPMN-Bausteine, die die\nOrch Spec in einen Prozess einfügt und wiedererkennt.\
     \ Je Pattern gibt es einen Beispielprozess\nfür Camunda 7 und Camunda 8 und eine\
     \ Simulation je Engine, die den Baustein auf einer echten Engine\ndurchspielt.\
@@ -176,19 +176,24 @@ info:
     \ noch nicht gemergt).\n\n## Mocks und Identität weitergeben – `democompany-patterns-propagateMocksV1`\n\
     \n```\nStart ─▶ [Init Process] ─▶ [Teilprozess aufrufen] ─▶ (succeeded)\n    \
     \                              │\n                                  ▼  democompany-patterns-propagateMocksSubV1\n\
-    \                    Start ─▶ [Init Process] ─▶ [Kunde prüfen] ─▶ (succeeded)\n\
+    \                    Start ─▶ [Init Process] ─▶ [Kunde laden] ─▶ (succeeded)\n\
     ```\n\nEin Teilprozess (Call Activity) sieht nur die Variablen, die ihm der Aufruf\
     \ mitgibt. Damit Mocks\nund Identität auch dort gelten, gibt die Call Activity\
     \ diese drei weiter:\n\n- **`_servicesMocked`** – die Services im Teilprozess\
     \ sind gemockt,\n- **`_mockedWorkers`** – gemockte Worker, auch der InitWorker\
     \ des Teilprozesses (dessen Prozess-ID),\n- **`_identityCorrelation`** – die signierte\
-    \ Identität des Starts.\n\nDazu das In (`customerName`); zurück kommen `processStatus`\
-    \ des Teilprozesses als `subProcessStatus`\nund `customerChecked`.\n\n**«Kunde\
-    \ prüfen»** zeigt, dass beides ankommt: ein ServiceWorker, dessen Service es nicht\
-    \ gibt\n(`http://localhost:1/...`). Er gelingt nur, wenn `_servicesMocked` im\
-    \ Teilprozess angekommen ist –\nund vorher prüft er die Signatur von `_identityCorrelation`.\
-    \ Die Identität ist an die\nProzessinstanz des **Starts** gebunden; im Teilprozess\
-    \ akzeptiert der Worker sie, weil das die\nRoot-Instanz seines Jobs ist.\n\n |\
+    \ Identität des Starts.\n\nDazu das In (`customerName`, `clientId`); zurück kommen\
+    \ `processStatus` des Teilprozesses als\n`subProcessStatus` und `client`.\n\n\
+    **«Kunde laden»** zeigt, dass beides ankommt: der Service `GetClientsClientId`\
+    \ aus\n**democompany-services** (Topic `democompany-services-clientsV1-GetClientsClientId`,\
+    \ wie in\ndemocompany-cards). Seinen ServiceWorker führt die Worker-App dieses\
+    \ Projekts mit\n(`dependencies(democompany.services.worker.WorkerApp)`, die Abhä\
+    ngigkeit steht in `PROJECT.conf`).\nGemockt ist er nur, wenn `_servicesMocked`\
+    \ im Teilprozess angekommen ist – und vorher prüft er die\nSignatur von `_identityCorrelation`.\
+    \ Die Identität ist an die Prozessinstanz des **Starts**\ngebunden; im Teilprozess\
+    \ akzeptiert der Worker sie, weil das die Root-Instanz seines Jobs ist.\n\nWeil\
+    \ das Topic nicht mit der Prozess-ID beginnt, sieht die Orch Spec den Schritt\
+    \ als Service aus dem\nKatalog – nicht als eigenen Worker des Prozesses.\n\n |\
     \ Camunda 7 | Camunda 8 |\n---|---|---|\n Aufruf | `calledElement=\"<processId>\"\
     ` | `zeebe:calledElement processId=\"<processId>\"` mit `propagateAllChildVariables=\"\
     false\"` und `propagateAllParentVariables=\"false\"` |\n hinein | `camunda:in\
@@ -197,19 +202,17 @@ info:
     \ | kommt mit dem Job – über gRPC nicht, dann fragt der Worker die Engine (siehe\
     \ unten) |\n\n Datei | Inhalt |\n---|---|\n [`PropagateMocks.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocks.scala)\
     \ | `In`, `Out` des aufrufenden Prozesses |\n [`PropagateMocksSub.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocksSub.scala)\
-    \ | `In`, `Out` des Teilprozesses |\n [`CheckCustomer.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/CheckCustomer.scala)\
-    \ | «Kunde prüfen» – Service-Aufruf im Teilprozess |\n [`PropagateMocksWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksWorker.scala)\
+    \ | `In`, `Out` des Teilprozesses |\n [`PropagateMocksWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksWorker.scala)\
     \ | InitWorker: Prüfung des In |\n [`PropagateMocksSubWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksSubWorker.scala)\
-    \ | InitWorker des Teilprozesses |\n [`CheckCustomerWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/CheckCustomerWorker.scala)\
-    \ | der ServiceWorker dazu |\n [`camunda/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksV1.bpmn),\
+    \ | InitWorker des Teilprozesses |\n [`camunda/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksV1.bpmn),\
     \ [`camunda/patterns-propagateMocksSubV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksSubV1.bpmn)\
     \ | Camunda 7 |\n [`camunda8/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda8/patterns-propagateMocksV1.bpmn),\
     \ [`camunda8/patterns-propagateMocksSubV1.bpmn`](src/main/resources/camunda8/patterns-propagateMocksSubV1.bpmn)\
     \ | Camunda 8 |\n [`PropagateMocksSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/PropagateMocksSimulation.scala)\
     \ | die Szenarien, für beide Engines gleich |\n\n### Simulationen\n\n1. **`PropagateMocks\
-    \ services mocked`** – `.mockServices`: «Kunde prüfen» ist im Teilprozess\n  \
-    \ gemockt und akzeptiert die Identität des Starts; endet mit `subProcessStatus\
-    \ = succeeded`,\n   `customerChecked = true`.\n2. **`PropagateMocks sub worker\
+    \ services mocked`** – `.mockServices`: «Kunde laden» ist im Teilprozess\n   gemockt\
+    \ und akzeptiert die Identität des Starts; endet mit `subProcessStatus = succeeded`\
+    \ und dem\n   Kunden aus dem Mock (`client`).\n2. **`PropagateMocks sub worker\
     \ mocked`** – zusätzlich `.mockWorker(PropagateMocksSub.processName)`:\n   der\
     \ Teilprozess endet über `output-mocked` (`subProcessStatus = output-mocked`),\
     \ der aufrufende\n   Prozess mit `processStatus = succeeded`.\n3. **`PropagateMocks\
@@ -321,11 +324,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > In`\n- Output: `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-initProcessV1-26030\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-initProcessV1-26030'), height: '95%',\
+        \ id=\"patterns-initProcessV1-20666\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-initProcessV1-20666'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-initProcessV1.bpmn](diagrams/patterns-initProcessV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-26030')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-20666')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -493,13 +496,13 @@ paths:
         \ `democompany-patterns-identityV1` (to define in the Call Activity)\n\n\n\
         \n---\n\n\n\n\n- Input:  `democompany.patterns.domain.identity.v1.Identity\
         \ > In`\n- Output: `democompany.patterns.domain.identity.v1.Identity > Out`\n\
-        \n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"patterns-identityV1-75942\"\
+        \n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"patterns-identityV1-9718\"\
         >\n    <img onLoad=\"openFromUrl('patterns-identityV1.bpmn', new BpmnJS({\
-        \ container: $('#patterns-identityV1-75942'), height: '95%', width: '95%'\
-        \ }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ container: $('#patterns-identityV1-9718'), height: '95%', width: '95%' }));\"\
+        \ src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-identityV1.bpmn](diagrams/patterns-identityV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-identityV1-75942')\"\
-        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-identityV1-9718')\">Download\
+        \ Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
         : \"processStatus,customerName,approved,checkedUsernames\",\n...\n```\n\n\
@@ -987,25 +990,32 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
         \ > In`\n- Output: `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-propagateMocksV1-3197\">\n    <img onLoad=\"openFromUrl('patterns-propagateMocksV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-propagateMocksV1-3197'), height: '95%',\
+        \ id=\"patterns-propagateMocksV1-26730\">\n    <img onLoad=\"openFromUrl('patterns-propagateMocksV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-propagateMocksV1-26730'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-propagateMocksV1.bpmn](diagrams/patterns-propagateMocksV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-propagateMocksV1-3197')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-propagateMocksV1-26730')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
-        : \"processStatus,customerName,subProcessStatus,customerChecked\",\n...\n\
-        ```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
-        \ : \"succeeded\",\n  \"customerName\" : \"Peter Muster\",\n  \"subProcessStatus\"\
-        \ : \"succeeded\",\n  \"customerChecked\" : true\n},\n...\n```\n\n</p>\n</details>\n\
-        </p>\n      \n\n\n**Used in no other Process.**\n\n**Uses no other Processes.**\n\
-        <p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n<p>\n\
-        \nThis describes the <b>Input</b> to start the Process with.\n\nBe aware that\
-        \ running this request with Postman,\nyou will not get the <b>Output</b> but\
-        \ the <i>processInstanceId</i>, as starting a process is asynchronous.\n\n\
-        To get the <b>Output</b> you need to use the `Process variables` request.\n\
-        \n</p>\n</details>"
+        : \"processStatus,customerName,subProcessStatus,client\",\n...\n```\n\n**outputMock**:\n\
+        \n```json\n...\n\"outputMock\": {\n  \"processStatus\" : \"succeeded\",\n\
+        \  \"customerName\" : \"Peter Muster\",\n  \"subProcessStatus\" : \"succeeded\"\
+        ,\n  \"client\" : {\n    \"id\" : 1,\n    \"firstName\" : \"John\",\n    \"\
+        lastName\" : \"Doe\",\n    \"email\" : \"john.doe@example.com\",\n    \"tel\"\
+        \ : \"+411234567890\",\n    \"address\" : {\n      \"street\" : \"Main Street\"\
+        ,\n      \"number\" : \"123\",\n      \"zip\" : \"12345\",\n      \"city\"\
+        \ : \"Anytown\",\n      \"country\" : \"Germany\",\n      \"additionalInfo\"\
+        \ : \"Additional Info\"\n    },\n    \"gender\" : {\n      \"type\" : \"Male\"\
+        \n    },\n    \"fullName\" : \"John Doe\",\n    \"salutation\" : \"Mr.\",\n\
+        \    \"dateOfBirth\" : \"1970-01-01\",\n    \"createdAt\" : \"2021-01-01T00:00:00\"\
+        \n  }\n},\n...\n```\n\n</p>\n</details>\n</p>\n      \n\n\n**Used in no other\
+        \ Process.**\n\n**Uses no other Processes.**\n<p/>\n<details>\n<summary><b><i>General\
+        \ Information</i></b></summary>\n<p>\n\nThis describes the <b>Input</b> to\
+        \ start the Process with.\n\nBe aware that running this request with Postman,\n\
+        you will not get the <b>Output</b> but the <i>processInstanceId</i>, as starting\
+        \ a process is asynchronous.\n\nTo get the <b>Output</b> you need to use the\
+        \ `Process variables` request.\n\n</p>\n</details>"
       operationId: Process start
       parameters:
       - name: tenantId
@@ -1033,6 +1043,7 @@ paths:
               democompany-patterns-propagateMocksV1:
                 value:
                   customerName: Peter Muster
+                  clientId: 1234
         required: true
       responses:
         '200':
@@ -1059,11 +1070,19 @@ paths:
         \ > In`\n- Output: `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
         \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
         </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
-        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,customerName,subProcessStatus,customerChecked\"\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,customerName,subProcessStatus,client\"\
         ,\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
         \ : \"succeeded\",\n  \"customerName\" : \"Peter Muster\",\n  \"subProcessStatus\"\
-        \ : \"succeeded\",\n  \"customerChecked\" : true\n},\n...\n```\n\n</p>\n</details>\n\
-        </p>\n      <p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        \ : \"succeeded\",\n  \"client\" : {\n    \"id\" : 1,\n    \"firstName\" :\
+        \ \"John\",\n    \"lastName\" : \"Doe\",\n    \"email\" : \"john.doe@example.com\"\
+        ,\n    \"tel\" : \"+411234567890\",\n    \"address\" : {\n      \"street\"\
+        \ : \"Main Street\",\n      \"number\" : \"123\",\n      \"zip\" : \"12345\"\
+        ,\n      \"city\" : \"Anytown\",\n      \"country\" : \"Germany\",\n     \
+        \ \"additionalInfo\" : \"Additional Info\"\n    },\n    \"gender\" : {\n \
+        \     \"type\" : \"Male\"\n    },\n    \"fullName\" : \"John Doe\",\n    \"\
+        salutation\" : \"Mr.\",\n    \"dateOfBirth\" : \"1970-01-01\",\n    \"createdAt\"\
+        \ : \"2021-01-01T00:00:00\"\n  }\n},\n...\n```\n\n</p>\n</details>\n</p>\n\
+        \      <p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
         <p>\n\nThis describes the <b>Output</b> of the Process you get. Be aware this\
         \ does not check if the process is finished (TODO).\n\n  \n</p>\n</details>"
       operationId: Process variables
@@ -1085,7 +1104,7 @@ paths:
         required: false
         schema:
           type: string
-        example: processStatus,customerName,subProcessStatus,customerChecked
+        example: processStatus,customerName,subProcessStatus,client
       responses:
         '200':
           description: ''
@@ -1099,7 +1118,25 @@ paths:
                     processStatus: succeeded
                     customerName: Peter Muster
                     subProcessStatus: succeeded
-                    customerChecked: true
+                    client:
+                      id: 1
+                      firstName: John
+                      lastName: Doe
+                      email: john.doe@example.com
+                      tel: '+411234567890'
+                      address:
+                        street: Main Street
+                        number: '123'
+                        zip: '12345'
+                        city: Anytown
+                        country: Germany
+                        additionalInfo: Additional Info
+                      gender:
+                        type: Male
+                      fullName: John Doe
+                      salutation: Mr.
+                      dateOfBirth: '1970-01-01'
+                      createdAt: '2021-01-01T00:00:00'
   /worker/democompany-patterns-propagateMocksV1:
     post:
       tags:
@@ -1131,6 +1168,7 @@ paths:
               democompany-patterns-propagateMocksV1:
                 value:
                   customerName: Peter Muster
+                  clientId: 1234
         required: true
       responses:
         '200':
@@ -1148,22 +1186,29 @@ paths:
       - Propagate Mocks V1
       summary: 'Bpmn: propagateMocksSubV1'
       description: "\nTeilprozess zum Pattern «Mocks und Identität weitergeben».\n\
-        «Kunde prüfen» ruft einen Service auf, den es nicht gibt - er gelingt nur,\
-        \ wenn\n`_servicesMocked` vom Aufrufer kommt; vorher prüft der ServiceWorker\
-        \ die weitergegebene\n`_identityCorrelation`.\n\n\n---\n\n- **Called Element**:\
-        \ `democompany-patterns-propagateMocksSubV1` (to define in the Call Activity)\n\
-        \n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.propagateMocks.v1.PropagateMocksSub\
+        «Kunde laden» ruft den Service `GetClientsClientId` (democompany-services)\
+        \ auf - gemockt,\nwenn `_servicesMocked` vom Aufrufer kommt; vorher prüft\
+        \ der ServiceWorker die weitergegebene\n`_identityCorrelation`.\n\n\n---\n\
+        \n- **Called Element**: `democompany-patterns-propagateMocksSubV1` (to define\
+        \ in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.propagateMocks.v1.PropagateMocksSub\
         \ > In`\n- Output: `democompany.patterns.domain.propagateMocks.v1.PropagateMocksSub\
         \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
         </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
-        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,customerName,customerChecked\"\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,customerName,client\"\
         ,\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
-        \ : \"succeeded\",\n  \"customerName\" : \"Peter Muster\",\n  \"customerChecked\"\
-        \ : true\n},\n...\n```\n\n</p>\n</details>\n</p>\n      \n\n\n**Used in no\
-        \ other Process.**\n\n**Uses no other Processes.**\n<p/>\n<details>\n<summary><b><i>General\
-        \ Information</i></b></summary>\n<p>\n\nThis describes the <b>Output</b> of\
-        \ the Process you get. Be aware this does not check if the process is finished\
-        \ (TODO).\n\n  \n</p>\n</details>"
+        \ : \"succeeded\",\n  \"customerName\" : \"Peter Muster\",\n  \"client\" :\
+        \ {\n    \"id\" : 1,\n    \"firstName\" : \"John\",\n    \"lastName\" : \"\
+        Doe\",\n    \"email\" : \"john.doe@example.com\",\n    \"tel\" : \"+411234567890\"\
+        ,\n    \"address\" : {\n      \"street\" : \"Main Street\",\n      \"number\"\
+        \ : \"123\",\n      \"zip\" : \"12345\",\n      \"city\" : \"Anytown\",\n\
+        \      \"country\" : \"Germany\",\n      \"additionalInfo\" : \"Additional\
+        \ Info\"\n    },\n    \"gender\" : {\n      \"type\" : \"Male\"\n    },\n\
+        \    \"fullName\" : \"John Doe\",\n    \"salutation\" : \"Mr.\",\n    \"dateOfBirth\"\
+        \ : \"1970-01-01\",\n    \"createdAt\" : \"2021-01-01T00:00:00\"\n  }\n},\n\
+        ...\n```\n\n</p>\n</details>\n</p>\n      \n\n\n**Used in no other Process.**\n\
+        \n**Uses no other Processes.**\n<p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Output</b> of the Process you get. Be aware this\
+        \ does not check if the process is finished (TODO).\n\n  \n</p>\n</details>"
       operationId: 'Bpmn: propagateMocksSubV1'
       parameters:
       - name: processInstanceId
@@ -1183,7 +1228,7 @@ paths:
         required: false
         schema:
           type: string
-        example: processStatus,customerName,customerChecked
+        example: processStatus,customerName,client
       responses:
         '200':
           description: ''
@@ -1196,61 +1241,49 @@ paths:
                   value:
                     processStatus: succeeded
                     customerName: Peter Muster
-                    customerChecked: true
-  /worker/democompany-patterns-propagateMocksSubV1-CheckCustomer:
-    post:
-      tags:
-      - Propagate Mocks V1
-      summary: 'Worker: CheckCustomer'
-      description: "\n\n\n**Topic:** `democompany-patterns-propagateMocksSubV1-CheckCustomer`\
-        \ (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_\
-        \ of type _External_)\n\nKunde prüfen - ein Service-Aufruf im Teilprozess;\
-        \ gelingt nur mit `_servicesMocked` vom Aufrufer.\n\n---\n\n\n\n<details>\n\
-        <summary><b>Wrapped Service:</b>\n\n(Patterns Customer 1.0 - v1.0 - GET: customer)\n\
-        </summary>\n<p>\nInput Body: `orchescala.domain.NoInput`:\n\n\nExample Response:\
-        \ `orchescala.domain.NoOutput`:\n\n```json\n{\n  \"respStatus\" : 204,\n \
-        \ \"respBody\" : {\n    \n  },\n  \"respHeaders\" : [\n  ]\n}\n```\n</p>\n\
-        </details>\n</p>\n\n---\n\n\n- Input:  `democompany.patterns.domain.propagateMocks.v1.CheckCustomer\
-        \ > In`\n- Output: `democompany.patterns.domain.propagateMocks.v1.CheckCustomer\
-        \ > Out`\n\n\n\nYou can test this worker using the generic process _**orchescala-externalTask-generic**_\
-        \ (e.g. with Postman).\n\n- ServiceOut:  `orchescala.domain.MockedServiceResponse`\n\
-        \n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n</summary>\n\n\
-        <p>\n\n**outputVariables**:\n\nJust take the variable you need in your process!\n\
-        ```json\n...\n\"outputVariables\": \"customerChecked\",\n...\n```\n\n**outputMock**:\n\
-        \n```json\n...\n\"outputMock\": {\n  \"customerChecked\" : true\n},\n...\n\
-        ```\n\n**outputServiceMock**:\n```json\n...\n\"outputServiceMock\": {\n  \"\
-        respStatus\" : 200,\n  \"respBody\" : {\n    \"respStatus\" : 204,\n    \"\
-        respBody\" : {\n      \n    },\n    \"respHeaders\" : [\n    ]\n  },\n  \"\
-        respHeaders\" : [\n  ]\n},\n...\n```\n</p>\n</details>\n</p>\n      \n   \
-        \ \n\n\n**Used in no other Process.**\n\n**Uses no other Processes.**\n<p/>\n\
-        <details>\n<summary><b><i>General Information</i></b></summary>\n<p>\n\nThis\
-        \ describes the <b>Input</b> and the <b>Output</b> of the Worker.\n\nRunning\
-        \ this request with Postman, it will run the Worker directly, no Process will\
-        \ be started.\n\n</p>\n</details>"
-      operationId: 'Worker: CheckCustomer'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CheckCustomer.In'
-            examples:
-              democompany-patterns-propagateMocksSubV1-CheckCustomer:
-                value:
-                  customerName: Peter Muster
-        required: true
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CheckCustomer.Out'
-              examples:
-                democompany-patterns-propagateMocksSubV1-CheckCustomer:
-                  value:
-                    customerChecked: true
+                    client:
+                      id: 1
+                      firstName: John
+                      lastName: Doe
+                      email: john.doe@example.com
+                      tel: '+411234567890'
+                      address:
+                        street: Main Street
+                        number: '123'
+                        zip: '12345'
+                        city: Anytown
+                        country: Germany
+                        additionalInfo: Additional Info
+                      gender:
+                        type: Male
+                      fullName: John Doe
+                      salutation: Mr.
+                      dateOfBirth: '1970-01-01'
+                      createdAt: '2021-01-01T00:00:00'
 components:
   schemas:
+    Address:
+      title: Address
+      type: object
+      required:
+      - street
+      - number
+      - zip
+      - city
+      - country
+      properties:
+        street:
+          type: string
+        number:
+          type: string
+        zip:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        additionalInfo:
+          type: string
     ApproveRequestUT.In:
       title: ApproveRequestUT.In
       type: object
@@ -1267,23 +1300,6 @@ components:
       properties:
         approved:
           description: Antrag freigegeben?
-          type: boolean
-    CheckCustomer.In:
-      title: CheckCustomer.In
-      type: object
-      required:
-      - customerName
-      properties:
-        customerName:
-          type: string
-    CheckCustomer.Out:
-      title: CheckCustomer.Out
-      type: object
-      required:
-      - customerChecked
-      properties:
-        customerChecked:
-          description: Der Kunde wurde geprüft.
           type: boolean
     CheckIdentity.In:
       title: CheckIdentity.In
@@ -1319,6 +1335,46 @@ components:
           type: array
           items:
             type: string
+    Client:
+      title: Client
+      type: object
+      required:
+      - id
+      - firstName
+      - lastName
+      - address
+      - gender
+      - fullName
+      - salutation
+      - dateOfBirth
+      - createdAt
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        tel:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+        gender:
+          $ref: '#/components/schemas/Gender'
+        fullName:
+          type: string
+        salutation:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
     CloseRequestUT.In:
       title: CloseRequestUT.In
       type: object
@@ -1348,6 +1404,14 @@ components:
       - C8
       - Gateway
       - Op
+    Female:
+      title: Female
+      type: object
+    Gender:
+      oneOf:
+      - $ref: '#/components/schemas/Female'
+      - $ref: '#/components/schemas/Male'
+      - $ref: '#/components/schemas/Unknown'
     Identity.In:
       title: Identity.In
       type: object
@@ -1433,6 +1497,9 @@ components:
             In keine hat.
         greetingMessage:
           type: string
+    Male:
+      title: Male
+      type: object
     NoInput:
       title: NoInput
       type: object
@@ -1478,11 +1545,16 @@ components:
       type: object
       required:
       - customerName
+      - clientId
       properties:
         customerName:
           description: Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker
             `validation-failed`).
           type: string
+        clientId:
+          description: Id des Kunden - der Teilprozess lädt ihn mit dem Service `GetClientsClientId`.
+          type: integer
+          format: int64
     PropagateMocks.Out:
       title: PropagateMocks.Out
       type: object
@@ -1498,23 +1570,25 @@ components:
         subProcessStatus:
           $ref: '#/components/schemas/ProcessStatus1'
           description: Der `processStatus`, mit dem der Teilprozess endete.
-        customerChecked:
-          description: Der Teilprozess hat den Kunden geprüft (fehlt, wenn er über
-            `output-mocked` endete).
-          type: boolean
+        client:
+          $ref: '#/components/schemas/Client'
+          description: Der Kunde, den der Teilprozess geladen hat.
     PropagateMocksSub.Out:
       title: PropagateMocksSub.Out
       type: object
       required:
       - processStatus
       - customerName
-      - customerChecked
+      - client
       properties:
         processStatus:
           $ref: '#/components/schemas/ProcessStatus1'
         customerName:
           type: string
-        customerChecked:
-          description: Der Kunde wurde geprüft - aus «Kunde prüfen».
-          type: boolean
+        client:
+          $ref: '#/components/schemas/Client'
+          description: Der Kunde - aus «Kunde laden».
+    Unknown:
+      title: Unknown
+      type: object
 tags: []

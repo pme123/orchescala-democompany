@@ -22,6 +22,17 @@
       "type" : "Hidden"
     },
     {
+      "value" : "clientId",
+      "binding" : {
+        "type" : "camunda:in",
+        "target" : "clientId",
+        "expression" : false
+      },
+      "label" : "clientId",
+      "description" : "",
+      "type" : "Hidden"
+    },
+    {
       "value" : "processStatus",
       "binding" : {
         "type" : "camunda:out",
@@ -55,13 +66,13 @@
       "type" : "Hidden"
     },
     {
-      "value" : "customerChecked",
+      "value" : "client",
       "binding" : {
         "type" : "camunda:out",
-        "source" : "customerChecked",
+        "source" : "client",
         "expression" : false
       },
-      "label" : "customerChecked",
+      "label" : "client",
       "description" : "",
       "type" : "Hidden"
     },

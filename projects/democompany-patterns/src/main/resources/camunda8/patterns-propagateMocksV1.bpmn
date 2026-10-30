@@ -22,8 +22,9 @@
           <zeebe:input source="=_mockedWorkers" target="_mockedWorkers" />
           <zeebe:input source="=_identityCorrelation" target="_identityCorrelation" />
           <zeebe:input source="=customerName" target="customerName" />
+          <zeebe:input source="=clientId" target="clientId" />
           <zeebe:output source="=processStatus" target="subProcessStatus" />
-          <zeebe:output source="=customerChecked" target="customerChecked" />
+          <zeebe:output source="=client" target="client" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>InitProcessFlow</bpmn:incoming>

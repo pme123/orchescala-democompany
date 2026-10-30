@@ -10,8 +10,8 @@ import democompany.patterns.domain.propagateMocks.v1.PropagateMocks.*
 abstract class PropagateMocksSimulation extends CompanySimulation:
 
   simulate(
-    // 1. the services are mocked: «Kunde prüfen» in the sub process only succeeds if
-    //    `_servicesMocked` and a valid `_identityCorrelation` reach it
+    // 1. the services are mocked: «Kunde laden» (GetClientsClientId) in the sub process is mocked
+    //    only if `_servicesMocked` reaches it - and it needs a valid `_identityCorrelation`
     scenario(`PropagateMocks services mocked`),
     // 2. the InitWorker of the sub process is mocked: the sub process ends on `output-mocked`
     scenario(`PropagateMocks sub worker mocked`),

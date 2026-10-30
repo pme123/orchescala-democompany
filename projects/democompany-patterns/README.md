@@ -205,7 +205,7 @@ Orchescala-Branch `feat/simulation-second-test-identity` (0.9.0-SNAPSHOT, noch n
 Start ─▶ [Init Process] ─▶ [Teilprozess aufrufen] ─▶ (succeeded)
                                   │
                                   ▼  democompany-patterns-propagateMocksSubV1
-                    Start ─▶ [Init Process] ─▶ [Kunde prüfen] ─▶ (succeeded)
+                    Start ─▶ [Init Process] ─▶ [Kunde laden] ─▶ (succeeded)
 ```
 
 Ein Teilprozess (Call Activity) sieht nur die Variablen, die ihm der Aufruf mitgibt. Damit Mocks
@@ -215,14 +215,19 @@ und Identität auch dort gelten, gibt die Call Activity diese drei weiter:
 - **`_mockedWorkers`** – gemockte Worker, auch der InitWorker des Teilprozesses (dessen Prozess-ID),
 - **`_identityCorrelation`** – die signierte Identität des Starts.
 
-Dazu das In (`customerName`); zurück kommen `processStatus` des Teilprozesses als `subProcessStatus`
-und `customerChecked`.
+Dazu das In (`customerName`, `clientId`); zurück kommen `processStatus` des Teilprozesses als
+`subProcessStatus` und `client`.
 
-**«Kunde prüfen»** zeigt, dass beides ankommt: ein ServiceWorker, dessen Service es nicht gibt
-(`http://localhost:1/...`). Er gelingt nur, wenn `_servicesMocked` im Teilprozess angekommen ist –
-und vorher prüft er die Signatur von `_identityCorrelation`. Die Identität ist an die
-Prozessinstanz des **Starts** gebunden; im Teilprozess akzeptiert der Worker sie, weil das die
-Root-Instanz seines Jobs ist.
+**«Kunde laden»** zeigt, dass beides ankommt: der Service `GetClientsClientId` aus
+**democompany-services** (Topic `democompany-services-clientsV1-GetClientsClientId`, wie in
+democompany-cards). Seinen ServiceWorker führt die Worker-App dieses Projekts mit
+(`dependencies(democompany.services.worker.WorkerApp)`, die Abhängigkeit steht in `PROJECT.conf`).
+Gemockt ist er nur, wenn `_servicesMocked` im Teilprozess angekommen ist – und vorher prüft er die
+Signatur von `_identityCorrelation`. Die Identität ist an die Prozessinstanz des **Starts**
+gebunden; im Teilprozess akzeptiert der Worker sie, weil das die Root-Instanz seines Jobs ist.
+
+Weil das Topic nicht mit der Prozess-ID beginnt, sieht die Orch Spec den Schritt als Service aus dem
+Katalog – nicht als eigenen Worker des Prozesses.
 
 | | Camunda 7 | Camunda 8 |
 |---|---|---|
@@ -235,19 +240,17 @@ Root-Instanz seines Jobs ist.
 |---|---|
 | [`PropagateMocks.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocks.scala) | `In`, `Out` des aufrufenden Prozesses |
 | [`PropagateMocksSub.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocksSub.scala) | `In`, `Out` des Teilprozesses |
-| [`CheckCustomer.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/CheckCustomer.scala) | «Kunde prüfen» – Service-Aufruf im Teilprozess |
 | [`PropagateMocksWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksWorker.scala) | InitWorker: Prüfung des In |
 | [`PropagateMocksSubWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksSubWorker.scala) | InitWorker des Teilprozesses |
-| [`CheckCustomerWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/CheckCustomerWorker.scala) | der ServiceWorker dazu |
 | [`camunda/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksV1.bpmn), [`camunda/patterns-propagateMocksSubV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksSubV1.bpmn) | Camunda 7 |
 | [`camunda8/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda8/patterns-propagateMocksV1.bpmn), [`camunda8/patterns-propagateMocksSubV1.bpmn`](src/main/resources/camunda8/patterns-propagateMocksSubV1.bpmn) | Camunda 8 |
 | [`PropagateMocksSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/PropagateMocksSimulation.scala) | die Szenarien, für beide Engines gleich |
 
 ### Simulationen
 
-1. **`PropagateMocks services mocked`** – `.mockServices`: «Kunde prüfen» ist im Teilprozess
-   gemockt und akzeptiert die Identität des Starts; endet mit `subProcessStatus = succeeded`,
-   `customerChecked = true`.
+1. **`PropagateMocks services mocked`** – `.mockServices`: «Kunde laden» ist im Teilprozess
+   gemockt und akzeptiert die Identität des Starts; endet mit `subProcessStatus = succeeded` und dem
+   Kunden aus dem Mock (`client`).
 2. **`PropagateMocks sub worker mocked`** – zusätzlich `.mockWorker(PropagateMocksSub.processName)`:
    der Teilprozess endet über `output-mocked` (`subProcessStatus = output-mocked`), der aufrufende
    Prozess mit `processStatus = succeeded`.

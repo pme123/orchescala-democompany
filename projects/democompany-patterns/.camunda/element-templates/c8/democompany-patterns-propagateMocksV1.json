@@ -22,6 +22,16 @@
         "type" : "Hidden"
       },
       {
+        "value" : "clientId",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "clientId"
+        },
+        "label" : "clientId",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
         "value" : "processStatus",
         "binding" : {
           "type" : "zeebe:output",
@@ -52,12 +62,12 @@
         "type" : "Hidden"
       },
       {
-        "value" : "customerChecked",
+        "value" : "client",
         "binding" : {
           "type" : "zeebe:output",
-          "source" : "customerChecked"
+          "source" : "client"
         },
-        "label" : "customerChecked",
+        "label" : "client",
         "description" : "",
         "type" : "Hidden"
       },

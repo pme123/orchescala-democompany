@@ -13,7 +13,7 @@
       <bpmn:incoming>StartFlow</bpmn:incoming>
       <bpmn:outgoing>InitProcessFlow</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="CheckCustomerTask" name="Kunde prüfen" camunda:type="external" camunda:topic="democompany-patterns-propagateMocksSubV1-CheckCustomer">
+    <bpmn:serviceTask id="GetClientsClientIdTask" name="Kunde laden" camunda:type="external" camunda:topic="democompany-services-clientsV1-GetClientsClientId">
       <bpmn:incoming>InitProcessFlow</bpmn:incoming>
       <bpmn:outgoing>MiddleFlow</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -42,8 +42,8 @@
       <bpmn:incoming>OutputmockedFlow</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="StartFlow" sourceRef="StartEvent" targetRef="InitProcessTask" />
-    <bpmn:sequenceFlow id="InitProcessFlow" sourceRef="InitProcessTask" targetRef="CheckCustomerTask" />
-    <bpmn:sequenceFlow id="MiddleFlow" sourceRef="CheckCustomerTask" targetRef="SucceededEndEvent" />
+    <bpmn:sequenceFlow id="InitProcessFlow" sourceRef="InitProcessTask" targetRef="GetClientsClientIdTask" />
+    <bpmn:sequenceFlow id="MiddleFlow" sourceRef="GetClientsClientIdTask" targetRef="SucceededEndEvent" />
     <bpmn:sequenceFlow id="OutputMockedBoundaryFlow" sourceRef="OutputMockedBoundary" targetRef="OutputMockedThrow" />
     <bpmn:sequenceFlow id="OutputmockedFlow" sourceRef="OutputmockedEvent" targetRef="OutputmockedEndEvent" />
   </bpmn:process>
@@ -59,7 +59,7 @@
       <bpmndi:BPMNShape id="InitProcessTask_di" bpmnElement="InitProcessTask" color:background-color="#D5D5D5">
         <dc:Bounds x="200" y="100" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CheckCustomerTask_di" bpmnElement="CheckCustomerTask">
+      <bpmndi:BPMNShape color:background-color="#ffffcc" id="GetClientsClientIdTask_di" bpmnElement="GetClientsClientIdTask">
         <dc:Bounds x="360" y="100" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="SucceededEndEvent_di" bpmnElement="SucceededEndEvent">
