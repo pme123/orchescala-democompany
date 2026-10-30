@@ -1,0 +1,133 @@
+[
+  {
+    "name" : "democompany-patterns-propagateMocksSubV1",
+    "id" : "democompany-patterns-propagateMocksSubV1",
+    "description" : "\nTeilprozess zum Pattern «Mocks und Identität weitergeben».\n«Kunde laden» ruft den Service `GetClientsClientId` (democompany-services) auf - gemockt,\nwenn `_servicesMocked` vom Aufrufer kommt; vorher prüft der ServiceWorker die weitergegebene\n`_identityCorrelation`.\n\n\n",
+    "version" : 0,
+    "appliesTo" : [
+      "bpmn:Activity"
+    ],
+    "elementType" : {
+      "value" : "bpmn:CallActivity"
+    },
+    "properties" : [
+      {
+        "value" : "customerName",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "customerName"
+        },
+        "label" : "customerName",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "clientId",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "clientId"
+        },
+        "label" : "clientId",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "processStatus",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "processStatus"
+        },
+        "label" : "processStatus",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "customerName",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "customerName"
+        },
+        "label" : "customerName",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "client",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "client"
+        },
+        "label" : "client",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "_servicesMocked",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "_servicesMocked"
+        },
+        "label" : "_servicesMocked",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "_mockedWorkers",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "_mockedWorkers"
+        },
+        "label" : "_mockedWorkers",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "_outputMock",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "_outputMock"
+        },
+        "label" : "_outputMock",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "impersonateUserId",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "impersonateUserId"
+        },
+        "label" : "impersonateUserId",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "_identityCorrelation",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "_identityCorrelation"
+        },
+        "label" : "_identityCorrelation",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "Propagate Mocks Sub V1",
+        "binding" : {
+          "type" : "property",
+          "name" : "name"
+        },
+        "label" : "",
+        "description" : "",
+        "type" : "Hidden"
+      }
+    ],
+    "$schema" : "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
+    "groups" : [
+    ],
+    "entriesVisible" : true,
+    "engines" : {
+      "camunda" : "^8.6"
+    }
+  }
+]

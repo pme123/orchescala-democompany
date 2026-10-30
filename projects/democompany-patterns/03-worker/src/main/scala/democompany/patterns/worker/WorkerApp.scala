@@ -5,9 +5,13 @@ package democompany.patterns.worker
 object WorkerApp extends CompanyWorkerApp:
   workers(
     initProcessWorkers,
-    identityWorkers
+    identityWorkers,
+    propagateMocksWorkers,
+    uniqueExecutionWorkers
   )
+  // «Kunde laden» (GetClientsClientId) is a service of democompany-services - run by this app
   dependencies(
+    democompany.services.worker.WorkerApp
   )
 
   // WORKER_APP_PORT - if 5555 is taken by another worker app
@@ -28,4 +32,19 @@ object WorkerApp extends CompanyWorkerApp:
       new CheckIdentityWorker()
     )
   end identityWorkers
+
+  private lazy val propagateMocksWorkers =
+    import democompany.patterns.worker.propagateMocks.v1.*
+    Seq(
+      new PropagateMocksWorker(),
+      new PropagateMocksSubWorker()
+    )
+  end propagateMocksWorkers
+
+  private lazy val uniqueExecutionWorkers =
+    import democompany.patterns.worker.uniqueExecution.v1.*
+    Seq(
+      new UniqueExecutionWorker()
+    )
+  end uniqueExecutionWorkers
 end WorkerApp

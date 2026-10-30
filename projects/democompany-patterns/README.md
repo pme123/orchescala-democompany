@@ -5,7 +5,8 @@ Orch Spec in einen Prozess einfügt und wiedererkennt. Je Pattern gibt es einen 
 für Camunda 7 und Camunda 8 und eine Simulation je Engine, die den Baustein auf einer echten Engine
 durchspielt. Später sollen die BPMN auch als Testdaten für die Orch Spec dienen.
 
-Bis jetzt: **«Init Process»** und **«Identität übernehmen / zurücksetzen»**.
+Bis jetzt: **«Init Process»**, **«Identität übernehmen / zurücksetzen»**,
+**«Mocks und Identität weitergeben»** und **«Einmalige Ausführung»**.
 
 ## Init Process – `democompany-patterns-initProcessV1`
 
@@ -126,27 +127,28 @@ entscheidet das BPMN (siehe «Voraussetzung: Orchescala»).
   `_identityCorrelation = _identityCorrelationBefore`.
 
 Die Signatur bindet die Identität an die Prozessinstanz, nicht an den Namen der Variable – nach dem
-Kopieren prüfen die Worker sie wie bisher. Das zeigt **«Identität prüfen»**: ein ServiceWorker nach dem
-Übernehmen und nach dem Zurücksetzen. Er ist im BPMN gemockt (`_servicesMocked = true`), prüft aber
-vorher die Signatur von `_identityCorrelation` – eine ungültige lässt den Job scheitern. Den
-Benutzernamen dieser Identität hängt er an `checkedUsernames` an; das BPMN mappt ihn als Input
+Kopieren prüfen die ServiceWorker sie wie bisher. Welche Identität der Prozess gerade hat, zeigt
+**«Identität prüfen»**: ein CustomTask nach dem Übernehmen und nach dem Zurücksetzen. Er hängt den
+Benutzernamen dieser Identität an `checkedUsernames` an; das BPMN mappt ihn als Input
 `identityUsername` (C7 `${_identityCorrelation.prop("username").stringValue()}`, C8
-`=_identityCorrelation.username`), denn ein ServiceWorker kommt selbst nicht an die Identität.
+`=_identityCorrelation.username`). Die Signatur prüft ein CustomWorker nicht – das tun nur
+ServiceWorker (siehe «Mocks und Identität weitergeben»). Ein CustomTask ist er, damit die Orch Spec
+ihn als Worker des Prozesses mit seinem In/Out erkennt.
 
 | | Camunda 7 | Camunda 8 |
 |---|---|---|
-| übernehmen | zwei Execution Listener (`start`) mit `execution.setVariable(...)` und `execution.getVariableTyped(...)` | Output-Mappings – die Quellen werden alle vor dem Setzen gelesen |
+| übernehmen | zwei Execution Listener (`start`) mit `execution.setVariable(...)` und `execution.getVariableTyped(...)` | zwei Output-Mappings – **die Reihenfolge zählt**: Zeebe wendet sie nacheinander an, also erst `_identityCorrelationBefore` sichern, dann `_identityCorrelation` überschreiben (umgekehrt wäre «Before» schon der Actor) |
 | zurücksetzen | ein Execution Listener | ein Output-Mapping |
 
-**C8:** die Output-Mappings stehen auf dem leeren Zwischenereignis – nicht auf der Benutzeraufgabe
+**C8:** fehlt eine Variable, liest FEEL `null` – ohne Identität gibt es also keinen Incident, die Variablen stehen dann auf `null` (auf c8run 8.9 nachgeprüft, wie die Reihenfolge). Die Output-Mappings stehen auf dem leeren Zwischenereignis – nicht auf der Benutzeraufgabe
 (mit einem Output-Mapping übernimmt Zeebe dort sonst nur noch die gemappten Variablen).
 
 | Datei | Inhalt |
 |---|---|
 | [`Identity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/Identity.scala) | `In`, `Out` |
 | [`ApproveRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/ApproveRequestUT.scala) | «Antrag freigeben» – wer sie erledigt, wird übernommen |
-| [`CheckIdentity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala) | «Identität prüfen» – Service-Aufruf mit der Identität des Prozesses |
-| [`CheckIdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/CheckIdentityWorker.scala) | der ServiceWorker dazu (gemockt) |
+| [`CheckIdentity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala) | «Identität prüfen» – CustomTask: Benutzername der Identität des Prozesses |
+| [`CheckIdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/CheckIdentityWorker.scala) | der CustomWorker dazu |
 | [`CloseRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala) | «Antrag abschliessen» – hier hat der Prozess die übernommene Identität |
 | [`IdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/IdentityWorker.scala) | InitWorker: Prüfung des In |
 | [`camunda/patterns-identityV1.bpmn`](src/main/resources/camunda/patterns-identityV1.bpmn) | Camunda 7 |
@@ -183,7 +185,8 @@ Vor `actingAs` von Hand geprüft (C7 und C8): über ein lokales Gateway gestarte
 | bei «Antrag abschliessen» | `approver` (übernommen) |
 | am Ende | `starter` (zurückgesetzt) – `_identityCorrelationBefore = starter` |
 
-«Identität prüfen» hat dabei beide Male die Signatur des Gateways akzeptiert (`approver`, dann `starter`).
+«Identität prüfen» – damals noch ein ServiceWorker – hat dabei beide Male die Signatur des Gateways
+akzeptiert (`approver`, dann `starter`).
 
 ### Voraussetzung: Orchescala
 
@@ -197,6 +200,147 @@ Orchescala ab pme123/orchescala#87 (in develop) – vorher hiess es `example`.
 
 `actingAs` und die zweite Test-Identität `testActorIdentityCorrelation` gibt es ab dem
 Orchescala-Branch `feat/simulation-second-test-identity` (0.9.0-SNAPSHOT, noch nicht gemergt).
+
+## Mocks und Identität weitergeben – `democompany-patterns-propagateMocksV1`
+
+```
+Start ─▶ [Init Process] ─▶ [Teilprozess aufrufen] ─▶ (succeeded)
+                                  │
+                                  ▼  democompany-patterns-propagateMocksSubV1
+                    Start ─▶ [Init Process] ─▶ [Kunde laden] ─▶ (succeeded)
+```
+
+Ein Teilprozess (Call Activity) sieht nur die Variablen, die ihm der Aufruf mitgibt. Damit Mocks
+und Identität auch dort gelten, gibt die Call Activity diese drei weiter:
+
+- **`_servicesMocked`** – die Services im Teilprozess sind gemockt,
+- **`_mockedWorkers`** – gemockte Worker, auch der InitWorker des Teilprozesses (dessen Prozess-ID),
+- **`_identityCorrelation`** – die signierte Identität des Starts.
+
+Dazu das In (`customerName`, `clientId`); zurück kommen `processStatus` des Teilprozesses als
+`subProcessStatus` und `client`.
+
+**«Kunde laden»** zeigt, dass beides ankommt: der Service `GetClientsClientId` aus
+**democompany-services** (Topic `democompany-services-clientsV1-GetClientsClientId`, wie in
+democompany-cards). Seinen ServiceWorker führt die Worker-App dieses Projekts mit
+(`dependencies(democompany.services.worker.WorkerApp)`, die Abhängigkeit steht in `PROJECT.conf`).
+Gemockt ist er nur, wenn `_servicesMocked` im Teilprozess angekommen ist – und vorher prüft er die
+Signatur von `_identityCorrelation`. Die Identität ist an die Prozessinstanz des **Starts**
+gebunden; im Teilprozess akzeptiert der Worker sie, weil das die Root-Instanz seines Jobs ist.
+
+Weil das Topic nicht mit der Prozess-ID beginnt, sieht die Orch Spec den Schritt als Service aus dem
+Katalog – nicht als eigenen Worker des Prozesses.
+
+| | Camunda 7 | Camunda 8 |
+|---|---|---|
+| Aufruf | `calledElement="<processId>"` | `zeebe:calledElement processId="<processId>"` mit `propagateAllChildVariables="false"` und `propagateAllParentVariables="false"` |
+| hinein | `camunda:in source=… target=…` | `zeebe:input` |
+| zurück | `camunda:out source=… target=…` | `zeebe:output` |
+| Root-Instanz des Jobs | der Worker liest sie aus der History | kommt mit dem Job – über gRPC nicht, dann fragt der Worker die Engine (siehe unten) |
+
+| Datei | Inhalt |
+|---|---|
+| [`PropagateMocks.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocks.scala) | `In`, `Out` des aufrufenden Prozesses |
+| [`PropagateMocksSub.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocksSub.scala) | `In`, `Out` des Teilprozesses |
+| [`PropagateMocksWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksWorker.scala) | InitWorker: Prüfung des In |
+| [`PropagateMocksSubWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksSubWorker.scala) | InitWorker des Teilprozesses |
+| [`camunda/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksV1.bpmn), [`camunda/patterns-propagateMocksSubV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksSubV1.bpmn) | Camunda 7 |
+| [`camunda8/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda8/patterns-propagateMocksV1.bpmn), [`camunda8/patterns-propagateMocksSubV1.bpmn`](src/main/resources/camunda8/patterns-propagateMocksSubV1.bpmn) | Camunda 8 |
+| [`PropagateMocksSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/PropagateMocksSimulation.scala) | die Szenarien, für beide Engines gleich |
+
+### Simulationen
+
+1. **`PropagateMocks services mocked`** – `.mockServices`: «Kunde laden» ist im Teilprozess
+   gemockt und akzeptiert die Identität des Starts; endet mit `subProcessStatus = succeeded` und dem
+   Kunden aus dem Mock (`client`).
+2. **`PropagateMocks sub worker mocked`** – zusätzlich `.mockWorker(PropagateMocksSub.processName)`:
+   der Teilprozess endet über `output-mocked` (`subProcessStatus = output-mocked`), der aufrufende
+   Prozess mit `processStatus = succeeded`.
+3. **`PropagateMocks invalid In`** – `customerName = " "`: Incident `validation-failed`.
+
+```bash
+./helper.scala deploy PropagateMocksC7Simulation
+```
+```bash
+./helper.scala deploy PropagateMocksC8Simulation
+```
+
+### Voraussetzung: Orchescala (C8)
+
+Über gRPC liefert der Camunda-Client 8.9 die Root-Instanz eines Jobs nicht mit
+(`rootProcessInstanceKey` ist leer). Ohne sie lehnt der Worker im Teilprozess die Identität des
+Starts ab («bound to process instance …, not to the job's … (root: -)»). Ab dem Orchescala-Branch
+`fix/c8-root-process-instance` (0.9.0-SNAPSHOT, noch nicht gemergt) fragt der C8-Worker die
+Root-Instanz dann bei der Engine nach (`GET /v2/process-instances/{key}`). C7 braucht das nicht.
+
+## Einmalige Ausführung – `democompany-patterns-uniqueExecutionV1`
+
+```
+✉ Start ─▶ [Init Process] ─▶ [Antrag bearbeiten] ─▶ (succeeded)
+
+┌ Prozess läuft schon (Ereignis-Subprozess, nicht unterbrechend) ┐
+│  ✉ Start-Nachricht nochmals ─▶ (läuft schon: alreadyRunning = true) │
+└────────────────────────────────────────────────────────────────┘
+```
+
+Derselbe Prozess soll für denselben Fall nur einmal laufen. Er startet deshalb über ein
+**Nachrichten-Startereignis** (Name der Nachricht = Prozess-ID) mit einem **`businessKey`**. Solange
+er läuft, fängt ein nicht unterbrechender Ereignis-Subprozess **dieselbe Nachricht**: ein zweiter
+Start mit demselben `businessKey` landet in der laufenden Instanz (`alreadyRunning = true`) – eine
+zweite gibt es nicht.
+
+- Der InitWorker setzt `alreadyRunning = false`; das Ende des Ereignis-Subprozesses setzt es auf `true`.
+- Die Nachricht trägt das In mit – ein zweiter Start überschreibt also dessen Variablen in der
+  laufenden Instanz.
+
+| | Camunda 7 | Camunda 8 |
+|---|---|---|
+| Start | `messageEventDefinition` – der `businessKey` ist der der Instanz | ebenso – Orchescala setzt dazu die Variable `businessKey` |
+| Ereignis-Subprozess | fängt die Nachricht, weil C7 sie zuerst laufenden Instanzen mit diesem `businessKey` zuordnet | die Nachricht hat `zeebe:subscription correlationKey="=businessKey"` – das Abo öffnet beim Start |
+| `alreadyRunning = true` | Execution Listener (`start`) am Ende | Output-Mapping am Ende |
+| zweiter Start über Orchescala | wird abgelehnt (409: «correlated to a running process instance») | startet heute eine **zweite Instanz** (siehe unten) |
+
+| Datei | Inhalt |
+|---|---|
+| [`UniqueExecution.scala`](01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/UniqueExecution.scala) | `In`, `InitIn` (`alreadyRunning`), `Out` |
+| [`EditRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/EditRequestUT.scala) | «Antrag bearbeiten» – solange sie offen ist, läuft der Prozess |
+| [`StartAgainME.scala`](01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/StartAgainME.scala) | die Start-Nachricht ein zweites Mal |
+| [`UniqueExecutionWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/uniqueExecution/v1/UniqueExecutionWorker.scala) | InitWorker: Prüfung des In, `alreadyRunning = false` |
+| [`camunda/patterns-uniqueExecutionV1.bpmn`](src/main/resources/camunda/patterns-uniqueExecutionV1.bpmn) | Camunda 7 |
+| [`camunda8/patterns-uniqueExecutionV1.bpmn`](src/main/resources/camunda8/patterns-uniqueExecutionV1.bpmn) | Camunda 8 |
+| [`UniqueExecutionSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/UniqueExecutionSimulation.scala) | die Szenarien, für beide Engines gleich |
+
+### Simulationen
+
+Alle Szenarien starten mit der Nachricht (`.startWithMsg`); der `businessKey` ist der Name des Szenarios.
+
+1. **`UniqueExecution started`** – einmal gestartet, «Antrag bearbeiten» erledigt: endet mit
+   `alreadyRunning = false`.
+2. **`UniqueExecution started twice`** – während «Antrag bearbeiten» offen ist, kommt die
+   Start-Nachricht mit demselben `businessKey` nochmals (`StartAgainME.withBusinessKey(...)`): der
+   Ereignis-Subprozess fängt sie, der Prozess endet mit `alreadyRunning = true`. Die Nachricht wartet,
+   bis der InitWorker `alreadyRunning = false` gesetzt hat (`.waitFor("alreadyRunning", false)`) –
+   sonst überschreibt er das `true`.
+3. **`UniqueExecution invalid In`** – `customerName = " "`: Incident `validation-failed`.
+
+```bash
+./helper.scala deploy UniqueExecutionC7Simulation
+```
+```bash
+./helper.scala deploy UniqueExecutionC8Simulation
+```
+
+### Voraussetzung: Orchescala (C8)
+
+Den zweiten Start in Szenario 2 schickt die Simulation als Nachricht mit `businessKey` – in C8 als
+`correlationKey`, und so greift das Pattern. Ein **Start** über Orchescala
+(`POST /process/{messageName}/message?businessKey=…`, `C8ProcessInstanceService.startProcessByMessage`)
+schickt in C8 dagegen keinen `correlationKey` mit: dann passt das Abo des Ereignis-Subprozesses nicht,
+und Zeebe startet eine zweite Instanz. Auf c8run nachgeprüft: ohne Schlüssel eine neue Instanz, mit
+`correlationKey = businessKey` landet die Nachricht in der laufenden Instanz (deren Key kommt zurück).
+Damit es auch beim Start über Orchescala greift, müsste der C8-Start den `businessKey` als
+`correlationKey` schicken und – wie in C7 – mit 409 antworten, wenn die Nachricht in einer laufenden
+Instanz landet (sonst setzt er dort die Identität des neuen Aufrufers).
 
 ## Offene Punkte
 

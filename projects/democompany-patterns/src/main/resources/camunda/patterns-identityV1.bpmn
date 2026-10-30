@@ -28,7 +28,6 @@
     <bpmn:serviceTask id="CheckIdentityAsActorTask" name="Identität prüfen (übernommen)" camunda:type="external" camunda:topic="democompany-patterns-identityV1-CheckIdentity">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="_servicesMocked">${true}</camunda:inputParameter>
           <camunda:inputParameter name="identityUsername">${_identityCorrelation.prop("username").stringValue()}</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
@@ -49,7 +48,6 @@
     <bpmn:serviceTask id="CheckIdentityAsStarterTask" name="Identität prüfen (zurückgesetzt)" camunda:type="external" camunda:topic="democompany-patterns-identityV1-CheckIdentity">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="_servicesMocked">${true}</camunda:inputParameter>
           <camunda:inputParameter name="identityUsername">${_identityCorrelation.prop("username").stringValue()}</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>

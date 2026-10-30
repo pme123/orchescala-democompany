@@ -5,7 +5,7 @@ info:
   summary: "\n**This is for Postman - to have example requests. Be aware the Output\
     \ is not provided!**\n\n\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns\
     \ - je Pattern ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated\
-    \ at 10/30/26, 7:50 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ at 10/30/26, 1:24 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -43,17 +43,17 @@ info:
     \ here: [democompany-patterns](../../dependencies/democompany-patterns.html)**\n\
     \n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\
     \nprojectName: democompany-patterns\nprojectVersion: 0.1.0-SNAPSHOT\nsubProjects:\
-    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n]\n\n```\n\n</p>\n\
-    </details>\n\n\nKatalog mit Beispielprozessen für die **Orchescala-Patterns**\
+    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n  democompany-services\n\
+    ]\n\n```\n\n</p>\n</details>\n\n\nKatalog mit Beispielprozessen für die **Orchescala-Patterns**\
     \ – kleine BPMN-Bausteine, die die\nOrch Spec in einen Prozess einfügt und wiedererkennt.\
     \ Je Pattern gibt es einen Beispielprozess\nfür Camunda 7 und Camunda 8 und eine\
     \ Simulation je Engine, die den Baustein auf einer echten Engine\ndurchspielt.\
     \ Später sollen die BPMN auch als Testdaten für die Orch Spec dienen.\n\nBis jetzt:\
-    \ **«Init Process»** und **«Identität übernehmen / zurücksetzen»**.\n\n## Init\
-    \ Process – `democompany-patterns-initProcessV1`\n\n```\nStart ─▶ [Init Process]\
-    \ ─▶ (succeeded)\n              │ output-mocked (Fehler-Boundary)\n          \
-    \    ▼\n         ⇨ output-mocked (Link-Wurf)\n\n⇨ output-mocked (Link-Ziel) ─▶\
-    \ (output-mocked)\n```\n\nDer erste Schritt des Prozesses ist ein Service-Task\
+    \ **«Init Process»**, **«Identität übernehmen / zurücksetzen»** und\n**«Mocks\
+    \ und Identität weitergeben»**.\n\n## Init Process – `democompany-patterns-initProcessV1`\n\
+    \n```\nStart ─▶ [Init Process] ─▶ (succeeded)\n              │ output-mocked (Fehler-Boundary)\n\
+    \              ▼\n         ⇨ output-mocked (Link-Wurf)\n\n⇨ output-mocked (Link-Ziel)\
+    \ ─▶ (output-mocked)\n```\n\nDer erste Schritt des Prozesses ist ein Service-Task\
     \ mit der **Prozess-ID als Topic**. Den Task\nbearbeitet der InitWorker (`InitProcessWorker`):\n\
     \n- er **prüft das In** – ein leerer `customerName` ist ungültig (`validation-failed`),\n\
     - er **setzt die Vorgaben aus dem InConfig** – fehlt `inConfig` im In, steht danach\n\
@@ -125,15 +125,15 @@ info:
     \ (fehlt sie, bleibt die bisherige).\n- **«Identität zurücksetzen»** – ein leeres\
     \ Zwischenereignis, überall möglich:\n  `_identityCorrelation = _identityCorrelationBefore`.\n\
     \nDie Signatur bindet die Identität an die Prozessinstanz, nicht an den Namen\
-    \ der Variable – nach dem\nKopieren prüfen die Worker sie wie bisher. Das zeigt\
-    \ **«Identität prüfen»**: ein ServiceWorker nach dem\nÜbernehmen und nach dem\
-    \ Zurücksetzen. Er ist im BPMN gemockt (`_servicesMocked = true`), prüft aber\n\
-    vorher die Signatur von `_identityCorrelation` – eine ungültige lässt den Job\
-    \ scheitern. Den\nBenutzernamen dieser Identität hängt er an `checkedUsernames`\
-    \ an; das BPMN mappt ihn als Input\n`identityUsername` (C7 `${_identityCorrelation.prop(\"\
-    username\").stringValue()}`, C8\n`=_identityCorrelation.username`), denn ein ServiceWorker\
-    \ kommt selbst nicht an die Identität.\n\n Camunda 7 | Camunda 8 |\n---|---|---|\n\
-    \ übernehmen | zwei Execution Listener (`start`) mit `execution.setVariable(...)`\
+    \ der Variable – nach dem\nKopieren prüfen die ServiceWorker sie wie bisher. Welche\
+    \ Identität der Prozess gerade hat, zeigt\n**«Identität prüfen»**: ein CustomTask\
+    \ nach dem Übernehmen und nach dem Zurücksetzen. Er hängt den\nBenutzernamen dieser\
+    \ Identität an `checkedUsernames` an; das BPMN mappt ihn als Input\n`identityUsername`\
+    \ (C7 `${_identityCorrelation.prop(\"username\").stringValue()}`, C8\n`=_identityCorrelation.username`).\
+    \ Die Signatur prüft ein CustomWorker nicht – das tun nur\nServiceWorker (siehe\
+    \ «Mocks und Identität weitergeben»). Ein CustomTask ist er, damit die Orch Spec\n\
+    ihn als Worker des Prozesses mit seinem In/Out erkennt.\n\n Camunda 7 | Camunda\
+    \ 8 |\n---|---|---|\n übernehmen | zwei Execution Listener (`start`) mit `execution.setVariable(...)`\
     \ und `execution.getVariableTyped(...)` | Output-Mappings – die Quellen werden\
     \ alle vor dem Setzen gelesen |\n zurücksetzen | ein Execution Listener | ein\
     \ Output-Mapping |\n\n**C8:** die Output-Mappings stehen auf dem leeren Zwischenereignis\
@@ -141,8 +141,9 @@ info:
     \ sonst nur noch die gemappten Variablen).\n\n Datei | Inhalt |\n---|---|\n [`Identity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/Identity.scala)\
     \ | `In`, `Out` |\n [`ApproveRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/ApproveRequestUT.scala)\
     \ | «Antrag freigeben» – wer sie erledigt, wird übernommen |\n [`CheckIdentity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala)\
-    \ | «Identität prüfen» – Service-Aufruf mit der Identität des Prozesses |\n [`CheckIdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/CheckIdentityWorker.scala)\
-    \ | der ServiceWorker dazu (gemockt) |\n [`CloseRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala)\
+    \ | «Identität prüfen» – CustomTask: Benutzername der Identität des Prozesses\
+    \ |\n [`CheckIdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/CheckIdentityWorker.scala)\
+    \ | der CustomWorker dazu |\n [`CloseRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala)\
     \ | «Antrag abschliessen» – hier hat der Prozess die übernommene Identität |\n\
     \ [`IdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/IdentityWorker.scala)\
     \ | InitWorker: Prüfung des In |\n [`camunda/patterns-identityV1.bpmn`](src/main/resources/camunda/patterns-identityV1.bpmn)\
@@ -165,21 +166,73 @@ info:
     \n wann | `_identityCorrelation` |\n---|---|\n bei «Antrag freigeben» | `starter`\
     \ |\n bei «Antrag abschliessen» | `approver` (übernommen) |\n am Ende | `starter`\
     \ (zurückgesetzt) – `_identityCorrelationBefore = starter` |\n\n«Identität prü\
-    fen» hat dabei beide Male die Signatur des Gateways akzeptiert (`approver`, dann\
-    \ `starter`).\n\n### Voraussetzung: Orchescala\n\n`_identityCorrelationOfActor`\
-    \ setzt das Gateway erst ab dem Orchescala-Branch\n`claude/gateway-actor-identity-b424f0`\
-    \ (0.9.0-SNAPSHOT, noch nicht gemergt). Mit einem älteren\nGateway überschreibt\
-    \ der Abschluss einer Aufgabe die Identität selbst: C8 immer, C7 nur mit\n`doOverrideImpersonation\
-    \ = true`.\n\nDass `example.exists(...)` das Szenario nach dem `val` benennt (`Identity\
-    \ approved`), braucht\nOrchescala ab pme123/orchescala#87 (in develop) – vorher\
-    \ hiess es `example`.\n\n`actingAs` und die zweite Test-Identität `testActorIdentityCorrelation`\
-    \ gibt es ab dem\nOrchescala-Branch `feat/simulation-second-test-identity` (0.9.0-SNAPSHOT,\
-    \ noch nicht gemergt).\n\n## Offene Punkte\n\n- Im gemockten Lauf auf C8 setzt\
-    \ der InitWorker `processInstanceId` nicht (im normalen Lauf schon) –\n  die Variablen\
-    \ kommen dort über den Fehler `output-mocked`, nicht über das Abschliessen des\
-    \ Jobs.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n<p>\n\n\
-    \nAll notable changes to this project will be documented in this file.\n\n* Types\
-    \ of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
+    fen» – damals noch ein ServiceWorker – hat dabei beide Male die Signatur des Gateways\n\
+    akzeptiert (`approver`, dann `starter`).\n\n### Voraussetzung: Orchescala\n\n\
+    `_identityCorrelationOfActor` setzt das Gateway erst ab dem Orchescala-Branch\n\
+    `claude/gateway-actor-identity-b424f0` (0.9.0-SNAPSHOT, noch nicht gemergt). Mit\
+    \ einem älteren\nGateway überschreibt der Abschluss einer Aufgabe die Identitä\
+    t selbst: C8 immer, C7 nur mit\n`doOverrideImpersonation = true`.\n\nDass `example.exists(...)`\
+    \ das Szenario nach dem `val` benennt (`Identity approved`), braucht\nOrchescala\
+    \ ab pme123/orchescala#87 (in develop) – vorher hiess es `example`.\n\n`actingAs`\
+    \ und die zweite Test-Identität `testActorIdentityCorrelation` gibt es ab dem\n\
+    Orchescala-Branch `feat/simulation-second-test-identity` (0.9.0-SNAPSHOT, noch\
+    \ nicht gemergt).\n\n## Mocks und Identität weitergeben – `democompany-patterns-propagateMocksV1`\n\
+    \n```\nStart ─▶ [Init Process] ─▶ [Teilprozess aufrufen] ─▶ (succeeded)\n    \
+    \                              │\n                                  ▼  democompany-patterns-propagateMocksSubV1\n\
+    \                    Start ─▶ [Init Process] ─▶ [Kunde laden] ─▶ (succeeded)\n\
+    ```\n\nEin Teilprozess (Call Activity) sieht nur die Variablen, die ihm der Aufruf\
+    \ mitgibt. Damit Mocks\nund Identität auch dort gelten, gibt die Call Activity\
+    \ diese drei weiter:\n\n- **`_servicesMocked`** – die Services im Teilprozess\
+    \ sind gemockt,\n- **`_mockedWorkers`** – gemockte Worker, auch der InitWorker\
+    \ des Teilprozesses (dessen Prozess-ID),\n- **`_identityCorrelation`** – die signierte\
+    \ Identität des Starts.\n\nDazu das In (`customerName`, `clientId`); zurück kommen\
+    \ `processStatus` des Teilprozesses als\n`subProcessStatus` und `client`.\n\n\
+    **«Kunde laden»** zeigt, dass beides ankommt: der Service `GetClientsClientId`\
+    \ aus\n**democompany-services** (Topic `democompany-services-clientsV1-GetClientsClientId`,\
+    \ wie in\ndemocompany-cards). Seinen ServiceWorker führt die Worker-App dieses\
+    \ Projekts mit\n(`dependencies(democompany.services.worker.WorkerApp)`, die Abhä\
+    ngigkeit steht in `PROJECT.conf`).\nGemockt ist er nur, wenn `_servicesMocked`\
+    \ im Teilprozess angekommen ist – und vorher prüft er die\nSignatur von `_identityCorrelation`.\
+    \ Die Identität ist an die Prozessinstanz des **Starts**\ngebunden; im Teilprozess\
+    \ akzeptiert der Worker sie, weil das die Root-Instanz seines Jobs ist.\n\nWeil\
+    \ das Topic nicht mit der Prozess-ID beginnt, sieht die Orch Spec den Schritt\
+    \ als Service aus dem\nKatalog – nicht als eigenen Worker des Prozesses.\n\n Camunda\
+    \ 7 | Camunda 8 |\n---|---|---|\n Aufruf | `calledElement=\"<processId>\"` | `zeebe:calledElement\
+    \ processId=\"<processId>\"` mit `propagateAllChildVariables=\"false\"` und `propagateAllParentVariables=\"\
+    false\"` |\n hinein | `camunda:in source=… target=…` | `zeebe:input` |\n zurü\
+    ck | `camunda:out source=… target=…` | `zeebe:output` |\n Root-Instanz des Jobs\
+    \ | der Worker liest sie aus der History | kommt mit dem Job – über gRPC nicht,\
+    \ dann fragt der Worker die Engine (siehe unten) |\n\n Datei | Inhalt |\n---|---|\n\
+    \ [`PropagateMocks.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocks.scala)\
+    \ | `In`, `Out` des aufrufenden Prozesses |\n [`PropagateMocksSub.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocksSub.scala)\
+    \ | `In`, `Out` des Teilprozesses |\n [`PropagateMocksWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksWorker.scala)\
+    \ | InitWorker: Prüfung des In |\n [`PropagateMocksSubWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksSubWorker.scala)\
+    \ | InitWorker des Teilprozesses |\n [`camunda/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksV1.bpmn),\
+    \ [`camunda/patterns-propagateMocksSubV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksSubV1.bpmn)\
+    \ | Camunda 7 |\n [`camunda8/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda8/patterns-propagateMocksV1.bpmn),\
+    \ [`camunda8/patterns-propagateMocksSubV1.bpmn`](src/main/resources/camunda8/patterns-propagateMocksSubV1.bpmn)\
+    \ | Camunda 8 |\n [`PropagateMocksSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/PropagateMocksSimulation.scala)\
+    \ | die Szenarien, für beide Engines gleich |\n\n### Simulationen\n\n1. **`PropagateMocks\
+    \ services mocked`** – `.mockServices`: «Kunde laden» ist im Teilprozess\n   gemockt\
+    \ und akzeptiert die Identität des Starts; endet mit `subProcessStatus = succeeded`\
+    \ und dem\n   Kunden aus dem Mock (`client`).\n2. **`PropagateMocks sub worker\
+    \ mocked`** – zusätzlich `.mockWorker(PropagateMocksSub.processName)`:\n   der\
+    \ Teilprozess endet über `output-mocked` (`subProcessStatus = output-mocked`),\
+    \ der aufrufende\n   Prozess mit `processStatus = succeeded`.\n3. **`PropagateMocks\
+    \ invalid In`** – `customerName = \" \"`: Incident `validation-failed`.\n\n```bash\n\
+    ./helper.scala deploy PropagateMocksC7Simulation\n```\n```bash\n./helper.scala\
+    \ deploy PropagateMocksC8Simulation\n```\n\n### Voraussetzung: Orchescala (C8)\n\
+    \nÜber gRPC liefert der Camunda-Client 8.9 die Root-Instanz eines Jobs nicht mit\n\
+    (`rootProcessInstanceKey` ist leer). Ohne sie lehnt der Worker im Teilprozess\
+    \ die Identität des\nStarts ab («bound to process instance …, not to the job's\
+    \ … (root: -)»). Ab dem Orchescala-Branch\n`fix/c8-root-process-instance` (0.9.0-SNAPSHOT,\
+    \ noch nicht gemergt) fragt der C8-Worker die\nRoot-Instanz dann bei der Engine\
+    \ nach (`GET /v2/process-instances/{key}`). C7 braucht das nicht.\n\n## Offene\
+    \ Punkte\n\n- Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId`\
+    \ nicht (im normalen Lauf schon) –\n  die Variablen kommen dort über den Fehler\
+    \ `output-mocked`, nicht über das Abschliessen des Jobs.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
+    <p>\n\n\nAll notable changes to this project will be documented in this file.\n\
+    \n* Types of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
     \ functionality\n  * Deprecated: soon-to-be-removed features\n  * Removed: now\
     \ removed features\n  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\
     \n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\n\
@@ -492,13 +545,10 @@ paths:
       tags:
       - democompany-patterns-identityV1
       summary: 'Worker: CheckIdentity'
-      description: "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses;\
-        \ der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.\n\
-        \n---\n\n\n\n<details>\n<summary><b>Wrapped Service:</b>\n\n(Patterns Identity\
-        \ 1.0 - v1.0 - GET: identity)\n</summary>\n<p>\nInput Body: `orchescala.domain.NoInput`:\n\
-        \n\nExample Response: `orchescala.domain.NoOutput`:\n\n```json\n{\n  \"respStatus\"\
-        \ : 204,\n  \"respBody\" : {\n    \n  },\n  \"respHeaders\" : [\n  ]\n}\n\
-        ```\n</p>\n</details>\n</p>\n\n---\n\n\nSee API Doc: [Worker: CheckIdentity](/site/democompany/democompany-patterns/OpenApi.html#operation/Worker:%20CheckIdentity)\n"
+      description: |
+        Identität prüfen - hängt den Benutzernamen der Identität des Prozesses an `checkedUsernames` an.
+
+        See API Doc: [Worker: CheckIdentity](/site/democompany/democompany-patterns/OpenApi.html#operation/Worker:%20CheckIdentity)
       operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-patterns-identityv1-checkidentity--
       requestBody:
         content:
@@ -657,6 +707,321 @@ paths:
       responses:
         '200':
           description: ''
+  /process-definition/key/democompany-patterns-propagateMocksV1/start:
+    post:
+      tags:
+      - democompany-patterns-propagateMocksV1
+      summary: 'Bpmn: propagateMocksV1'
+      description: |2
+
+        Beispiel für das Pattern «Mocks und Identität weitergeben».
+        Die Call Activity «Teilprozess aufrufen» gibt `_servicesMocked`, `_mockedWorkers` und
+        `_identityCorrelation` an den Teilprozess weiter - so greifen Mocks und Identität auch dort.
+
+
+        ---
+
+        - **Called Element**: `democompany-patterns-propagateMocksV1` (to define in the Call Activity)
+
+
+
+        ---
+
+
+
+
+        See API Doc: [Bpmn: propagateMocksV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20propagateMocksV1)
+      operationId: postProcess-definitionKeyDemocompany-patterns-propagatemocksv1Start
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-patterns-propagateMocksV1:
+                value:
+                  variables:
+                    customerName:
+                      value: Peter Muster
+                      type: String
+                    clientId:
+                      value: 1234
+                      type: Long
+                  businessKey: democompany-patterns-propagateMocksV1
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /process-definition/key/democompany-patterns-propagateMocksSubV1/start:
+    post:
+      tags:
+      - democompany-patterns-propagateMocksV1
+      summary: 'Bpmn: propagateMocksSubV1'
+      description: |2
+
+        Teilprozess zum Pattern «Mocks und Identität weitergeben».
+        «Kunde laden» ruft den Service `GetClientsClientId` (democompany-services) auf - gemockt,
+        wenn `_servicesMocked` vom Aufrufer kommt; vorher prüft der ServiceWorker die weitergegebene
+        `_identityCorrelation`.
+
+
+        ---
+
+        - **Called Element**: `democompany-patterns-propagateMocksSubV1` (to define in the Call Activity)
+
+
+
+        ---
+
+
+
+
+        See API Doc: [Bpmn: propagateMocksSubV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20propagateMocksSubV1)
+      operationId: postProcess-definitionKeyDemocompany-patterns-propagatemockssubv1Start
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-patterns-propagateMocksSubV1:
+                value:
+                  variables:
+                    customerName:
+                      value: Peter Muster
+                      type: String
+                    clientId:
+                      value: 1234
+                      type: Long
+                  businessKey: democompany-patterns-propagateMocksSubV1
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /process-definition/key/democompany-patterns-uniqueExecutionV1/start:
+    post:
+      tags:
+      - democompany-patterns-uniqueExecutionV1
+      summary: 'Bpmn: uniqueExecutionV1'
+      description: |2
+
+        Beispiel für das Pattern «Einmalige Ausführung».
+        Der Prozess startet über eine Nachricht (Name = Prozess-ID) mit einem `businessKey`. Solange er
+        läuft, fängt ein nicht unterbrechender Ereignis-Subprozess dieselbe Nachricht - ein zweiter Start
+        mit demselben `businessKey` landet in der laufenden Instanz (`alreadyRunning = true`) statt eine
+        zweite zu starten.
+
+
+        ---
+
+        - **Called Element**: `democompany-patterns-uniqueExecutionV1` (to define in the Call Activity)
+
+
+
+        ---
+
+
+
+
+        See API Doc: [Bpmn: uniqueExecutionV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20uniqueExecutionV1)
+      operationId: postProcess-definitionKeyDemocompany-patterns-uniqueexecutionv1Start
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-patterns-uniqueExecutionV1:
+                value:
+                  variables:
+                    customerName:
+                      value: Peter Muster
+                      type: String
+                  businessKey: democompany-patterns-uniqueExecutionV1
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /task/--REMOVE:EditRequestUT--:
+    post:
+      tags:
+      - democompany-patterns-uniqueExecutionV1
+      summary: 'UserTask task: EditRequestUT'
+      description: |2
+
+        Antrag bearbeiten - solange die Aufgabe offen ist, läuft der Prozess; ein zweiter Start landet hier.
+
+        - _taskDefinitionKey_: `EditRequestUT`
+
+        ---
+
+
+
+
+        See API Doc: [UserTask task: EditRequestUT](/site/democompany/democompany-patterns/OpenApi.html#operation/UserTask%20task:%20EditRequestUT)
+      operationId: postTask--remove:editrequestut--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetActiveTaskIn'
+            examples:
+              EditRequestUT:
+                value:
+                  processInstanceId: '{{processInstanceId}}'
+                  active: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /task/{taskId}/form-variables/--REMOVE:EditRequestUT--:
+    get:
+      tags:
+      - democompany-patterns-uniqueExecutionV1
+      summary: 'UserTask variables: EditRequestUT'
+      description: |2
+
+        Antrag bearbeiten - solange die Aufgabe offen ist, läuft der Prozess; ein zweiter Start landet hier.
+
+        - _taskDefinitionKey_: `EditRequestUT`
+
+        ---
+
+
+
+
+        See API Doc: [UserTask variables: EditRequestUT](/site/democompany/democompany-patterns/OpenApi.html#operation/UserTask%20variables:%20EditRequestUT)
+      operationId: getTaskTaskidForm-variables--remove:editrequestut--
+      parameters:
+      - name: taskId
+        in: path
+        description: |
+          The taskId of the Form.
+          > This is the result id of the `GetActiveTask`
+
+          Add in the _Tests_ panel of _Postman_:
+          ```
+          let result = pm.response.json()[0];
+          pm.collectionVariables.set("taskId", result.id)
+          ```
+        required: true
+        schema:
+          default: '{{taskId}}'
+          type: string
+      - name: variableNames
+        in: query
+        description: |-
+          A comma-separated list of variable names. Allows restricting the list of requested variables to the variable names in the list.
+          It is best practice to restrict the list of variables to the variables actually required by the form in order to minimize fetching of data. If the query parameter is ommitted all variables are fetched.
+          If the query parameter contains non-existent variable names, the variable names are ignored.
+        required: false
+        schema:
+          default: name,example
+          type: string
+      - name: deserializeValues
+        in: query
+        required: false
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          description: ''
+  /task/{taskId}/complete/--REMOVE:EditRequestUT--:
+    post:
+      tags:
+      - democompany-patterns-uniqueExecutionV1
+      summary: 'UserTask complete: EditRequestUT'
+      description: |2
+
+        Antrag bearbeiten - solange die Aufgabe offen ist, läuft der Prozess; ein zweiter Start landet hier.
+
+        - _taskDefinitionKey_: `EditRequestUT`
+
+        ---
+
+
+
+
+        See API Doc: [UserTask complete: EditRequestUT](/site/democompany/democompany-patterns/OpenApi.html#operation/UserTask%20complete:%20EditRequestUT)
+      operationId: postTaskTaskidComplete--remove:editrequestut--
+      parameters:
+      - name: taskId
+        in: path
+        description: |
+          The taskId of the Form.
+          > This is the result id of the `GetActiveTask`
+
+          Add in the _Tests_ panel of _Postman_:
+          ```
+          let result = pm.response.json()[0];
+          pm.collectionVariables.set("taskId", result.id)
+          ```
+        required: true
+        schema:
+          default: '{{taskId}}'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteTaskIn'
+            examples:
+              EditRequestUT:
+                value:
+                  variables: {}
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /message/--REMOVE:democompany-patterns-uniqueExecutionV1--:
+    post:
+      tags:
+      - democompany-patterns-uniqueExecutionV1
+      summary: 'Message: uniqueExecutionV1'
+      description: |2
+
+
+        Dieselbe Start-Nachricht ein zweites Mal - mit dem `businessKey` der laufenden Instanz.
+
+        - _messageName_: `democompany-patterns-uniqueExecutionV1`
+
+        ---
+
+
+
+
+        Message:
+        - _messageName_: `democompany-patterns-uniqueExecutionV1`,
+
+
+        See API Doc: [Message: uniqueExecutionV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Message:%20uniqueExecutionV1)
+      operationId: postMessage--remove:democompany-patterns-uniqueexecutionv1--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CorrelateMessageIn'
+            examples:
+              democompany-patterns-uniqueExecutionV1:
+                value:
+                  messageName: democompany-patterns-uniqueExecutionV1
+                  businessKey: democompany-patterns-uniqueExecutionV1
+                  processVariables:
+                    customerName:
+                      value: Peter Muster
+                      type: String
+                  all: false
+                  resultEnabled: true
+                  variablesInResultEnabled: true
+        required: true
+      responses:
+        '200':
+          description: ''
 components:
   schemas:
     CBoolean:
@@ -780,6 +1145,39 @@ components:
         withVariablesInReturn:
           description: Set to false will not return the Process Variables and the
             Result Status is 204.
+          type: boolean
+    CorrelateMessageIn:
+      title: CorrelateMessageIn
+      type: object
+      required:
+      - messageName
+      - all
+      - resultEnabled
+      - variablesInResultEnabled
+      properties:
+        messageName:
+          type: string
+        businessKey:
+          type: string
+        tenantId:
+          type: string
+        withoutTenantId:
+          type: boolean
+        processInstanceId:
+          type: string
+        correlationKeys:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+        localCorrelationKeys:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+        processVariables:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+        processVariablesLocal:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+        all:
+          type: boolean
+        resultEnabled:
+          type: boolean
+        variablesInResultEnabled:
           type: boolean
     GetActiveTaskIn:
       title: GetActiveTaskIn

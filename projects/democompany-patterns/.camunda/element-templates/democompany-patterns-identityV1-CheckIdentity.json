@@ -1,7 +1,7 @@
 {
   "name" : "democompany-patterns-identityV1-CheckIdentity",
   "id" : "democompany-patterns-identityV1-CheckIdentity",
-  "description" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.\n\n",
+  "description" : "Identität prüfen - hängt den Benutzernamen der Identität des Prozesses an `checkedUsernames` an.",
   "version" : 0,
   "appliesTo" : [
     "bpmn:Activity"
@@ -77,16 +77,6 @@
         "name" : "camunda:type"
       },
       "label" : "",
-      "description" : "",
-      "type" : "Hidden"
-    },
-    {
-      "value" : "#{execution.getVariable('_outputServiceMock')}",
-      "binding" : {
-        "type" : "camunda:inputParameter",
-        "name" : "_outputServiceMock"
-      },
-      "label" : "_outputServiceMock",
       "description" : "",
       "type" : "Hidden"
     },

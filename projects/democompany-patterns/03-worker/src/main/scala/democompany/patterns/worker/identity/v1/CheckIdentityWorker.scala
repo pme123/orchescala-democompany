@@ -3,23 +3,14 @@ package worker.identity.v1
 
 import democompany.patterns.domain.identity.v1.CheckIdentity.*
 
-/** Stands for any service call with the identity of the process. The BPMN mocks it
-  * (`_servicesMocked`) - the service is never called, but the ServiceWorker verifies the signature
-  * of `_identityCorrelation` before it mocks (an invalid one fails the job).
+/** Adds the username of the identity the process has at this point to `checkedUsernames` - the
+  * BPMN maps it in as `identityUsername`.
   */
-class CheckIdentityWorker extends CompanyServiceWorkerDsl[In, Out, ServiceIn, ServiceOut]:
+class CheckIdentityWorker extends CompanyCustomWorkerDsl[In, Out]:
 
-  lazy val serviceTask = example
+  lazy val customTask = example
 
-  override lazy val method = Method.GET
-
-  // never called - mocked in the BPMN
-  def apiUri(in: In) = uri"http://localhost/democompany-patterns/identity"
-
-  override def outputMapper(
-      out: ServiceResponse[ServiceOut],
-      in: In
-  ) =
+  override def runWork(in: In): Either[WorkerError.CustomError, Out] =
     Right(Out(checkedUsernames = in.checkedUsernames.getOrElse(Seq.empty) :+ in.identityUsername))
 
 end CheckIdentityWorker

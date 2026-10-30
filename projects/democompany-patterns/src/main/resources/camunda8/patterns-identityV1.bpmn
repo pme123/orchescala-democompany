@@ -35,7 +35,6 @@
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="democompany-patterns-identityV1-CheckIdentity" />
         <zeebe:ioMapping>
-          <zeebe:input source="=true" target="_servicesMocked" />
           <zeebe:input source="=_identityCorrelation.username" target="identityUsername" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
@@ -62,7 +61,6 @@
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="democompany-patterns-identityV1-CheckIdentity" />
         <zeebe:ioMapping>
-          <zeebe:input source="=true" target="_servicesMocked" />
           <zeebe:input source="=_identityCorrelation.username" target="identityUsername" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
