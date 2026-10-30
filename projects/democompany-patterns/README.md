@@ -190,16 +190,16 @@ akzeptiert (`approver`, dann `starter`).
 
 ### Voraussetzung: Orchescala
 
-`_identityCorrelationOfActor` setzt das Gateway erst ab dem Orchescala-Branch
-`claude/gateway-actor-identity-b424f0` (0.9.0-SNAPSHOT, noch nicht gemergt). Mit einem älteren
+`_identityCorrelationOfActor` setzt das Gateway ab pme123/orchescala#90 (in develop,
+0.9.0-SNAPSHOT). Mit einem älteren
 Gateway überschreibt der Abschluss einer Aufgabe die Identität selbst: C8 immer, C7 nur mit
 `doOverrideImpersonation = true`.
 
 Dass `example.exists(...)` das Szenario nach dem `val` benennt (`Identity approved`), braucht
 Orchescala ab pme123/orchescala#87 (in develop) – vorher hiess es `example`.
 
-`actingAs` und die zweite Test-Identität `testActorIdentityCorrelation` gibt es ab dem
-Orchescala-Branch `feat/simulation-second-test-identity` (0.9.0-SNAPSHOT, noch nicht gemergt).
+`actingAs` und die zweite Test-Identität `testActorIdentityCorrelation` gibt es ab
+pme123/orchescala#92 (in develop).
 
 ## Mocks und Identität weitergeben – `democompany-patterns-propagateMocksV1`
 
@@ -269,9 +269,10 @@ Katalog – nicht als eigenen Worker des Prozesses.
 
 Über gRPC liefert der Camunda-Client 8.9 die Root-Instanz eines Jobs nicht mit
 (`rootProcessInstanceKey` ist leer). Ohne sie lehnt der Worker im Teilprozess die Identität des
-Starts ab («bound to process instance …, not to the job's … (root: -)»). Ab dem Orchescala-Branch
-`fix/c8-root-process-instance` (0.9.0-SNAPSHOT, noch nicht gemergt) fragt der C8-Worker die
-Root-Instanz dann bei der Engine nach (`GET /v2/process-instances/{key}`). C7 braucht das nicht.
+Starts ab («bound to process instance …, not to the job's … (root: -)»). Ab pme123/orchescala#96
+(in develop, 0.9.0-SNAPSHOT) fragt der C8-Worker die Root-Instanz dann bei der Engine nach
+(`GET /v2/process-instances/{key}`) – erneut nur bei einem 404, solange ein eben gestarteter
+Teilprozess dort noch fehlt. C7 braucht das nicht.
 
 ## Einmalige Ausführung – `democompany-patterns-uniqueExecutionV1`
 
