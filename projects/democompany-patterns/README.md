@@ -137,10 +137,10 @@ ihn als Worker des Prozesses mit seinem In/Out erkennt.
 
 | | Camunda 7 | Camunda 8 |
 |---|---|---|
-| übernehmen | zwei Execution Listener (`start`) mit `execution.setVariable(...)` und `execution.getVariableTyped(...)` | Output-Mappings – die Quellen werden alle vor dem Setzen gelesen |
+| übernehmen | zwei Execution Listener (`start`) mit `execution.setVariable(...)` und `execution.getVariableTyped(...)` | zwei Output-Mappings – **die Reihenfolge zählt**: Zeebe wendet sie nacheinander an, also erst `_identityCorrelationBefore` sichern, dann `_identityCorrelation` überschreiben (umgekehrt wäre «Before» schon der Actor) |
 | zurücksetzen | ein Execution Listener | ein Output-Mapping |
 
-**C8:** die Output-Mappings stehen auf dem leeren Zwischenereignis – nicht auf der Benutzeraufgabe
+**C8:** fehlt eine Variable, liest FEEL `null` – ohne Identität gibt es also keinen Incident, die Variablen stehen dann auf `null` (auf c8run 8.9 nachgeprüft, wie die Reihenfolge). Die Output-Mappings stehen auf dem leeren Zwischenereignis – nicht auf der Benutzeraufgabe
 (mit einem Output-Mapping übernimmt Zeebe dort sonst nur noch die gemappten Variablen).
 
 | Datei | Inhalt |
