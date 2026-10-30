@@ -1,0 +1,154 @@
+{
+  "version": 1,
+  "slug": "democompany-patterns-propagatemockssubv1",
+  "name": "propagateMocksSubV1",
+  "title": "democompany-patterns-propagateMocksSubV1",
+  "processId": "democompany-patterns-propagateMocksSubV1",
+  "project": "democompany-patterns",
+  "engine": "c7",
+  "status": "draft",
+  "description": "Teilprozess zum Pattern «Mocks und Identität weitergeben».\n«Kunde prüfen» ruft einen Service auf, den es nicht gibt - er gelingt nur, wenn\n`_servicesMocked` vom Aufrufer kommt; vorher prüft der ServiceWorker die weitergegebene\n`_identityCorrelation`.",
+  "createdAt": "2026-10-30",
+  "updatedAt": "2026-10-30T11:33:01+01:00",
+  "variables": [],
+  "timeToLive": "5",
+  "steps": [
+    {
+      "id": "StartEvent",
+      "kind": "start",
+      "name": "Start",
+      "status": "implemented"
+    },
+    {
+      "id": "InitProcessTask",
+      "kind": "service",
+      "name": "Init Process",
+      "status": "implemented",
+      "topic": "democompany-patterns-propagateMocksSubV1",
+      "manualOutMapping": false,
+      "errors": [
+        {
+          "code": "output-mocked",
+          "declared": true,
+          "interrupting": true,
+          "boundary": true,
+          "steps": [
+            {
+              "id": "OutputMockedThrow",
+              "kind": "event",
+              "name": "output-mocked",
+              "status": "implemented",
+              "eventKind": "none",
+              "eventDirection": "throw"
+            },
+            {
+              "id": "OutputmockedEndEvent",
+              "kind": "end",
+              "name": "output-mocked",
+              "status": "implemented"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GetClientsClientIdTask",
+      "kind": "service",
+      "name": "Kunde laden",
+      "status": "draft",
+      "topic": "democompany-services-clientsV1-GetClientsClientId",
+      "manualOutMapping": false,
+      "inputs": [
+        {
+          "name": "clientId",
+          "expression": "= clientId"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "client",
+          "expression": "= client",
+          "disabled": true,
+          "fromService": true
+        },
+        {
+          "name": "etag",
+          "expression": "= etag",
+          "disabled": true,
+          "fromService": true
+        },
+        {
+          "name": "email",
+          "expression": "= email",
+          "disabled": true,
+          "fromService": true
+        }
+      ]
+    },
+    {
+      "id": "SucceededEndEvent",
+      "kind": "end",
+      "name": "succeeded",
+      "status": "implemented"
+    }
+  ],
+  "types": [
+    {
+      "id": "t-1a03ff603b",
+      "name": "In",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.propagateMocks.v1.PropagateMocksSub.In",
+      "root": true,
+      "fields": [
+        {
+          "id": "f-42edf6b046",
+          "name": "customerName",
+          "type": "String",
+          "description": "Name des Kunden - vom Aufrufer.",
+          "example": "PropagateMocks.In.example.customerName"
+        },
+        {
+          "id": "f-9639b3fa27",
+          "name": "clientId",
+          "type": "Long",
+          "description": "Id des Kunden - vom Aufrufer.",
+          "example": "PropagateMocks.In.example.clientId"
+        }
+      ]
+    },
+    {
+      "id": "t-94c45e85f0",
+      "name": "Out",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.propagateMocks.v1.PropagateMocksSub.Out",
+      "processOut": true,
+      "fields": [
+        {
+          "id": "f-db6dfc838c",
+          "name": "processStatus",
+          "type": "dom:orchescala.domain.ProcessStatus",
+          "example": "ProcessStatus.succeeded"
+        },
+        {
+          "id": "f-307d907154",
+          "name": "customerName",
+          "type": "String",
+          "example": "In.example.customerName"
+        },
+        {
+          "id": "f-bc11641069",
+          "name": "client",
+          "type": "dom:democompany.services.domain.clients.v1.schema.Client",
+          "description": "Der Kunde - aus «Kunde laden».",
+          "example": "GetClientsClientId.Out.example.client"
+        }
+      ]
+    }
+  ],
+  "interactions": [],
+  "epics": [
+    "pattern"
+  ]
+}

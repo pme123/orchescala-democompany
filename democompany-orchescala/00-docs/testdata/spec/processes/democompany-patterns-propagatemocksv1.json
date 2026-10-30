@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "slug": "democompany-patterns-propagatemocksv1",
+  "name": "propagateMocksV1",
+  "title": "democompany-patterns-propagateMocksV1",
+  "processId": "democompany-patterns-propagateMocksV1",
+  "project": "democompany-patterns",
+  "engine": "c7",
+  "status": "implemented",
+  "description": "Beispiel für das Pattern «Mocks und Identität weitergeben».\nDie Call Activity «Teilprozess aufrufen» gibt `_servicesMocked`, `_mockedWorkers` und\n`_identityCorrelation` an den Teilprozess weiter - so greifen Mocks und Identität auch dort.",
+  "createdAt": "2026-10-30",
+  "updatedAt": "2026-10-30T11:23:57+01:00",
+  "variables": [],
+  "timeToLive": "5",
+  "steps": [
+    {
+      "id": "StartEvent",
+      "kind": "start",
+      "name": "Start",
+      "status": "implemented"
+    },
+    {
+      "id": "InitProcessTask",
+      "kind": "service",
+      "name": "Init Process",
+      "status": "implemented",
+      "topic": "democompany-patterns-propagateMocksV1",
+      "manualOutMapping": false,
+      "errors": [
+        {
+          "code": "output-mocked",
+          "declared": true,
+          "interrupting": true,
+          "boundary": true,
+          "steps": [
+            {
+              "id": "OutputMockedThrow",
+              "kind": "event",
+              "name": "output-mocked",
+              "status": "implemented",
+              "eventKind": "none",
+              "eventDirection": "throw"
+            },
+            {
+              "id": "OutputmockedEndEvent",
+              "kind": "end",
+              "name": "output-mocked",
+              "status": "implemented"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CallSubProcess",
+      "kind": "call",
+      "name": "Teilprozess aufrufen",
+      "status": "implemented",
+      "calledProcess": "democompany-patterns-propagateMocksSubV1",
+      "inputs": [
+        {
+          "name": "customerName",
+          "expression": "= customerName"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "subProcessStatus",
+          "expression": "= processStatus"
+        },
+        {
+          "name": "customerChecked",
+          "expression": "= customerChecked"
+        },
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "disabled": true,
+          "fromService": true
+        }
+      ]
+    },
+    {
+      "id": "SucceededEndEvent",
+      "kind": "end",
+      "name": "succeeded",
+      "status": "implemented"
+    }
+  ],
+  "types": [
+    {
+      "id": "t-fa04327d06",
+      "name": "In",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.propagateMocks.v1.PropagateMocks.In",
+      "root": true,
+      "fields": [
+        {
+          "id": "f-ad59f61b3b",
+          "name": "customerName",
+          "type": "String",
+          "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "example": "\"Peter Muster\""
+        }
+      ]
+    },
+    {
+      "id": "t-1a753343f8",
+      "name": "Out",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.propagateMocks.v1.PropagateMocks.Out",
+      "processOut": true,
+      "fields": [
+        {
+          "id": "f-66cb4fd3d6",
+          "name": "processStatus",
+          "type": "dom:orchescala.domain.ProcessStatus",
+          "example": "ProcessStatus.succeeded"
+        },
+        {
+          "id": "f-4883e3591a",
+          "name": "customerName",
+          "type": "String",
+          "example": "In.example.customerName"
+        },
+        {
+          "id": "f-253018cb39",
+          "name": "subProcessStatus",
+          "type": "dom:orchescala.domain.ProcessStatus",
+          "description": "Der `processStatus`, mit dem der Teilprozess endete.",
+          "example": "PropagateMocksSub.Out.example.processStatus"
+        },
+        {
+          "id": "f-a4de208f5e",
+          "name": "customerChecked",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Der Teilprozess hat den Kunden geprüft (fehlt, wenn er über `output-mocked` endete).",
+          "example": "PropagateMocksSub.Out.example.customerChecked"
+        }
+      ]
+    }
+  ],
+  "interactions": [],
+  "epics": [
+    "pattern"
+  ]
+}

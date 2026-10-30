@@ -1,0 +1,341 @@
+{
+  "version": 1,
+  "slug": "democompany-patterns-identityv1",
+  "name": "identityV1",
+  "title": "democompany-patterns-identityV1",
+  "processId": "democompany-patterns-identityV1",
+  "project": "democompany-patterns",
+  "engine": "c7",
+  "status": "draft",
+  "description": "Beispiel für die Patterns «Identität übernehmen» und «Identität zurücksetzen».\nNach der Benutzeraufgabe übernimmt der Prozess die Identität der Person, die sie erledigt hat\n(`_identityCorrelation = _identityCorrelationOfActor`, die bisherige in `_identityCorrelationBefore`) -\n«Identität zurücksetzen» setzt danach wieder die Identität vom Start.",
+  "createdAt": "2026-10-30",
+  "updatedAt": "2026-10-30T11:31:14+01:00",
+  "variables": [],
+  "timeToLive": "5",
+  "steps": [
+    {
+      "id": "StartEvent",
+      "kind": "start",
+      "name": "Start",
+      "status": "implemented"
+    },
+    {
+      "id": "InitProcessTask",
+      "kind": "service",
+      "name": "Init Process",
+      "status": "implemented",
+      "topic": "democompany-patterns-identityV1",
+      "manualOutMapping": false,
+      "errors": [
+        {
+          "code": "output-mocked",
+          "declared": true,
+          "interrupting": true,
+          "boundary": true,
+          "steps": [
+            {
+              "id": "OutputMockedThrow",
+              "kind": "event",
+              "name": "output-mocked",
+              "status": "implemented",
+              "eventKind": "none",
+              "eventDirection": "throw"
+            },
+            {
+              "id": "OutputmockedEndEvent",
+              "kind": "end",
+              "name": "output-mocked",
+              "status": "implemented"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ApproveRequestUT",
+      "kind": "user",
+      "name": "Antrag freigeben",
+      "status": "implemented"
+    },
+    {
+      "id": "TakeOverIdentityEvent",
+      "kind": "event",
+      "name": "Identität übernehmen",
+      "status": "implemented",
+      "eventKind": "none",
+      "eventDirection": "throw"
+    },
+    {
+      "id": "CheckIdentityAsActorTask",
+      "kind": "service",
+      "name": "Identität prüfen (übernommen)",
+      "status": "implemented",
+      "topic": "democompany-patterns-identityV1-CheckIdentity",
+      "inputs": [
+        {
+          "name": "identityUsername",
+          "expression": "= _identityCorrelation.username"
+        }
+      ],
+      "manualOutMapping": false
+    },
+    {
+      "id": "CloseRequestUT",
+      "kind": "user",
+      "name": "Antrag abschliessen",
+      "status": "implemented"
+    },
+    {
+      "id": "ResetIdentityEvent",
+      "kind": "event",
+      "name": "Identität zurücksetzen",
+      "status": "implemented",
+      "eventKind": "none",
+      "eventDirection": "throw"
+    },
+    {
+      "id": "CheckIdentityAsStarterTask",
+      "kind": "service",
+      "name": "Identität prüfen (zurückgesetzt)",
+      "status": "implemented",
+      "topic": "democompany-patterns-identityV1-CheckIdentity",
+      "inputs": [
+        {
+          "name": "identityUsername",
+          "expression": "= _identityCorrelation.username"
+        }
+      ],
+      "manualOutMapping": false
+    },
+    {
+      "id": "SucceededEndEvent",
+      "kind": "end",
+      "name": "succeeded",
+      "status": "implemented"
+    }
+  ],
+  "types": [
+    {
+      "id": "t-f18dc61824",
+      "name": "In",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.identity.v1.Identity.In",
+      "root": true,
+      "fields": [
+        {
+          "id": "f-fb24ec669c",
+          "name": "customerName",
+          "type": "String",
+          "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "example": "\"Peter Muster\""
+        }
+      ]
+    },
+    {
+      "id": "t-c5fbcf6fcd",
+      "name": "Out",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.identity.v1.Identity.Out",
+      "processOut": true,
+      "fields": [
+        {
+          "id": "f-8eaf907c53",
+          "name": "processStatus",
+          "type": "dom:orchescala.domain.ProcessStatus",
+          "example": "ProcessStatus.succeeded"
+        },
+        {
+          "id": "f-6ef8e1f2f0",
+          "name": "customerName",
+          "type": "String",
+          "example": "In.example.customerName"
+        },
+        {
+          "id": "f-b50cdf40ba",
+          "name": "approved",
+          "type": "Boolean",
+          "description": "Antrag freigegeben - aus der Benutzeraufgabe «Antrag freigeben».",
+          "example": "ApproveRequestUT.Out.example.approved"
+        },
+        {
+          "id": "f-1366b8245d",
+          "name": "checkedUsernames",
+          "type": "String",
+          "collection": true,
+          "description": "Die Benutzernamen, mit denen «Identität prüfen» lief - nach der Übernahme der Freigebende, nach dem Zurücksetzen wieder der Starter.",
+          "example": "Seq(\"actor\", \"admin\")"
+        }
+      ]
+    },
+    {
+      "id": "t-4ce118c210",
+      "name": "ApproveRequestUT.In",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.identity.v1.ApproveRequestUT.In",
+      "interactionId": "ia-48332d82b0",
+      "fields": [
+        {
+          "id": "f-4a79c655f5",
+          "name": "customerName",
+          "type": "String",
+          "example": "Identity.In.example.customerName"
+        }
+      ]
+    },
+    {
+      "id": "t-5c3fa28865",
+      "name": "ApproveRequestUT.Out",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.identity.v1.ApproveRequestUT.Out",
+      "interactionId": "ia-48332d82b0",
+      "fields": [
+        {
+          "id": "f-68f9d43305",
+          "name": "approved",
+          "type": "Boolean",
+          "description": "Antrag freigegeben?",
+          "example": "true"
+        }
+      ]
+    },
+    {
+      "id": "t-594cefb470",
+      "name": "CloseRequestUT.In",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.identity.v1.CloseRequestUT.In",
+      "interactionId": "ia-94710738e9",
+      "fields": [
+        {
+          "id": "f-15e284c985",
+          "name": "customerName",
+          "type": "String",
+          "example": "Identity.In.example.customerName"
+        },
+        {
+          "id": "f-ef7023ad19",
+          "name": "approved",
+          "type": "Boolean",
+          "example": "ApproveRequestUT.Out.example.approved"
+        }
+      ]
+    },
+    {
+      "id": "t-3b4933c2c8",
+      "name": "CloseRequestUT.Out",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.identity.v1.CloseRequestUT.Out",
+      "interactionId": "ia-94710738e9",
+      "fields": [
+        {
+          "id": "f-3558ad8046",
+          "name": "closed",
+          "type": "Boolean",
+          "description": "Antrag abgeschlossen?",
+          "example": "true"
+        }
+      ]
+    },
+    {
+      "id": "t-f6dbaec72a",
+      "name": "CheckIdentity.In",
+      "kind": "case",
+      "interactionId": "ia-7ffc713dc5",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-dc498e7e84",
+          "name": "customerName",
+          "type": "String"
+        },
+        {
+          "id": "f-bca2c01102",
+          "name": "identityUsername",
+          "type": "String",
+          "description": "Benutzername der Identität des Prozesses - das BPMN mappt ihn aus `_identityCorrelation`."
+        },
+        {
+          "id": "f-e3177de928",
+          "name": "checkedUsernames",
+          "type": "String",
+          "description": "Die Benutzernamen der bisherigen Prüfungen."
+        }
+      ],
+      "description": "Vorbereitet beim Import — in der Domain gibt es «CheckIdentity» noch nicht. Felder und Typen prüfen."
+    },
+    {
+      "id": "t-2169df6a3d",
+      "name": "CheckIdentity.Out",
+      "kind": "case",
+      "interactionId": "ia-7ffc713dc5",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-c5a0eb6d5c",
+          "name": "identityChecked",
+          "type": "String",
+          "description": "Der Service wurde mit der (geprüften) Identität des Prozesses aufgerufen."
+        },
+        {
+          "id": "f-90b1321684",
+          "name": "checkedUsernames",
+          "type": "String",
+          "description": "Die Benutzernamen aller Prüfungen bis hier, in ihrer Reihenfolge."
+        }
+      ],
+      "description": "Vorbereitet beim Import — in der Domain gibt es «CheckIdentity» noch nicht. Felder und Typen prüfen."
+    }
+  ],
+  "interactions": [
+    {
+      "id": "ia-48332d82b0",
+      "stepId": "ApproveRequestUT",
+      "kind": "userTask",
+      "name": "ApproveRequestUT",
+      "key": "ApproveRequestUT",
+      "descr": "Antrag freigeben - wer die Aufgabe erledigt, steht danach als `_identityCorrelationOfActor` im Prozess.",
+      "status": "implemented",
+      "inTypeId": "t-4ce118c210",
+      "outTypeId": "t-5c3fa28865"
+    },
+    {
+      "id": "ia-94710738e9",
+      "stepId": "CloseRequestUT",
+      "kind": "userTask",
+      "name": "CloseRequestUT",
+      "key": "CloseRequestUT",
+      "descr": "Antrag abschliessen - der Prozess hat hier die Identität der Person, die den Antrag freigegeben hat.",
+      "status": "implemented",
+      "inTypeId": "t-594cefb470",
+      "outTypeId": "t-3b4933c2c8"
+    },
+    {
+      "id": "ia-7ffc713dc5",
+      "stepId": "CheckIdentityAsActorTask",
+      "kind": "customTask",
+      "name": "CheckIdentity",
+      "key": "democompany-patterns-identityV1-CheckIdentity",
+      "status": "draft",
+      "inTypeId": "t-f6dbaec72a",
+      "outTypeId": "t-2169df6a3d"
+    },
+    {
+      "id": "ia-8163263e05",
+      "stepId": "CheckIdentityAsStarterTask",
+      "kind": "customTask",
+      "name": "CheckIdentity",
+      "key": "democompany-patterns-identityV1-CheckIdentity",
+      "status": "draft",
+      "inTypeId": "t-f6dbaec72a",
+      "outTypeId": "t-2169df6a3d"
+    }
+  ],
+  "epics": [
+    "pattern"
+  ]
+}

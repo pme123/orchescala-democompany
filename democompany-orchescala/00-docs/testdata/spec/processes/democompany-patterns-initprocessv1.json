@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "slug": "democompany-patterns-initprocessv1",
+  "name": "initProcessV1",
+  "title": "democompany-patterns-initProcessV1",
+  "processId": "democompany-patterns-initProcessV1",
+  "project": "democompany-patterns",
+  "engine": "c7",
+  "status": "implemented",
+  "description": "Beispiel für das Pattern «Init Process»: der erste Schritt ist ein Service-Task mit der Prozess-ID als Topic.\nDer InitWorker prüft das In, setzt die Vorgaben aus dem InConfig und liefert gemockte Ausgaben -\nist der Prozess gemockt, endet er über den Pfad `output-mocked` mit `processStatus = output-mocked`.",
+  "createdAt": "2026-10-30",
+  "updatedAt": "2026-10-30T11:34:15+01:00",
+  "variables": [],
+  "timeToLive": "5",
+  "steps": [
+    {
+      "id": "StartEvent",
+      "kind": "start",
+      "name": "Start",
+      "status": "implemented"
+    },
+    {
+      "id": "InitProcessTask",
+      "kind": "service",
+      "name": "Init Process",
+      "status": "implemented",
+      "topic": "democompany-patterns-initProcessV1",
+      "manualOutMapping": false,
+      "errors": [
+        {
+          "code": "output-mocked",
+          "declared": true,
+          "interrupting": true,
+          "boundary": true,
+          "steps": [
+            {
+              "id": "OutputMockedThrow",
+              "kind": "event",
+              "name": "output-mocked",
+              "status": "implemented",
+              "eventKind": "none",
+              "eventDirection": "throw"
+            },
+            {
+              "id": "OutputmockedEndEvent",
+              "kind": "end",
+              "name": "output-mocked",
+              "status": "implemented"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SucceededEndEvent",
+      "kind": "end",
+      "name": "succeeded",
+      "status": "implemented"
+    }
+  ],
+  "types": [
+    {
+      "id": "t-206f6c4981",
+      "name": "In",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.initProcess.v1.InitProcess.In",
+      "root": true,
+      "fields": [
+        {
+          "id": "f-a2f3e5ab82",
+          "name": "customerName",
+          "type": "String",
+          "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "example": "\"Peter Muster\""
+        }
+      ]
+    },
+    {
+      "id": "t-ceaaa559a0",
+      "name": "InitIn",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.initProcess.v1.InitProcess.InitIn",
+      "initIn": true,
+      "fields": [
+        {
+          "id": "f-abd0d0c6f6",
+          "name": "greetingMessage",
+          "type": "String",
+          "description": "Begrüssung aus der Anrede im InConfig und dem Namen des Kunden.",
+          "example": "\"Grüezi Peter Muster\""
+        }
+      ]
+    },
+    {
+      "id": "t-fe05defe63",
+      "name": "InConfig",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.initProcess.v1.InitProcess.InConfig",
+      "inConfig": true,
+      "fields": [
+        {
+          "id": "f-f6ced59ebf",
+          "name": "greeting",
+          "type": "String",
+          "default": "\"Grüezi\"",
+          "description": "Die Anrede, mit der der InitWorker die Begrüssung bildet."
+        }
+      ]
+    },
+    {
+      "id": "t-8503617a6c",
+      "name": "Out",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.initProcess.v1.InitProcess.Out",
+      "processOut": true,
+      "fields": [
+        {
+          "id": "f-51bd1701b7",
+          "name": "processStatus",
+          "type": "dom:orchescala.domain.ProcessStatus",
+          "example": "ProcessStatus.succeeded"
+        },
+        {
+          "id": "f-f95cd6e651",
+          "name": "customerName",
+          "type": "String",
+          "example": "In.example.customerName"
+        },
+        {
+          "id": "f-eaf84143dd",
+          "name": "greetingMessage",
+          "type": "String",
+          "example": "InitIn.example.greetingMessage"
+        }
+      ]
+    }
+  ],
+  "interactions": []
+}
