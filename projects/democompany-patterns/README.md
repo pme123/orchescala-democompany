@@ -298,7 +298,7 @@ zweite gibt es nicht.
 | Start | `messageEventDefinition` – der `businessKey` ist der der Instanz | ebenso – Orchescala setzt dazu die Variable `businessKey` |
 | Ereignis-Subprozess | fängt die Nachricht, weil C7 sie zuerst laufenden Instanzen mit diesem `businessKey` zuordnet | die Nachricht hat `zeebe:subscription correlationKey="=businessKey"` – das Abo öffnet beim Start |
 | `alreadyRunning = true` | Execution Listener (`start`) am Ende | Output-Mapping am Ende |
-| zweiter Start über Orchescala | wird abgelehnt (409: «correlated to a running process instance») | startet heute eine **zweite Instanz** (siehe unten) |
+| zweiter Start über Orchescala | wird abgelehnt (409: «correlated to a running process instance») | ebenso – Orchescala schickt den `businessKey` als Korrelationsschlüssel mit (siehe unten) |
 
 | Datei | Inhalt |
 |---|---|
@@ -312,8 +312,11 @@ zweite gibt es nicht.
 
 ### Simulationen
 
-Die Szenarien 1 und 2 starten mit der Nachricht (`.startWithMsg`), Szenario 3 je nach Engine (siehe
-dort); der `businessKey` ist der Name des Szenarios.
+Beide Szenarien starten mit der Nachricht (`.startWithMsg`); der `businessKey` ist der Name des
+Szenarios. Ein Szenario mit ungültigem In gibt es hier nicht (das prüft die Simulation von «Init
+Process»): Seine Instanz bliebe mit dem Incident stehen, und die Nachricht des nächsten Laufs
+(gleicher `businessKey`) käme dann in ihr an – genau das, was das Pattern tut (409). Direkt starten
+lässt sich der Prozess in C8 nicht, er hat dort nur den Nachrichten-Start.
 
 1. **`UniqueExecution started`** – einmal gestartet, «Antrag bearbeiten» erledigt: endet mit
    `alreadyRunning = false`.
@@ -322,12 +325,6 @@ dort); der `businessKey` ist der Name des Szenarios.
    Ereignis-Subprozess fängt sie, der Prozess endet mit `alreadyRunning = true`. Die Nachricht wartet,
    bis der InitWorker `alreadyRunning = false` gesetzt hat (`.waitFor("alreadyRunning", false)`) –
    sonst überschreibt er das `true`.
-3. **`UniqueExecution invalid In`** – `customerName = " "`: Incident `validation-failed`. Seine
-   Instanz bleibt mit dem Incident stehen. Auf **C7** startet das Szenario deshalb direkt, nicht mit
-   der Nachricht: Sonst käme die Nachricht des nächsten Laufs (gleicher `businessKey`) in dieser
-   Instanz an – genau das, was das Pattern tut (409 «correlated to a running process instance»).
-   Auf **C8** startet es mit der Nachricht: Der Prozess hat dort nur den Nachrichten-Start, und
-   ohne Korrelationsschlüssel startet die Nachricht ohnehin eine neue Instanz.
 
 ```bash
 ./helper.scala deploy UniqueExecutionC7Simulation
@@ -336,17 +333,26 @@ dort); der `businessKey` ist der Name des Szenarios.
 ./helper.scala deploy UniqueExecutionC8Simulation
 ```
 
+Bleibt eine Instanz eines Szenarios stehen (ein abgebrochener Lauf, ein zweiter Worker, der den Job
+hält), lehnt der nächste Lauf dessen Start mit 409 ab – das Pattern wirkt. Dann die Instanz in
+Cockpit bzw. Operate abbrechen.
+
 ### Voraussetzung: Orchescala (C8)
 
-Den zweiten Start in Szenario 2 schickt die Simulation als Nachricht mit `businessKey` – in C8 als
-`correlationKey`, und so greift das Pattern. Ein **Start** über Orchescala
-(`POST /process/{messageName}/message?businessKey=…`, `C8ProcessInstanceService.startProcessByMessage`)
-schickt in C8 dagegen keinen `correlationKey` mit: dann passt das Abo des Ereignis-Subprozesses nicht,
-und Zeebe startet eine zweite Instanz. Auf c8run nachgeprüft: ohne Schlüssel eine neue Instanz, mit
-`correlationKey = businessKey` landet die Nachricht in der laufenden Instanz (deren Key kommt zurück).
-Damit es auch beim Start über Orchescala greift, müsste der C8-Start den `businessKey` als
-`correlationKey` schicken und – wie in C7 – mit 409 antworten, wenn die Nachricht in einer laufenden
-Instanz landet (sonst setzt er dort die Identität des neuen Aufrufers).
+Ab Orchescala 0.9.0 ([pme123/orchescala#98](https://github.com/pme123/orchescala/pull/98)) schickt der Start über Orchescala (`POST /process/{messageName}/message?businessKey=…`,
+`C8ProcessInstanceService.startProcessByMessage`) den `businessKey` als Korrelationsschlüssel mit:
+
+- **Mit dem Pattern** landet ein zweiter Start in der laufenden Instanz – Orchescala antwortet wie in
+  C7 mit 409 und setzt dort keine Identität.
+- **Ohne das Pattern** startet ein zweiter Start weiter eine neue Instanz, wie bisher und wie in C7:
+  Zeebe lässt pro Korrelationsschlüssel nur eine laufende Instanz eines Nachrichten-Starts zu – lehnt
+  es ab, schickt Orchescala die Nachricht nochmals ohne Schlüssel.
+
+Ob die Nachricht eine neue Instanz gestartet hat, sieht Orchescala am Key: eine neue ist jünger als
+die Nachricht (auf ihrer Partition), eine laufende älter. Auf c8run 8.9.21 nachgeprüft.
+
+Vorher schickte der C8-Start keinen Schlüssel mit – dann passte das Abo des Ereignis-Subprozesses
+nicht, und jeder Start legte eine neue Instanz an.
 
 ## Offene Punkte
 
