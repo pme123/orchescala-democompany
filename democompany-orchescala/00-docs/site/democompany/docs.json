@@ -4,7 +4,7 @@
   "release" : {
     "tag" : "2026-10",
     "released" : true,
-    "createdDay" : "28.10.2026",
+    "createdDay" : "30.10.2026",
     "jiraUrl" : "https://yourReleasePage/versions/64209",
     "notes" : "- **Kundentermine** (democompany-customer): Termine buchen ohne Login, Bestätigung durch den Berater, Einladung als .ics - auf Operaton, mit Seiten aus orch-spec und dem Gateway als einzigem Einstieg.\n- Orchescala 0.9: Gateway mit öffentlichem Zugang, `CustomError.refused`, der Renderer der Seiten.",
     "olderReleases" : [
