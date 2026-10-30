@@ -312,7 +312,8 @@ zweite gibt es nicht.
 
 ### Simulationen
 
-Alle Szenarien starten mit der Nachricht (`.startWithMsg`); der `businessKey` ist der Name des Szenarios.
+Die Szenarien 1 und 2 starten mit der Nachricht (`.startWithMsg`), Szenario 3 je nach Engine (siehe
+dort); der `businessKey` ist der Name des Szenarios.
 
 1. **`UniqueExecution started`** – einmal gestartet, «Antrag bearbeiten» erledigt: endet mit
    `alreadyRunning = false`.
@@ -321,7 +322,12 @@ Alle Szenarien starten mit der Nachricht (`.startWithMsg`); der `businessKey` is
    Ereignis-Subprozess fängt sie, der Prozess endet mit `alreadyRunning = true`. Die Nachricht wartet,
    bis der InitWorker `alreadyRunning = false` gesetzt hat (`.waitFor("alreadyRunning", false)`) –
    sonst überschreibt er das `true`.
-3. **`UniqueExecution invalid In`** – `customerName = " "`: Incident `validation-failed`.
+3. **`UniqueExecution invalid In`** – `customerName = " "`: Incident `validation-failed`. Seine
+   Instanz bleibt mit dem Incident stehen. Auf **C7** startet das Szenario deshalb direkt, nicht mit
+   der Nachricht: Sonst käme die Nachricht des nächsten Laufs (gleicher `businessKey`) in dieser
+   Instanz an – genau das, was das Pattern tut (409 «correlated to a running process instance»).
+   Auf **C8** startet es mit der Nachricht: Der Prozess hat dort nur den Nachrichten-Start, und
+   ohne Korrelationsschlüssel startet die Nachricht ohnehin eine neue Instanz.
 
 ```bash
 ./helper.scala deploy UniqueExecutionC7Simulation
