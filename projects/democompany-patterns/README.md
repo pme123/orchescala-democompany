@@ -5,7 +5,8 @@ Orch Spec in einen Prozess einfügt und wiedererkennt. Je Pattern gibt es einen 
 für Camunda 7 und Camunda 8 und eine Simulation je Engine, die den Baustein auf einer echten Engine
 durchspielt. Später sollen die BPMN auch als Testdaten für die Orch Spec dienen.
 
-Bis jetzt: **«Init Process»** und **«Identität übernehmen / zurücksetzen»**.
+Bis jetzt: **«Init Process»**, **«Identität übernehmen / zurücksetzen»** und
+**«Mocks und Identität weitergeben»**.
 
 ## Init Process – `democompany-patterns-initProcessV1`
 
@@ -197,6 +198,75 @@ Orchescala ab pme123/orchescala#87 (in develop) – vorher hiess es `example`.
 
 `actingAs` und die zweite Test-Identität `testActorIdentityCorrelation` gibt es ab dem
 Orchescala-Branch `feat/simulation-second-test-identity` (0.9.0-SNAPSHOT, noch nicht gemergt).
+
+## Mocks und Identität weitergeben – `democompany-patterns-propagateMocksV1`
+
+```
+Start ─▶ [Init Process] ─▶ [Teilprozess aufrufen] ─▶ (succeeded)
+                                  │
+                                  ▼  democompany-patterns-propagateMocksSubV1
+                    Start ─▶ [Init Process] ─▶ [Kunde prüfen] ─▶ (succeeded)
+```
+
+Ein Teilprozess (Call Activity) sieht nur die Variablen, die ihm der Aufruf mitgibt. Damit Mocks
+und Identität auch dort gelten, gibt die Call Activity diese drei weiter:
+
+- **`_servicesMocked`** – die Services im Teilprozess sind gemockt,
+- **`_mockedWorkers`** – gemockte Worker, auch der InitWorker des Teilprozesses (dessen Prozess-ID),
+- **`_identityCorrelation`** – die signierte Identität des Starts.
+
+Dazu das In (`customerName`); zurück kommen `processStatus` des Teilprozesses als `subProcessStatus`
+und `customerChecked`.
+
+**«Kunde prüfen»** zeigt, dass beides ankommt: ein ServiceWorker, dessen Service es nicht gibt
+(`http://localhost:1/...`). Er gelingt nur, wenn `_servicesMocked` im Teilprozess angekommen ist –
+und vorher prüft er die Signatur von `_identityCorrelation`. Die Identität ist an die
+Prozessinstanz des **Starts** gebunden; im Teilprozess akzeptiert der Worker sie, weil das die
+Root-Instanz seines Jobs ist.
+
+| | Camunda 7 | Camunda 8 |
+|---|---|---|
+| Aufruf | `calledElement="<processId>"` | `zeebe:calledElement processId="<processId>"` mit `propagateAllChildVariables="false"` und `propagateAllParentVariables="false"` |
+| hinein | `camunda:in source=… target=…` | `zeebe:input` |
+| zurück | `camunda:out source=… target=…` | `zeebe:output` |
+| Root-Instanz des Jobs | der Worker liest sie aus der History | kommt mit dem Job – über gRPC nicht, dann fragt der Worker die Engine (siehe unten) |
+
+| Datei | Inhalt |
+|---|---|
+| [`PropagateMocks.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocks.scala) | `In`, `Out` des aufrufenden Prozesses |
+| [`PropagateMocksSub.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocksSub.scala) | `In`, `Out` des Teilprozesses |
+| [`CheckCustomer.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/CheckCustomer.scala) | «Kunde prüfen» – Service-Aufruf im Teilprozess |
+| [`PropagateMocksWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksWorker.scala) | InitWorker: Prüfung des In |
+| [`PropagateMocksSubWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksSubWorker.scala) | InitWorker des Teilprozesses |
+| [`CheckCustomerWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/CheckCustomerWorker.scala) | der ServiceWorker dazu |
+| [`camunda/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksV1.bpmn), [`camunda/patterns-propagateMocksSubV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksSubV1.bpmn) | Camunda 7 |
+| [`camunda8/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda8/patterns-propagateMocksV1.bpmn), [`camunda8/patterns-propagateMocksSubV1.bpmn`](src/main/resources/camunda8/patterns-propagateMocksSubV1.bpmn) | Camunda 8 |
+| [`PropagateMocksSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/PropagateMocksSimulation.scala) | die Szenarien, für beide Engines gleich |
+
+### Simulationen
+
+1. **`PropagateMocks services mocked`** – `.mockServices`: «Kunde prüfen» ist im Teilprozess
+   gemockt und akzeptiert die Identität des Starts; endet mit `subProcessStatus = succeeded`,
+   `customerChecked = true`.
+2. **`PropagateMocks sub worker mocked`** – zusätzlich `.mockWorker(PropagateMocksSub.processName)`:
+   der Teilprozess endet über `output-mocked` (`subProcessStatus = output-mocked`), der aufrufende
+   Prozess mit `processStatus = succeeded`.
+3. **`PropagateMocks invalid In`** – `customerName = " "`: Incident `validation-failed`.
+
+```bash
+./helper.scala deploy PropagateMocksC7Simulation
+```
+```bash
+./helper.scala deploy PropagateMocksC8Simulation
+```
+
+### Voraussetzung: Orchescala (C8)
+
+Über gRPC liefert der Camunda-Client 8.9 die Root-Instanz eines Jobs nicht mit
+(`rootProcessInstanceKey` ist leer). Ohne sie lehnt der Worker im Teilprozess die Identität des
+Starts ab («bound to process instance …, not to the job's … (root: -)»). Ab dem Orchescala-Branch
+`fix/c8-root-process-instance` (0.9.0-SNAPSHOT, noch nicht gemergt) fragt der C8-Worker die
+Root-Instanz dann bei der Engine nach (`GET /v2/process-instances/{key}`). C7 braucht das nicht.
 
 ## Offene Punkte
 

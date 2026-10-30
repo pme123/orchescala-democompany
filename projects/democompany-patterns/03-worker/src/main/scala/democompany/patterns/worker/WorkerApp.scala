@@ -5,7 +5,8 @@ package democompany.patterns.worker
 object WorkerApp extends CompanyWorkerApp:
   workers(
     initProcessWorkers,
-    identityWorkers
+    identityWorkers,
+    propagateMocksWorkers
   )
   dependencies(
   )
@@ -28,4 +29,13 @@ object WorkerApp extends CompanyWorkerApp:
       new CheckIdentityWorker()
     )
   end identityWorkers
+
+  private lazy val propagateMocksWorkers =
+    import democompany.patterns.worker.propagateMocks.v1.*
+    Seq(
+      new PropagateMocksWorker(),
+      new PropagateMocksSubWorker(),
+      new CheckCustomerWorker()
+    )
+  end propagateMocksWorkers
 end WorkerApp
