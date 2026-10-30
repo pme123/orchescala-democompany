@@ -4,7 +4,7 @@ info:
   version: 0.1.0-SNAPSHOT
   summary: "\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns - je Pattern\
     \ ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated at 10/30/26,\
-    \ 11:35 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ 1:24 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -326,11 +326,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > In`\n- Output: `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-initProcessV1-7526\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-initProcessV1-7526'), height: '95%',\
+        \ id=\"patterns-initProcessV1-44895\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-initProcessV1-44895'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-initProcessV1.bpmn](diagrams/patterns-initProcessV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-7526')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-44895')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -498,13 +498,13 @@ paths:
         \ `democompany-patterns-identityV1` (to define in the Call Activity)\n\n\n\
         \n---\n\n\n\n\n- Input:  `democompany.patterns.domain.identity.v1.Identity\
         \ > In`\n- Output: `democompany.patterns.domain.identity.v1.Identity > Out`\n\
-        \n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"patterns-identityV1-33313\"\
+        \n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"patterns-identityV1-1365\"\
         >\n    <img onLoad=\"openFromUrl('patterns-identityV1.bpmn', new BpmnJS({\
-        \ container: $('#patterns-identityV1-33313'), height: '95%', width: '95%'\
-        \ }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ container: $('#patterns-identityV1-1365'), height: '95%', width: '95%' }));\"\
+        \ src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-identityV1.bpmn](diagrams/patterns-identityV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-identityV1-33313')\"\
-        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-identityV1-1365')\">Download\
+        \ Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
         : \"processStatus,customerName,approved,checkedUsernames\",\n...\n```\n\n\
@@ -995,11 +995,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
         \ > In`\n- Output: `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-propagateMocksV1-93252\">\n    <img onLoad=\"openFromUrl('patterns-propagateMocksV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-propagateMocksV1-93252'), height: '95%',\
+        \ id=\"patterns-propagateMocksV1-45577\">\n    <img onLoad=\"openFromUrl('patterns-propagateMocksV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-propagateMocksV1-45577'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-propagateMocksV1.bpmn](diagrams/patterns-propagateMocksV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-propagateMocksV1-93252')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-propagateMocksV1-45577')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -1265,6 +1265,377 @@ paths:
                       salutation: Mr.
                       dateOfBirth: '1970-01-01'
                       createdAt: '2021-01-01T00:00:00'
+  /process/democompany-patterns-uniqueExecutionV1/async:
+    post:
+      tags:
+      - Unique Execution V1
+      summary: Process start
+      description: "\nBeispiel für das Pattern «Einmalige Ausführung».\nDer Prozess\
+        \ startet über eine Nachricht (Name = Prozess-ID) mit einem `businessKey`.\
+        \ Solange er\nläuft, fängt ein nicht unterbrechender Ereignis-Subprozess dieselbe\
+        \ Nachricht - ein zweiter Start\nmit demselben `businessKey` landet in der\
+        \ laufenden Instanz (`alreadyRunning = true`) statt eine\nzweite zu starten.\n\
+        \n\n---\n\n- **Called Element**: `democompany-patterns-uniqueExecutionV1`\
+        \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution\
+        \ > In`\n- Output: `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution\
+        \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
+        \ id=\"patterns-uniqueExecutionV1-36813\">\n    <img onLoad=\"openFromUrl('patterns-uniqueExecutionV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-uniqueExecutionV1-36813'), height:\
+        \ '95%', width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [patterns-uniqueExecutionV1.bpmn](diagrams/patterns-uniqueExecutionV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-uniqueExecutionV1-36813')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
+        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"processStatus,customerName,alreadyRunning\",\n...\n```\n\n**outputMock**:\n\
+        \n```json\n...\n\"outputMock\": {\n  \"processStatus\" : \"succeeded\",\n\
+        \  \"customerName\" : \"Peter Muster\",\n  \"alreadyRunning\" : false\n},\n\
+        ...\n```\n\n</p>\n</details>\n</p>\n      \n\n\n**Used in no other Process.**\n\
+        \n**Uses no other Processes.**\n<p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Input</b> to start the Process with.\n\nBe aware\
+        \ that running this request with Postman,\nyou will not get the <b>Output</b>\
+        \ but the <i>processInstanceId</i>, as starting a process is asynchronous.\n\
+        \nTo get the <b>Output</b> you need to use the `Process variables` request.\n\
+        \n</p>\n</details>"
+      operationId: Process start
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UniqueExecution.In'
+            examples:
+              democompany-patterns-uniqueExecutionV1:
+                value:
+                  customerName: Peter Muster
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessInfo'
+              example:
+                processInstanceId: f150c3f1-13f5-11ec-936e-0242ac1d0007
+                businessKey: ORDER-2025-12345
+                status: Active
+                engineType: C7
+  /process/democompany-patterns-uniqueExecutionV1/{processInstanceId}/variables:
+    get:
+      tags:
+      - Unique Execution V1
+      summary: Process variables
+      description: "\nBeispiel für das Pattern «Einmalige Ausführung».\nDer Prozess\
+        \ startet über eine Nachricht (Name = Prozess-ID) mit einem `businessKey`.\
+        \ Solange er\nläuft, fängt ein nicht unterbrechender Ereignis-Subprozess dieselbe\
+        \ Nachricht - ein zweiter Start\nmit demselben `businessKey` landet in der\
+        \ laufenden Instanz (`alreadyRunning = true`) statt eine\nzweite zu starten.\n\
+        \n\n---\n\n- **Called Element**: `democompany-patterns-uniqueExecutionV1`\
+        \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution\
+        \ > In`\n- Output: `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution\
+        \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
+        </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,customerName,alreadyRunning\"\
+        ,\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ : \"succeeded\",\n  \"customerName\" : \"Peter Muster\",\n  \"alreadyRunning\"\
+        \ : false\n},\n...\n```\n\n</p>\n</details>\n</p>\n      <p/>\n<details>\n\
+        <summary><b><i>General Information</i></b></summary>\n<p>\n\nThis describes\
+        \ the <b>Output</b> of the Process you get. Be aware this does not check if\
+        \ the process is finished (TODO).\n\n  \n</p>\n</details>"
+      operationId: Process variables
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: processStatus,customerName,alreadyRunning
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UniqueExecution.Out'
+              examples:
+                democompany-patterns-uniqueExecutionV1:
+                  value:
+                    processStatus: succeeded
+                    customerName: Peter Muster
+                    alreadyRunning: false
+  /worker/democompany-patterns-uniqueExecutionV1:
+    post:
+      tags:
+      - Unique Execution V1
+      summary: Init Worker
+      description: |2
+
+        <details>
+        <summary><b>General Information</b></summary>
+
+        The Init Worker has the following responsibilities:
+
+          - Validates the Process Input (`In`). -> by Orchescala
+          - Maps the Configuration to Process Variables (`InConfig`). -> by Orchescala
+          - Custom validation the Process Input (`In`, e.g. combining 2 variables). -> Process Specific
+          - Initializes the default Variables with `In` as input (see _Process_ description) and `InitIn` as output. -> Process Specific
+
+        The Input is the same as the `In` object of the _Process_.
+
+        `NoInput` means there is no initialization needed.
+        </details>
+      operationId: Init Worker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UniqueExecution.In'
+            examples:
+              democompany-patterns-uniqueExecutionV1:
+                value:
+                  customerName: Peter Muster
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UniqueExecution.InitIn'
+              examples:
+                InitIn:
+                  value:
+                    alreadyRunning: false
+  /process/{processInstanceId}/userTask/EditRequestUT/variables:
+    get:
+      tags:
+      - Unique Execution V1
+      summary: 'UserTask variables: EditRequestUT'
+      description: |2-
+
+        Antrag bearbeiten - solange die Aufgabe offen ist, läuft der Prozess; ein zweiter Start landet hier.
+
+        - _taskDefinitionKey_: `EditRequestUT`
+
+        ---
+
+
+
+
+        - Input:  `democompany.patterns.domain.uniqueExecution.v1.EditRequestUT > In`
+        - Output: `orchescala.domain.NoOutput`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        A <b>UserTask</b> consists of two steps (variables and complete).
+        This is the <b>first step</b>:
+
+        1. Wait for the UserTask and get then the Variables.
+
+        The <b>Output</b> are the Variables you want for your UserTask Form.
+
+
+        </p>
+        </details>
+      operationId: 'UserTask variables: EditRequestUT'
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: customerName
+      - name: timeoutInSec
+        in: query
+        description: The maximum number of seconds to wait for the user task to become
+          active (0 - 60). If not provided, it will wait 10 seconds.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 60
+        example: 10
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditRequestUT.In'
+              examples:
+                EditRequestUT:
+                  value:
+                    customerName: Peter Muster
+  /userTask/EditRequestUT/{userTaskInstanceId}/complete:
+    post:
+      tags:
+      - Unique Execution V1
+      summary: 'UserTask complete: EditRequestUT'
+      description: |2-
+
+        Antrag bearbeiten - solange die Aufgabe offen ist, läuft der Prozess; ein zweiter Start landet hier.
+
+        - _taskDefinitionKey_: `EditRequestUT`
+
+        ---
+
+
+
+
+        - Input:  `democompany.patterns.domain.uniqueExecution.v1.EditRequestUT > In`
+        - Output: `orchescala.domain.NoOutput`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        A <b>UserTask</b> consists of two steps (variables and complete).
+        This is the <b>second step</b>:
+
+        2. Complete the UserTask
+
+        The <b>Input</b> are the Variables you want to set when completing the task.
+
+
+        </p>
+        </details>
+      operationId: 'UserTask complete: EditRequestUT'
+      parameters:
+      - name: userTaskInstanceId
+        in: path
+        description: User task instance ID (obtained from getUserTaskVariables)
+        required: true
+        schema:
+          type: string
+        example: '{{userTaskInstanceId}}'
+      responses:
+        '200':
+          description: ''
+  /message/democompany-patterns-uniqueExecutionV1:
+    post:
+      tags:
+      - Unique Execution V1
+      summary: 'Message: uniqueExecutionV1'
+      description: |2-
+
+        Dieselbe Start-Nachricht ein zweites Mal - mit dem `businessKey` der laufenden Instanz.
+
+        - _messageName_: `democompany-patterns-uniqueExecutionV1`
+
+        ---
+
+
+
+
+        - Input:  `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution > In`
+        - Output: `orchescala.domain.NoOutput`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+        Send a Message to the Process.
+        Process is waiting at a Message Event, or has the possibility to interact with a Message,
+        e.g. in a Boundary Event.
+
+        </p>
+        </details>
+      operationId: 'Message: uniqueExecutionV1'
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: timeToLiveInSec
+        in: query
+        description: 'The time in seconds the message is buffered, waiting for correlation.
+          The default value is 0 seconds (no buffering). Only supported in C8 - BE
+          AWARE that if set, it is fire and forget: Camunda will just try to correlate
+          for the configured time.'
+        required: false
+        schema:
+          type: integer
+          format: int32
+        example: 10
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      - name: processInstanceId
+        in: query
+        description: Process instance ID to correlate the message to a specific process
+          instance.
+        required: false
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UniqueExecution.In'
+            examples:
+              democompany-patterns-uniqueExecutionV1:
+                value:
+                  customerName: Peter Muster
+        required: true
+      responses:
+        '200':
+          description: ''
 components:
   schemas:
     Address:
@@ -1399,6 +1770,14 @@ components:
         closed:
           description: Antrag abgeschlossen?
           type: boolean
+    EditRequestUT.In:
+      title: EditRequestUT.In
+      type: object
+      required:
+      - customerName
+      properties:
+        customerName:
+          type: string
     EngineType:
       title: EngineType
       description: Type of the engine
@@ -1592,6 +1971,42 @@ components:
         client:
           $ref: '#/components/schemas/Client'
           description: Der Kunde - aus «Kunde laden».
+    UniqueExecution.In:
+      title: UniqueExecution.In
+      type: object
+      required:
+      - customerName
+      properties:
+        customerName:
+          description: Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker
+            `validation-failed`).
+          type: string
+    UniqueExecution.InitIn:
+      title: UniqueExecution.InitIn
+      type: object
+      required:
+      - alreadyRunning
+      properties:
+        alreadyRunning:
+          description: '`false` beim Start - der Ereignis-Subprozess «Prozess läuft
+            schon» setzt ihn auf `true`.'
+          type: boolean
+    UniqueExecution.Out:
+      title: UniqueExecution.Out
+      type: object
+      required:
+      - processStatus
+      - customerName
+      - alreadyRunning
+      properties:
+        processStatus:
+          $ref: '#/components/schemas/ProcessStatus1'
+        customerName:
+          type: string
+        alreadyRunning:
+          description: Kam die Start-Nachricht ein zweites Mal, während der Prozess
+            lief?
+          type: boolean
     Unknown:
       title: Unknown
       type: object

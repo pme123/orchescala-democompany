@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_patterns_uniqueExecutionV1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.34.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.23.0">
+  <bpmn:process id="democompany-patterns-uniqueExecutionV1" name="democompany-patterns-uniqueExecutionV1" isExecutable="true" camunda:historyTimeToLive="5">
+    <bpmn:startEvent id="StartEvent" name="Start">
+      <bpmn:outgoing>StartFlow</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="StartEventDef" messageRef="StartMessage" />
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="InitProcessTask" name="Init Process" camunda:type="external" camunda:topic="democompany-patterns-uniqueExecutionV1">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="_handledErrors">output-mocked</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>StartFlow</bpmn:incoming>
+      <bpmn:outgoing>InitProcessFlow</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="EditRequestUT" name="Antrag bearbeiten">
+      <bpmn:incoming>InitProcessFlow</bpmn:incoming>
+      <bpmn:outgoing>EditRequestFlow</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="SucceededEndEvent" name="succeeded">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="${execution.setVariable(&#34;processStatus&#34;, &#34;succeeded&#34;)}" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>EditRequestFlow</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="OutputMockedBoundary" attachedToRef="InitProcessTask">
+      <bpmn:outgoing>OutputMockedBoundaryFlow</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="OutputMockedBoundaryDef" errorRef="OutputMockedError" />
+    </bpmn:boundaryEvent>
+    <bpmn:intermediateThrowEvent id="OutputMockedThrow" name="output-mocked">
+      <bpmn:incoming>OutputMockedBoundaryFlow</bpmn:incoming>
+      <bpmn:linkEventDefinition id="OutputMockedThrowDef" name="output-mocked" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateCatchEvent id="OutputmockedEvent" name="output-mocked">
+      <bpmn:outgoing>OutputmockedFlow</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="OutputmockedEventDef" name="output-mocked" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="OutputmockedEndEvent" name="output-mocked">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="${execution.setVariable(&#34;processStatus&#34;, &#34;output-mocked&#34;)}" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>OutputmockedFlow</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:subProcess id="AlreadyRunningSubProcess" name="Prozess läuft schon" triggeredByEvent="true">
+      <bpmn:startEvent id="AlreadyRunningStartEvent" name="Start-Nachricht nochmals" isInterrupting="false">
+        <bpmn:outgoing>AlreadyRunningFlow</bpmn:outgoing>
+        <bpmn:messageEventDefinition id="AlreadyRunningStartEventDef" messageRef="StartMessage" />
+      </bpmn:startEvent>
+      <bpmn:endEvent id="AlreadyRunningEndEvent" name="läuft schon">
+        <bpmn:extensionElements>
+          <camunda:executionListener expression="${execution.setVariable(&#34;alreadyRunning&#34;, true)}" event="start" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>AlreadyRunningFlow</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="AlreadyRunningFlow" sourceRef="AlreadyRunningStartEvent" targetRef="AlreadyRunningEndEvent" />
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="StartFlow" sourceRef="StartEvent" targetRef="InitProcessTask" />
+    <bpmn:sequenceFlow id="InitProcessFlow" sourceRef="InitProcessTask" targetRef="EditRequestUT" />
+    <bpmn:sequenceFlow id="EditRequestFlow" sourceRef="EditRequestUT" targetRef="SucceededEndEvent" />
+    <bpmn:sequenceFlow id="OutputMockedBoundaryFlow" sourceRef="OutputMockedBoundary" targetRef="OutputMockedThrow" />
+    <bpmn:sequenceFlow id="OutputmockedFlow" sourceRef="OutputmockedEvent" targetRef="OutputmockedEndEvent" />
+  </bpmn:process>
+  <bpmn:message id="StartMessage" name="democompany-patterns-uniqueExecutionV1" />
+  <bpmn:error id="OutputMockedError" name="output-mocked" errorCode="output-mocked" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="democompany-patterns-uniqueExecutionV1">
+      <bpmndi:BPMNShape id="StartEvent_di" bpmnElement="StartEvent">
+        <dc:Bounds x="112" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="118" y="165" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="InitProcessTask_di" bpmnElement="InitProcessTask" color:background-color="#D5D5D5">
+        <dc:Bounds x="200" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EditRequestUT_di" bpmnElement="EditRequestUT">
+        <dc:Bounds x="360" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SucceededEndEvent_di" bpmnElement="SucceededEndEvent">
+        <dc:Bounds x="522" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="514" y="165" width="52" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputMockedThrow_di" bpmnElement="OutputMockedThrow" color:background-color="#D5D5D5">
+        <dc:Bounds x="262" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="244" y="285" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedEvent_di" bpmnElement="OutputmockedEvent" color:background-color="#D5D5D5">
+        <dc:Bounds x="422" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="404" y="385" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedEndEvent_di" bpmnElement="OutputmockedEndEvent" color:background-color="#D5D5D5">
+        <dc:Bounds x="522" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="504" y="385" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputMockedBoundary_di" bpmnElement="OutputMockedBoundary" color:background-color="#D5D5D5">
+        <dc:Bounds x="262" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AlreadyRunningSubProcess_di" bpmnElement="AlreadyRunningSubProcess" isExpanded="true">
+        <dc:Bounds x="160" y="440" width="420" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AlreadyRunningStartEvent_di" bpmnElement="AlreadyRunningStartEvent">
+        <dc:Bounds x="212" y="492" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="186" y="535" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AlreadyRunningEndEvent_di" bpmnElement="AlreadyRunningEndEvent">
+        <dc:Bounds x="482" y="492" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="473" y="535" width="54" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="StartFlow_di" bpmnElement="StartFlow">
+        <di:waypoint x="148" y="140" />
+        <di:waypoint x="200" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="InitProcessFlow_di" bpmnElement="InitProcessFlow">
+        <di:waypoint x="300" y="140" />
+        <di:waypoint x="360" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="EditRequestFlow_di" bpmnElement="EditRequestFlow">
+        <di:waypoint x="460" y="140" />
+        <di:waypoint x="522" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="OutputMockedBoundaryFlow_di" bpmnElement="OutputMockedBoundaryFlow">
+        <di:waypoint x="280" y="198" />
+        <di:waypoint x="280" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="OutputmockedFlow_di" bpmnElement="OutputmockedFlow">
+        <di:waypoint x="458" y="360" />
+        <di:waypoint x="522" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AlreadyRunningFlow_di" bpmnElement="AlreadyRunningFlow">
+        <di:waypoint x="248" y="510" />
+        <di:waypoint x="482" y="510" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

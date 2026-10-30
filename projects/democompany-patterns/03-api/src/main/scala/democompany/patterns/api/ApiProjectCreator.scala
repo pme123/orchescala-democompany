@@ -13,7 +13,8 @@ object ApiProjectCreator extends CompanyApiCreator:
   document(
     initProcessApi,
     identityApi,
-    propagateMocksApi
+    propagateMocksApi,
+    uniqueExecutionApi
   )
 
   private lazy val initProcessApi =
@@ -32,5 +33,12 @@ object ApiProjectCreator extends CompanyApiCreator:
     import democompany.patterns.domain.propagateMocks.v1.*
     api(PropagateMocks.example)(
       PropagateMocksSub.example
+    )
+
+  private lazy val uniqueExecutionApi =
+    import democompany.patterns.domain.uniqueExecution.v1.*
+    api(UniqueExecution.example)(
+      EditRequestUT.example,
+      StartAgainME.example
     )
 end ApiProjectCreator

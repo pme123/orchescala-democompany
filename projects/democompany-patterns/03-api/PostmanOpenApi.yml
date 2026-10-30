@@ -5,7 +5,7 @@ info:
   summary: "\n**This is for Postman - to have example requests. Be aware the Output\
     \ is not provided!**\n\n\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns\
     \ - je Pattern ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated\
-    \ at 10/30/26, 11:35 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ at 10/30/26, 1:24 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -800,6 +800,228 @@ paths:
       responses:
         '200':
           description: ''
+  /process-definition/key/democompany-patterns-uniqueExecutionV1/start:
+    post:
+      tags:
+      - democompany-patterns-uniqueExecutionV1
+      summary: 'Bpmn: uniqueExecutionV1'
+      description: |2
+
+        Beispiel für das Pattern «Einmalige Ausführung».
+        Der Prozess startet über eine Nachricht (Name = Prozess-ID) mit einem `businessKey`. Solange er
+        läuft, fängt ein nicht unterbrechender Ereignis-Subprozess dieselbe Nachricht - ein zweiter Start
+        mit demselben `businessKey` landet in der laufenden Instanz (`alreadyRunning = true`) statt eine
+        zweite zu starten.
+
+
+        ---
+
+        - **Called Element**: `democompany-patterns-uniqueExecutionV1` (to define in the Call Activity)
+
+
+
+        ---
+
+
+
+
+        See API Doc: [Bpmn: uniqueExecutionV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20uniqueExecutionV1)
+      operationId: postProcess-definitionKeyDemocompany-patterns-uniqueexecutionv1Start
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-patterns-uniqueExecutionV1:
+                value:
+                  variables:
+                    customerName:
+                      value: Peter Muster
+                      type: String
+                  businessKey: democompany-patterns-uniqueExecutionV1
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /task/--REMOVE:EditRequestUT--:
+    post:
+      tags:
+      - democompany-patterns-uniqueExecutionV1
+      summary: 'UserTask task: EditRequestUT'
+      description: |2
+
+        Antrag bearbeiten - solange die Aufgabe offen ist, läuft der Prozess; ein zweiter Start landet hier.
+
+        - _taskDefinitionKey_: `EditRequestUT`
+
+        ---
+
+
+
+
+        See API Doc: [UserTask task: EditRequestUT](/site/democompany/democompany-patterns/OpenApi.html#operation/UserTask%20task:%20EditRequestUT)
+      operationId: postTask--remove:editrequestut--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetActiveTaskIn'
+            examples:
+              EditRequestUT:
+                value:
+                  processInstanceId: '{{processInstanceId}}'
+                  active: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /task/{taskId}/form-variables/--REMOVE:EditRequestUT--:
+    get:
+      tags:
+      - democompany-patterns-uniqueExecutionV1
+      summary: 'UserTask variables: EditRequestUT'
+      description: |2
+
+        Antrag bearbeiten - solange die Aufgabe offen ist, läuft der Prozess; ein zweiter Start landet hier.
+
+        - _taskDefinitionKey_: `EditRequestUT`
+
+        ---
+
+
+
+
+        See API Doc: [UserTask variables: EditRequestUT](/site/democompany/democompany-patterns/OpenApi.html#operation/UserTask%20variables:%20EditRequestUT)
+      operationId: getTaskTaskidForm-variables--remove:editrequestut--
+      parameters:
+      - name: taskId
+        in: path
+        description: |
+          The taskId of the Form.
+          > This is the result id of the `GetActiveTask`
+
+          Add in the _Tests_ panel of _Postman_:
+          ```
+          let result = pm.response.json()[0];
+          pm.collectionVariables.set("taskId", result.id)
+          ```
+        required: true
+        schema:
+          default: '{{taskId}}'
+          type: string
+      - name: variableNames
+        in: query
+        description: |-
+          A comma-separated list of variable names. Allows restricting the list of requested variables to the variable names in the list.
+          It is best practice to restrict the list of variables to the variables actually required by the form in order to minimize fetching of data. If the query parameter is ommitted all variables are fetched.
+          If the query parameter contains non-existent variable names, the variable names are ignored.
+        required: false
+        schema:
+          default: name,example
+          type: string
+      - name: deserializeValues
+        in: query
+        required: false
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          description: ''
+  /task/{taskId}/complete/--REMOVE:EditRequestUT--:
+    post:
+      tags:
+      - democompany-patterns-uniqueExecutionV1
+      summary: 'UserTask complete: EditRequestUT'
+      description: |2
+
+        Antrag bearbeiten - solange die Aufgabe offen ist, läuft der Prozess; ein zweiter Start landet hier.
+
+        - _taskDefinitionKey_: `EditRequestUT`
+
+        ---
+
+
+
+
+        See API Doc: [UserTask complete: EditRequestUT](/site/democompany/democompany-patterns/OpenApi.html#operation/UserTask%20complete:%20EditRequestUT)
+      operationId: postTaskTaskidComplete--remove:editrequestut--
+      parameters:
+      - name: taskId
+        in: path
+        description: |
+          The taskId of the Form.
+          > This is the result id of the `GetActiveTask`
+
+          Add in the _Tests_ panel of _Postman_:
+          ```
+          let result = pm.response.json()[0];
+          pm.collectionVariables.set("taskId", result.id)
+          ```
+        required: true
+        schema:
+          default: '{{taskId}}'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteTaskIn'
+            examples:
+              EditRequestUT:
+                value:
+                  variables: {}
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /message/--REMOVE:democompany-patterns-uniqueExecutionV1--:
+    post:
+      tags:
+      - democompany-patterns-uniqueExecutionV1
+      summary: 'Message: uniqueExecutionV1'
+      description: |2
+
+
+        Dieselbe Start-Nachricht ein zweites Mal - mit dem `businessKey` der laufenden Instanz.
+
+        - _messageName_: `democompany-patterns-uniqueExecutionV1`
+
+        ---
+
+
+
+
+        Message:
+        - _messageName_: `democompany-patterns-uniqueExecutionV1`,
+
+
+        See API Doc: [Message: uniqueExecutionV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Message:%20uniqueExecutionV1)
+      operationId: postMessage--remove:democompany-patterns-uniqueexecutionv1--
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CorrelateMessageIn'
+            examples:
+              democompany-patterns-uniqueExecutionV1:
+                value:
+                  messageName: democompany-patterns-uniqueExecutionV1
+                  businessKey: democompany-patterns-uniqueExecutionV1
+                  processVariables:
+                    customerName:
+                      value: Peter Muster
+                      type: String
+                  all: false
+                  resultEnabled: true
+                  variablesInResultEnabled: true
+        required: true
+      responses:
+        '200':
+          description: ''
 components:
   schemas:
     CBoolean:
@@ -923,6 +1145,39 @@ components:
         withVariablesInReturn:
           description: Set to false will not return the Process Variables and the
             Result Status is 204.
+          type: boolean
+    CorrelateMessageIn:
+      title: CorrelateMessageIn
+      type: object
+      required:
+      - messageName
+      - all
+      - resultEnabled
+      - variablesInResultEnabled
+      properties:
+        messageName:
+          type: string
+        businessKey:
+          type: string
+        tenantId:
+          type: string
+        withoutTenantId:
+          type: boolean
+        processInstanceId:
+          type: string
+        correlationKeys:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+        localCorrelationKeys:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+        processVariables:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+        processVariablesLocal:
+          $ref: '#/components/schemas/Map_orchescala.domain.CamundaVariable'
+        all:
+          type: boolean
+        resultEnabled:
+          type: boolean
+        variablesInResultEnabled:
           type: boolean
     GetActiveTaskIn:
       title: GetActiveTaskIn

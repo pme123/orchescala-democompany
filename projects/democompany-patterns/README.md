@@ -5,8 +5,8 @@ Orch Spec in einen Prozess einfügt und wiedererkennt. Je Pattern gibt es einen 
 für Camunda 7 und Camunda 8 und eine Simulation je Engine, die den Baustein auf einer echten Engine
 durchspielt. Später sollen die BPMN auch als Testdaten für die Orch Spec dienen.
 
-Bis jetzt: **«Init Process»**, **«Identität übernehmen / zurücksetzen»** und
-**«Mocks und Identität weitergeben»**.
+Bis jetzt: **«Init Process»**, **«Identität übernehmen / zurücksetzen»**,
+**«Mocks und Identität weitergeben»** und **«Einmalige Ausführung»**.
 
 ## Init Process – `democompany-patterns-initProcessV1`
 
@@ -272,6 +272,75 @@ Katalog – nicht als eigenen Worker des Prozesses.
 Starts ab («bound to process instance …, not to the job's … (root: -)»). Ab dem Orchescala-Branch
 `fix/c8-root-process-instance` (0.9.0-SNAPSHOT, noch nicht gemergt) fragt der C8-Worker die
 Root-Instanz dann bei der Engine nach (`GET /v2/process-instances/{key}`). C7 braucht das nicht.
+
+## Einmalige Ausführung – `democompany-patterns-uniqueExecutionV1`
+
+```
+✉ Start ─▶ [Init Process] ─▶ [Antrag bearbeiten] ─▶ (succeeded)
+
+┌ Prozess läuft schon (Ereignis-Subprozess, nicht unterbrechend) ┐
+│  ✉ Start-Nachricht nochmals ─▶ (läuft schon: alreadyRunning = true) │
+└────────────────────────────────────────────────────────────────┘
+```
+
+Derselbe Prozess soll für denselben Fall nur einmal laufen. Er startet deshalb über ein
+**Nachrichten-Startereignis** (Name der Nachricht = Prozess-ID) mit einem **`businessKey`**. Solange
+er läuft, fängt ein nicht unterbrechender Ereignis-Subprozess **dieselbe Nachricht**: ein zweiter
+Start mit demselben `businessKey` landet in der laufenden Instanz (`alreadyRunning = true`) – eine
+zweite gibt es nicht.
+
+- Der InitWorker setzt `alreadyRunning = false`; das Ende des Ereignis-Subprozesses setzt es auf `true`.
+- Die Nachricht trägt das In mit – ein zweiter Start überschreibt also dessen Variablen in der
+  laufenden Instanz.
+
+| | Camunda 7 | Camunda 8 |
+|---|---|---|
+| Start | `messageEventDefinition` – der `businessKey` ist der der Instanz | ebenso – Orchescala setzt dazu die Variable `businessKey` |
+| Ereignis-Subprozess | fängt die Nachricht, weil C7 sie zuerst laufenden Instanzen mit diesem `businessKey` zuordnet | die Nachricht hat `zeebe:subscription correlationKey="=businessKey"` – das Abo öffnet beim Start |
+| `alreadyRunning = true` | Execution Listener (`start`) am Ende | Output-Mapping am Ende |
+| zweiter Start über Orchescala | wird abgelehnt (409: «correlated to a running process instance») | startet heute eine **zweite Instanz** (siehe unten) |
+
+| Datei | Inhalt |
+|---|---|
+| [`UniqueExecution.scala`](01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/UniqueExecution.scala) | `In`, `InitIn` (`alreadyRunning`), `Out` |
+| [`EditRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/EditRequestUT.scala) | «Antrag bearbeiten» – solange sie offen ist, läuft der Prozess |
+| [`StartAgainME.scala`](01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/StartAgainME.scala) | die Start-Nachricht ein zweites Mal |
+| [`UniqueExecutionWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/uniqueExecution/v1/UniqueExecutionWorker.scala) | InitWorker: Prüfung des In, `alreadyRunning = false` |
+| [`camunda/patterns-uniqueExecutionV1.bpmn`](src/main/resources/camunda/patterns-uniqueExecutionV1.bpmn) | Camunda 7 |
+| [`camunda8/patterns-uniqueExecutionV1.bpmn`](src/main/resources/camunda8/patterns-uniqueExecutionV1.bpmn) | Camunda 8 |
+| [`UniqueExecutionSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/UniqueExecutionSimulation.scala) | die Szenarien, für beide Engines gleich |
+
+### Simulationen
+
+Alle Szenarien starten mit der Nachricht (`.startWithMsg`); der `businessKey` ist der Name des Szenarios.
+
+1. **`UniqueExecution started`** – einmal gestartet, «Antrag bearbeiten» erledigt: endet mit
+   `alreadyRunning = false`.
+2. **`UniqueExecution started twice`** – während «Antrag bearbeiten» offen ist, kommt die
+   Start-Nachricht mit demselben `businessKey` nochmals (`StartAgainME.withBusinessKey(...)`): der
+   Ereignis-Subprozess fängt sie, der Prozess endet mit `alreadyRunning = true`. Die Nachricht wartet,
+   bis der InitWorker `alreadyRunning = false` gesetzt hat (`.waitFor("alreadyRunning", false)`) –
+   sonst überschreibt er das `true`.
+3. **`UniqueExecution invalid In`** – `customerName = " "`: Incident `validation-failed`.
+
+```bash
+./helper.scala deploy UniqueExecutionC7Simulation
+```
+```bash
+./helper.scala deploy UniqueExecutionC8Simulation
+```
+
+### Voraussetzung: Orchescala (C8)
+
+Den zweiten Start in Szenario 2 schickt die Simulation als Nachricht mit `businessKey` – in C8 als
+`correlationKey`, und so greift das Pattern. Ein **Start** über Orchescala
+(`POST /process/{messageName}/message?businessKey=…`, `C8ProcessInstanceService.startProcessByMessage`)
+schickt in C8 dagegen keinen `correlationKey` mit: dann passt das Abo des Ereignis-Subprozesses nicht,
+und Zeebe startet eine zweite Instanz. Auf c8run nachgeprüft: ohne Schlüssel eine neue Instanz, mit
+`correlationKey = businessKey` landet die Nachricht in der laufenden Instanz (deren Key kommt zurück).
+Damit es auch beim Start über Orchescala greift, müsste der C8-Start den `businessKey` als
+`correlationKey` schicken und – wie in C7 – mit 409 antworten, wenn die Nachricht in einer laufenden
+Instanz landet (sonst setzt er dort die Identität des neuen Aufrufers).
 
 ## Offene Punkte
 
