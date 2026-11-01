@@ -19,6 +19,7 @@ lazy val root = (project in file("."))
     simulation,
     worker,
     gateway,
+    platform,
     helper,
     docs
   )
@@ -76,6 +77,17 @@ lazy val gateway = project
   .settings(zioTestSettings)
   .settings(libraryDependencies ++= gatewayDeps)
   .dependsOn(worker)
+  .enablePlugins(JavaAppPackaging)
+
+// The platform app of the company (orch-platform): orch-doc, orch-spec and orch-ops with the
+// company's documentation - `sbt platform/run`, then http://localhost:8880/site/
+lazy val platform = project
+  .in(file("./04-platform"))
+  // not generalSettings: its auto imports (circe, tapir) are no dependencies of the platform
+  .settings(scalaVersion := scalaV, name := s"$projectName-platform")
+  .settings(publicationSettings)
+  .settings(libraryDependencies ++= platformDeps)
+  .settings(platformSiteSettings(docs))
   .enablePlugins(JavaAppPackaging)
 
 lazy val helper = project

@@ -16,6 +16,7 @@ object Settings {
 
   val scalaV       = "3.8.3"
   val orchescalaV  = "0.9.0-SNAPSHOT"
+  val orchPlatformV = "0.1.0-SNAPSHOT"
   val camundaV     = "7.24.0" // only as info
   val mUnitVersion = "1.2.4"
   val zioVersion = "2.1.24"
@@ -144,6 +145,29 @@ object Settings {
     "dev.zio"         %% "zio-logging-slf4j2"   % zioLoggingVersion,
     "jakarta.xml.bind" % "jakarta.xml.bind-api" % jaxbApiVersion,
     "io.github.pme123" %% "orchescala-gateway" % orchescalaV
+  )
+
+  lazy val platformDeps = Seq(
+    "ch.z9nai" %% "orch-platform-server" % orchPlatformV
+  )
+
+  /** The company's documentation (`00-docs/site`, assembled by `prepareDocs` / `publishDocs`) in the
+    * platform app as `site/` - like the gateway has it. Copied on every build: a page removed from the
+    * documentation does not stay in the app. `sbt platform/run` from the company's folder, so the
+    * app finds the orch-spec and orch-ops folders in `00-docs/testdata`.
+    */
+  def platformSiteSettings(docs: Project) = Seq(
+    Compile / resourceGenerators += Def.task {
+      val src = (docs / baseDirectory).value / "site"
+      val out = (Compile / resourceManaged).value / "site"
+      IO.delete(out)
+      val files = (src ** -DirectoryFilter).get().pair(Path.rebase(src, out))
+      IO.copy(files, CopyOptions().withOverwrite(true))
+      files.map(_._2)
+    }.taskValue,
+    run / fork := true,
+    run / baseDirectory := (LocalRootProject / baseDirectory).value,
+    run / connectInput := true
   )
 
   lazy val helperDeps = apiDeps ++ Seq(
