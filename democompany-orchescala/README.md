@@ -170,6 +170,21 @@ GitHub Pages: <https://pme123.github.io/orchescala-democompany/>
 - One-time setup in the repository settings: Pages → Source: *GitHub Actions*, and allow
   `develop` under Environments → `github-pages` → Deployment branches.
 
+### Platform app
+
+The module `platform` (`04-platform`) builds the company's platform app with
+[orch-platform](https://github.com/z9nai/orch-platform) (`orch-platform-server`): orch-doc
+with the company's docs, orch-spec and orch-ops - the docs (`00-docs/site`) are on its
+classpath as `site/`, the apps come from the `orchescala-orch-doc` jar.
+
+```bash
+sbt platform/run   # http://localhost:8880/site/ · /site/spec/ · /site/ops/
+```
+
+- `orch-platform-server` comes from a local publish (`sbt server/publishLocal` in orch-platform).
+- No login yet (PoC) - it listens on `localhost` only. `PLATFORM_PORT`, `PLATFORM_SITE_DIR`
+  (the docs from a folder, e.g. right after `prepareDocs`).
+
 ## Examples
 
 See the `projects/` directory for complete examples:
