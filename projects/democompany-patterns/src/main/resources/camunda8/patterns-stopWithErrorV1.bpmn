@@ -19,13 +19,29 @@
       <bpmn:outgoing>NotBlockedFlow</bpmn:outgoing>
       <bpmn:outgoing>BlockedFlow</bpmn:outgoing>
     </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="LimitGateway" name="Limit überschritten?">
+      <bpmn:incoming>NotBlockedFlow</bpmn:incoming>
+      <bpmn:outgoing>LimitOkFlow</bpmn:outgoing>
+      <bpmn:outgoing>LimitExceededFlow</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:intermediateThrowEvent id="LimitExceededEvent" name="Limit überschritten">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=&#34;Limit von &#34; + customerName + &#34; überschritten.&#34;" target="_errorMessage" />
+          <zeebe:output source="=assert(false, false, string(_errorMessage))" target="_stopped" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>LimitExceededFlow</bpmn:incoming>
+      <bpmn:outgoing>LimitContinueFlow</bpmn:outgoing>
+    </bpmn:intermediateThrowEvent>
     <bpmn:endEvent id="SucceededEndEvent" name="succeeded">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
           <zeebe:output source="=&#34;succeeded&#34;" target="processStatus" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
-      <bpmn:incoming>NotBlockedFlow</bpmn:incoming>
+      <bpmn:incoming>LimitOkFlow</bpmn:incoming>
+      <bpmn:incoming>LimitContinueFlow</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:endEvent id="StoppedEndEvent" name="Kunde gesperrt">
       <bpmn:extensionElements>
@@ -58,9 +74,16 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="StartFlow" sourceRef="StartEvent" targetRef="InitProcessTask" />
     <bpmn:sequenceFlow id="InitProcessFlow" sourceRef="InitProcessTask" targetRef="BlockedGateway" />
-    <bpmn:sequenceFlow id="NotBlockedFlow" name="nein" sourceRef="BlockedGateway" targetRef="SucceededEndEvent">
+    <bpmn:sequenceFlow id="NotBlockedFlow" name="nein" sourceRef="BlockedGateway" targetRef="LimitGateway">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=not(blocked)</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="LimitOkFlow" name="nein" sourceRef="LimitGateway" targetRef="SucceededEndEvent">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=not(limitExceeded)</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="LimitExceededFlow" name="ja" sourceRef="LimitGateway" targetRef="LimitExceededEvent">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=limitExceeded</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="LimitContinueFlow" sourceRef="LimitExceededEvent" targetRef="SucceededEndEvent" />
     <bpmn:sequenceFlow id="BlockedFlow" name="ja" sourceRef="BlockedGateway" targetRef="StoppedEndEvent">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=blocked</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -85,10 +108,22 @@
           <dc:Bounds x="337" y="85" width="86" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="SucceededEndEvent_di" bpmnElement="SucceededEndEvent">
-        <dc:Bounds x="482" y="122" width="36" height="36" />
+      <bpmndi:BPMNShape id="LimitGateway_di" bpmnElement="LimitGateway" isMarkerVisible="true">
+        <dc:Bounds x="455" y="115" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="474" y="165" width="52" height="14" />
+          <dc:Bounds x="429" y="172" width="102" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="LimitExceededEvent_di" bpmnElement="LimitExceededEvent" bioc:stroke="#fb8c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#fb8c00">
+        <dc:Bounds x="572" y="42" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="542" y="18" width="96" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SucceededEndEvent_di" bpmnElement="SucceededEndEvent">
+        <dc:Bounds x="682" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="674" y="165" width="52" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="StoppedEndEvent_di" bpmnElement="StoppedEndEvent" bioc:stroke="#fb8c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#fb8c00">
@@ -128,10 +163,30 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="NotBlockedFlow_di" bpmnElement="NotBlockedFlow">
         <di:waypoint x="405" y="140" />
-        <di:waypoint x="482" y="140" />
+        <di:waypoint x="455" y="140" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="437" y="122" width="12" height="14" />
+          <dc:Bounds x="418" y="122" width="24" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="LimitOkFlow_di" bpmnElement="LimitOkFlow">
+        <di:waypoint x="505" y="140" />
+        <di:waypoint x="682" y="140" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="582" y="122" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="LimitExceededFlow_di" bpmnElement="LimitExceededFlow">
+        <di:waypoint x="480" y="115" />
+        <di:waypoint x="480" y="60" />
+        <di:waypoint x="572" y="60" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="488" y="85" width="12" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="LimitContinueFlow_di" bpmnElement="LimitContinueFlow">
+        <di:waypoint x="608" y="60" />
+        <di:waypoint x="700" y="60" />
+        <di:waypoint x="700" y="122" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BlockedFlow_di" bpmnElement="BlockedFlow">
         <di:waypoint x="380" y="165" />

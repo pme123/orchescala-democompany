@@ -5,7 +5,7 @@ info:
   summary: "\n**This is for Postman - to have example requests. Be aware the Output\
     \ is not provided!**\n\n\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns\
     \ - je Pattern ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated\
-    \ at 11/2/26, 4:27 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ at 11/2/26, 4:46 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -319,23 +319,30 @@ info:
     \ ungültigem In gibt es hier nicht – das prüft die Simulation von «Init Process»\
     .\n\n```bash\n./helper.scala deploy ProcessStatusC7Simulation\n```\n```bash\n\
     ./helper.scala deploy ProcessStatusC8Simulation\n```\n\n## Prozess mit Fehler\
-    \ stoppen – `democompany-patterns-stopWithErrorV1`\n\n```\nStart ─▶ [Init Process]\
-    \ ─▶ ◇ Kunde gesperrt? ─ nein ─▶ (succeeded)\n                               \
-    \   └─ ja ──▶ (Kunde gesperrt) ⚡ Incident\n```\n\nDas Pattern **unterbricht den\
-    \ Prozess mit einem Fehler, den DevOps im Cockpit (C7) bzw. in Operate (C8)\n\
-    behandeln**: der Prozess bleibt sofort mit einem **Incident** stehen, dessen Meldung\
-    \ das Problem\nbeschreibt. Das Ereignis ist **orange** – ohne Blitz: ein Fehler-Endereignis\
+    \ stoppen – `democompany-patterns-stopWithErrorV1`\n\n```\n                  \
+    \                                    ┌─ ja ──▶ ○ Limit überschritten ⚡ Incident\
+    \ ─┐\nStart ─▶ [Init Process] ─▶ ◇ Kunde gesperrt? ─ nein ─▶ ◇ Limit überschritten?\
+    \ ─ nein ─────────────▶ (succeeded)\n                                  └─ ja ─\
+    ─▶ (Kunde gesperrt) ⚡ Incident\n```\n\nDas Pattern **unterbricht den Prozess mit\
+    \ einem Fehler, den DevOps im Cockpit (C7) bzw. in Operate (C8)\nbehandeln**:\
+    \ der Prozess bleibt sofort mit einem **Incident** stehen, dessen Meldung das\
+    \ Problem\nbeschreibt. Das Ereignis ist **orange** – ohne Blitz: ein Fehler-Endereignis\
     \ würfe in C8 den BPMN-Fehler,\nohne die Mappings auszuwerten (der Incident hiesse\
     \ dann nur «… not caught»), und ein Aufrufer könnte ihn\nfangen. Es passt an ein\
     \ End-Ereignis oder an ein werfendes Zwischenereignis; die Meldung\n(`message`)\
     \ ist Text oder FEEL – hier `= \"Kunde \" + customerName + \" ist gesperrt.\"\
-    `.\n\n**Behandeln:** ein Retry wirft denselben Fehler wieder – der Incident ist\
-    \ kein vorübergehender\nFehler, sondern eine Stelle, an der jemand entscheiden\
-    \ muss. DevOps brechen die Instanz ab oder schieben\nsie per Process Instance\
-    \ Modification weiter (C7: Cockpit, C8: Operate), nachdem die Ursache behoben\
-    \ ist.\n\n Camunda 7 | Camunda 8 |\n---|---|---|\n Meldung | `camunda:inputParameter\
-    \ _errorMessage` – FEEL wird JUEL (`${\"Kunde \".concat(customerName)…}`) | Output-Mapping\
-    \ `_errorMessage` |\n stoppen | Groovy-Listener (`end`): `throw new IllegalArgumentException(…\
+    ` am Ende und\n`= \"Limit von \" + customerName + \" überschritten.\"` am Zwischenereignis.\n\
+    \n**Ende oder Zwischenereignis:** am Ende ist der Prozess fertig, wenn DevOps\
+    \ ihn behandelt haben (meist\nabbrechen). Am Zwischenereignis kann er weiterlaufen:\
+    \ nachdem die Ursache behoben ist, schieben DevOps\ndie Instanz per Modification\
+    \ hinter das Ereignis – hier geht sie dann zu `succeeded`.\n\n**Behandeln:** ein\
+    \ Retry wirft denselben Fehler wieder – der Incident ist kein vorübergehender\n\
+    Fehler, sondern eine Stelle, an der jemand entscheiden muss. DevOps brechen die\
+    \ Instanz ab oder schieben\nsie per Process Instance Modification weiter (C7:\
+    \ Cockpit, C8: Operate), nachdem die Ursache behoben ist.\n\n Camunda 7 | Camunda\
+    \ 8 |\n---|---|---|\n Meldung | `camunda:inputParameter _errorMessage` – FEEL\
+    \ wird JUEL (`${\"Kunde \".concat(customerName)…}`) | Output-Mapping `_errorMessage`\
+    \ |\n stoppen | Groovy-Listener (`end`): `throw new IllegalArgumentException(…\
     )`; `asyncBefore`, damit der Incident am Ereignis entsteht, und `failedJobRetryTimeCycle`\
     \ `R1/PT0S` – ein Versuch | Output-Mapping `_stopped = assert(false, false, string(_errorMessage))`\
     \ |\n Incident | Meldung der Exception | `IO_MAPPING_ERROR` – «Assertion failure\
@@ -350,23 +357,25 @@ info:
     \ neu aus – der Prozess bleibt stehen, wie in C7. Fester Text mit\n`\"` geht als\
     \ C8-Meldung nicht (er stünde in einer FEEL-Zeichenkette) – dann als FEEL schreiben.\n\
     \n Datei | Inhalt |\n---|---|\n [`StopWithError.scala`](01-domain/src/main/scala/democompany/patterns/domain/stopWithError/v1/StopWithError.scala)\
-    \ | `In` (`blocked`), `Out` |\n [`StopWithErrorWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/stopWithError/v1/StopWithErrorWorker.scala)\
+    \ | `In` (`blocked`, `limitExceeded`), `Out` |\n [`StopWithErrorWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/stopWithError/v1/StopWithErrorWorker.scala)\
     \ | InitWorker: Prüfung des In |\n [`camunda/patterns-stopWithErrorV1.bpmn`](src/main/resources/camunda/patterns-stopWithErrorV1.bpmn)\
     \ | Camunda 7 |\n [`camunda8/patterns-stopWithErrorV1.bpmn`](src/main/resources/camunda8/patterns-stopWithErrorV1.bpmn)\
     \ | Camunda 8 |\n [`StopWithErrorSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/StopWithErrorSimulation.scala)\
     \ | die Szenarien, für beide Engines gleich |\n\n### Simulationen\n\n1. **`StopWithError\
     \ succeeded`** – `blocked = false`: endet mit `processStatus = succeeded`.\n2.\
-    \ **`StopWithError blocked`** – `blocked = true`: Incident mit «Kunde Peter Muster\
-    \ ist gesperrt.»\n   (`incidentScenario`).\n3. **`StopWithError mocked`** – endet\
-    \ über den Pfad `output-mocked` von «Init Process».\n\n```bash\n./helper.scala\
-    \ deploy StopWithErrorC7Simulation\n```\n```bash\n./helper.scala deploy StopWithErrorC8Simulation\n\
-    ```\n\nBleibt die Instanz von Szenario 2 stehen, ist das gewollt – in Cockpit\
-    \ bzw. Operate abbrechen.\n\n## Offene Punkte\n\n- Im gemockten Lauf auf C8 setzt\
-    \ der InitWorker `processInstanceId` nicht (im normalen Lauf schon) –\n  die Variablen\
-    \ kommen dort über den Fehler `output-mocked`, nicht über das Abschliessen des\
-    \ Jobs.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n<p>\n\n\
-    \nAll notable changes to this project will be documented in this file.\n\n* Types\
-    \ of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
+    \ **`StopWithError blocked`** – `blocked = true`: Incident am Ende mit «Kunde\
+    \ Peter Muster ist\n   gesperrt.» (`incidentScenario`).\n3. **`StopWithError limit\
+    \ exceeded`** – `limitExceeded = true`: Incident am Zwischenereignis mit «Limit\n\
+    \   von Peter Muster überschritten.».\n4. **`StopWithError mocked`** – endet ü\
+    ber den Pfad `output-mocked` von «Init Process».\n\n```bash\n./helper.scala deploy\
+    \ StopWithErrorC7Simulation\n```\n```bash\n./helper.scala deploy StopWithErrorC8Simulation\n\
+    ```\n\nBleiben die Instanzen der Szenarien 2 und 3 stehen, ist das gewollt – in\
+    \ Cockpit bzw. Operate abbrechen\noder (Szenario 3) per Modification weiterschieben.\n\
+    \n## Offene Punkte\n\n- Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId`\
+    \ nicht (im normalen Lauf schon) –\n  die Variablen kommen dort über den Fehler\
+    \ `output-mocked`, nicht über das Abschliessen des Jobs.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
+    <p>\n\n\nAll notable changes to this project will be documented in this file.\n\
+    \n* Types of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
     \ functionality\n  * Deprecated: soon-to-be-removed features\n  * Removed: now\
     \ removed features\n  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\
     \n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\n\
@@ -1210,8 +1219,10 @@ paths:
       description: |2
 
         Beispiel für das Pattern «Prozess mit Fehler stoppen»: ist der Kunde gesperrt (`blocked`), bleibt
-        der Prozess mit einem Incident stehen - Meldung «Kunde <Name> ist gesperrt.». Sonst endet er mit
-        `succeeded`.
+        der Prozess am Ende mit einem Incident stehen - Meldung «Kunde <Name> ist gesperrt.». Ist das Limit
+        überschritten (`limitExceeded`), bleibt er an einem Zwischenereignis stehen - «Limit von <Name>
+        überschritten.»; schieben DevOps ihn danach weiter, endet er mit `succeeded`. Sonst endet er gleich
+        mit `succeeded`.
 
 
         ---
@@ -1240,6 +1251,9 @@ paths:
                       value: Peter Muster
                       type: String
                     blocked:
+                      value: false
+                      type: Boolean
+                    limitExceeded:
                       value: false
                       type: Boolean
                   businessKey: democompany-patterns-stopWithErrorV1
