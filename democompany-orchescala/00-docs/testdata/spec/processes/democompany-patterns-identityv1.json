@@ -9,7 +9,7 @@
   "status": "draft",
   "description": "Beispiel für die Patterns «Identität übernehmen» und «Identität zurücksetzen».\nNach der Benutzeraufgabe übernimmt der Prozess die Identität der Person, die sie erledigt hat\n(`_identityCorrelation = _identityCorrelationOfActor`, die bisherige in `_identityCorrelationBefore`) -\n«Identität zurücksetzen» setzt danach wieder die Identität vom Start.",
   "createdAt": "2026-10-30",
-  "updatedAt": "2026-10-30T11:31:14+01:00",
+  "updatedAt": "2026-11-01T11:12:04+01:00",
   "variables": [],
   "timeToLive": "5",
   "steps": [
@@ -39,15 +39,23 @@
               "name": "output-mocked",
               "status": "implemented",
               "eventKind": "none",
-              "eventDirection": "throw"
+              "eventDirection": "throw",
+              "pattern": "init-process"
             },
             {
               "id": "OutputmockedEndEvent",
               "kind": "end",
               "name": "output-mocked",
-              "status": "implemented"
+              "status": "implemented",
+              "pattern": "init-process"
             }
-          ]
+          ],
+          "pattern": "init-process"
+        }
+      ],
+      "patterns": [
+        {
+          "id": "init-process"
         }
       ]
     },
@@ -63,7 +71,12 @@
       "name": "Identität übernehmen",
       "status": "implemented",
       "eventKind": "none",
-      "eventDirection": "throw"
+      "eventDirection": "throw",
+      "patterns": [
+        {
+          "id": "identity-take-over"
+        }
+      ]
     },
     {
       "id": "CheckIdentityAsActorTask",
@@ -91,7 +104,12 @@
       "name": "Identität zurücksetzen",
       "status": "implemented",
       "eventKind": "none",
-      "eventDirection": "throw"
+      "eventDirection": "throw",
+      "patterns": [
+        {
+          "id": "identity-reset"
+        }
+      ]
     },
     {
       "id": "CheckIdentityAsStarterTask",
