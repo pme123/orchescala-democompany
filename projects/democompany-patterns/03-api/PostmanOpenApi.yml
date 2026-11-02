@@ -5,7 +5,7 @@ info:
   summary: "\n**This is for Postman - to have example requests. Be aware the Output\
     \ is not provided!**\n\n\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns\
     \ - je Pattern ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated\
-    \ at 11/2/26, 8:39 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ at 11/2/26, 2:09 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -1154,6 +1154,52 @@ paths:
                       value: true
                       type: Boolean
                   businessKey: democompany-patterns-processStatusV1
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /process-definition/key/democompany-patterns-stopWithErrorV1/start:
+    post:
+      tags:
+      - democompany-patterns-stopWithErrorV1
+      summary: 'Bpmn: stopWithErrorV1'
+      description: |2
+
+        Beispiel für das Pattern «Prozess mit Fehler stoppen»: ist der Kunde gesperrt (`blocked`), bleibt
+        der Prozess mit einem Incident stehen - Meldung «Kunde <Name> ist gesperrt.». Sonst endet er mit
+        `succeeded`.
+
+
+        ---
+
+        - **Called Element**: `democompany-patterns-stopWithErrorV1` (to define in the Call Activity)
+
+
+
+        ---
+
+
+
+
+        See API Doc: [Bpmn: stopWithErrorV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20stopWithErrorV1)
+      operationId: postProcess-definitionKeyDemocompany-patterns-stopwitherrorv1Start
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-patterns-stopWithErrorV1:
+                value:
+                  variables:
+                    customerName:
+                      value: Peter Muster
+                      type: String
+                    blocked:
+                      value: false
+                      type: Boolean
+                  businessKey: democompany-patterns-stopWithErrorV1
                   withVariablesInReturn: true
         required: true
       responses:

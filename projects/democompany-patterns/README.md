@@ -6,7 +6,8 @@ für Camunda 7 und Camunda 8 und eine Simulation je Engine, die den Baustein auf
 durchspielt. Später sollen die BPMN auch als Testdaten für die Orch Spec dienen.
 
 Bis jetzt: **«Init Process»**, **«Identität übernehmen / zurücksetzen»**,
-**«Mocks und Identität weitergeben»**, **«Einmalige Ausführung»** und **«Prozess-Status am Ende»**.
+**«Mocks und Identität weitergeben»**, **«Einmalige Ausführung»**, **«Prozess-Status am Ende»** und
+**«Prozess mit Fehler stoppen»**.
 
 ## Init Process – `democompany-patterns-initProcessV1`
 
@@ -403,6 +404,52 @@ Ein Szenario mit ungültigem In gibt es hier nicht – das prüft die Simulation
 ```bash
 ./helper.scala deploy ProcessStatusC8Simulation
 ```
+
+## Prozess mit Fehler stoppen – `democompany-patterns-stopWithErrorV1`
+
+```
+Start ─▶ [Init Process] ─▶ ◇ Kunde gesperrt? ─ nein ─▶ (succeeded)
+                                  └─ ja ──▶ (Kunde gesperrt) ⚡ Incident
+```
+
+Der Prozess bleibt mit einem **Incident** stehen, dessen Meldung das Problem beschreibt. Das Pattern
+passt an ein End-Ereignis oder an ein werfendes Zwischenereignis; die Meldung (`message`) ist Text
+oder FEEL – hier `= "Kunde " + customerName + " ist gesperrt."`.
+
+| | Camunda 7 | Camunda 8 |
+|---|---|---|
+| Meldung | `camunda:inputParameter _errorMessage` – FEEL wird JUEL (`${"Kunde ".concat(customerName)…}`) | Output-Mapping `_errorMessage` |
+| stoppen | Groovy-Listener (`end`): `throw new IllegalArgumentException(…)`; `asyncBefore`, damit der Incident am Ereignis entsteht | Output-Mapping `_stopped = assert(false, false, string(_errorMessage))` |
+| Incident | Meldung der Exception | `IO_MAPPING_ERROR` – «Assertion failure …: Kunde Peter Muster ist gesperrt.» |
+
+**C8:** Zeebe fasst die Output-Mappings zu einem FEEL-Kontext zusammen (`{_errorMessage: …, _stopped:
+…}`) – ein späterer Eintrag sieht die früheren. Ein Ziel zweimal gäbe es darin nur einmal; deshalb
+steht `assert` unter einem eigenen Namen. `assert` ist auf c8run 8.9 nachgeprüft. Wird der Incident
+aufgelöst, wertet Zeebe das Mapping neu aus – der Prozess bleibt stehen, wie in C7.
+
+| Datei | Inhalt |
+|---|---|
+| [`StopWithError.scala`](01-domain/src/main/scala/democompany/patterns/domain/stopWithError/v1/StopWithError.scala) | `In` (`blocked`), `Out` |
+| [`StopWithErrorWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/stopWithError/v1/StopWithErrorWorker.scala) | InitWorker: Prüfung des In |
+| [`camunda/patterns-stopWithErrorV1.bpmn`](src/main/resources/camunda/patterns-stopWithErrorV1.bpmn) | Camunda 7 |
+| [`camunda8/patterns-stopWithErrorV1.bpmn`](src/main/resources/camunda8/patterns-stopWithErrorV1.bpmn) | Camunda 8 |
+| [`StopWithErrorSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/StopWithErrorSimulation.scala) | die Szenarien, für beide Engines gleich |
+
+### Simulationen
+
+1. **`StopWithError succeeded`** – `blocked = false`: endet mit `processStatus = succeeded`.
+2. **`StopWithError blocked`** – `blocked = true`: Incident mit «Kunde Peter Muster ist gesperrt.»
+   (`incidentScenario`).
+3. **`StopWithError mocked`** – endet über den Pfad `output-mocked` von «Init Process».
+
+```bash
+./helper.scala deploy StopWithErrorC7Simulation
+```
+```bash
+./helper.scala deploy StopWithErrorC8Simulation
+```
+
+Bleibt die Instanz von Szenario 2 stehen, ist das gewollt – in Cockpit bzw. Operate abbrechen.
 
 ## Offene Punkte
 
