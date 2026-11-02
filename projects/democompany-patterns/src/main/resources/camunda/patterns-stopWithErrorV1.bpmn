@@ -26,6 +26,7 @@
     </bpmn:endEvent>
     <bpmn:endEvent id="StoppedEndEvent" name="Kunde gesperrt" camunda:asyncBefore="true">
       <bpmn:extensionElements>
+        <camunda:failedJobRetryTimeCycle>R1/PT0S</camunda:failedJobRetryTimeCycle>
         <camunda:inputOutput>
           <camunda:inputParameter name="_errorMessage">${"Kunde ".concat(customerName).concat(" ist gesperrt.")}</camunda:inputParameter>
         </camunda:inputOutput>

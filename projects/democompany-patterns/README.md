@@ -412,19 +412,24 @@ Start ─▶ [Init Process] ─▶ ◇ Kunde gesperrt? ─ nein ─▶ (succeede
                                   └─ ja ──▶ (Kunde gesperrt) ⚡ Incident
 ```
 
-Der Prozess bleibt mit einem **Incident** stehen, dessen Meldung das Problem beschreibt. Das Pattern
-passt an ein End-Ereignis oder an ein werfendes Zwischenereignis; die Meldung (`message`) ist Text
-oder FEEL – hier `= "Kunde " + customerName + " ist gesperrt."`.
+Das Pattern **unterbricht den Prozess mit einem Fehler, den DevOps im Cockpit (C7) bzw. in Operate (C8)
+behandeln**: der Prozess bleibt sofort mit einem **Incident** stehen, dessen Meldung das Problem
+beschreibt. Es passt an ein End-Ereignis oder an ein werfendes Zwischenereignis; die Meldung
+(`message`) ist Text oder FEEL – hier `= "Kunde " + customerName + " ist gesperrt."`.
+
+**Behandeln:** ein Retry wirft denselben Fehler wieder – der Incident ist kein vorübergehender
+Fehler, sondern eine Stelle, an der jemand entscheiden muss. DevOps brechen die Instanz ab oder schieben
+sie per Process Instance Modification weiter (C7: Cockpit, C8: Operate), nachdem die Ursache behoben ist.
 
 | | Camunda 7 | Camunda 8 |
 |---|---|---|
 | Meldung | `camunda:inputParameter _errorMessage` – FEEL wird JUEL (`${"Kunde ".concat(customerName)…}`) | Output-Mapping `_errorMessage` |
-| stoppen | Groovy-Listener (`end`): `throw new IllegalArgumentException(…)`; `asyncBefore`, damit der Incident am Ereignis entsteht | Output-Mapping `_stopped = assert(false, false, string(_errorMessage))` |
+| stoppen | Groovy-Listener (`end`): `throw new IllegalArgumentException(…)`; `asyncBefore`, damit der Incident am Ereignis entsteht, und `failedJobRetryTimeCycle` `R1/PT0S` – ein Versuch | Output-Mapping `_stopped = assert(false, false, string(_errorMessage))` |
 | Incident | Meldung der Exception | `IO_MAPPING_ERROR` – «Assertion failure …: Kunde Peter Muster ist gesperrt.» |
 
-**C7:** die Exception kommt im Job von `asyncBefore` – der Incident entsteht, wenn dessen Retries
-aufgebraucht sind (ohne `failedJobRetryTimeCycle` drei, sofort hintereinander); bis dahin läuft der
-Prozess noch. `asyncBefore` ist eine Transaktionsgrenze am Ereignis.
+**C7:** die Exception kommt im Job von `asyncBefore`. `failedJobRetryTimeCycle` `R1/PT0S` lässt ihn nur
+einmal laufen – der Incident entsteht sofort, gleich wie die Engine Retries sonst einstellt.
+`asyncBefore` ist eine Transaktionsgrenze am Ereignis.
 
 **C8:** Zeebe fasst die Output-Mappings zu einem FEEL-Kontext zusammen (`{_errorMessage: …, _stopped:
 …}`) – ein späterer Eintrag sieht die früheren. Ein Ziel zweimal gäbe es darin nur einmal; deshalb
