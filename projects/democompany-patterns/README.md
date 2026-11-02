@@ -408,23 +408,36 @@ Ein Szenario mit ungültigem In gibt es hier nicht – das prüft die Simulation
 ## Prozess mit Fehler stoppen – `democompany-patterns-stopWithErrorV1`
 
 ```
-Start ─▶ [Init Process] ─▶ ◇ Kunde gesperrt? ─ nein ─▶ (succeeded)
+                                                      ┌─ ja ──▶ ○ Limit überschritten ⚡ Incident ─┐
+Start ─▶ [Init Process] ─▶ ◇ Kunde gesperrt? ─ nein ─▶ ◇ Limit überschritten? ─ nein ─────────────▶ (succeeded)
                                   └─ ja ──▶ (Kunde gesperrt) ⚡ Incident
 ```
 
-Der Prozess bleibt mit einem **Incident** stehen, dessen Meldung das Problem beschreibt. Das Pattern
-passt an ein End-Ereignis oder an ein werfendes Zwischenereignis; die Meldung (`message`) ist Text
-oder FEEL – hier `= "Kunde " + customerName + " ist gesperrt."`.
+Das Pattern **unterbricht den Prozess mit einem Fehler, den DevOps im Cockpit (C7) bzw. in Operate (C8)
+behandeln**: der Prozess bleibt sofort mit einem **Incident** stehen, dessen Meldung das Problem
+beschreibt. Das Ereignis ist **orange** – ohne Blitz: ein Fehler-Endereignis würfe in C8 den BPMN-Fehler,
+ohne die Mappings auszuwerten (der Incident hiesse dann nur «… not caught»), und ein Aufrufer könnte ihn
+fangen. Es passt an ein End-Ereignis oder an ein werfendes Zwischenereignis; die Meldung
+(`message`) ist Text oder FEEL – hier `= "Kunde " + customerName + " ist gesperrt."` am Ende und
+`= "Limit von " + customerName + " überschritten."` am Zwischenereignis.
+
+**Ende oder Zwischenereignis:** am Ende ist der Prozess fertig, wenn DevOps ihn behandelt haben (meist
+abbrechen). Am Zwischenereignis kann er weiterlaufen: nachdem die Ursache behoben ist, schieben DevOps
+die Instanz per Modification hinter das Ereignis – hier geht sie dann zu `succeeded`.
+
+**Behandeln:** ein Retry wirft denselben Fehler wieder – der Incident ist kein vorübergehender
+Fehler, sondern eine Stelle, an der jemand entscheiden muss. DevOps brechen die Instanz ab oder schieben
+sie per Process Instance Modification weiter (C7: Cockpit, C8: Operate), nachdem die Ursache behoben ist.
 
 | | Camunda 7 | Camunda 8 |
 |---|---|---|
 | Meldung | `camunda:inputParameter _errorMessage` – FEEL wird JUEL (`${"Kunde ".concat(customerName)…}`) | Output-Mapping `_errorMessage` |
-| stoppen | Groovy-Listener (`end`): `throw new IllegalArgumentException(…)`; `asyncBefore`, damit der Incident am Ereignis entsteht | Output-Mapping `_stopped = assert(false, false, string(_errorMessage))` |
+| stoppen | Groovy-Listener (`end`): `throw new IllegalArgumentException(…)`; `asyncBefore`, damit der Incident am Ereignis entsteht, und `failedJobRetryTimeCycle` `R1/PT0S` – ein Versuch | Output-Mapping `_stopped = assert(false, false, string(_errorMessage))` |
 | Incident | Meldung der Exception | `IO_MAPPING_ERROR` – «Assertion failure …: Kunde Peter Muster ist gesperrt.» |
 
-**C7:** die Exception kommt im Job von `asyncBefore` – der Incident entsteht, wenn dessen Retries
-aufgebraucht sind (ohne `failedJobRetryTimeCycle` drei, sofort hintereinander); bis dahin läuft der
-Prozess noch. `asyncBefore` ist eine Transaktionsgrenze am Ereignis.
+**C7:** die Exception kommt im Job von `asyncBefore`. `failedJobRetryTimeCycle` `R1/PT0S` lässt ihn nur
+einmal laufen – der Incident entsteht sofort, gleich wie die Engine Retries sonst einstellt.
+`asyncBefore` ist eine Transaktionsgrenze am Ereignis.
 
 **C8:** Zeebe fasst die Output-Mappings zu einem FEEL-Kontext zusammen (`{_errorMessage: …, _stopped:
 …}`) – ein späterer Eintrag sieht die früheren. Ein Ziel zweimal gäbe es darin nur einmal; deshalb
@@ -434,7 +447,7 @@ aufgelöst, wertet Zeebe das Mapping neu aus – der Prozess bleibt stehen, wie 
 
 | Datei | Inhalt |
 |---|---|
-| [`StopWithError.scala`](01-domain/src/main/scala/democompany/patterns/domain/stopWithError/v1/StopWithError.scala) | `In` (`blocked`), `Out` |
+| [`StopWithError.scala`](01-domain/src/main/scala/democompany/patterns/domain/stopWithError/v1/StopWithError.scala) | `In` (`blocked`, `limitExceeded`), `Out` |
 | [`StopWithErrorWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/stopWithError/v1/StopWithErrorWorker.scala) | InitWorker: Prüfung des In |
 | [`camunda/patterns-stopWithErrorV1.bpmn`](src/main/resources/camunda/patterns-stopWithErrorV1.bpmn) | Camunda 7 |
 | [`camunda8/patterns-stopWithErrorV1.bpmn`](src/main/resources/camunda8/patterns-stopWithErrorV1.bpmn) | Camunda 8 |
@@ -443,9 +456,11 @@ aufgelöst, wertet Zeebe das Mapping neu aus – der Prozess bleibt stehen, wie 
 ### Simulationen
 
 1. **`StopWithError succeeded`** – `blocked = false`: endet mit `processStatus = succeeded`.
-2. **`StopWithError blocked`** – `blocked = true`: Incident mit «Kunde Peter Muster ist gesperrt.»
-   (`incidentScenario`).
-3. **`StopWithError mocked`** – endet über den Pfad `output-mocked` von «Init Process».
+2. **`StopWithError blocked`** – `blocked = true`: Incident am Ende mit «Kunde Peter Muster ist
+   gesperrt.» (`incidentScenario`).
+3. **`StopWithError limit exceeded`** – `limitExceeded = true`: Incident am Zwischenereignis mit «Limit
+   von Peter Muster überschritten.».
+4. **`StopWithError mocked`** – endet über den Pfad `output-mocked` von «Init Process».
 
 ```bash
 ./helper.scala deploy StopWithErrorC7Simulation
@@ -454,7 +469,8 @@ aufgelöst, wertet Zeebe das Mapping neu aus – der Prozess bleibt stehen, wie 
 ./helper.scala deploy StopWithErrorC8Simulation
 ```
 
-Bleibt die Instanz von Szenario 2 stehen, ist das gewollt – in Cockpit bzw. Operate abbrechen.
+Bleiben die Instanzen der Szenarien 2 und 3 stehen, ist das gewollt – in Cockpit bzw. Operate abbrechen
+oder (Szenario 3) per Modification weiterschieben.
 
 ## Offene Punkte
 

@@ -2,7 +2,7 @@
   {
     "name" : "democompany-patterns-stopWithErrorV1",
     "id" : "democompany-patterns-stopWithErrorV1",
-    "description" : "\nBeispiel für das Pattern «Prozess mit Fehler stoppen»: ist der Kunde gesperrt (`blocked`), bleibt\nder Prozess mit einem Incident stehen - Meldung «Kunde <Name> ist gesperrt.». Sonst endet er mit\n`succeeded`.\n\n\n",
+    "description" : "\nBeispiel für das Pattern «Prozess mit Fehler stoppen»: ist der Kunde gesperrt (`blocked`), bleibt\nder Prozess am Ende mit einem Incident stehen - Meldung «Kunde <Name> ist gesperrt.». Ist das Limit\nüberschritten (`limitExceeded`), bleibt er an einem Zwischenereignis stehen - «Limit von <Name>\nüberschritten.»; schieben DevOps ihn danach weiter, endet er mit `succeeded`. Sonst endet er gleich\nmit `succeeded`.\n\n\n",
     "version" : 0,
     "appliesTo" : [
       "bpmn:Activity"
@@ -28,6 +28,16 @@
           "name" : "blocked"
         },
         "label" : "blocked",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "limitExceeded",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "limitExceeded"
+        },
+        "label" : "limitExceeded",
         "description" : "",
         "type" : "Hidden"
       },
@@ -58,6 +68,16 @@
           "source" : "blocked"
         },
         "label" : "blocked",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "limitExceeded",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "limitExceeded"
+        },
+        "label" : "limitExceeded",
         "description" : "",
         "type" : "Hidden"
       },

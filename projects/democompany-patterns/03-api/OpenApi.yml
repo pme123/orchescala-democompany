@@ -4,7 +4,7 @@ info:
   version: 0.1.0-SNAPSHOT
   summary: "\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns - je Pattern\
     \ ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated at 11/2/26,\
-    \ 2:09 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ 4:46 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -49,9 +49,9 @@ info:
     \ Simulation je Engine, die den Baustein auf einer echten Engine\ndurchspielt.\
     \ Später sollen die BPMN auch als Testdaten für die Orch Spec dienen.\n\nBis jetzt:\
     \ **«Init Process»**, **«Identität übernehmen / zurücksetzen»**,\n**«Mocks und\
-    \ Identität weitergeben»**, **«Einmalige Ausführung»** und **«Prozess-Status am\
-    \ Ende»**.\n\n## Init Process – `democompany-patterns-initProcessV1`\n\n```\n\
-    Start ─▶ [Init Process] ─▶ (succeeded)\n              │ output-mocked (Fehler-Boundary)\n\
+    \ Identität weitergeben»**, **«Einmalige Ausführung»**, **«Prozess-Status am Ende»\
+    ** und\n**«Prozess mit Fehler stoppen»**.\n\n## Init Process – `democompany-patterns-initProcessV1`\n\
+    \n```\nStart ─▶ [Init Process] ─▶ (succeeded)\n              │ output-mocked (Fehler-Boundary)\n\
     \              ▼\n         ⇨ output-mocked (Link-Wurf)\n\n⇨ output-mocked (Link-Ziel)\
     \ ─▶ (output-mocked)\n```\n\nDer erste Schritt des Prozesses ist ein Service-Task\
     \ mit der **Prozess-ID als Topic**. Den Task\nbearbeitet der InitWorker (`InitProcessWorker`):\n\
@@ -317,10 +317,62 @@ info:
     \ – endet über den Pfad `output-mocked` von «Init Process».\n\nEin Szenario mit\
     \ ungültigem In gibt es hier nicht – das prüft die Simulation von «Init Process»\
     .\n\n```bash\n./helper.scala deploy ProcessStatusC7Simulation\n```\n```bash\n\
-    ./helper.scala deploy ProcessStatusC8Simulation\n```\n\n## Offene Punkte\n\n-\
-    \ Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId` nicht (im\
-    \ normalen Lauf schon) –\n  die Variablen kommen dort über den Fehler `output-mocked`,\
-    \ nicht über das Abschliessen des Jobs.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
+    ./helper.scala deploy ProcessStatusC8Simulation\n```\n\n## Prozess mit Fehler\
+    \ stoppen – `democompany-patterns-stopWithErrorV1`\n\n```\n                  \
+    \                                    ┌─ ja ──▶ ○ Limit überschritten ⚡ Incident\
+    \ ─┐\nStart ─▶ [Init Process] ─▶ ◇ Kunde gesperrt? ─ nein ─▶ ◇ Limit überschritten?\
+    \ ─ nein ─────────────▶ (succeeded)\n                                  └─ ja ─\
+    ─▶ (Kunde gesperrt) ⚡ Incident\n```\n\nDas Pattern **unterbricht den Prozess mit\
+    \ einem Fehler, den DevOps im Cockpit (C7) bzw. in Operate (C8)\nbehandeln**:\
+    \ der Prozess bleibt sofort mit einem **Incident** stehen, dessen Meldung das\
+    \ Problem\nbeschreibt. Das Ereignis ist **orange** – ohne Blitz: ein Fehler-Endereignis\
+    \ würfe in C8 den BPMN-Fehler,\nohne die Mappings auszuwerten (der Incident hiesse\
+    \ dann nur «… not caught»), und ein Aufrufer könnte ihn\nfangen. Es passt an ein\
+    \ End-Ereignis oder an ein werfendes Zwischenereignis; die Meldung\n(`message`)\
+    \ ist Text oder FEEL – hier `= \"Kunde \" + customerName + \" ist gesperrt.\"\
+    ` am Ende und\n`= \"Limit von \" + customerName + \" überschritten.\"` am Zwischenereignis.\n\
+    \n**Ende oder Zwischenereignis:** am Ende ist der Prozess fertig, wenn DevOps\
+    \ ihn behandelt haben (meist\nabbrechen). Am Zwischenereignis kann er weiterlaufen:\
+    \ nachdem die Ursache behoben ist, schieben DevOps\ndie Instanz per Modification\
+    \ hinter das Ereignis – hier geht sie dann zu `succeeded`.\n\n**Behandeln:** ein\
+    \ Retry wirft denselben Fehler wieder – der Incident ist kein vorübergehender\n\
+    Fehler, sondern eine Stelle, an der jemand entscheiden muss. DevOps brechen die\
+    \ Instanz ab oder schieben\nsie per Process Instance Modification weiter (C7:\
+    \ Cockpit, C8: Operate), nachdem die Ursache behoben ist.\n\n | Camunda 7 | Camunda\
+    \ 8 |\n---|---|---|\n Meldung | `camunda:inputParameter _errorMessage` – FEEL\
+    \ wird JUEL (`${\"Kunde \".concat(customerName)…}`) | Output-Mapping `_errorMessage`\
+    \ |\n stoppen | Groovy-Listener (`end`): `throw new IllegalArgumentException(…\
+    )`; `asyncBefore`, damit der Incident am Ereignis entsteht, und `failedJobRetryTimeCycle`\
+    \ `R1/PT0S` – ein Versuch | Output-Mapping `_stopped = assert(false, false, string(_errorMessage))`\
+    \ |\n Incident | Meldung der Exception | `IO_MAPPING_ERROR` – «Assertion failure\
+    \ …: Kunde Peter Muster ist gesperrt.» |\n\n**C7:** die Exception kommt im Job\
+    \ von `asyncBefore`. `failedJobRetryTimeCycle` `R1/PT0S` lässt ihn nur\neinmal\
+    \ laufen – der Incident entsteht sofort, gleich wie die Engine Retries sonst einstellt.\n\
+    `asyncBefore` ist eine Transaktionsgrenze am Ereignis.\n\n**C8:** Zeebe fasst\
+    \ die Output-Mappings zu einem FEEL-Kontext zusammen (`{_errorMessage: …, _stopped:\n\
+    …}`) – ein späterer Eintrag sieht die früheren. Ein Ziel zweimal gäbe es darin\
+    \ nur einmal; deshalb\nsteht `assert` unter einem eigenen Namen. `assert` ist\
+    \ auf c8run 8.9 nachgeprüft. Wird der Incident\naufgelöst, wertet Zeebe das Mapping\
+    \ neu aus – der Prozess bleibt stehen, wie in C7. Fester Text mit\n`\"` geht als\
+    \ C8-Meldung nicht (er stünde in einer FEEL-Zeichenkette) – dann als FEEL schreiben.\n\
+    \n Datei | Inhalt |\n---|---|\n [`StopWithError.scala`](01-domain/src/main/scala/democompany/patterns/domain/stopWithError/v1/StopWithError.scala)\
+    \ | `In` (`blocked`, `limitExceeded`), `Out` |\n [`StopWithErrorWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/stopWithError/v1/StopWithErrorWorker.scala)\
+    \ | InitWorker: Prüfung des In |\n [`camunda/patterns-stopWithErrorV1.bpmn`](src/main/resources/camunda/patterns-stopWithErrorV1.bpmn)\
+    \ | Camunda 7 |\n [`camunda8/patterns-stopWithErrorV1.bpmn`](src/main/resources/camunda8/patterns-stopWithErrorV1.bpmn)\
+    \ | Camunda 8 |\n [`StopWithErrorSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/StopWithErrorSimulation.scala)\
+    \ | die Szenarien, für beide Engines gleich |\n\n### Simulationen\n\n1. **`StopWithError\
+    \ succeeded`** – `blocked = false`: endet mit `processStatus = succeeded`.\n2.\
+    \ **`StopWithError blocked`** – `blocked = true`: Incident am Ende mit «Kunde\
+    \ Peter Muster ist\n   gesperrt.» (`incidentScenario`).\n3. **`StopWithError limit\
+    \ exceeded`** – `limitExceeded = true`: Incident am Zwischenereignis mit «Limit\n\
+    \   von Peter Muster überschritten.».\n4. **`StopWithError mocked`** – endet ü\
+    ber den Pfad `output-mocked` von «Init Process».\n\n```bash\n./helper.scala deploy\
+    \ StopWithErrorC7Simulation\n```\n```bash\n./helper.scala deploy StopWithErrorC8Simulation\n\
+    ```\n\nBleiben die Instanzen der Szenarien 2 und 3 stehen, ist das gewollt – in\
+    \ Cockpit bzw. Operate abbrechen\noder (Szenario 3) per Modification weiterschieben.\n\
+    \n## Offene Punkte\n\n- Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId`\
+    \ nicht (im normalen Lauf schon) –\n  die Variablen kommen dort über den Fehler\
+    \ `output-mocked`, nicht über das Abschliessen des Jobs.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
     <p>\n\n\nAll notable changes to this project will be documented in this file.\n\
     \n* Types of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
     \ functionality\n  * Deprecated: soon-to-be-removed features\n  * Removed: now\
@@ -417,11 +469,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > In`\n- Output: `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-initProcessV1-82460\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-initProcessV1-82460'), height: '95%',\
+        \ id=\"patterns-initProcessV1-71508\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-initProcessV1-71508'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-initProcessV1.bpmn](diagrams/patterns-initProcessV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-82460')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-71508')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -589,12 +641,12 @@ paths:
         \ `democompany-patterns-identityV1` (to define in the Call Activity)\n\n\n\
         \n---\n\n\n\n\n- Input:  `democompany.patterns.domain.identity.v1.Identity\
         \ > In`\n- Output: `democompany.patterns.domain.identity.v1.Identity > Out`\n\
-        \n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"patterns-identityV1-38825\"\
+        \n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"patterns-identityV1-68777\"\
         >\n    <img onLoad=\"openFromUrl('patterns-identityV1.bpmn', new BpmnJS({\
-        \ container: $('#patterns-identityV1-38825'), height: '95%', width: '95%'\
+        \ container: $('#patterns-identityV1-68777'), height: '95%', width: '95%'\
         \ }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-identityV1.bpmn](diagrams/patterns-identityV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-identityV1-38825')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-identityV1-68777')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -1086,11 +1138,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
         \ > In`\n- Output: `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-propagateMocksV1-75977\">\n    <img onLoad=\"openFromUrl('patterns-propagateMocksV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-propagateMocksV1-75977'), height: '95%',\
+        \ id=\"patterns-propagateMocksV1-8872\">\n    <img onLoad=\"openFromUrl('patterns-propagateMocksV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-propagateMocksV1-8872'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-propagateMocksV1.bpmn](diagrams/patterns-propagateMocksV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-propagateMocksV1-75977')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-propagateMocksV1-8872')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -1370,11 +1422,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution\
         \ > In`\n- Output: `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-uniqueExecutionV1-1620\">\n    <img onLoad=\"openFromUrl('patterns-uniqueExecutionV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-uniqueExecutionV1-1620'), height: '95%',\
-        \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ id=\"patterns-uniqueExecutionV1-59330\">\n    <img onLoad=\"openFromUrl('patterns-uniqueExecutionV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-uniqueExecutionV1-59330'), height:\
+        \ '95%', width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-uniqueExecutionV1.bpmn](diagrams/patterns-uniqueExecutionV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-uniqueExecutionV1-1620')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-uniqueExecutionV1-59330')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -1740,11 +1792,11 @@ paths:
         \ Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.processStatus.v1.ProcessStatusExample\
         \ > In`\n- Output: `democompany.patterns.domain.processStatus.v1.ProcessStatusExample\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-processStatusV1-26887\">\n    <img onLoad=\"openFromUrl('patterns-processStatusV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-processStatusV1-26887'), height: '95%',\
+        \ id=\"patterns-processStatusV1-8826\">\n    <img onLoad=\"openFromUrl('patterns-processStatusV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-processStatusV1-8826'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-processStatusV1.bpmn](diagrams/patterns-processStatusV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-processStatusV1-26887')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-processStatusV1-8826')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -1902,30 +1954,33 @@ paths:
       - Stop With Error V1
       summary: Process start
       description: "\nBeispiel für das Pattern «Prozess mit Fehler stoppen»: ist der\
-        \ Kunde gesperrt (`blocked`), bleibt\nder Prozess mit einem Incident stehen\
-        \ - Meldung «Kunde <Name> ist gesperrt.». Sonst endet er mit\n`succeeded`.\n\
-        \n\n---\n\n- **Called Element**: `democompany-patterns-stopWithErrorV1` (to\
-        \ define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.stopWithError.v1.StopWithError\
+        \ Kunde gesperrt (`blocked`), bleibt\nder Prozess am Ende mit einem Incident\
+        \ stehen - Meldung «Kunde <Name> ist gesperrt.». Ist das Limit\nüberschritten\
+        \ (`limitExceeded`), bleibt er an einem Zwischenereignis stehen - «Limit von\
+        \ <Name>\nüberschritten.»; schieben DevOps ihn danach weiter, endet er mit\
+        \ `succeeded`. Sonst endet er gleich\nmit `succeeded`.\n\n\n---\n\n- **Called\
+        \ Element**: `democompany-patterns-stopWithErrorV1` (to define in the Call\
+        \ Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.stopWithError.v1.StopWithError\
         \ > In`\n- Output: `democompany.patterns.domain.stopWithError.v1.StopWithError\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-stopWithErrorV1-54049\">\n    <img onLoad=\"openFromUrl('patterns-stopWithErrorV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-stopWithErrorV1-54049'), height: '95%',\
+        \ id=\"patterns-stopWithErrorV1-86820\">\n    <img onLoad=\"openFromUrl('patterns-stopWithErrorV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-stopWithErrorV1-86820'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-stopWithErrorV1.bpmn](diagrams/patterns-stopWithErrorV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-stopWithErrorV1-54049')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-stopWithErrorV1-86820')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
-        : \"processStatus,customerName,blocked\",\n...\n```\n\n**outputMock**:\n\n\
-        ```json\n...\n\"outputMock\": {\n  \"processStatus\" : \"succeeded\",\n  \"\
-        customerName\" : \"Peter Muster\",\n  \"blocked\" : false\n},\n...\n```\n\n\
-        </p>\n</details>\n</p>\n      \n\n\n**Used in no other Process.**\n\n**Uses\
-        \ no other Processes.**\n<p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
-        <p>\n\nThis describes the <b>Input</b> to start the Process with.\n\nBe aware\
-        \ that running this request with Postman,\nyou will not get the <b>Output</b>\
-        \ but the <i>processInstanceId</i>, as starting a process is asynchronous.\n\
-        \nTo get the <b>Output</b> you need to use the `Process variables` request.\n\
-        \n</p>\n</details>"
+        : \"processStatus,customerName,blocked,limitExceeded\",\n...\n```\n\n**outputMock**:\n\
+        \n```json\n...\n\"outputMock\": {\n  \"processStatus\" : \"succeeded\",\n\
+        \  \"customerName\" : \"Peter Muster\",\n  \"blocked\" : false,\n  \"limitExceeded\"\
+        \ : false\n},\n...\n```\n\n</p>\n</details>\n</p>\n      \n\n\n**Used in no\
+        \ other Process.**\n\n**Uses no other Processes.**\n<p/>\n<details>\n<summary><b><i>General\
+        \ Information</i></b></summary>\n<p>\n\nThis describes the <b>Input</b> to\
+        \ start the Process with.\n\nBe aware that running this request with Postman,\n\
+        you will not get the <b>Output</b> but the <i>processInstanceId</i>, as starting\
+        \ a process is asynchronous.\n\nTo get the <b>Output</b> you need to use the\
+        \ `Process variables` request.\n\n</p>\n</details>"
       operationId: Process start
       parameters:
       - name: tenantId
@@ -1954,6 +2009,7 @@ paths:
                 value:
                   customerName: Peter Muster
                   blocked: false
+                  limitExceeded: false
         required: true
       responses:
         '200':
@@ -1973,20 +2029,23 @@ paths:
       - Stop With Error V1
       summary: Process variables
       description: "\nBeispiel für das Pattern «Prozess mit Fehler stoppen»: ist der\
-        \ Kunde gesperrt (`blocked`), bleibt\nder Prozess mit einem Incident stehen\
-        \ - Meldung «Kunde <Name> ist gesperrt.». Sonst endet er mit\n`succeeded`.\n\
-        \n\n---\n\n- **Called Element**: `democompany-patterns-stopWithErrorV1` (to\
-        \ define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.stopWithError.v1.StopWithError\
+        \ Kunde gesperrt (`blocked`), bleibt\nder Prozess am Ende mit einem Incident\
+        \ stehen - Meldung «Kunde <Name> ist gesperrt.». Ist das Limit\nüberschritten\
+        \ (`limitExceeded`), bleibt er an einem Zwischenereignis stehen - «Limit von\
+        \ <Name>\nüberschritten.»; schieben DevOps ihn danach weiter, endet er mit\
+        \ `succeeded`. Sonst endet er gleich\nmit `succeeded`.\n\n\n---\n\n- **Called\
+        \ Element**: `democompany-patterns-stopWithErrorV1` (to define in the Call\
+        \ Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.stopWithError.v1.StopWithError\
         \ > In`\n- Output: `democompany.patterns.domain.stopWithError.v1.StopWithError\
         \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
         </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
-        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,customerName,blocked\"\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,customerName,blocked,limitExceeded\"\
         ,\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
         \ : \"succeeded\",\n  \"customerName\" : \"Peter Muster\",\n  \"blocked\"\
-        \ : false\n},\n...\n```\n\n</p>\n</details>\n</p>\n      <p/>\n<details>\n\
-        <summary><b><i>General Information</i></b></summary>\n<p>\n\nThis describes\
-        \ the <b>Output</b> of the Process you get. Be aware this does not check if\
-        \ the process is finished (TODO).\n\n  \n</p>\n</details>"
+        \ : false,\n  \"limitExceeded\" : false\n},\n...\n```\n\n</p>\n</details>\n\
+        </p>\n      <p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Output</b> of the Process you get. Be aware this\
+        \ does not check if the process is finished (TODO).\n\n  \n</p>\n</details>"
       operationId: Process variables
       parameters:
       - name: processInstanceId
@@ -2006,7 +2065,7 @@ paths:
         required: false
         schema:
           type: string
-        example: processStatus,customerName,blocked
+        example: processStatus,customerName,blocked,limitExceeded
       responses:
         '200':
           description: ''
@@ -2020,6 +2079,7 @@ paths:
                     processStatus: succeeded
                     customerName: Peter Muster
                     blocked: false
+                    limitExceeded: false
   /worker/democompany-patterns-stopWithErrorV1:
     post:
       tags:
@@ -2052,6 +2112,7 @@ paths:
                 value:
                   customerName: Peter Muster
                   blocked: false
+                  limitExceeded: false
         required: true
       responses:
         '200':
@@ -2435,14 +2496,19 @@ components:
       required:
       - customerName
       - blocked
+      - limitExceeded
       properties:
         customerName:
           description: Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker
             `validation-failed`).
           type: string
         blocked:
-          description: 'Ist der Kunde gesperrt? Ja: der Prozess bleibt mit einem Incident
-            stehen.'
+          description: 'Ist der Kunde gesperrt? Ja: der Prozess bleibt am Ende mit
+            einem Incident stehen.'
+          type: boolean
+        limitExceeded:
+          description: 'Ist das Limit überschritten? Ja: der Prozess bleibt an einem
+            Zwischenereignis mit einem Incident stehen.'
           type: boolean
     StopWithError.Out:
       title: StopWithError.Out
@@ -2451,12 +2517,15 @@ components:
       - processStatus
       - customerName
       - blocked
+      - limitExceeded
       properties:
         processStatus:
           $ref: '#/components/schemas/ProcessStatus1'
         customerName:
           type: string
         blocked:
+          type: boolean
+        limitExceeded:
           type: boolean
     UniqueExecution.In:
       title: UniqueExecution.In

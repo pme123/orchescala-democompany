@@ -8,12 +8,17 @@ abstract class StopWithErrorSimulation extends CompanySimulation:
   simulate(
     // 1. not blocked: ends with processStatus = succeeded
     scenario(`StopWithError succeeded`),
-    // 2. blocked: stops with an incident - its message names the customer
+    // 2. blocked: stops at the end with an incident - its message names the customer
     incidentScenario(
       `StopWithError blocked`,
       "Kunde Peter Muster ist gesperrt."
     ),
-    // 3. the process output is mocked: ends on the path `output-mocked` of «Init Process»
+    // 3. limit exceeded: stops at the intermediate event with an incident
+    incidentScenario(
+      `StopWithError limit exceeded`,
+      "Limit von Peter Muster überschritten."
+    ),
+    // 4. the process output is mocked: ends on the path `output-mocked` of «Init Process»
     scenario(`StopWithError mocked`)
   )
 
@@ -23,6 +28,10 @@ abstract class StopWithErrorSimulation extends CompanySimulation:
   private lazy val `StopWithError blocked` =
     example
       .withIn(In.example.copy(blocked = true))
+
+  private lazy val `StopWithError limit exceeded` =
+    example
+      .withIn(In.example.copy(limitExceeded = true))
 
   private lazy val `StopWithError mocked` =
     example
