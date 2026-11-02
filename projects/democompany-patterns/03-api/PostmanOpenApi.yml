@@ -5,7 +5,7 @@ info:
   summary: "\n**This is for Postman - to have example requests. Be aware the Output\
     \ is not provided!**\n\n\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns\
     \ - je Pattern ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated\
-    \ at 11/2/26, 3:49 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ at 11/2/26, 4:27 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -324,30 +324,32 @@ info:
     \   └─ ja ──▶ (Kunde gesperrt) ⚡ Incident\n```\n\nDas Pattern **unterbricht den\
     \ Prozess mit einem Fehler, den DevOps im Cockpit (C7) bzw. in Operate (C8)\n\
     behandeln**: der Prozess bleibt sofort mit einem **Incident** stehen, dessen Meldung\
-    \ das Problem\nbeschreibt. Es passt an ein End-Ereignis oder an ein werfendes\
-    \ Zwischenereignis; die Meldung\n(`message`) ist Text oder FEEL – hier `= \"Kunde\
-    \ \" + customerName + \" ist gesperrt.\"`.\n\n**Behandeln:** ein Retry wirft denselben\
-    \ Fehler wieder – der Incident ist kein vorübergehender\nFehler, sondern eine\
-    \ Stelle, an der jemand entscheiden muss. DevOps brechen die Instanz ab oder schieben\n\
-    sie per Process Instance Modification weiter (C7: Cockpit, C8: Operate), nachdem\
-    \ die Ursache behoben ist.\n\n Camunda 7 | Camunda 8 |\n---|---|---|\n Meldung\
-    \ | `camunda:inputParameter _errorMessage` – FEEL wird JUEL (`${\"Kunde \".concat(customerName)…\
-    }`) | Output-Mapping `_errorMessage` |\n stoppen | Groovy-Listener (`end`): `throw\
-    \ new IllegalArgumentException(…)`; `asyncBefore`, damit der Incident am Ereignis\
-    \ entsteht, und `failedJobRetryTimeCycle` `R1/PT0S` – ein Versuch | Output-Mapping\
-    \ `_stopped = assert(false, false, string(_errorMessage))` |\n Incident | Meldung\
-    \ der Exception | `IO_MAPPING_ERROR` – «Assertion failure …: Kunde Peter Muster\
-    \ ist gesperrt.» |\n\n**C7:** die Exception kommt im Job von `asyncBefore`. `failedJobRetryTimeCycle`\
-    \ `R1/PT0S` lässt ihn nur\neinmal laufen – der Incident entsteht sofort, gleich\
-    \ wie die Engine Retries sonst einstellt.\n`asyncBefore` ist eine Transaktionsgrenze\
-    \ am Ereignis.\n\n**C8:** Zeebe fasst die Output-Mappings zu einem FEEL-Kontext\
-    \ zusammen (`{_errorMessage: …, _stopped:\n…}`) – ein späterer Eintrag sieht die\
-    \ früheren. Ein Ziel zweimal gäbe es darin nur einmal; deshalb\nsteht `assert`\
-    \ unter einem eigenen Namen. `assert` ist auf c8run 8.9 nachgeprüft. Wird der\
-    \ Incident\naufgelöst, wertet Zeebe das Mapping neu aus – der Prozess bleibt stehen,\
-    \ wie in C7. Fester Text mit\n`\"` geht als C8-Meldung nicht (er stünde in einer\
-    \ FEEL-Zeichenkette) – dann als FEEL schreiben.\n\n Datei | Inhalt |\n---|---|\n\
-    \ [`StopWithError.scala`](01-domain/src/main/scala/democompany/patterns/domain/stopWithError/v1/StopWithError.scala)\
+    \ das Problem\nbeschreibt. Das Ereignis ist **orange** – ohne Blitz: ein Fehler-Endereignis\
+    \ würfe in C8 den BPMN-Fehler,\nohne die Mappings auszuwerten (der Incident hiesse\
+    \ dann nur «… not caught»), und ein Aufrufer könnte ihn\nfangen. Es passt an ein\
+    \ End-Ereignis oder an ein werfendes Zwischenereignis; die Meldung\n(`message`)\
+    \ ist Text oder FEEL – hier `= \"Kunde \" + customerName + \" ist gesperrt.\"\
+    `.\n\n**Behandeln:** ein Retry wirft denselben Fehler wieder – der Incident ist\
+    \ kein vorübergehender\nFehler, sondern eine Stelle, an der jemand entscheiden\
+    \ muss. DevOps brechen die Instanz ab oder schieben\nsie per Process Instance\
+    \ Modification weiter (C7: Cockpit, C8: Operate), nachdem die Ursache behoben\
+    \ ist.\n\n Camunda 7 | Camunda 8 |\n---|---|---|\n Meldung | `camunda:inputParameter\
+    \ _errorMessage` – FEEL wird JUEL (`${\"Kunde \".concat(customerName)…}`) | Output-Mapping\
+    \ `_errorMessage` |\n stoppen | Groovy-Listener (`end`): `throw new IllegalArgumentException(…\
+    )`; `asyncBefore`, damit der Incident am Ereignis entsteht, und `failedJobRetryTimeCycle`\
+    \ `R1/PT0S` – ein Versuch | Output-Mapping `_stopped = assert(false, false, string(_errorMessage))`\
+    \ |\n Incident | Meldung der Exception | `IO_MAPPING_ERROR` – «Assertion failure\
+    \ …: Kunde Peter Muster ist gesperrt.» |\n\n**C7:** die Exception kommt im Job\
+    \ von `asyncBefore`. `failedJobRetryTimeCycle` `R1/PT0S` lässt ihn nur\neinmal\
+    \ laufen – der Incident entsteht sofort, gleich wie die Engine Retries sonst einstellt.\n\
+    `asyncBefore` ist eine Transaktionsgrenze am Ereignis.\n\n**C8:** Zeebe fasst\
+    \ die Output-Mappings zu einem FEEL-Kontext zusammen (`{_errorMessage: …, _stopped:\n\
+    …}`) – ein späterer Eintrag sieht die früheren. Ein Ziel zweimal gäbe es darin\
+    \ nur einmal; deshalb\nsteht `assert` unter einem eigenen Namen. `assert` ist\
+    \ auf c8run 8.9 nachgeprüft. Wird der Incident\naufgelöst, wertet Zeebe das Mapping\
+    \ neu aus – der Prozess bleibt stehen, wie in C7. Fester Text mit\n`\"` geht als\
+    \ C8-Meldung nicht (er stünde in einer FEEL-Zeichenkette) – dann als FEEL schreiben.\n\
+    \n Datei | Inhalt |\n---|---|\n [`StopWithError.scala`](01-domain/src/main/scala/democompany/patterns/domain/stopWithError/v1/StopWithError.scala)\
     \ | `In` (`blocked`), `Out` |\n [`StopWithErrorWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/stopWithError/v1/StopWithErrorWorker.scala)\
     \ | InitWorker: Prüfung des In |\n [`camunda/patterns-stopWithErrorV1.bpmn`](src/main/resources/camunda/patterns-stopWithErrorV1.bpmn)\
     \ | Camunda 7 |\n [`camunda8/patterns-stopWithErrorV1.bpmn`](src/main/resources/camunda8/patterns-stopWithErrorV1.bpmn)\

@@ -414,7 +414,9 @@ Start ─▶ [Init Process] ─▶ ◇ Kunde gesperrt? ─ nein ─▶ (succeede
 
 Das Pattern **unterbricht den Prozess mit einem Fehler, den DevOps im Cockpit (C7) bzw. in Operate (C8)
 behandeln**: der Prozess bleibt sofort mit einem **Incident** stehen, dessen Meldung das Problem
-beschreibt. Es passt an ein End-Ereignis oder an ein werfendes Zwischenereignis; die Meldung
+beschreibt. Das Ereignis ist **orange** – ohne Blitz: ein Fehler-Endereignis würfe in C8 den BPMN-Fehler,
+ohne die Mappings auszuwerten (der Incident hiesse dann nur «… not caught»), und ein Aufrufer könnte ihn
+fangen. Es passt an ein End-Ereignis oder an ein werfendes Zwischenereignis; die Meldung
 (`message`) ist Text oder FEEL – hier `= "Kunde " + customerName + " ist gesperrt."`.
 
 **Behandeln:** ein Retry wirft denselben Fehler wieder – der Incident ist kein vorübergehender
