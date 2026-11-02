@@ -14,7 +14,8 @@ object ApiProjectCreator extends CompanyApiCreator:
     initProcessApi,
     identityApi,
     propagateMocksApi,
-    uniqueExecutionApi
+    uniqueExecutionApi,
+    processStatusApi
   )
 
   private lazy val initProcessApi =
@@ -41,4 +42,8 @@ object ApiProjectCreator extends CompanyApiCreator:
       EditRequestUT.example,
       StartAgainME.example
     )
+
+  private lazy val processStatusApi =
+    import democompany.patterns.domain.processStatus.v1.*
+    api(ProcessStatusExample.example)()
 end ApiProjectCreator

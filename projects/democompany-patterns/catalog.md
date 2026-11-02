@@ -1,6 +1,7 @@
 ### Patterns
 - [Bpmn: identityV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20identityV1)
 - [Bpmn: initProcessV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20initProcessV1)
+- [Bpmn: processStatusV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20processStatusV1)
 - [Bpmn: propagateMocksSubV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20propagateMocksSubV1)
 - [Bpmn: propagateMocksV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20propagateMocksV1)
 - [Bpmn: uniqueExecutionV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20uniqueExecutionV1)

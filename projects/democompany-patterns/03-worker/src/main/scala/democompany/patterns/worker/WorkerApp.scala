@@ -7,7 +7,8 @@ object WorkerApp extends CompanyWorkerApp:
     initProcessWorkers,
     identityWorkers,
     propagateMocksWorkers,
-    uniqueExecutionWorkers
+    uniqueExecutionWorkers,
+    processStatusWorkers
   )
   // «Kunde laden» (GetClientsClientId) is a service of democompany-services - run by this app
   dependencies(
@@ -47,4 +48,11 @@ object WorkerApp extends CompanyWorkerApp:
       new UniqueExecutionWorker()
     )
   end uniqueExecutionWorkers
+
+  private lazy val processStatusWorkers =
+    import democompany.patterns.worker.processStatus.v1.*
+    Seq(
+      new ProcessStatusExampleWorker()
+    )
+  end processStatusWorkers
 end WorkerApp
