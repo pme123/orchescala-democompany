@@ -4,7 +4,7 @@ info:
   version: 0.1.0-SNAPSHOT
   summary: "\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns - je Pattern\
     \ ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated at 11/2/26,\
-    \ 8:39 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ 2:09 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -417,11 +417,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > In`\n- Output: `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-initProcessV1-6191\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-initProcessV1-6191'), height: '95%',\
+        \ id=\"patterns-initProcessV1-82460\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-initProcessV1-82460'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-initProcessV1.bpmn](diagrams/patterns-initProcessV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-6191')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-82460')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -589,12 +589,12 @@ paths:
         \ `democompany-patterns-identityV1` (to define in the Call Activity)\n\n\n\
         \n---\n\n\n\n\n- Input:  `democompany.patterns.domain.identity.v1.Identity\
         \ > In`\n- Output: `democompany.patterns.domain.identity.v1.Identity > Out`\n\
-        \n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"patterns-identityV1-83058\"\
+        \n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"patterns-identityV1-38825\"\
         >\n    <img onLoad=\"openFromUrl('patterns-identityV1.bpmn', new BpmnJS({\
-        \ container: $('#patterns-identityV1-83058'), height: '95%', width: '95%'\
+        \ container: $('#patterns-identityV1-38825'), height: '95%', width: '95%'\
         \ }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-identityV1.bpmn](diagrams/patterns-identityV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-identityV1-83058')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-identityV1-38825')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -1086,11 +1086,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
         \ > In`\n- Output: `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-propagateMocksV1-28655\">\n    <img onLoad=\"openFromUrl('patterns-propagateMocksV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-propagateMocksV1-28655'), height: '95%',\
+        \ id=\"patterns-propagateMocksV1-75977\">\n    <img onLoad=\"openFromUrl('patterns-propagateMocksV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-propagateMocksV1-75977'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-propagateMocksV1.bpmn](diagrams/patterns-propagateMocksV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-propagateMocksV1-28655')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-propagateMocksV1-75977')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -1370,11 +1370,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution\
         \ > In`\n- Output: `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-uniqueExecutionV1-70971\">\n    <img onLoad=\"openFromUrl('patterns-uniqueExecutionV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-uniqueExecutionV1-70971'), height:\
-        \ '95%', width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ id=\"patterns-uniqueExecutionV1-1620\">\n    <img onLoad=\"openFromUrl('patterns-uniqueExecutionV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-uniqueExecutionV1-1620'), height: '95%',\
+        \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-uniqueExecutionV1.bpmn](diagrams/patterns-uniqueExecutionV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-uniqueExecutionV1-70971')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-uniqueExecutionV1-1620')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -1740,11 +1740,11 @@ paths:
         \ Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.processStatus.v1.ProcessStatusExample\
         \ > In`\n- Output: `democompany.patterns.domain.processStatus.v1.ProcessStatusExample\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-processStatusV1-77448\">\n    <img onLoad=\"openFromUrl('patterns-processStatusV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-processStatusV1-77448'), height: '95%',\
+        \ id=\"patterns-processStatusV1-26887\">\n    <img onLoad=\"openFromUrl('patterns-processStatusV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-processStatusV1-26887'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-processStatusV1.bpmn](diagrams/patterns-processStatusV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-processStatusV1-77448')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-processStatusV1-26887')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -1885,6 +1885,173 @@ paths:
                 value:
                   customerName: Peter Muster
                   approved: true
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoInput'
+              examples:
+                InitIn:
+                  value: {}
+  /process/democompany-patterns-stopWithErrorV1/async:
+    post:
+      tags:
+      - Stop With Error V1
+      summary: Process start
+      description: "\nBeispiel für das Pattern «Prozess mit Fehler stoppen»: ist der\
+        \ Kunde gesperrt (`blocked`), bleibt\nder Prozess mit einem Incident stehen\
+        \ - Meldung «Kunde <Name> ist gesperrt.». Sonst endet er mit\n`succeeded`.\n\
+        \n\n---\n\n- **Called Element**: `democompany-patterns-stopWithErrorV1` (to\
+        \ define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.stopWithError.v1.StopWithError\
+        \ > In`\n- Output: `democompany.patterns.domain.stopWithError.v1.StopWithError\
+        \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
+        \ id=\"patterns-stopWithErrorV1-54049\">\n    <img onLoad=\"openFromUrl('patterns-stopWithErrorV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-stopWithErrorV1-54049'), height: '95%',\
+        \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [patterns-stopWithErrorV1.bpmn](diagrams/patterns-stopWithErrorV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-stopWithErrorV1-54049')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
+        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"processStatus,customerName,blocked\",\n...\n```\n\n**outputMock**:\n\n\
+        ```json\n...\n\"outputMock\": {\n  \"processStatus\" : \"succeeded\",\n  \"\
+        customerName\" : \"Peter Muster\",\n  \"blocked\" : false\n},\n...\n```\n\n\
+        </p>\n</details>\n</p>\n      \n\n\n**Used in no other Process.**\n\n**Uses\
+        \ no other Processes.**\n<p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Input</b> to start the Process with.\n\nBe aware\
+        \ that running this request with Postman,\nyou will not get the <b>Output</b>\
+        \ but the <i>processInstanceId</i>, as starting a process is asynchronous.\n\
+        \nTo get the <b>Output</b> you need to use the `Process variables` request.\n\
+        \n</p>\n</details>"
+      operationId: Process start
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StopWithError.In'
+            examples:
+              democompany-patterns-stopWithErrorV1:
+                value:
+                  customerName: Peter Muster
+                  blocked: false
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessInfo'
+              example:
+                processInstanceId: f150c3f1-13f5-11ec-936e-0242ac1d0007
+                businessKey: ORDER-2025-12345
+                status: Active
+                engineType: C7
+  /process/democompany-patterns-stopWithErrorV1/{processInstanceId}/variables:
+    get:
+      tags:
+      - Stop With Error V1
+      summary: Process variables
+      description: "\nBeispiel für das Pattern «Prozess mit Fehler stoppen»: ist der\
+        \ Kunde gesperrt (`blocked`), bleibt\nder Prozess mit einem Incident stehen\
+        \ - Meldung «Kunde <Name> ist gesperrt.». Sonst endet er mit\n`succeeded`.\n\
+        \n\n---\n\n- **Called Element**: `democompany-patterns-stopWithErrorV1` (to\
+        \ define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.stopWithError.v1.StopWithError\
+        \ > In`\n- Output: `democompany.patterns.domain.stopWithError.v1.StopWithError\
+        \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
+        </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,customerName,blocked\"\
+        ,\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ : \"succeeded\",\n  \"customerName\" : \"Peter Muster\",\n  \"blocked\"\
+        \ : false\n},\n...\n```\n\n</p>\n</details>\n</p>\n      <p/>\n<details>\n\
+        <summary><b><i>General Information</i></b></summary>\n<p>\n\nThis describes\
+        \ the <b>Output</b> of the Process you get. Be aware this does not check if\
+        \ the process is finished (TODO).\n\n  \n</p>\n</details>"
+      operationId: Process variables
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: processStatus,customerName,blocked
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StopWithError.Out'
+              examples:
+                democompany-patterns-stopWithErrorV1:
+                  value:
+                    processStatus: succeeded
+                    customerName: Peter Muster
+                    blocked: false
+  /worker/democompany-patterns-stopWithErrorV1:
+    post:
+      tags:
+      - Stop With Error V1
+      summary: Init Worker
+      description: |2
+
+        <details>
+        <summary><b>General Information</b></summary>
+
+        The Init Worker has the following responsibilities:
+
+          - Validates the Process Input (`In`). -> by Orchescala
+          - Maps the Configuration to Process Variables (`InConfig`). -> by Orchescala
+          - Custom validation the Process Input (`In`, e.g. combining 2 variables). -> Process Specific
+          - Initializes the default Variables with `In` as input (see _Process_ description) and `InitIn` as output. -> Process Specific
+
+        The Input is the same as the `In` object of the _Process_.
+
+        `NoInput` means there is no initialization needed.
+        </details>
+      operationId: Init Worker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StopWithError.In'
+            examples:
+              democompany-patterns-stopWithErrorV1:
+                value:
+                  customerName: Peter Muster
+                  blocked: false
         required: true
       responses:
         '200':
@@ -2262,6 +2429,35 @@ components:
         client:
           $ref: '#/components/schemas/Client'
           description: Der Kunde - aus «Kunde laden».
+    StopWithError.In:
+      title: StopWithError.In
+      type: object
+      required:
+      - customerName
+      - blocked
+      properties:
+        customerName:
+          description: Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker
+            `validation-failed`).
+          type: string
+        blocked:
+          description: 'Ist der Kunde gesperrt? Ja: der Prozess bleibt mit einem Incident
+            stehen.'
+          type: boolean
+    StopWithError.Out:
+      title: StopWithError.Out
+      type: object
+      required:
+      - processStatus
+      - customerName
+      - blocked
+      properties:
+        processStatus:
+          $ref: '#/components/schemas/ProcessStatus1'
+        customerName:
+          type: string
+        blocked:
+          type: boolean
     UniqueExecution.In:
       title: UniqueExecution.In
       type: object

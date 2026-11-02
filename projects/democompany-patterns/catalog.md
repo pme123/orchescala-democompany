@@ -4,6 +4,7 @@
 - [Bpmn: processStatusV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20processStatusV1)
 - [Bpmn: propagateMocksSubV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20propagateMocksSubV1)
 - [Bpmn: propagateMocksV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20propagateMocksV1)
+- [Bpmn: stopWithErrorV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20stopWithErrorV1)
 - [Bpmn: uniqueExecutionV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20uniqueExecutionV1)
 - [Message: uniqueExecutionV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Message:%20uniqueExecutionV1)
 - [UserTask variables: ApproveRequestUT](/site/democompany/democompany-patterns/OpenApi.html#operation/UserTask%20variables:%20ApproveRequestUT)
