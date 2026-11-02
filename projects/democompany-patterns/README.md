@@ -6,7 +6,7 @@ für Camunda 7 und Camunda 8 und eine Simulation je Engine, die den Baustein auf
 durchspielt. Später sollen die BPMN auch als Testdaten für die Orch Spec dienen.
 
 Bis jetzt: **«Init Process»**, **«Identität übernehmen / zurücksetzen»**,
-**«Mocks und Identität weitergeben»** und **«Einmalige Ausführung»**.
+**«Mocks und Identität weitergeben»**, **«Einmalige Ausführung»** und **«Prozess-Status am Ende»**.
 
 ## Init Process – `democompany-patterns-initProcessV1`
 
@@ -354,6 +354,55 @@ die Nachricht (auf ihrer Partition), eine laufende älter. Auf c8run 8.9.21 nach
 
 Vorher schickte der C8-Start keinen Schlüssel mit – dann passte das Abo des Ereignis-Subprozesses
 nicht, und jeder Start legte eine neue Instanz an.
+
+## Prozess-Status am Ende – `democompany-patterns-processStatusV1`
+
+```
+Start ─▶ [Init Process] ─▶ ◇ Antrag bewilligt? ─ ja ──▶ (succeeded)
+                                  └─ nein ─▶ (canceled)
+```
+
+Jedes Ende setzt **`processStatus`** – so sieht der Aufrufer (und die Simulation), wie der Prozess
+ausgegangen ist. Den Wert gibt man beim Einfügen als Parameter `processStatus` an (Vorgabe
+`succeeded`); er ist Text, kein Ausdruck. Ein Status von Orchescala (`ProcessStatus`: `succeeded`,
+`canceled`, `failed`, `notValid`, `output-mocked`) wird im `Out` ein fester Fall.
+
+Hier entscheidet ein Gateway über `approved` aus dem In: bewilligt endet der Prozess mit
+`succeeded`, sonst mit `canceled`.
+
+| | Camunda 7 | Camunda 8 |
+|---|---|---|
+| `processStatus` am Ende | Execution Listener (`start`): `execution.setVariable("processStatus", "…")` | Output-Mapping `zeebe:output source="=&quot;…&quot;" target="processStatus"` |
+
+Die anderen Beispielprozesse tragen das Pattern an ihrem Ende `succeeded` schon. Das Ende
+`output-mocked` setzt `processStatus` auch – es gehört aber zu «Init Process», nicht zu diesem
+Pattern: die Orch Spec erkennt dort nur «Init Process».
+
+| Datei | Inhalt |
+|---|---|
+| [`ProcessStatusExample.scala`](01-domain/src/main/scala/democompany/patterns/domain/processStatus/v1/ProcessStatusExample.scala) | `In` (`approved`), `Out` |
+| [`ProcessStatusExampleWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/processStatus/v1/ProcessStatusExampleWorker.scala) | InitWorker: Prüfung des In |
+| [`camunda/patterns-processStatusV1.bpmn`](src/main/resources/camunda/patterns-processStatusV1.bpmn) | Camunda 7 |
+| [`camunda8/patterns-processStatusV1.bpmn`](src/main/resources/camunda8/patterns-processStatusV1.bpmn) | Camunda 8 |
+| [`ProcessStatusSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/ProcessStatusSimulation.scala) | die Szenarien, für beide Engines gleich |
+
+Das Objekt heisst `ProcessStatusExample`, nicht `ProcessStatus` – sonst verdeckte es den Typ
+`ProcessStatus` von Orchescala.
+
+### Simulationen
+
+1. **`ProcessStatus succeeded`** – `approved = true`: endet mit `processStatus = succeeded`.
+2. **`ProcessStatus canceled`** – `approved = false`: endet mit `processStatus = canceled`.
+3. **`ProcessStatus mocked`** – endet über den Pfad `output-mocked` von «Init Process».
+
+Ein Szenario mit ungültigem In gibt es hier nicht – das prüft die Simulation von «Init Process».
+
+```bash
+./helper.scala deploy ProcessStatusC7Simulation
+```
+```bash
+./helper.scala deploy ProcessStatusC8Simulation
+```
 
 ## Offene Punkte
 
