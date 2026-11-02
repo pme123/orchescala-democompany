@@ -422,10 +422,15 @@ oder FEEL – hier `= "Kunde " + customerName + " ist gesperrt."`.
 | stoppen | Groovy-Listener (`end`): `throw new IllegalArgumentException(…)`; `asyncBefore`, damit der Incident am Ereignis entsteht | Output-Mapping `_stopped = assert(false, false, string(_errorMessage))` |
 | Incident | Meldung der Exception | `IO_MAPPING_ERROR` – «Assertion failure …: Kunde Peter Muster ist gesperrt.» |
 
+**C7:** die Exception kommt im Job von `asyncBefore` – der Incident entsteht, wenn dessen Retries
+aufgebraucht sind (ohne `failedJobRetryTimeCycle` drei, sofort hintereinander); bis dahin läuft der
+Prozess noch. `asyncBefore` ist eine Transaktionsgrenze am Ereignis.
+
 **C8:** Zeebe fasst die Output-Mappings zu einem FEEL-Kontext zusammen (`{_errorMessage: …, _stopped:
 …}`) – ein späterer Eintrag sieht die früheren. Ein Ziel zweimal gäbe es darin nur einmal; deshalb
 steht `assert` unter einem eigenen Namen. `assert` ist auf c8run 8.9 nachgeprüft. Wird der Incident
-aufgelöst, wertet Zeebe das Mapping neu aus – der Prozess bleibt stehen, wie in C7.
+aufgelöst, wertet Zeebe das Mapping neu aus – der Prozess bleibt stehen, wie in C7. Fester Text mit
+`"` geht als C8-Meldung nicht (er stünde in einer FEEL-Zeichenkette) – dann als FEEL schreiben.
 
 | Datei | Inhalt |
 |---|---|
