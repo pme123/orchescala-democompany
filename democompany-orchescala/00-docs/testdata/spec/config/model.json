@@ -1,7 +1,480 @@
 {
   "version": 1,
   "company": "Demo Company",
-  "services": [],
+  "services": [
+    {
+      "id": "democompany-patterns-identityV1",
+      "name": "democompany-patterns-identityV1",
+      "group": "democompany-patterns",
+      "description": "Beispiel für die Patterns «Identität übernehmen» und «Identität zurücksetzen».",
+      "kind": "call",
+      "calledProcess": "democompany-patterns-identityV1",
+      "inputs": [
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "processStatus",
+          "expression": "= processStatus",
+          "required": true
+        },
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "required": true
+        },
+        {
+          "name": "approved",
+          "expression": "= approved",
+          "description": "Antrag freigegeben - aus der Benutzeraufgabe «Antrag freigeben».",
+          "required": true
+        },
+        {
+          "name": "checkedUsernames",
+          "expression": "= checkedUsernames",
+          "description": "Die Benutzernamen, mit denen «Identität prüfen» lief - nach der Übernahme der Freigebende, nach dem Zurücksetzen wieder der Starter.",
+          "required": true
+        }
+      ],
+      "builtAt": "2026-11-03T06:56:03.336Z"
+    },
+    {
+      "id": "democompany-patterns-identityV1-CheckIdentity",
+      "name": "CheckIdentity",
+      "group": "democompany-patterns",
+      "description": "Identität prüfen - hängt den Benutzernamen der Identität des Prozesses an `checkedUsernames` an.",
+      "topic": "democompany-patterns-identityV1-CheckIdentity",
+      "kind": "service",
+      "inputs": [
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "required": true
+        },
+        {
+          "name": "identityUsername",
+          "expression": "= identityUsername",
+          "description": "Benutzername der Identität des Prozesses - das BPMN mappt ihn aus `_identityCorrelation`.",
+          "required": true
+        },
+        {
+          "name": "checkedUsernames",
+          "expression": "= checkedUsernames",
+          "description": "Die Benutzernamen der bisherigen Prüfungen."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "identityChecked",
+          "expression": "= identityChecked",
+          "description": "Die Identität des Prozesses wurde geprüft.",
+          "required": true
+        },
+        {
+          "name": "checkedUsernames",
+          "expression": "= checkedUsernames",
+          "description": "Die Benutzernamen aller Prüfungen bis hier, in ihrer Reihenfolge.",
+          "required": true
+        }
+      ],
+      "builtAt": "2026-11-03T06:56:03.336Z"
+    },
+    {
+      "id": "democompany-patterns-initProcessV1",
+      "name": "democompany-patterns-initProcessV1",
+      "group": "democompany-patterns",
+      "description": "Beispiel für das Pattern «Init Process»: der erste Schritt ist ein Service-Task mit der Prozess-ID als Topic.",
+      "kind": "call",
+      "calledProcess": "democompany-patterns-initProcessV1",
+      "inputs": [
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "processStatus",
+          "expression": "= processStatus",
+          "required": true
+        },
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "required": true
+        },
+        {
+          "name": "greetingMessage",
+          "expression": "= greetingMessage",
+          "required": true
+        }
+      ],
+      "builtAt": "2026-11-03T06:56:03.336Z"
+    },
+    {
+      "id": "democompany-patterns-processStatusV1",
+      "name": "democompany-patterns-processStatusV1",
+      "group": "democompany-patterns",
+      "description": "Beispiel für das Pattern «Prozess-Status am Ende»: jedes Ende setzt `processStatus` -",
+      "kind": "call",
+      "calledProcess": "democompany-patterns-processStatusV1",
+      "inputs": [
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "required": true
+        },
+        {
+          "name": "approved",
+          "expression": "= approved",
+          "description": "Ist der Antrag bewilligt? Ja: Ende «succeeded», nein: Ende «canceled».",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "processStatus",
+          "expression": "= processStatus",
+          "description": "Wie der Prozess ausgegangen ist - gesetzt vom Ende, an dem er angekommen ist.",
+          "required": true
+        },
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "required": true
+        },
+        {
+          "name": "approved",
+          "expression": "= approved",
+          "required": true
+        }
+      ],
+      "builtAt": "2026-11-03T06:56:03.336Z"
+    },
+    {
+      "id": "democompany-patterns-propagateMocksV1",
+      "name": "democompany-patterns-propagateMocksV1",
+      "group": "democompany-patterns",
+      "description": "Beispiel für das Pattern «Mocks und Identität weitergeben».",
+      "kind": "call",
+      "calledProcess": "democompany-patterns-propagateMocksV1",
+      "inputs": [
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "required": true
+        },
+        {
+          "name": "clientId",
+          "expression": "= clientId",
+          "description": "Id des Kunden - der Teilprozess lädt ihn mit dem Service `GetClientsClientId`.",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "processStatus",
+          "expression": "= processStatus",
+          "required": true
+        },
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "required": true
+        },
+        {
+          "name": "subProcessStatus",
+          "expression": "= subProcessStatus",
+          "description": "Der `processStatus`, mit dem der Teilprozess endete.",
+          "required": true
+        },
+        {
+          "name": "client",
+          "expression": "= client",
+          "description": "Der Kunde, den der Teilprozess geladen hat."
+        }
+      ],
+      "builtAt": "2026-11-03T06:56:03.336Z"
+    },
+    {
+      "id": "democompany-patterns-stopWithErrorV1",
+      "name": "democompany-patterns-stopWithErrorV1",
+      "group": "democompany-patterns",
+      "description": "Beispiel für das Pattern «Prozess mit Fehler stoppen»: ist der Kunde gesperrt (`blocked`), bleibt",
+      "kind": "call",
+      "calledProcess": "democompany-patterns-stopWithErrorV1",
+      "inputs": [
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "required": true
+        },
+        {
+          "name": "blocked",
+          "expression": "= blocked",
+          "description": "Ist der Kunde gesperrt? Ja: der Prozess bleibt am Ende mit einem Incident stehen.",
+          "required": true
+        },
+        {
+          "name": "limitExceeded",
+          "expression": "= limitExceeded",
+          "description": "Ist das Limit überschritten? Ja: der Prozess bleibt an einem Zwischenereignis mit einem Incident stehen.",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "processStatus",
+          "expression": "= processStatus",
+          "required": true
+        },
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "required": true
+        },
+        {
+          "name": "blocked",
+          "expression": "= blocked",
+          "required": true
+        },
+        {
+          "name": "limitExceeded",
+          "expression": "= limitExceeded",
+          "required": true
+        }
+      ],
+      "builtAt": "2026-11-03T06:56:03.336Z"
+    },
+    {
+      "id": "democompany-patterns-uniqueExecutionV1",
+      "name": "democompany-patterns-uniqueExecutionV1",
+      "group": "democompany-patterns",
+      "description": "Beispiel für das Pattern «Einmalige Ausführung».",
+      "kind": "call",
+      "calledProcess": "democompany-patterns-uniqueExecutionV1",
+      "inputs": [
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "processStatus",
+          "expression": "= processStatus",
+          "required": true
+        },
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "required": true
+        },
+        {
+          "name": "alreadyRunning",
+          "expression": "= alreadyRunning",
+          "description": "Kam die Start-Nachricht ein zweites Mal, während der Prozess lief?",
+          "required": true
+        }
+      ],
+      "builtAt": "2026-11-03T06:56:03.336Z"
+    },
+    {
+      "id": "democompany-patterns.signal.uniqueExecutionV1",
+      "name": "uniqueExecutionV1",
+      "group": "democompany-patterns",
+      "kind": "send",
+      "inputs": [
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "required": true
+        }
+      ],
+      "builtAt": "2026-11-03T06:56:03.336Z"
+    },
+    {
+      "id": "democompany-patterns.userTask.ApproveRequestUT",
+      "name": "ApproveRequestUT",
+      "group": "democompany-patterns",
+      "kind": "user",
+      "inputs": [
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "approved",
+          "expression": "= approved",
+          "description": "Antrag freigegeben?",
+          "required": true
+        }
+      ],
+      "builtAt": "2026-11-03T06:56:03.336Z"
+    },
+    {
+      "id": "democompany-patterns.userTask.CloseRequestUT",
+      "name": "CloseRequestUT",
+      "group": "democompany-patterns",
+      "kind": "user",
+      "inputs": [
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "required": true
+        },
+        {
+          "name": "approved",
+          "expression": "= approved",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "closed",
+          "expression": "= closed",
+          "description": "Antrag abgeschlossen?",
+          "required": true
+        }
+      ],
+      "builtAt": "2026-11-03T06:56:03.336Z"
+    },
+    {
+      "id": "democompany-patterns.userTask.EditRequestUT",
+      "name": "EditRequestUT",
+      "group": "democompany-patterns",
+      "kind": "user",
+      "inputs": [
+        {
+          "name": "customerName",
+          "expression": "= customerName",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "builtAt": "2026-11-03T06:56:03.336Z"
+    },
+    {
+      "id": "democompany-services-clientsV1-GetClientsClientId",
+      "name": "GetClientsClientId",
+      "group": "democompany-services",
+      "description": "Get the Client by Id",
+      "topic": "democompany-services-clientsV1-GetClientsClientId",
+      "kind": "service",
+      "inputs": [
+        {
+          "name": "clientId",
+          "expression": "= clientId",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "client",
+          "expression": "= client",
+          "required": true
+        },
+        {
+          "name": "etag",
+          "expression": "= etag",
+          "required": true
+        },
+        {
+          "name": "email",
+          "expression": "= email"
+        }
+      ],
+      "builtAt": "2026-11-03T06:56:03.336Z"
+    },
+    {
+      "id": "democompany-services-mailsV1-SendEmail",
+      "name": "SendEmail",
+      "group": "democompany-services",
+      "description": "Send an Email",
+      "topic": "democompany-services-mailsV1-SendEmail",
+      "kind": "service",
+      "inputs": [
+        {
+          "name": "subject",
+          "expression": "= subject",
+          "required": true
+        },
+        {
+          "name": "body",
+          "expression": "= body",
+          "required": true
+        },
+        {
+          "name": "to",
+          "expression": "= to",
+          "required": true
+        },
+        {
+          "name": "cc",
+          "expression": "= cc"
+        },
+        {
+          "name": "bcc",
+          "expression": "= bcc"
+        }
+      ],
+      "outputs": [],
+      "builtAt": "2026-11-03T06:56:03.336Z"
+    },
+    {
+      "id": "democompany-services-smtpV1-SendMail",
+      "name": "SendMail",
+      "group": "democompany-services",
+      "description": "Schickt eine Mail über den SMTP-Server der Umgebung (lokal Mailpit).",
+      "topic": "democompany-services-smtpV1-SendMail",
+      "kind": "service",
+      "inputs": [
+        {
+          "name": "to",
+          "expression": "= to",
+          "description": "Empfänger",
+          "required": true
+        },
+        {
+          "name": "subject",
+          "expression": "= subject",
+          "description": "Betreff",
+          "required": true
+        },
+        {
+          "name": "body",
+          "expression": "= body",
+          "description": "Text - `\\n` ist ein Zeilenumbruch",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "sentAt",
+          "expression": "= sentAt",
+          "description": "Zeitpunkt des Versands",
+          "required": true
+        }
+      ],
+      "builtAt": "2026-11-03T06:56:03.336Z"
+    }
+  ],
   "domainTypes": [
     {
       "id": "democompany.patterns.domain.identity.v1.ApproveRequestUT.In",
@@ -73,8 +546,8 @@
         }
       ],
       "topicName": "democompany-patterns-identityV1-CheckIdentity",
-      "dsl": "ServiceTask",
-      "ownerDescr": "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`."
+      "dsl": "CustomTask",
+      "ownerDescr": "Identität prüfen - hängt den Benutzernamen der Identität des Prozesses an `checkedUsernames` an."
     },
     {
       "id": "democompany.patterns.domain.identity.v1.CheckIdentity.Out",
@@ -89,7 +562,7 @@
           "name": "identityChecked",
           "type": "Boolean",
           "default": "true",
-          "description": "Der Service wurde mit der (geprüften) Identität des Prozesses aufgerufen.",
+          "description": "Die Identität des Prozesses wurde geprüft.",
           "example": "true"
         },
         {
@@ -101,34 +574,8 @@
         }
       ],
       "topicName": "democompany-patterns-identityV1-CheckIdentity",
-      "dsl": "ServiceTask",
-      "ownerDescr": "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`."
-    },
-    {
-      "id": "democompany.patterns.domain.identity.v1.CheckIdentity.ServiceIn",
-      "name": "CheckIdentity.ServiceIn",
-      "pkg": "democompany.patterns.domain.identity.v1",
-      "kind": "alias",
-      "owner": "CheckIdentity",
-      "importPath": "democompany.patterns.domain.identity.v1.CheckIdentity",
-      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala",
-      "target": "NoInput",
-      "topicName": "democompany-patterns-identityV1-CheckIdentity",
-      "dsl": "ServiceTask",
-      "ownerDescr": "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`."
-    },
-    {
-      "id": "democompany.patterns.domain.identity.v1.CheckIdentity.ServiceOut",
-      "name": "CheckIdentity.ServiceOut",
-      "pkg": "democompany.patterns.domain.identity.v1",
-      "kind": "alias",
-      "owner": "CheckIdentity",
-      "importPath": "democompany.patterns.domain.identity.v1.CheckIdentity",
-      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala",
-      "target": "NoOutput",
-      "topicName": "democompany-patterns-identityV1-CheckIdentity",
-      "dsl": "ServiceTask",
-      "ownerDescr": "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`."
+      "dsl": "CustomTask",
+      "ownerDescr": "Identität prüfen - hängt den Benutzernamen der Identität des Prozesses an `checkedUsernames` an."
     },
     {
       "id": "democompany.patterns.domain.identity.v1.CloseRequestUT.In",
@@ -181,83 +628,31 @@
       "id": "democompany.patterns.domain.identity.v1.Identity.In",
       "name": "Identity.In",
       "pkg": "democompany.patterns.domain.identity.v1",
-      "kind": "case",
+      "kind": "member",
       "owner": "Identity",
       "importPath": "democompany.patterns.domain.identity.v1.Identity",
-      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/Identity.scala",
-      "fields": [
-        {
-          "name": "customerName",
-          "type": "String",
-          "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
-          "example": "\"Peter Muster\""
-        }
-      ],
-      "processName": "democompany-patterns-identityV1",
-      "dsl": "Process",
-      "ownerDescr": "Beispiel für die Patterns «Identität übernehmen» und «Identität zurücksetzen».\nNach der Benutzeraufgabe übernimmt der Prozess die Identität der Person, die sie erledigt hat\n(`_identityCorrelation = _identityCorrelationOfActor`, die bisherige in `_identityCorrelationBefore`) -\n«Identität zurücksetzen» setzt danach wieder die Identität vom Start."
+      "descr": "Prozess «democompany-patterns-identityV1»",
+      "source": "OpenApi.yml"
     },
     {
       "id": "democompany.patterns.domain.identity.v1.Identity.Out",
       "name": "Identity.Out",
       "pkg": "democompany.patterns.domain.identity.v1",
-      "kind": "case",
+      "kind": "member",
       "owner": "Identity",
       "importPath": "democompany.patterns.domain.identity.v1.Identity",
-      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/Identity.scala",
-      "fields": [
-        {
-          "name": "processStatus",
-          "type": "ProcessStatus",
-          "example": "ProcessStatus.succeeded"
-        },
-        {
-          "name": "customerName",
-          "type": "String",
-          "example": "In.example.customerName"
-        },
-        {
-          "name": "approved",
-          "type": "Boolean",
-          "description": "Antrag freigegeben - aus der Benutzeraufgabe «Antrag freigeben».",
-          "example": "ApproveRequestUT.Out.example.approved"
-        },
-        {
-          "name": "checkedUsernames",
-          "type": "Seq[String]",
-          "description": "Die Benutzernamen, mit denen «Identität prüfen» lief - nach der Übernahme der Freigebende, nach dem Zurücksetzen wieder der Starter.",
-          "example": "Seq(\"actor\", \"admin\")"
-        }
-      ],
-      "processName": "democompany-patterns-identityV1",
-      "dsl": "Process",
-      "ownerDescr": "Beispiel für die Patterns «Identität übernehmen» und «Identität zurücksetzen».\nNach der Benutzeraufgabe übernimmt der Prozess die Identität der Person, die sie erledigt hat\n(`_identityCorrelation = _identityCorrelationOfActor`, die bisherige in `_identityCorrelationBefore`) -\n«Identität zurücksetzen» setzt danach wieder die Identität vom Start."
+      "descr": "Prozess «democompany-patterns-identityV1»",
+      "source": "OpenApi.yml"
     },
     {
       "id": "democompany.patterns.domain.initProcess.v1.InitProcess.In",
       "name": "InitProcess.In",
       "pkg": "democompany.patterns.domain.initProcess.v1",
-      "kind": "case",
+      "kind": "member",
       "owner": "InitProcess",
       "importPath": "democompany.patterns.domain.initProcess.v1.InitProcess",
-      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/initProcess/v1/InitProcess.scala",
-      "fields": [
-        {
-          "name": "customerName",
-          "type": "String",
-          "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
-          "example": "\"Peter Muster\""
-        },
-        {
-          "name": "inConfig",
-          "type": "Option[InConfig]",
-          "default": "None",
-          "description": "A way to override process configuration.\n\n**SHOULD NOT BE USED on Production!**"
-        }
-      ],
-      "processName": "democompany-patterns-initProcessV1",
-      "dsl": "Process",
-      "ownerDescr": "Beispiel für das Pattern «Init Process»: der erste Schritt ist ein Service-Task mit der Prozess-ID als Topic.\nDer InitWorker prüft das In, setzt die Vorgaben aus dem InConfig und liefert gemockte Ausgaben -\nist der Prozess gemockt, endet er über den Pfad `output-mocked` mit `processStatus = output-mocked`."
+      "descr": "Prozess «democompany-patterns-initProcessV1»",
+      "source": "OpenApi.yml"
     },
     {
       "id": "democompany.patterns.domain.initProcess.v1.InitProcess.InConfig",
@@ -304,135 +699,72 @@
       "id": "democompany.patterns.domain.initProcess.v1.InitProcess.Out",
       "name": "InitProcess.Out",
       "pkg": "democompany.patterns.domain.initProcess.v1",
-      "kind": "case",
+      "kind": "member",
       "owner": "InitProcess",
       "importPath": "democompany.patterns.domain.initProcess.v1.InitProcess",
-      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/initProcess/v1/InitProcess.scala",
-      "fields": [
-        {
-          "name": "processStatus",
-          "type": "ProcessStatus",
-          "example": "ProcessStatus.succeeded"
-        },
-        {
-          "name": "customerName",
-          "type": "String",
-          "example": "In.example.customerName"
-        },
-        {
-          "name": "inConfig",
-          "type": "InConfig",
-          "description": "Die Vorgaben des InConfig - vom InitWorker gesetzt, wenn das In keine hat.",
-          "example": "InConfig()"
-        },
-        {
-          "name": "greetingMessage",
-          "type": "String",
-          "example": "InitIn.example.greetingMessage"
-        }
-      ],
-      "processName": "democompany-patterns-initProcessV1",
-      "dsl": "Process",
-      "ownerDescr": "Beispiel für das Pattern «Init Process»: der erste Schritt ist ein Service-Task mit der Prozess-ID als Topic.\nDer InitWorker prüft das In, setzt die Vorgaben aus dem InConfig und liefert gemockte Ausgaben -\nist der Prozess gemockt, endet er über den Pfad `output-mocked` mit `processStatus = output-mocked`."
+      "descr": "Prozess «democompany-patterns-initProcessV1»",
+      "source": "OpenApi.yml"
     },
     {
-      "id": "democompany.patterns.domain.propagateMocks.v1.CheckCustomer.In",
-      "name": "CheckCustomer.In",
-      "pkg": "democompany.patterns.domain.propagateMocks.v1",
+      "id": "democompany.patterns.domain.processStatus.v1.ProcessStatus.In",
+      "name": "ProcessStatus.In",
+      "pkg": "democompany.patterns.domain.processStatus.v1",
+      "kind": "member",
+      "owner": "ProcessStatus",
+      "importPath": "democompany.patterns.domain.processStatus.v1.ProcessStatus",
+      "descr": "Prozess «democompany-patterns-processStatusV1»",
+      "source": "OpenApi.yml"
+    },
+    {
+      "id": "democompany.patterns.domain.processStatus.v1.ProcessStatus.Out",
+      "name": "ProcessStatus.Out",
+      "pkg": "democompany.patterns.domain.processStatus.v1",
+      "kind": "member",
+      "owner": "ProcessStatus",
+      "importPath": "democompany.patterns.domain.processStatus.v1.ProcessStatus",
+      "descr": "Prozess «democompany-patterns-processStatusV1»",
+      "source": "OpenApi.yml"
+    },
+    {
+      "id": "democompany.patterns.domain.processStatus.v1.ProcessStatusExample.In",
+      "name": "ProcessStatusExample.In",
+      "pkg": "democompany.patterns.domain.processStatus.v1",
       "kind": "case",
-      "owner": "CheckCustomer",
-      "importPath": "democompany.patterns.domain.propagateMocks.v1.CheckCustomer",
-      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/CheckCustomer.scala",
-      "fields": [
-        {
-          "name": "customerName",
-          "type": "String",
-          "example": "PropagateMocks.In.example.customerName"
-        }
-      ],
-      "topicName": "democompany-patterns-propagateMocksSubV1-CheckCustomer",
-      "dsl": "ServiceTask",
-      "ownerDescr": "Kunde prüfen - ein Service-Aufruf im Teilprozess; gelingt nur mit `_servicesMocked` vom Aufrufer."
-    },
-    {
-      "id": "democompany.patterns.domain.propagateMocks.v1.CheckCustomer.Out",
-      "name": "CheckCustomer.Out",
-      "pkg": "democompany.patterns.domain.propagateMocks.v1",
-      "kind": "case",
-      "owner": "CheckCustomer",
-      "importPath": "democompany.patterns.domain.propagateMocks.v1.CheckCustomer",
-      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/CheckCustomer.scala",
-      "fields": [
-        {
-          "name": "customerChecked",
-          "type": "Boolean",
-          "default": "true",
-          "description": "Der Kunde wurde geprüft.",
-          "example": "true"
-        }
-      ],
-      "topicName": "democompany-patterns-propagateMocksSubV1-CheckCustomer",
-      "dsl": "ServiceTask",
-      "ownerDescr": "Kunde prüfen - ein Service-Aufruf im Teilprozess; gelingt nur mit `_servicesMocked` vom Aufrufer."
-    },
-    {
-      "id": "democompany.patterns.domain.propagateMocks.v1.CheckCustomer.ServiceIn",
-      "name": "CheckCustomer.ServiceIn",
-      "pkg": "democompany.patterns.domain.propagateMocks.v1",
-      "kind": "alias",
-      "owner": "CheckCustomer",
-      "importPath": "democompany.patterns.domain.propagateMocks.v1.CheckCustomer",
-      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/CheckCustomer.scala",
-      "target": "NoInput",
-      "topicName": "democompany-patterns-propagateMocksSubV1-CheckCustomer",
-      "dsl": "ServiceTask",
-      "ownerDescr": "Kunde prüfen - ein Service-Aufruf im Teilprozess; gelingt nur mit `_servicesMocked` vom Aufrufer."
-    },
-    {
-      "id": "democompany.patterns.domain.propagateMocks.v1.CheckCustomer.ServiceOut",
-      "name": "CheckCustomer.ServiceOut",
-      "pkg": "democompany.patterns.domain.propagateMocks.v1",
-      "kind": "alias",
-      "owner": "CheckCustomer",
-      "importPath": "democompany.patterns.domain.propagateMocks.v1.CheckCustomer",
-      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/CheckCustomer.scala",
-      "target": "NoOutput",
-      "topicName": "democompany-patterns-propagateMocksSubV1-CheckCustomer",
-      "dsl": "ServiceTask",
-      "ownerDescr": "Kunde prüfen - ein Service-Aufruf im Teilprozess; gelingt nur mit `_servicesMocked` vom Aufrufer."
-    },
-    {
-      "id": "democompany.patterns.domain.propagateMocks.v1.PropagateMocks.In",
-      "name": "PropagateMocks.In",
-      "pkg": "democompany.patterns.domain.propagateMocks.v1",
-      "kind": "case",
-      "owner": "PropagateMocks",
-      "importPath": "democompany.patterns.domain.propagateMocks.v1.PropagateMocks",
-      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocks.scala",
+      "owner": "ProcessStatusExample",
+      "importPath": "democompany.patterns.domain.processStatus.v1.ProcessStatusExample",
+      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/processStatus/v1/ProcessStatusExample.scala",
       "fields": [
         {
           "name": "customerName",
           "type": "String",
           "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
           "example": "\"Peter Muster\""
+        },
+        {
+          "name": "approved",
+          "type": "Boolean",
+          "default": "true",
+          "description": "Ist der Antrag bewilligt? Ja: Ende «succeeded», nein: Ende «canceled».",
+          "example": "true"
         }
       ],
-      "processName": "democompany-patterns-propagateMocksV1",
+      "processName": "democompany-patterns-processStatusV1",
       "dsl": "Process",
-      "ownerDescr": "Beispiel für das Pattern «Mocks und Identität weitergeben».\nDie Call Activity «Teilprozess aufrufen» gibt `_servicesMocked`, `_mockedWorkers` und\n`_identityCorrelation` an den Teilprozess weiter - so greifen Mocks und Identität auch dort."
+      "ownerDescr": "Beispiel für das Pattern «Prozess-Status am Ende»: jedes Ende setzt `processStatus` -\nso sieht der Aufrufer (und die Simulation), wie der Prozess ausgegangen ist.\nIst der Antrag bewilligt (`approved`), endet der Prozess mit `succeeded`, sonst mit `canceled`."
     },
     {
-      "id": "democompany.patterns.domain.propagateMocks.v1.PropagateMocks.Out",
-      "name": "PropagateMocks.Out",
-      "pkg": "democompany.patterns.domain.propagateMocks.v1",
+      "id": "democompany.patterns.domain.processStatus.v1.ProcessStatusExample.Out",
+      "name": "ProcessStatusExample.Out",
+      "pkg": "democompany.patterns.domain.processStatus.v1",
       "kind": "case",
-      "owner": "PropagateMocks",
-      "importPath": "democompany.patterns.domain.propagateMocks.v1.PropagateMocks",
-      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocks.scala",
+      "owner": "ProcessStatusExample",
+      "importPath": "democompany.patterns.domain.processStatus.v1.ProcessStatusExample",
+      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/processStatus/v1/ProcessStatusExample.scala",
       "fields": [
         {
           "name": "processStatus",
           "type": "ProcessStatus",
+          "description": "Wie der Prozess ausgegangen ist - gesetzt vom Ende, an dem er angekommen ist.",
           "example": "ProcessStatus.succeeded"
         },
         {
@@ -441,22 +773,35 @@
           "example": "In.example.customerName"
         },
         {
-          "name": "subProcessStatus",
-          "type": "ProcessStatus",
-          "description": "Der `processStatus`, mit dem der Teilprozess endete.",
-          "example": "PropagateMocksSub.Out.example.processStatus"
-        },
-        {
-          "name": "customerChecked",
-          "type": "Option[Boolean]",
-          "default": "None",
-          "description": "Der Teilprozess hat den Kunden geprüft (fehlt, wenn er über `output-mocked` endete).",
-          "example": "Some(PropagateMocksSub.Out.example.customerChecked)"
+          "name": "approved",
+          "type": "Boolean",
+          "default": "true",
+          "example": "true"
         }
       ],
-      "processName": "democompany-patterns-propagateMocksV1",
+      "processName": "democompany-patterns-processStatusV1",
       "dsl": "Process",
-      "ownerDescr": "Beispiel für das Pattern «Mocks und Identität weitergeben».\nDie Call Activity «Teilprozess aufrufen» gibt `_servicesMocked`, `_mockedWorkers` und\n`_identityCorrelation` an den Teilprozess weiter - so greifen Mocks und Identität auch dort."
+      "ownerDescr": "Beispiel für das Pattern «Prozess-Status am Ende»: jedes Ende setzt `processStatus` -\nso sieht der Aufrufer (und die Simulation), wie der Prozess ausgegangen ist.\nIst der Antrag bewilligt (`approved`), endet der Prozess mit `succeeded`, sonst mit `canceled`."
+    },
+    {
+      "id": "democompany.patterns.domain.propagateMocks.v1.PropagateMocks.In",
+      "name": "PropagateMocks.In",
+      "pkg": "democompany.patterns.domain.propagateMocks.v1",
+      "kind": "member",
+      "owner": "PropagateMocks",
+      "importPath": "democompany.patterns.domain.propagateMocks.v1.PropagateMocks",
+      "descr": "Prozess «democompany-patterns-propagateMocksV1»",
+      "source": "OpenApi.yml"
+    },
+    {
+      "id": "democompany.patterns.domain.propagateMocks.v1.PropagateMocks.Out",
+      "name": "PropagateMocks.Out",
+      "pkg": "democompany.patterns.domain.propagateMocks.v1",
+      "kind": "member",
+      "owner": "PropagateMocks",
+      "importPath": "democompany.patterns.domain.propagateMocks.v1.PropagateMocks",
+      "descr": "Prozess «democompany-patterns-propagateMocksV1»",
+      "source": "OpenApi.yml"
     },
     {
       "id": "democompany.patterns.domain.propagateMocks.v1.PropagateMocksSub.In",
@@ -466,17 +811,27 @@
       "owner": "PropagateMocksSub",
       "importPath": "democompany.patterns.domain.propagateMocks.v1.PropagateMocksSub",
       "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocksSub.scala",
+      "imports": [
+        "democompany.services.domain.clients.v1.GetClientsClientId",
+        "democompany.services.domain.clients.v1.schema.Client"
+      ],
       "fields": [
         {
           "name": "customerName",
           "type": "String",
           "description": "Name des Kunden - vom Aufrufer.",
           "example": "PropagateMocks.In.example.customerName"
+        },
+        {
+          "name": "clientId",
+          "type": "Long",
+          "description": "Id des Kunden - vom Aufrufer.",
+          "example": "PropagateMocks.In.example.clientId"
         }
       ],
       "processName": "democompany-patterns-propagateMocksSubV1",
       "dsl": "Process",
-      "ownerDescr": "Teilprozess zum Pattern «Mocks und Identität weitergeben».\n«Kunde prüfen» ruft einen Service auf, den es nicht gibt - er gelingt nur, wenn\n`_servicesMocked` vom Aufrufer kommt; vorher prüft der ServiceWorker die weitergegebene\n`_identityCorrelation`."
+      "ownerDescr": "Teilprozess zum Pattern «Mocks und Identität weitergeben».\n«Kunde laden» ruft den Service `GetClientsClientId` (democompany-services) auf - gemockt,\nwenn `_servicesMocked` vom Aufrufer kommt; vorher prüft der ServiceWorker die weitergegebene\n`_identityCorrelation`."
     },
     {
       "id": "democompany.patterns.domain.propagateMocks.v1.PropagateMocksSub.Out",
@@ -486,6 +841,10 @@
       "owner": "PropagateMocksSub",
       "importPath": "democompany.patterns.domain.propagateMocks.v1.PropagateMocksSub",
       "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocksSub.scala",
+      "imports": [
+        "democompany.services.domain.clients.v1.GetClientsClientId",
+        "democompany.services.domain.clients.v1.schema.Client"
+      ],
       "fields": [
         {
           "name": "processStatus",
@@ -498,15 +857,135 @@
           "example": "In.example.customerName"
         },
         {
-          "name": "customerChecked",
-          "type": "Boolean",
-          "description": "Der Kunde wurde geprüft - aus «Kunde prüfen».",
-          "example": "CheckCustomer.Out.example.customerChecked"
+          "name": "client",
+          "type": "Client",
+          "description": "Der Kunde - aus «Kunde laden».",
+          "example": "GetClientsClientId.Out.example.client"
         }
       ],
       "processName": "democompany-patterns-propagateMocksSubV1",
       "dsl": "Process",
-      "ownerDescr": "Teilprozess zum Pattern «Mocks und Identität weitergeben».\n«Kunde prüfen» ruft einen Service auf, den es nicht gibt - er gelingt nur, wenn\n`_servicesMocked` vom Aufrufer kommt; vorher prüft der ServiceWorker die weitergegebene\n`_identityCorrelation`."
+      "ownerDescr": "Teilprozess zum Pattern «Mocks und Identität weitergeben».\n«Kunde laden» ruft den Service `GetClientsClientId` (democompany-services) auf - gemockt,\nwenn `_servicesMocked` vom Aufrufer kommt; vorher prüft der ServiceWorker die weitergegebene\n`_identityCorrelation`."
+    },
+    {
+      "id": "democompany.patterns.domain.stopWithError.v1.StopWithError.In",
+      "name": "StopWithError.In",
+      "pkg": "democompany.patterns.domain.stopWithError.v1",
+      "kind": "member",
+      "owner": "StopWithError",
+      "importPath": "democompany.patterns.domain.stopWithError.v1.StopWithError",
+      "descr": "Prozess «democompany-patterns-stopWithErrorV1»",
+      "source": "OpenApi.yml"
+    },
+    {
+      "id": "democompany.patterns.domain.stopWithError.v1.StopWithError.Out",
+      "name": "StopWithError.Out",
+      "pkg": "democompany.patterns.domain.stopWithError.v1",
+      "kind": "member",
+      "owner": "StopWithError",
+      "importPath": "democompany.patterns.domain.stopWithError.v1.StopWithError",
+      "descr": "Prozess «democompany-patterns-stopWithErrorV1»",
+      "source": "OpenApi.yml"
+    },
+    {
+      "id": "democompany.patterns.domain.uniqueExecution.v1.EditRequestUT.In",
+      "name": "EditRequestUT.In",
+      "pkg": "democompany.patterns.domain.uniqueExecution.v1",
+      "kind": "case",
+      "owner": "EditRequestUT",
+      "importPath": "democompany.patterns.domain.uniqueExecution.v1.EditRequestUT",
+      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/EditRequestUT.scala",
+      "fields": [
+        {
+          "name": "customerName",
+          "type": "String",
+          "example": "UniqueExecution.In.example.customerName"
+        }
+      ],
+      "dsl": "UserTask",
+      "keyName": "name",
+      "key": "EditRequestUT",
+      "ownerDescr": "Antrag bearbeiten - solange die Aufgabe offen ist, läuft der Prozess; ein zweiter Start landet hier."
+    },
+    {
+      "id": "democompany.patterns.domain.uniqueExecution.v1.EditRequestUT.Out",
+      "name": "EditRequestUT.Out",
+      "pkg": "democompany.patterns.domain.uniqueExecution.v1",
+      "kind": "member",
+      "owner": "EditRequestUT",
+      "importPath": "democompany.patterns.domain.uniqueExecution.v1.EditRequestUT",
+      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/EditRequestUT.scala",
+      "dsl": "UserTask",
+      "keyName": "name",
+      "key": "EditRequestUT",
+      "ownerDescr": "Antrag bearbeiten - solange die Aufgabe offen ist, läuft der Prozess; ein zweiter Start landet hier."
+    },
+    {
+      "id": "democompany.patterns.domain.uniqueExecution.v1.StartAgainME.In",
+      "name": "StartAgainME.In",
+      "pkg": "democompany.patterns.domain.uniqueExecution.v1",
+      "kind": "member",
+      "owner": "StartAgainME",
+      "importPath": "democompany.patterns.domain.uniqueExecution.v1.StartAgainME",
+      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/StartAgainME.scala",
+      "dsl": "MessageEvent",
+      "keyName": "messageName",
+      "key": "UniqueExecution.processName",
+      "ownerDescr": "Dieselbe Start-Nachricht ein zweites Mal - mit dem `businessKey` der laufenden Instanz."
+    },
+    {
+      "id": "democompany.patterns.domain.uniqueExecution.v1.StartAgainME.Out",
+      "name": "StartAgainME.Out",
+      "pkg": "democompany.patterns.domain.uniqueExecution.v1",
+      "kind": "member",
+      "owner": "StartAgainME",
+      "importPath": "democompany.patterns.domain.uniqueExecution.v1.StartAgainME",
+      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/StartAgainME.scala",
+      "dsl": "MessageEvent",
+      "keyName": "messageName",
+      "key": "UniqueExecution.processName",
+      "ownerDescr": "Dieselbe Start-Nachricht ein zweites Mal - mit dem `businessKey` der laufenden Instanz."
+    },
+    {
+      "id": "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution.In",
+      "name": "UniqueExecution.In",
+      "pkg": "democompany.patterns.domain.uniqueExecution.v1",
+      "kind": "member",
+      "owner": "UniqueExecution",
+      "importPath": "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution",
+      "descr": "Prozess «democompany-patterns-uniqueExecutionV1»",
+      "source": "OpenApi.yml"
+    },
+    {
+      "id": "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution.InitIn",
+      "name": "UniqueExecution.InitIn",
+      "pkg": "democompany.patterns.domain.uniqueExecution.v1",
+      "kind": "case",
+      "owner": "UniqueExecution",
+      "importPath": "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution",
+      "source": "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/UniqueExecution.scala",
+      "fields": [
+        {
+          "name": "alreadyRunning",
+          "type": "Boolean",
+          "default": "false",
+          "description": "`false` beim Start - der Ereignis-Subprozess «Prozess läuft schon» setzt ihn auf `true`.",
+          "example": "false"
+        }
+      ],
+      "processName": "democompany-patterns-uniqueExecutionV1",
+      "dsl": "Process",
+      "ownerDescr": "Beispiel für das Pattern «Einmalige Ausführung».\nDer Prozess startet über eine Nachricht (Name = Prozess-ID) mit einem `businessKey`. Solange er\nläuft, fängt ein nicht unterbrechender Ereignis-Subprozess dieselbe Nachricht - ein zweiter Start\nmit demselben `businessKey` landet in der laufenden Instanz (`alreadyRunning = true`) statt eine\nzweite zu starten."
+    },
+    {
+      "id": "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution.Out",
+      "name": "UniqueExecution.Out",
+      "pkg": "democompany.patterns.domain.uniqueExecution.v1",
+      "kind": "member",
+      "owner": "UniqueExecution",
+      "importPath": "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution",
+      "descr": "Prozess «democompany-patterns-uniqueExecutionV1»",
+      "source": "OpenApi.yml"
     },
     {
       "id": "democompany.services.domain.clients.v1.GetClientsClientId.In",
@@ -527,7 +1006,8 @@
         }
       ],
       "topicName": "democompany-services-clientsV1-GetClientsClientId",
-      "ownerDescr": "Get the Client by Id"
+      "ownerDescr": "Get the Client by Id",
+      "ownerPath": "GET: clients/clientId"
     },
     {
       "id": "democompany.services.domain.clients.v1.GetClientsClientId.Out",
@@ -558,7 +1038,8 @@
         }
       ],
       "topicName": "democompany-services-clientsV1-GetClientsClientId",
-      "ownerDescr": "Get the Client by Id"
+      "ownerDescr": "Get the Client by Id",
+      "ownerPath": "GET: clients/clientId"
     },
     {
       "id": "democompany.services.domain.clients.v1.GetClientsClientId.ServiceIn",
@@ -573,7 +1054,8 @@
       ],
       "target": "NoInput",
       "topicName": "democompany-services-clientsV1-GetClientsClientId",
-      "ownerDescr": "Get the Client by Id"
+      "ownerDescr": "Get the Client by Id",
+      "ownerPath": "GET: clients/clientId"
     },
     {
       "id": "democompany.services.domain.clients.v1.GetClientsClientId.ServiceOut",
@@ -588,7 +1070,8 @@
       ],
       "target": "Client",
       "topicName": "democompany-services-clientsV1-GetClientsClientId",
-      "ownerDescr": "Get the Client by Id"
+      "ownerDescr": "Get the Client by Id",
+      "ownerPath": "GET: clients/clientId"
     },
     {
       "id": "democompany.services.domain.clients.v1.schema.Address",
@@ -745,7 +1228,8 @@
         }
       ],
       "topicName": "democompany-services-mailsV1-SendEmail",
-      "ownerDescr": "Send an Email"
+      "ownerDescr": "Send an Email",
+      "ownerPath": "PUT: mail"
     },
     {
       "id": "democompany.services.domain.mails.v1.SendEmail.Out",
@@ -756,7 +1240,8 @@
       "importPath": "democompany.services.domain.mails.v1.SendEmail",
       "source": "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
       "topicName": "democompany-services-mailsV1-SendEmail",
-      "ownerDescr": "Send an Email"
+      "ownerDescr": "Send an Email",
+      "ownerPath": "PUT: mail"
     },
     {
       "id": "democompany.services.domain.mails.v1.SendEmail.ServiceIn",
@@ -768,7 +1253,8 @@
       "source": "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
       "target": "In",
       "topicName": "democompany-services-mailsV1-SendEmail",
-      "ownerDescr": "Send an Email"
+      "ownerDescr": "Send an Email",
+      "ownerPath": "PUT: mail"
     },
     {
       "id": "democompany.services.domain.mails.v1.SendEmail.ServiceOut",
@@ -780,7 +1266,8 @@
       "source": "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
       "target": "NoOutput",
       "topicName": "democompany-services-mailsV1-SendEmail",
-      "ownerDescr": "Send an Email"
+      "ownerDescr": "Send an Email",
+      "ownerPath": "PUT: mail"
     },
     {
       "id": "democompany.services.domain.smtp.v1.SendMail.In",
@@ -847,6 +1334,406 @@
       "name": "defaultEtag",
       "pkg": "democompany.services.domain",
       "type": "String"
+    },
+    {
+      "name": "defaultFirstName",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultFirstNamePartner",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultLastName",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultCompanyName",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultDateOfBirth",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "LocalDate"
+    },
+    {
+      "name": "defaultUid",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultStreet",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultHouseNumber",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultPostcode",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultPlace",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultValidAfterStr",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultValidAfter",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "LocalDate"
+    },
+    {
+      "name": "defaultValidUntilStr",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultValidUntil",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "LocalDate"
+    },
+    {
+      "name": "defaultValidFromStr",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultValidUntilRestrictionStr",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultDummyText",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultSortNo",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultClientKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultClientNumber",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultEditClientNumber",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultClientDesignation",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultClientSegment",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultClientCategory",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultAdvisorKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultAdvisorRoleCode",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultAdvisorAssignmentKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultBranch",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultNogaCode",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultNogaCode25",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultLocationKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultInitiator",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultResponsibleUser",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultAccountKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultAccountNumber",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultEditAccountNumber",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultIban",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Iban"
+    },
+    {
+      "name": "defaultContractKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultContractId",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultPortfolioKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultPortfolioId",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultPortfolioIdKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultRelationshipKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultCommunicationKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultCardKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultCardNumber",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultPoaKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultPoaStatus",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultSignbaseKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultSignbaseStatus",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultSigningAuthorityKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultSignatureOrigin",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultLegitimation",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultAssignmentKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultRelationshipType",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultTerminationRule",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultInstructionKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultInstructionType",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultRestrictionKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultRestrictionCategory",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultMaximumAmount",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Double"
+    },
+    {
+      "name": "defaultAutoSiCheck",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Boolean"
+    },
+    {
+      "name": "defaultResponseKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultPensionPlanKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultInvestmentPlanKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultPlanNumber",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultPlanCategory",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultPlanCurrency",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultPlanType",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultInvestmentObjective",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultPaymentRuleKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultLevelKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultBusinessCaseGroupNumber",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultDispatchRuleKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
+    },
+    {
+      "name": "defaultDispatchAddressKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultDocumentCategoryKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultDocumentGroupingKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultAddressType",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Int"
+    },
+    {
+      "name": "defaultScopeLevel",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "String"
+    },
+    {
+      "name": "defaultRuleKey",
+      "pkg": "z9nai.orchescala.domain",
+      "type": "Long"
     }
   ],
   "projects": [
@@ -855,18 +1742,29 @@
       "name": "democompany-services",
       "path": "/Users/pme/dev/Github/pme123/orchescala-democompany/projects/democompany-services",
       "types": 13,
-      "scannedAt": "2026-10-30T10:23:52.609Z"
+      "scannedAt": "2026-11-03T06:56:03.259Z",
+      "dependencies": []
     },
     {
       "id": "p-b25ef57253",
       "name": "democompany-patterns",
-      "types": 22,
-      "scannedAt": "2026-10-30T10:23:52.609Z"
+      "types": 27,
+      "scannedAt": "2026-11-03T06:56:03.259Z",
+      "dependencies": [
+        "democompany-services"
+      ]
+    },
+    {
+      "id": "p-3fdf97b1f5",
+      "name": "z9nai-orchescala",
+      "types": 0,
+      "scannedAt": "2026-11-03T06:56:03.259Z"
     }
   ],
   "domainSources": [
     "democompany-services",
-    "democompany-patterns"
+    "democompany-patterns",
+    "z9nai-orchescala"
   ],
   "epics": [
     {

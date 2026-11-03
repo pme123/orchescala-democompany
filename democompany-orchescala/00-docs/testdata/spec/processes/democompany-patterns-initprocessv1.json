@@ -5,11 +5,11 @@
   "title": "democompany-patterns-initProcessV1",
   "processId": "democompany-patterns-initProcessV1",
   "project": "democompany-patterns",
-  "engine": "c7",
+  "engine": "c8",
   "status": "implemented",
   "description": "Beispiel für das Pattern «Init Process»: der erste Schritt ist ein Service-Task mit der Prozess-ID als Topic.\nDer InitWorker prüft das In, setzt die Vorgaben aus dem InConfig und liefert gemockte Ausgaben -\nist der Prozess gemockt, endet er über den Pfad `output-mocked` mit `processStatus = output-mocked`.",
   "createdAt": "2026-10-30",
-  "updatedAt": "2026-10-30T11:34:15+01:00",
+  "updatedAt": "2026-11-02T09:55:10+01:00",
   "variables": [],
   "timeToLive": "5",
   "steps": [
@@ -32,6 +32,7 @@
           "declared": true,
           "interrupting": true,
           "boundary": true,
+          "pattern": "init-process",
           "steps": [
             {
               "id": "OutputMockedThrow",
@@ -39,15 +40,28 @@
               "name": "output-mocked",
               "status": "implemented",
               "eventKind": "none",
-              "eventDirection": "throw"
+              "eventDirection": "throw",
+              "pattern": "init-process"
             },
             {
               "id": "OutputmockedEndEvent",
               "kind": "end",
               "name": "output-mocked",
-              "status": "implemented"
+              "status": "implemented",
+              "outputs": [
+                {
+                  "name": "processStatus",
+                  "expression": "= \"output-mocked\""
+                }
+              ],
+              "pattern": "init-process"
             }
           ]
+        }
+      ],
+      "patterns": [
+        {
+          "id": "init-process"
         }
       ]
     },
@@ -55,7 +69,21 @@
       "id": "SucceededEndEvent",
       "kind": "end",
       "name": "succeeded",
-      "status": "implemented"
+      "status": "implemented",
+      "outputs": [
+        {
+          "name": "processStatus",
+          "expression": "= \"succeeded\""
+        }
+      ],
+      "patterns": [
+        {
+          "id": "process-status",
+          "params": {
+            "processStatus": "succeeded"
+          }
+        }
+      ]
     }
   ],
   "types": [
@@ -139,5 +167,8 @@
       ]
     }
   ],
-  "interactions": []
+  "interactions": [],
+  "epics": [
+    "pattern"
+  ]
 }

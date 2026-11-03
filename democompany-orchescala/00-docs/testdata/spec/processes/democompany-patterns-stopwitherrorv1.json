@@ -1,0 +1,263 @@
+{
+  "version": 1,
+  "slug": "democompany-patterns-stopwitherrorv1",
+  "name": "stopWithErrorV1",
+  "title": "democompany-patterns-stopWithErrorV1",
+  "processId": "democompany-patterns-stopWithErrorV1",
+  "project": "democompany-patterns",
+  "engine": "c8",
+  "status": "changed",
+  "description": "Beispiel für das Pattern «Prozess mit Fehler stoppen»: ist der Kunde gesperrt (`blocked`), bleibt\nder Prozess mit einem Incident stehen - Meldung «Kunde <Name> ist gesperrt.». Sonst endet er mit\n`succeeded`.",
+  "createdAt": "2026-11-02",
+  "updatedAt": "2026-11-02T16:49:36+01:00",
+  "variables": [],
+  "steps": [
+    {
+      "id": "StartEvent",
+      "kind": "start",
+      "name": "Start",
+      "status": "implemented"
+    },
+    {
+      "id": "InitProcessTask",
+      "kind": "service",
+      "name": "Init Process",
+      "status": "implemented",
+      "topic": "democompany-patterns-stopWithErrorV1",
+      "manualOutMapping": false,
+      "errors": [
+        {
+          "code": "output-mocked",
+          "declared": true,
+          "interrupting": true,
+          "boundary": true,
+          "pattern": "init-process",
+          "steps": [
+            {
+              "id": "OutputMockedThrow",
+              "kind": "event",
+              "name": "output-mocked",
+              "status": "implemented",
+              "eventKind": "none",
+              "eventDirection": "throw",
+              "pattern": "init-process"
+            },
+            {
+              "id": "OutputmockedEndEvent",
+              "kind": "end",
+              "name": "output-mocked",
+              "status": "implemented",
+              "outputs": [
+                {
+                  "name": "processStatus",
+                  "expression": "= \"output-mocked\""
+                }
+              ],
+              "pattern": "init-process"
+            }
+          ]
+        }
+      ],
+      "patterns": [
+        {
+          "id": "init-process"
+        }
+      ]
+    },
+    {
+      "id": "BlockedGateway",
+      "kind": "gateway",
+      "name": "Kunde gesperrt?",
+      "status": "implemented",
+      "gatewayType": "exclusive",
+      "branches": [
+        {
+          "id": "NotBlockedFlow",
+          "label": "nein",
+          "condition": "= not(blocked)",
+          "steps": [
+            {
+              "id": "LimitGateway",
+              "kind": "gateway",
+              "name": "Limit überschritten?",
+              "status": "implemented",
+              "gatewayType": "exclusive",
+              "branches": [
+                {
+                  "id": "LimitOkFlow",
+                  "label": "nein",
+                  "condition": "= not(limitExceeded)",
+                  "steps": []
+                },
+                {
+                  "id": "LimitExceededFlow",
+                  "label": "ja",
+                  "condition": "= limitExceeded",
+                  "steps": [
+                    {
+                      "id": "LimitExceededEvent",
+                      "kind": "event",
+                      "name": "Limit überschritten",
+                      "status": "implemented",
+                      "eventKind": "none",
+                      "eventDirection": "throw",
+                      "outputs": [
+                        {
+                          "name": "_errorMessage",
+                          "expression": "= \"Limit von \" + customerName + \" überschritten.\""
+                        },
+                        {
+                          "name": "_stopped",
+                          "expression": "= assert(false, false, string(_errorMessage))"
+                        }
+                      ],
+                      "patterns": [
+                        {
+                          "id": "stop-with-error",
+                          "params": {
+                            "message": "=\"Limit von \" + customerName + \" überschritten.\""
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "SucceededEndEvent",
+              "kind": "end",
+              "name": "succeeded",
+              "status": "implemented",
+              "outputs": [
+                {
+                  "name": "processStatus",
+                  "expression": "= \"succeeded\""
+                }
+              ],
+              "patterns": [
+                {
+                  "id": "process-status",
+                  "params": {
+                    "processStatus": "succeeded"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "BlockedFlow",
+          "label": "ja",
+          "condition": "= blocked",
+          "steps": [
+            {
+              "id": "StoppedEndEvent",
+              "kind": "end",
+              "name": "Kunde gesperrt",
+              "status": "implemented",
+              "outputs": [
+                {
+                  "name": "_errorMessage",
+                  "expression": "= \"Kunde \" + customerName + \" ist gesperrt.\""
+                },
+                {
+                  "name": "_stopped",
+                  "expression": "= assert(false, false, string(_errorMessage))"
+                }
+              ],
+              "patterns": [
+                {
+                  "id": "stop-with-error",
+                  "params": {
+                    "message": "=\"Kunde \" + customerName + \" ist gesperrt.\""
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "types": [
+    {
+      "id": "t-a436f5d9c2",
+      "name": "In",
+      "kind": "case",
+      "status": "changed",
+      "domainId": "democompany.patterns.domain.stopWithError.v1.StopWithError.In",
+      "root": true,
+      "fields": [
+        {
+          "id": "f-3f790e6353",
+          "name": "customerName",
+          "type": "String",
+          "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "example": "\"Peter Muster\""
+        },
+        {
+          "id": "f-2e8063de45",
+          "name": "blocked",
+          "type": "Boolean",
+          "description": "Ist der Kunde gesperrt? Ja: der Prozess bleibt mit einem Incident stehen.",
+          "example": "false"
+        },
+        {
+          "id": "f-42d0ce24ba",
+          "name": "limitExceeded",
+          "type": "Boolean",
+          "description": "Ist das Limit überschritten? Ja: der Prozess bleibt an einem Zwischenereignis mit einem Incident stehen.",
+          "example": "false"
+        }
+      ]
+    },
+    {
+      "id": "t-cb0cfd33ac",
+      "name": "Out",
+      "kind": "case",
+      "status": "changed",
+      "domainId": "democompany.patterns.domain.stopWithError.v1.StopWithError.Out",
+      "processOut": true,
+      "fields": [
+        {
+          "id": "f-9a866d18fa",
+          "name": "processStatus",
+          "type": "dom:orchescala.domain.ProcessStatus",
+          "example": "ProcessStatus.succeeded"
+        },
+        {
+          "id": "f-768a1626cb",
+          "name": "customerName",
+          "type": "String",
+          "example": "In.example.customerName"
+        },
+        {
+          "id": "f-96de9f8c67",
+          "name": "blocked",
+          "type": "Boolean",
+          "example": "false"
+        },
+        {
+          "id": "f-d6b337bf84",
+          "name": "limitExceeded",
+          "type": "Boolean",
+          "example": "false"
+        },
+        {
+          "id": "f-3b536adb7b",
+          "name": "_errorMessage",
+          "type": "String",
+          "description": "Gesetzt am Endereignis (Pattern)."
+        },
+        {
+          "id": "f-25269726b3",
+          "name": "_stopped",
+          "type": "String",
+          "description": "Gesetzt am Endereignis (Pattern)."
+        }
+      ]
+    }
+  ],
+  "interactions": []
+}

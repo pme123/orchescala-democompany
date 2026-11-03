@@ -1,0 +1,245 @@
+{
+  "version": 1,
+  "slug": "democompany-patterns-uniqueexecutionv1",
+  "name": "uniqueExecutionV1",
+  "title": "democompany-patterns-uniqueExecutionV1",
+  "processId": "democompany-patterns-uniqueExecutionV1",
+  "project": "democompany-patterns",
+  "engine": "c8",
+  "status": "draft",
+  "description": "Beispiel für das Pattern «Einmalige Ausführung».\nDer Prozess startet über eine Nachricht (Name = Prozess-ID) mit einem `businessKey`. Solange er\nläuft, fängt ein nicht unterbrechender Ereignis-Subprozess dieselbe Nachricht - ein zweiter Start\nmit demselben `businessKey` landet in der laufenden Instanz (`alreadyRunning = true`) statt eine\nzweite zu starten.",
+  "createdAt": "2026-11-02",
+  "updatedAt": "2026-11-03T08:49:44+01:00",
+  "variables": [],
+  "timeToLive": "5",
+  "patterns": [
+    {
+      "id": "unique-execution"
+    }
+  ],
+  "steps": [
+    {
+      "id": "StartEvent",
+      "kind": "start",
+      "name": "Start",
+      "status": "implemented",
+      "eventKind": "message",
+      "messageName": "democompany-patterns-uniqueExecutionV1"
+    },
+    {
+      "id": "InitProcessTask",
+      "kind": "service",
+      "name": "Init Process",
+      "status": "implemented",
+      "topic": "democompany-patterns-uniqueExecutionV1",
+      "manualOutMapping": false,
+      "errors": [
+        {
+          "code": "output-mocked",
+          "declared": true,
+          "interrupting": true,
+          "boundary": true,
+          "pattern": "init-process",
+          "steps": [
+            {
+              "id": "OutputMockedThrow",
+              "kind": "event",
+              "name": "output-mocked",
+              "status": "implemented",
+              "eventKind": "none",
+              "eventDirection": "throw",
+              "pattern": "init-process"
+            },
+            {
+              "id": "OutputmockedEndEvent",
+              "kind": "end",
+              "name": "output-mocked",
+              "status": "changed",
+              "outputs": [
+                {
+                  "name": "processStatus",
+                  "expression": "= \"output-mocked\""
+                }
+              ],
+              "pattern": "init-process"
+            }
+          ]
+        }
+      ],
+      "patterns": [
+        {
+          "id": "init-process"
+        }
+      ]
+    },
+    {
+      "id": "EditRequestUT",
+      "kind": "user",
+      "name": "Antrag bearbeiten",
+      "status": "implemented"
+    },
+    {
+      "id": "SucceededEndEvent",
+      "kind": "end",
+      "name": "succeeded",
+      "status": "changed",
+      "outputs": [
+        {
+          "name": "processStatus",
+          "expression": "= \"succeeded\""
+        }
+      ],
+      "patterns": [
+        {
+          "id": "process-status",
+          "params": {
+            "processStatus": "succeeded"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AlreadyRunningSubProcess",
+      "kind": "subprocess",
+      "name": "Prozess läuft schon",
+      "status": "implemented",
+      "eventSubprocess": true,
+      "children": [
+        {
+          "id": "AlreadyRunningStartEvent",
+          "kind": "start",
+          "name": "Start-Nachricht nochmals",
+          "status": "implemented",
+          "eventKind": "message",
+          "messageName": "democompany-patterns-uniqueExecutionV1"
+        },
+        {
+          "id": "AlreadyRunningEndEvent",
+          "kind": "end",
+          "name": "läuft schon",
+          "status": "changed",
+          "outputs": [
+            {
+              "name": "alreadyRunning",
+              "expression": "= true"
+            }
+          ]
+        }
+      ],
+      "orphan": true,
+      "pattern": "unique-execution"
+    }
+  ],
+  "types": [
+    {
+      "id": "t-b379bbc93d",
+      "name": "In",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution.In",
+      "root": true,
+      "fields": [
+        {
+          "id": "f-6fc9640e56",
+          "name": "customerName",
+          "type": "String",
+          "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "example": "\"Peter Muster\""
+        }
+      ]
+    },
+    {
+      "id": "t-44bac2c032",
+      "name": "InitIn",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution.InitIn",
+      "initIn": true,
+      "fields": [
+        {
+          "id": "f-c6afca9d5b",
+          "name": "alreadyRunning",
+          "type": "Boolean",
+          "default": "false",
+          "description": "`false` beim Start - der Ereignis-Subprozess «Prozess läuft schon» setzt ihn auf `true`.",
+          "example": "false"
+        }
+      ]
+    },
+    {
+      "id": "t-04da174070",
+      "name": "Out",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution.Out",
+      "processOut": true,
+      "fields": [
+        {
+          "id": "f-e3034d44fa",
+          "name": "processStatus",
+          "type": "dom:orchescala.domain.ProcessStatus",
+          "example": "ProcessStatus.succeeded"
+        },
+        {
+          "id": "f-4ac0b73198",
+          "name": "customerName",
+          "type": "String",
+          "example": "In.example.customerName"
+        },
+        {
+          "id": "f-9e1a76ac0e",
+          "name": "alreadyRunning",
+          "type": "Boolean",
+          "description": "Kam die Start-Nachricht ein zweites Mal, während der Prozess lief?",
+          "example": "false"
+        }
+      ]
+    },
+    {
+      "id": "t-e05e2e40ea",
+      "name": "EditRequestUT.In",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.uniqueExecution.v1.EditRequestUT.In",
+      "interactionId": "ia-b696657229",
+      "fields": [
+        {
+          "id": "f-81b0572724",
+          "name": "customerName",
+          "type": "String",
+          "example": "UniqueExecution.In.example.customerName"
+        }
+      ]
+    },
+    {
+      "id": "t-b478b33944",
+      "name": "EditRequestUT.Out",
+      "kind": "case",
+      "interactionId": "ia-b696657229",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-86697fcfbe",
+          "name": "isOk",
+          "type": "Boolean"
+        }
+      ]
+    }
+  ],
+  "interactions": [
+    {
+      "id": "ia-b696657229",
+      "stepId": "EditRequestUT",
+      "kind": "userTask",
+      "name": "EditRequestUT",
+      "key": "EditRequestUT",
+      "descr": "Antrag bearbeiten - solange die Aufgabe offen ist, läuft der Prozess; ein zweiter Start landet hier.",
+      "status": "implemented",
+      "inTypeId": "t-e05e2e40ea",
+      "outTypeId": "t-b478b33944"
+    }
+  ],
+  "epics": [
+    "pattern"
+  ]
+}

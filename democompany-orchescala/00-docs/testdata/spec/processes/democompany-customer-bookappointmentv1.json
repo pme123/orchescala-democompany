@@ -9,7 +9,7 @@
   "status": "draft",
   "description": "",
   "createdAt": "2026-10-06",
-  "updatedAt": "2026-10-22T16:48:39+02:00",
+  "updatedAt": "2026-11-03T09:38:25+01:00",
   "variables": [],
   "timeToLive": "5",
   "steps": [
@@ -50,7 +50,15 @@
               "id": "OutputmockedEndEvent",
               "kind": "end",
               "name": "output-mocked",
-              "status": "implemented"
+              "status": "implemented",
+              "patterns": [
+                {
+                  "id": "process-status",
+                  "params": {
+                    "processStatus": "output-mocked"
+                  }
+                }
+              ]
             }
           ]
         }
@@ -274,7 +282,15 @@
                               "id": "SucceededEndEvent",
                               "kind": "end",
                               "name": "gebucht",
-                              "status": "implemented"
+                              "status": "implemented",
+                              "patterns": [
+                                {
+                                  "id": "process-status",
+                                  "params": {
+                                    "processStatus": "succeeded"
+                                  }
+                                }
+                              ]
                             }
                           ]
                         },
@@ -326,7 +342,15 @@
                               "id": "DeclinedEndEvent",
                               "kind": "end",
                               "name": "abgelehnt",
-                              "status": "implemented"
+                              "status": "implemented",
+                              "patterns": [
+                                {
+                                  "id": "process-status",
+                                  "params": {
+                                    "processStatus": "declined"
+                                  }
+                                }
+                              ]
                             }
                           ]
                         }
@@ -380,7 +404,15 @@
               "id": "NotVerifiedEndEvent",
               "kind": "end",
               "name": "nicht bestätigt",
-              "status": "implemented"
+              "status": "implemented",
+              "patterns": [
+                {
+                  "id": "process-status",
+                  "params": {
+                    "processStatus": "notVerified"
+                  }
+                }
+              ]
             }
           ]
         }

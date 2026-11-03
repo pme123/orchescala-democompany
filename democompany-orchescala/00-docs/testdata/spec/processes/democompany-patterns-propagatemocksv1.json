@@ -5,11 +5,11 @@
   "title": "democompany-patterns-propagateMocksV1",
   "processId": "democompany-patterns-propagateMocksV1",
   "project": "democompany-patterns",
-  "engine": "c7",
-  "status": "implemented",
+  "engine": "c8",
+  "status": "changed",
   "description": "Beispiel für das Pattern «Mocks und Identität weitergeben».\nDie Call Activity «Teilprozess aufrufen» gibt `_servicesMocked`, `_mockedWorkers` und\n`_identityCorrelation` an den Teilprozess weiter - so greifen Mocks und Identität auch dort.",
   "createdAt": "2026-10-30",
-  "updatedAt": "2026-10-30T11:23:57+01:00",
+  "updatedAt": "2026-11-02T09:56:16+01:00",
   "variables": [],
   "timeToLive": "5",
   "steps": [
@@ -32,6 +32,7 @@
           "declared": true,
           "interrupting": true,
           "boundary": true,
+          "pattern": "init-process",
           "steps": [
             {
               "id": "OutputMockedThrow",
@@ -39,15 +40,28 @@
               "name": "output-mocked",
               "status": "implemented",
               "eventKind": "none",
-              "eventDirection": "throw"
+              "eventDirection": "throw",
+              "pattern": "init-process"
             },
             {
               "id": "OutputmockedEndEvent",
               "kind": "end",
               "name": "output-mocked",
-              "status": "implemented"
+              "status": "changed",
+              "outputs": [
+                {
+                  "name": "processStatus",
+                  "expression": "= \"output-mocked\""
+                }
+              ],
+              "pattern": "init-process"
             }
           ]
+        }
+      ],
+      "patterns": [
+        {
+          "id": "init-process"
         }
       ]
     },
@@ -55,9 +69,13 @@
       "id": "CallSubProcess",
       "kind": "call",
       "name": "Teilprozess aufrufen",
-      "status": "implemented",
+      "status": "changed",
       "calledProcess": "democompany-patterns-propagateMocksSubV1",
       "inputs": [
+        {
+          "name": "businessKey",
+          "expression": "= businessKey"
+        },
         {
           "name": "customerName",
           "expression": "= customerName"
@@ -78,13 +96,32 @@
           "disabled": true,
           "fromService": true
         }
+      ],
+      "patterns": [
+        {
+          "id": "propagate-mocks"
+        }
       ]
     },
     {
       "id": "SucceededEndEvent",
       "kind": "end",
       "name": "succeeded",
-      "status": "implemented"
+      "status": "changed",
+      "outputs": [
+        {
+          "name": "processStatus",
+          "expression": "= \"succeeded\""
+        }
+      ],
+      "patterns": [
+        {
+          "id": "process-status",
+          "params": {
+            "processStatus": "succeeded"
+          }
+        }
+      ]
     }
   ],
   "types": [

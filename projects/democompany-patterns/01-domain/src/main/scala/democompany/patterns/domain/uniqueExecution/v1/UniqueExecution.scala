@@ -22,12 +22,19 @@ object UniqueExecution extends CompanyBpmnProcessDsl:
 
   case class In(
       @description("Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).")
-      customerName: String
-  )
+      customerName: String,
+      inConfig: Option[InConfig] = None
+  ) extends WithConfig[InConfig]:
+    lazy val defaultConfig = InConfig()
+  end In
+
   object In:
     given ApiSchema[In]  = deriveApiSchema
     given InOutCodec[In] = deriveInOutCodec
-    lazy val example     = In(customerName = "Peter Muster")
+    lazy val example = In(
+      customerName = "Peter Muster"
+    )
+    lazy val exampleMinimal = example
   end In
 
   case class InitIn(
@@ -40,19 +47,29 @@ object UniqueExecution extends CompanyBpmnProcessDsl:
     lazy val example         = InitIn()
   end InitIn
 
+  case class InConfig()
+
+  object InConfig:
+    given ApiSchema[InConfig]  = deriveApiSchema
+    given InOutCodec[InConfig] = deriveInOutCodec
+  end InConfig
+
   case class Out(
       processStatus: ProcessStatus,
       customerName: String,
       @description("Kam die Start-Nachricht ein zweites Mal, während der Prozess lief?")
-      alreadyRunning: Boolean = false
+      alreadyRunning: Boolean
   )
+
   object Out:
     given ApiSchema[Out]  = deriveApiSchema
     given InOutCodec[Out] = deriveInOutCodec
-    lazy val example      = Out(
+    lazy val example = Out(
       processStatus = ProcessStatus.succeeded,
-      customerName = In.example.customerName
+      customerName = In.example.customerName,
+      alreadyRunning = false
     )
+    lazy val exampleMinimal = example
   end Out
 
   lazy val example = process(

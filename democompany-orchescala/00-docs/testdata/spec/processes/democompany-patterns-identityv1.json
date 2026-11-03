@@ -5,11 +5,11 @@
   "title": "democompany-patterns-identityV1",
   "processId": "democompany-patterns-identityV1",
   "project": "democompany-patterns",
-  "engine": "c7",
+  "engine": "c8",
   "status": "draft",
   "description": "Beispiel für die Patterns «Identität übernehmen» und «Identität zurücksetzen».\nNach der Benutzeraufgabe übernimmt der Prozess die Identität der Person, die sie erledigt hat\n(`_identityCorrelation = _identityCorrelationOfActor`, die bisherige in `_identityCorrelationBefore`) -\n«Identität zurücksetzen» setzt danach wieder die Identität vom Start.",
   "createdAt": "2026-10-30",
-  "updatedAt": "2026-11-01T11:12:04+01:00",
+  "updatedAt": "2026-11-03T06:28:19+01:00",
   "variables": [],
   "timeToLive": "5",
   "steps": [
@@ -32,6 +32,7 @@
           "declared": true,
           "interrupting": true,
           "boundary": true,
+          "pattern": "init-process",
           "steps": [
             {
               "id": "OutputMockedThrow",
@@ -46,11 +47,16 @@
               "id": "OutputmockedEndEvent",
               "kind": "end",
               "name": "output-mocked",
-              "status": "implemented",
+              "status": "changed",
+              "outputs": [
+                {
+                  "name": "processStatus",
+                  "expression": "= \"output-mocked\""
+                }
+              ],
               "pattern": "init-process"
             }
-          ],
-          "pattern": "init-process"
+          ]
         }
       ],
       "patterns": [
@@ -69,9 +75,15 @@
       "id": "TakeOverIdentityEvent",
       "kind": "event",
       "name": "Identität übernehmen",
-      "status": "implemented",
+      "status": "changed",
       "eventKind": "none",
       "eventDirection": "throw",
+      "outputs": [
+        {
+          "name": "_identityCorrelationBefore",
+          "expression": "= _identityCorrelation"
+        }
+      ],
       "patterns": [
         {
           "id": "identity-take-over"
@@ -129,7 +141,21 @@
       "id": "SucceededEndEvent",
       "kind": "end",
       "name": "succeeded",
-      "status": "implemented"
+      "status": "changed",
+      "outputs": [
+        {
+          "name": "processStatus",
+          "expression": "= \"succeeded\""
+        }
+      ],
+      "patterns": [
+        {
+          "id": "process-status",
+          "params": {
+            "processStatus": "succeeded"
+          }
+        }
+      ]
     }
   ],
   "types": [

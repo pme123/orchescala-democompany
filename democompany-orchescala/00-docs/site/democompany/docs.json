@@ -4,7 +4,7 @@
   "release" : {
     "tag" : "2026-10",
     "released" : true,
-    "createdDay" : "30.10.2026",
+    "createdDay" : "03.11.2026",
     "jiraUrl" : "https://yourReleasePage/versions/64209",
     "notes" : "- **Kundentermine** (democompany-customer): Termine buchen ohne Login, Bestätigung durch den Berater, Einladung als .ics - auf Operaton, mit Seiten aus orch-spec und dem Gateway als einzigem Einstieg.\n- Orchescala 0.9: Gateway mit öffentlichem Zugang, `CustomError.refused`, der Renderer der Seiten.",
     "olderReleases" : [
@@ -47,6 +47,7 @@
       "name" : "democompany-services",
       "group" : "general",
       "color" : "#ffffcc",
+      "version" : "0.1.0",
       "workerVersion" : "0.1.0",
       "apiDocUrl" : "democompany-services/OpenApi.html",
       "hasDependencies" : false
@@ -99,8 +100,8 @@
       "title" : "Camunda Dependencies",
       "columns" : [
         {
-          "project" : "",
-          "version" : ""
+          "project" : "democompany-services",
+          "version" : "0.1.0"
         }
       ],
       "rows" : [
@@ -110,7 +111,7 @@
           "previousVersion" : "0.1.0",
           "status" : "unchanged",
           "uses" : {
-            
+            "democompany-services" : "0.1.0-SNAPSHOT"
           }
         },
         {
@@ -119,7 +120,7 @@
           "previousVersion" : "0.1.0",
           "status" : "unchanged",
           "uses" : {
-            
+            "democompany-services" : "0.1.0-SNAPSHOT"
           }
         },
         {
@@ -127,6 +128,15 @@
           "version" : "0.1.0-SNAPSHOT",
           "previousVersion" : "0.2.0",
           "status" : "new",
+          "uses" : {
+            
+          }
+        },
+        {
+          "project" : "democompany-services",
+          "version" : "0.1.0-SNAPSHOT",
+          "previousVersion" : "0.1.0",
+          "status" : "unchanged",
           "uses" : {
             
           }
@@ -305,6 +315,36 @@
           "url" : "/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20initProcessV1"
         },
         {
+          "kind" : "Bpmn",
+          "name" : "processStatusV1",
+          "url" : "/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20processStatusV1"
+        },
+        {
+          "kind" : "Bpmn",
+          "name" : "propagateMocksSubV1",
+          "url" : "/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20propagateMocksSubV1"
+        },
+        {
+          "kind" : "Bpmn",
+          "name" : "propagateMocksV1",
+          "url" : "/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20propagateMocksV1"
+        },
+        {
+          "kind" : "Bpmn",
+          "name" : "stopWithErrorV1",
+          "url" : "/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20stopWithErrorV1"
+        },
+        {
+          "kind" : "Bpmn",
+          "name" : "uniqueExecutionV1",
+          "url" : "/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20uniqueExecutionV1"
+        },
+        {
+          "kind" : "Message",
+          "name" : "uniqueExecutionV1",
+          "url" : "/site/democompany/democompany-patterns/OpenApi.html#operation/Message:%20uniqueExecutionV1"
+        },
+        {
           "kind" : "Worker",
           "name" : "CheckIdentity",
           "url" : "/site/democompany/democompany-patterns/OpenApi.html#operation/Worker:%20CheckIdentity"
@@ -348,8 +388,8 @@
         },
         {
           "project" : "democompany-patterns",
-          "lines" : 45,
-          "files" : 2
+          "lines" : 143,
+          "files" : 7
         },
         {
           "project" : "democompany-services",
@@ -358,8 +398,8 @@
         }
       ],
       "total" : {
-        "lines" : 152,
-        "files" : 5
+        "lines" : 250,
+        "files" : 10
       }
     },
     {
@@ -377,8 +417,8 @@
         },
         {
           "project" : "democompany-patterns",
-          "lines" : 0,
-          "files" : 0
+          "lines" : 16,
+          "files" : 1
         },
         {
           "project" : "democompany-services",
@@ -387,8 +427,8 @@
         }
       ],
       "total" : {
-        "lines" : 49,
-        "files" : 3
+        "lines" : 65,
+        "files" : 4
       }
     },
     {
@@ -406,8 +446,8 @@
         },
         {
           "project" : "democompany-patterns",
-          "lines" : 25,
-          "files" : 1
+          "lines" : 0,
+          "files" : 0
         },
         {
           "project" : "democompany-services",
@@ -416,8 +456,8 @@
         }
       ],
       "total" : {
-        "lines" : 70,
-        "files" : 3
+        "lines" : 45,
+        "files" : 2
       }
     },
     {
@@ -435,8 +475,8 @@
         },
         {
           "project" : "democompany-patterns",
-          "lines" : 624,
-          "files" : 4
+          "lines" : 2138,
+          "files" : 14
         },
         {
           "project" : "democompany-services",
@@ -445,8 +485,8 @@
         }
       ],
       "total" : {
-        "lines" : 3336,
-        "files" : 11
+        "lines" : 4850,
+        "files" : 21
       }
     },
     {
@@ -493,8 +533,8 @@
         },
         {
           "project" : "democompany-patterns",
-          "lines" : 777,
-          "files" : 21
+          "lines" : 1436,
+          "files" : 45
         },
         {
           "project" : "democompany-services",
@@ -503,8 +543,8 @@
         }
       ],
       "total" : {
-        "lines" : 5304,
-        "files" : 135
+        "lines" : 5963,
+        "files" : 159
       }
     }
   ],

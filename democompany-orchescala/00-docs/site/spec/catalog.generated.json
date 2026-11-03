@@ -3190,7 +3190,8 @@
       ],
       "topicName" : "democompany-patterns-identityV1-CheckIdentity",
       "dsl" : "ServiceTask",
-      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`."
+      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.",
+      "ownerPath" : "GET: identity"
     },
     {
       "id" : "democompany.patterns.domain.identity.v1.CheckIdentity.Out",
@@ -3218,7 +3219,8 @@
       ],
       "topicName" : "democompany-patterns-identityV1-CheckIdentity",
       "dsl" : "ServiceTask",
-      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`."
+      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.",
+      "ownerPath" : "GET: identity"
     },
     {
       "id" : "democompany.patterns.domain.identity.v1.CheckIdentity.ServiceIn",
@@ -3231,7 +3233,8 @@
       "target" : "NoInput",
       "topicName" : "democompany-patterns-identityV1-CheckIdentity",
       "dsl" : "ServiceTask",
-      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`."
+      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.",
+      "ownerPath" : "GET: identity"
     },
     {
       "id" : "democompany.patterns.domain.identity.v1.CheckIdentity.ServiceOut",
@@ -3244,7 +3247,8 @@
       "target" : "NoOutput",
       "topicName" : "democompany-patterns-identityV1-CheckIdentity",
       "dsl" : "ServiceTask",
-      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`."
+      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.",
+      "ownerPath" : "GET: identity"
     },
     {
       "id" : "democompany.patterns.domain.identity.v1.CloseRequestUT.In",
@@ -3452,6 +3456,106 @@
       "ownerDescr" : "Beispiel für das Pattern «Init Process»: der erste Schritt ist ein Service-Task mit der Prozess-ID als Topic.\nDer InitWorker prüft das In, setzt die Vorgaben aus dem InConfig und liefert gemockte Ausgaben -\nist der Prozess gemockt, endet er über den Pfad `output-mocked` mit `processStatus = output-mocked`."
     },
     {
+      "id" : "democompany.patterns.domain.processStatus.v1.ProcessStatus.In",
+      "name" : "ProcessStatus.In",
+      "pkg" : "democompany.patterns.domain.processStatus.v1",
+      "kind" : "member",
+      "owner" : "ProcessStatus",
+      "importPath" : "democompany.patterns.domain.processStatus.v1.ProcessStatus",
+      "descr" : "Prozess «processStatusV1» aus democompany-patterns",
+      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+    },
+    {
+      "id" : "democompany.patterns.domain.processStatus.v1.ProcessStatus.Out",
+      "name" : "ProcessStatus.Out",
+      "pkg" : "democompany.patterns.domain.processStatus.v1",
+      "kind" : "member",
+      "owner" : "ProcessStatus",
+      "importPath" : "democompany.patterns.domain.processStatus.v1.ProcessStatus",
+      "descr" : "Prozess «processStatusV1» aus democompany-patterns",
+      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+    },
+    {
+      "id" : "democompany.patterns.domain.propagateMocks.v1.PropagateMocks.In",
+      "name" : "PropagateMocks.In",
+      "pkg" : "democompany.patterns.domain.propagateMocks.v1",
+      "kind" : "member",
+      "owner" : "PropagateMocks",
+      "importPath" : "democompany.patterns.domain.propagateMocks.v1.PropagateMocks",
+      "descr" : "Prozess «propagateMocksV1» aus democompany-patterns",
+      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+    },
+    {
+      "id" : "democompany.patterns.domain.propagateMocks.v1.PropagateMocks.Out",
+      "name" : "PropagateMocks.Out",
+      "pkg" : "democompany.patterns.domain.propagateMocks.v1",
+      "kind" : "member",
+      "owner" : "PropagateMocks",
+      "importPath" : "democompany.patterns.domain.propagateMocks.v1.PropagateMocks",
+      "descr" : "Prozess «propagateMocksV1» aus democompany-patterns",
+      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+    },
+    {
+      "id" : "democompany.patterns.domain.propagateMocksSub.v1.PropagateMocksSub.In",
+      "name" : "PropagateMocksSub.In",
+      "pkg" : "democompany.patterns.domain.propagateMocksSub.v1",
+      "kind" : "member",
+      "owner" : "PropagateMocksSub",
+      "importPath" : "democompany.patterns.domain.propagateMocksSub.v1.PropagateMocksSub",
+      "descr" : "Prozess «propagateMocksSubV1» aus democompany-patterns",
+      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+    },
+    {
+      "id" : "democompany.patterns.domain.propagateMocksSub.v1.PropagateMocksSub.Out",
+      "name" : "PropagateMocksSub.Out",
+      "pkg" : "democompany.patterns.domain.propagateMocksSub.v1",
+      "kind" : "member",
+      "owner" : "PropagateMocksSub",
+      "importPath" : "democompany.patterns.domain.propagateMocksSub.v1.PropagateMocksSub",
+      "descr" : "Prozess «propagateMocksSubV1» aus democompany-patterns",
+      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+    },
+    {
+      "id" : "democompany.patterns.domain.stopWithError.v1.StopWithError.In",
+      "name" : "StopWithError.In",
+      "pkg" : "democompany.patterns.domain.stopWithError.v1",
+      "kind" : "member",
+      "owner" : "StopWithError",
+      "importPath" : "democompany.patterns.domain.stopWithError.v1.StopWithError",
+      "descr" : "Prozess «stopWithErrorV1» aus democompany-patterns",
+      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+    },
+    {
+      "id" : "democompany.patterns.domain.stopWithError.v1.StopWithError.Out",
+      "name" : "StopWithError.Out",
+      "pkg" : "democompany.patterns.domain.stopWithError.v1",
+      "kind" : "member",
+      "owner" : "StopWithError",
+      "importPath" : "democompany.patterns.domain.stopWithError.v1.StopWithError",
+      "descr" : "Prozess «stopWithErrorV1» aus democompany-patterns",
+      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+    },
+    {
+      "id" : "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution.In",
+      "name" : "UniqueExecution.In",
+      "pkg" : "democompany.patterns.domain.uniqueExecution.v1",
+      "kind" : "member",
+      "owner" : "UniqueExecution",
+      "importPath" : "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution",
+      "descr" : "Prozess «uniqueExecutionV1» aus democompany-patterns",
+      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+    },
+    {
+      "id" : "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution.Out",
+      "name" : "UniqueExecution.Out",
+      "pkg" : "democompany.patterns.domain.uniqueExecution.v1",
+      "kind" : "member",
+      "owner" : "UniqueExecution",
+      "importPath" : "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution",
+      "descr" : "Prozess «uniqueExecutionV1» aus democompany-patterns",
+      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+    },
+    {
       "id" : "democompany.services.domain.clients.v1.GetClientsClientId.In",
       "name" : "GetClientsClientId.In",
       "pkg" : "democompany.services.domain.clients.v1",
@@ -3470,7 +3574,8 @@
         }
       ],
       "topicName" : "democompany-services-clientsV1-GetClientsClientId",
-      "ownerDescr" : "Get the Client by Id"
+      "ownerDescr" : "Get the Client by Id",
+      "ownerPath" : "GET: clients/clientId"
     },
     {
       "id" : "democompany.services.domain.clients.v1.GetClientsClientId.Out",
@@ -3501,7 +3606,8 @@
         }
       ],
       "topicName" : "democompany-services-clientsV1-GetClientsClientId",
-      "ownerDescr" : "Get the Client by Id"
+      "ownerDescr" : "Get the Client by Id",
+      "ownerPath" : "GET: clients/clientId"
     },
     {
       "id" : "democompany.services.domain.clients.v1.GetClientsClientId.ServiceIn",
@@ -3516,7 +3622,8 @@
       ],
       "target" : "NoInput",
       "topicName" : "democompany-services-clientsV1-GetClientsClientId",
-      "ownerDescr" : "Get the Client by Id"
+      "ownerDescr" : "Get the Client by Id",
+      "ownerPath" : "GET: clients/clientId"
     },
     {
       "id" : "democompany.services.domain.clients.v1.GetClientsClientId.ServiceOut",
@@ -3531,7 +3638,8 @@
       ],
       "target" : "Client",
       "topicName" : "democompany-services-clientsV1-GetClientsClientId",
-      "ownerDescr" : "Get the Client by Id"
+      "ownerDescr" : "Get the Client by Id",
+      "ownerPath" : "GET: clients/clientId"
     },
     {
       "id" : "democompany.services.domain.clients.v1.schema.Address",
@@ -3688,7 +3796,8 @@
         }
       ],
       "topicName" : "democompany-services-mailsV1-SendEmail",
-      "ownerDescr" : "Send an Email"
+      "ownerDescr" : "Send an Email",
+      "ownerPath" : "PUT: mail"
     },
     {
       "id" : "democompany.services.domain.mails.v1.SendEmail.Out",
@@ -3699,7 +3808,8 @@
       "importPath" : "democompany.services.domain.mails.v1.SendEmail",
       "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
       "topicName" : "democompany-services-mailsV1-SendEmail",
-      "ownerDescr" : "Send an Email"
+      "ownerDescr" : "Send an Email",
+      "ownerPath" : "PUT: mail"
     },
     {
       "id" : "democompany.services.domain.mails.v1.SendEmail.ServiceIn",
@@ -3711,7 +3821,8 @@
       "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
       "target" : "In",
       "topicName" : "democompany-services-mailsV1-SendEmail",
-      "ownerDescr" : "Send an Email"
+      "ownerDescr" : "Send an Email",
+      "ownerPath" : "PUT: mail"
     },
     {
       "id" : "democompany.services.domain.mails.v1.SendEmail.ServiceOut",
@@ -3723,7 +3834,8 @@
       "source" : "democompany-services/01-domain/src/main/scala/democompany/services/domain/mails/v1/SendEmail.scala",
       "target" : "NoOutput",
       "topicName" : "democompany-services-mailsV1-SendEmail",
-      "ownerDescr" : "Send an Email"
+      "ownerDescr" : "Send an Email",
+      "ownerPath" : "PUT: mail"
     }
   ],
   "domainSources" : [
@@ -3757,35 +3869,45 @@
       "name" : "democompany-orchescala",
       "path" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala",
       "types" : 3,
-      "scannedAt" : "2026-10-30T06:51:20.948Z"
+      "scannedAt" : "2026-11-03T09:33:18.879Z"
     },
     {
       "id" : "p-democompany-cards",
       "name" : "democompany-cards",
       "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-cards",
       "types" : 25,
-      "scannedAt" : "2026-10-30T06:51:20.953Z"
+      "dependencies" : [
+        "democompany-services"
+      ],
+      "scannedAt" : "2026-11-03T09:33:18.886Z"
     },
     {
       "id" : "p-democompany-customer",
       "name" : "democompany-customer",
       "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-customer",
       "types" : 48,
-      "scannedAt" : "2026-10-30T06:51:20.957Z"
+      "dependencies" : [
+        "democompany-services"
+      ],
+      "scannedAt" : "2026-11-03T09:33:18.895Z"
     },
     {
       "id" : "p-democompany-patterns",
       "name" : "democompany-patterns",
       "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-patterns",
       "types" : 14,
-      "scannedAt" : "2026-10-30T06:51:20.959Z"
+      "dependencies" : [
+      ],
+      "scannedAt" : "2026-11-03T09:33:18.901Z"
     },
     {
       "id" : "p-democompany-services",
       "name" : "democompany-services",
       "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-services",
       "types" : 11,
-      "scannedAt" : "2026-10-30T06:51:20.962Z"
+      "dependencies" : [
+      ],
+      "scannedAt" : "2026-11-03T09:33:18.904Z"
     }
   ],
   "projectColors" : {

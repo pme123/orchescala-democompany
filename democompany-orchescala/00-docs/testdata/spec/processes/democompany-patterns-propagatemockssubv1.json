@@ -5,11 +5,11 @@
   "title": "democompany-patterns-propagateMocksSubV1",
   "processId": "democompany-patterns-propagateMocksSubV1",
   "project": "democompany-patterns",
-  "engine": "c7",
+  "engine": "c8",
   "status": "draft",
   "description": "Teilprozess zum Pattern «Mocks und Identität weitergeben».\n«Kunde prüfen» ruft einen Service auf, den es nicht gibt - er gelingt nur, wenn\n`_servicesMocked` vom Aufrufer kommt; vorher prüft der ServiceWorker die weitergegebene\n`_identityCorrelation`.",
   "createdAt": "2026-10-30",
-  "updatedAt": "2026-10-30T11:33:01+01:00",
+  "updatedAt": "2026-11-02T09:55:53+01:00",
   "variables": [],
   "timeToLive": "5",
   "steps": [
@@ -32,6 +32,7 @@
           "declared": true,
           "interrupting": true,
           "boundary": true,
+          "pattern": "init-process",
           "steps": [
             {
               "id": "OutputMockedThrow",
@@ -39,15 +40,28 @@
               "name": "output-mocked",
               "status": "implemented",
               "eventKind": "none",
-              "eventDirection": "throw"
+              "eventDirection": "throw",
+              "pattern": "init-process"
             },
             {
               "id": "OutputmockedEndEvent",
               "kind": "end",
               "name": "output-mocked",
-              "status": "implemented"
+              "status": "changed",
+              "outputs": [
+                {
+                  "name": "processStatus",
+                  "expression": "= \"output-mocked\""
+                }
+              ],
+              "pattern": "init-process"
             }
           ]
+        }
+      ],
+      "patterns": [
+        {
+          "id": "init-process"
         }
       ]
     },
@@ -89,7 +103,21 @@
       "id": "SucceededEndEvent",
       "kind": "end",
       "name": "succeeded",
-      "status": "implemented"
+      "status": "changed",
+      "outputs": [
+        {
+          "name": "processStatus",
+          "expression": "= \"succeeded\""
+        }
+      ],
+      "patterns": [
+        {
+          "id": "process-status",
+          "params": {
+            "processStatus": "succeeded"
+          }
+        }
+      ]
     }
   ],
   "types": [

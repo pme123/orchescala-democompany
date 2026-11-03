@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_patternsStopWithErrorV1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.34.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
+  <bpmn:process id="democompany-patterns-stopWithErrorV1" name="democompany-patterns-stopWithErrorV1" isExecutable="true">
+    <bpmn:startEvent id="StartEvent" name="Start">
+      <bpmn:outgoing>StartFlow</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="InitProcessTask" name="Init Process">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="democompany-patterns-stopWithErrorV1" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=&#34;output-mocked&#34;" target="_handledErrors" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>StartFlow</bpmn:incoming>
+      <bpmn:outgoing>InitProcessFlow</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="BlockedGateway" name="Kunde gesperrt?">
+      <bpmn:incoming>InitProcessFlow</bpmn:incoming>
+      <bpmn:outgoing>NotBlockedFlow</bpmn:outgoing>
+      <bpmn:outgoing>BlockedFlow</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="LimitGateway" name="Limit überschritten?">
+      <bpmn:incoming>NotBlockedFlow</bpmn:incoming>
+      <bpmn:outgoing>LimitOkFlow</bpmn:outgoing>
+      <bpmn:outgoing>LimitExceededFlow</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:intermediateThrowEvent id="LimitExceededEvent" name="Limit überschritten">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=&#34;Limit von &#34; + customerName + &#34; überschritten.&#34;" target="_errorMessage" />
+          <zeebe:output source="=assert(false, false, string(_errorMessage))" target="_stopped" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>LimitExceededFlow</bpmn:incoming>
+      <bpmn:outgoing>LimitContinueFlow</bpmn:outgoing>
+    </bpmn:intermediateThrowEvent>
+    <bpmn:endEvent id="SucceededEndEvent" name="succeeded">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=&#34;succeeded&#34;" target="processStatus" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>LimitOkFlow</bpmn:incoming>
+      <bpmn:incoming>LimitContinueFlow</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="StoppedEndEvent" name="Kunde gesperrt">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=&#34;Kunde &#34; + customerName + &#34; ist gesperrt.&#34;" target="_errorMessage" />
+          <zeebe:output source="=assert(false, false, string(_errorMessage))" target="_stopped" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>BlockedFlow</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="OutputMockedBoundary" attachedToRef="InitProcessTask">
+      <bpmn:outgoing>OutputMockedBoundaryFlow</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="OutputMockedBoundaryDef" errorRef="OutputMockedError" />
+    </bpmn:boundaryEvent>
+    <bpmn:intermediateThrowEvent id="OutputMockedThrow" name="output-mocked">
+      <bpmn:incoming>OutputMockedBoundaryFlow</bpmn:incoming>
+      <bpmn:linkEventDefinition id="OutputMockedThrowDef" name="output-mocked" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateCatchEvent id="OutputmockedEvent" name="output-mocked">
+      <bpmn:outgoing>OutputmockedFlow</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="OutputmockedEventDef" name="output-mocked" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="OutputmockedEndEvent" name="output-mocked">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=&#34;output-mocked&#34;" target="processStatus" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>OutputmockedFlow</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="StartFlow" sourceRef="StartEvent" targetRef="InitProcessTask" />
+    <bpmn:sequenceFlow id="InitProcessFlow" sourceRef="InitProcessTask" targetRef="BlockedGateway" />
+    <bpmn:sequenceFlow id="NotBlockedFlow" name="nein" sourceRef="BlockedGateway" targetRef="LimitGateway">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=not(blocked)</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="LimitOkFlow" name="nein" sourceRef="LimitGateway" targetRef="SucceededEndEvent">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=not(limitExceeded)</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="LimitExceededFlow" name="ja" sourceRef="LimitGateway" targetRef="LimitExceededEvent">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=limitExceeded</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="LimitContinueFlow" sourceRef="LimitExceededEvent" targetRef="SucceededEndEvent" />
+    <bpmn:sequenceFlow id="BlockedFlow" name="ja" sourceRef="BlockedGateway" targetRef="StoppedEndEvent">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=blocked</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="OutputMockedBoundaryFlow" sourceRef="OutputMockedBoundary" targetRef="OutputMockedThrow" />
+    <bpmn:sequenceFlow id="OutputmockedFlow" sourceRef="OutputmockedEvent" targetRef="OutputmockedEndEvent" />
+  </bpmn:process>
+  <bpmn:error id="OutputMockedError" name="output-mocked" errorCode="output-mocked" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="democompany-patterns-stopWithErrorV1">
+      <bpmndi:BPMNShape id="StartEvent_di" bpmnElement="StartEvent">
+        <dc:Bounds x="112" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="118" y="165" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="InitProcessTask_di" bpmnElement="InitProcessTask" color:background-color="#D5D5D5">
+        <dc:Bounds x="200" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BlockedGateway_di" bpmnElement="BlockedGateway" isMarkerVisible="true">
+        <dc:Bounds x="355" y="115" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="337" y="85" width="86" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="LimitGateway_di" bpmnElement="LimitGateway" isMarkerVisible="true">
+        <dc:Bounds x="455" y="115" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="429" y="172" width="102" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="LimitExceededEvent_di" bpmnElement="LimitExceededEvent" bioc:stroke="#fb8c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#fb8c00">
+        <dc:Bounds x="572" y="42" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="542" y="18" width="96" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SucceededEndEvent_di" bpmnElement="SucceededEndEvent">
+        <dc:Bounds x="682" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="674" y="165" width="52" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StoppedEndEvent_di" bpmnElement="StoppedEndEvent" bioc:stroke="#fb8c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#fb8c00">
+        <dc:Bounds x="482" y="222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="478" y="265" width="45" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputMockedThrow_di" bpmnElement="OutputMockedThrow" color:background-color="#D5D5D5">
+        <dc:Bounds x="262" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="244" y="285" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedEvent_di" bpmnElement="OutputmockedEvent" color:background-color="#D5D5D5">
+        <dc:Bounds x="422" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="404" y="385" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputmockedEndEvent_di" bpmnElement="OutputmockedEndEvent" color:background-color="#D5D5D5">
+        <dc:Bounds x="522" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="504" y="385" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutputMockedBoundary_di" bpmnElement="OutputMockedBoundary" color:background-color="#D5D5D5">
+        <dc:Bounds x="262" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="StartFlow_di" bpmnElement="StartFlow">
+        <di:waypoint x="148" y="140" />
+        <di:waypoint x="200" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="InitProcessFlow_di" bpmnElement="InitProcessFlow">
+        <di:waypoint x="300" y="140" />
+        <di:waypoint x="355" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="NotBlockedFlow_di" bpmnElement="NotBlockedFlow">
+        <di:waypoint x="405" y="140" />
+        <di:waypoint x="455" y="140" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="418" y="122" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="LimitOkFlow_di" bpmnElement="LimitOkFlow">
+        <di:waypoint x="505" y="140" />
+        <di:waypoint x="682" y="140" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="582" y="122" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="LimitExceededFlow_di" bpmnElement="LimitExceededFlow">
+        <di:waypoint x="480" y="115" />
+        <di:waypoint x="480" y="60" />
+        <di:waypoint x="572" y="60" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="488" y="85" width="12" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="LimitContinueFlow_di" bpmnElement="LimitContinueFlow">
+        <di:waypoint x="608" y="60" />
+        <di:waypoint x="700" y="60" />
+        <di:waypoint x="700" y="122" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BlockedFlow_di" bpmnElement="BlockedFlow">
+        <di:waypoint x="380" y="165" />
+        <di:waypoint x="380" y="240" />
+        <di:waypoint x="482" y="240" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="388" y="200" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="OutputMockedBoundaryFlow_di" bpmnElement="OutputMockedBoundaryFlow">
+        <di:waypoint x="280" y="198" />
+        <di:waypoint x="280" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="OutputmockedFlow_di" bpmnElement="OutputmockedFlow">
+        <di:waypoint x="458" y="360" />
+        <di:waypoint x="522" y="360" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

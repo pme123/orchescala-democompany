@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "slug": "democompany-patterns-processstatusv1",
+  "name": "processStatusV1",
+  "title": "democompany-patterns-processStatusV1",
+  "processId": "democompany-patterns-processStatusV1",
+  "project": "democompany-patterns",
+  "engine": "c8",
+  "status": "changed",
+  "description": "Beispiel für das Pattern «Prozess-Status am Ende»: jedes Ende setzt `processStatus` -\nso sieht der Aufrufer (und die Simulation), wie der Prozess ausgegangen ist.\nIst der Antrag bewilligt (`approved`), endet der Prozess mit `succeeded`, sonst mit `canceled`.",
+  "createdAt": "2026-11-02",
+  "updatedAt": "2026-11-02T09:55:41+01:00",
+  "variables": [],
+  "timeToLive": "5",
+  "steps": [
+    {
+      "id": "StartEvent",
+      "kind": "start",
+      "name": "Start",
+      "status": "implemented"
+    },
+    {
+      "id": "InitProcessTask",
+      "kind": "service",
+      "name": "Init Process",
+      "status": "implemented",
+      "topic": "democompany-patterns-processStatusV1",
+      "manualOutMapping": false,
+      "errors": [
+        {
+          "code": "output-mocked",
+          "declared": true,
+          "interrupting": true,
+          "boundary": true,
+          "pattern": "init-process",
+          "steps": [
+            {
+              "id": "OutputMockedThrow",
+              "kind": "event",
+              "name": "output-mocked",
+              "status": "implemented",
+              "eventKind": "none",
+              "eventDirection": "throw",
+              "pattern": "init-process"
+            },
+            {
+              "id": "OutputmockedEndEvent",
+              "kind": "end",
+              "name": "output-mocked",
+              "status": "changed",
+              "outputs": [
+                {
+                  "name": "processStatus",
+                  "expression": "= \"output-mocked\""
+                }
+              ],
+              "pattern": "init-process"
+            }
+          ]
+        }
+      ],
+      "patterns": [
+        {
+          "id": "init-process"
+        }
+      ]
+    },
+    {
+      "id": "ApprovedGateway",
+      "kind": "gateway",
+      "name": "Antrag bewilligt?",
+      "status": "implemented",
+      "gatewayType": "exclusive",
+      "branches": [
+        {
+          "id": "ApprovedYesFlow",
+          "label": "ja",
+          "condition": "= approved",
+          "steps": [
+            {
+              "id": "SucceededEndEvent",
+              "kind": "end",
+              "name": "succeeded",
+              "status": "changed",
+              "outputs": [
+                {
+                  "name": "processStatus",
+                  "expression": "= \"succeeded\""
+                }
+              ],
+              "patterns": [
+                {
+                  "id": "process-status",
+                  "params": {
+                    "processStatus": "succeeded"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ApprovedNoFlow",
+          "label": "nein",
+          "condition": "= not(approved)",
+          "steps": [
+            {
+              "id": "CanceledEndEvent",
+              "kind": "end",
+              "name": "canceled",
+              "status": "changed",
+              "outputs": [
+                {
+                  "name": "processStatus",
+                  "expression": "= \"canceled\""
+                }
+              ],
+              "patterns": [
+                {
+                  "id": "process-status",
+                  "params": {
+                    "processStatus": "canceled"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "types": [
+    {
+      "id": "t-27a7903e87",
+      "name": "In",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.processStatus.v1.ProcessStatusExample.In",
+      "root": true,
+      "fields": [
+        {
+          "id": "f-229fb15be8",
+          "name": "customerName",
+          "type": "String",
+          "description": "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "example": "\"Peter Muster\""
+        },
+        {
+          "id": "f-3541bc14ee",
+          "name": "approved",
+          "type": "Boolean",
+          "description": "Ist der Antrag bewilligt? Ja: Ende «succeeded», nein: Ende «canceled».",
+          "example": "true"
+        }
+      ]
+    },
+    {
+      "id": "t-d55439416b",
+      "name": "Out",
+      "kind": "case",
+      "status": "implemented",
+      "domainId": "democompany.patterns.domain.processStatus.v1.ProcessStatusExample.Out",
+      "processOut": true,
+      "fields": [
+        {
+          "id": "f-3d576720ad",
+          "name": "processStatus",
+          "type": "dom:orchescala.domain.ProcessStatus",
+          "description": "Wie der Prozess ausgegangen ist - gesetzt vom Ende, an dem er angekommen ist.",
+          "example": "ProcessStatus.succeeded"
+        },
+        {
+          "id": "f-b1256e3974",
+          "name": "customerName",
+          "type": "String",
+          "example": "In.example.customerName"
+        },
+        {
+          "id": "f-209145fae2",
+          "name": "approved",
+          "type": "Boolean",
+          "example": "true"
+        }
+      ]
+    }
+  ],
+  "interactions": [],
+  "epics": [
+    "pattern"
+  ]
+}

@@ -1,0 +1,1935 @@
+{
+  "kind": "serviceCollection",
+  "version": 1,
+  "slug": "z9nai-orchescala-integration-service-clientmaster-multiplenaturalpersons",
+  "title": "Integration Service ClientMaster - MultipleNaturalPersons",
+  "project": "z9nai-orchescala",
+  "api": "constructMultipleNaturalPerson2",
+  "apiVersion": 1,
+  "status": "draft",
+  "createdAt": "2026-11-03T09:39:20+01:00",
+  "updatedAt": "2026-11-03T09:42:02+01:00",
+  "types": [
+    {
+      "id": "t-a4adb224d9",
+      "name": "TypeDateWrapper",
+      "kind": "case",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-4a7bc96852",
+          "name": "value",
+          "type": "String",
+          "optional": true,
+          "description": "Represent a ISO8601 date format, e.g 2024-11-13 (LocalDate)"
+        }
+      ]
+    },
+    {
+      "id": "e-b4366353e8",
+      "name": "MultipleNaturalPersonsGender1",
+      "kind": "enum",
+      "status": "draft",
+      "description": "Gender specification for natural persons for correct client identification and form of address\n\n@since 1.2020\nbuf:lint:ignore ENUM_ZERO_VALUE_SUFFIX\n\nsource: KDQE_GESCHLECHT_1 NUMBER(1)\n\n - GENDER1_NONE: No gender specification available or not relevant\n\nsource: KEIN\n - GENDER1_FEMALE: Female gender of the person\n\nsource: WEIBLICH\n - GENDER1_MALE: Male gender of the person\n\nsource: MAENNLICH\n - GENDER1_UNKNOWN: Gender of the person is not known or not specified\n\nsource: NICHT_BEKANNT",
+      "values": [
+        {
+          "name": "GENDER1_NONE"
+        },
+        {
+          "name": "GENDER1_FEMALE"
+        },
+        {
+          "name": "GENDER1_MALE"
+        },
+        {
+          "name": "GENDER1_UNKNOWN"
+        }
+      ]
+    },
+    {
+      "id": "e-269a252715",
+      "name": "MultipleNaturalPersonsMatrimonialPropertyRegime1",
+      "kind": "enum",
+      "status": "draft",
+      "description": "Matrimonial property regime of spouses for the legal regulation of the financial circumstances in the marriage\n\n@since 8.2019\nbuf:lint:ignore ENUM_ZERO_VALUE_SUFFIX\n\nsource: KDQE_GUETERSTAND_1 NUMBER(1)\n\n - MATRIMONIAL_PROPERTY_REGIME1_NONE: No matrimonial property regime defined or not applicable\n\nsource: KEIN\n - MATRIMONIAL_PROPERTY_REGIME1_COMMUNITY_OF_ACQUISITIONS: Joint ownership of acquired property as legal matrimonial property regime\n\nsource: ERRUNGENSCHAFTSBETEILIGUNG\n - MATRIMONIAL_PROPERTY_REGIME1_COMMUNITY_OF_PROPERTY: Community of property with joint assets\n\nsource: GUETERGEMEINSCHAFT\n - MATRIMONIAL_PROPERTY_REGIME1_SEPERATION_OF_PROPERTY: Separation of property with separated assets of spouses\n\nsource: GUETERTRENNUNG\n - MATRIMONIAL_PROPERTY_REGIME1_UNION_OF_PROPERTY: Union of property regime as a special form of association of assets\n\nsource: GUETERVERBINDUNG\n - MATRIMONIAL_PROPERTY_REGIME1_UNKNOWN: Matrimonial property regime is unknown or not specified\n\nsource: UNBEKANNT",
+      "values": [
+        {
+          "name": "MATRIMONIAL_PROPERTY_REGIME1_NONE"
+        },
+        {
+          "name": "MATRIMONIAL_PROPERTY_REGIME1_COMMUNITY_OF_ACQUISITIONS"
+        },
+        {
+          "name": "MATRIMONIAL_PROPERTY_REGIME1_COMMUNITY_OF_PROPERTY"
+        },
+        {
+          "name": "MATRIMONIAL_PROPERTY_REGIME1_SEPERATION_OF_PROPERTY"
+        },
+        {
+          "name": "MATRIMONIAL_PROPERTY_REGIME1_UNION_OF_PROPERTY"
+        },
+        {
+          "name": "MATRIMONIAL_PROPERTY_REGIME1_UNKNOWN"
+        }
+      ]
+    },
+    {
+      "id": "e-650181423d",
+      "name": "MultipleNaturalPersonsClientMainType1",
+      "kind": "enum",
+      "status": "draft",
+      "description": "Main type of the client for basic categorisation of various client types\n\n@since 10.2019\nbuf:lint:ignore ENUM_ZERO_VALUE_SUFFIX\n\nsource: KDQE_HTYP_1 NUMBER(1)\n\n - CLIENT_MAIN_TYPE1_UNSPECIFIED: Unspecified\n - CLIENT_MAIN_TYPE1_NATURAL_PERSON: Private individual as natural person\n\nsource: PRIVATE_EINZELPERSON\n - CLIENT_MAIN_TYPE1_MULTIPLE_NATURAL_PERSONS: Multiple private individuals in a joint client relationship\n\nsource: MEHRERE_PRIVATPERSONEN\n - CLIENT_MAIN_TYPE1_ORGANISATION: Companies and other organisational entities\n\nsource: FIRMEN_UND_SONSTIGE",
+      "values": [
+        {
+          "name": "CLIENT_MAIN_TYPE1_UNSPECIFIED"
+        },
+        {
+          "name": "CLIENT_MAIN_TYPE1_NATURAL_PERSON"
+        },
+        {
+          "name": "CLIENT_MAIN_TYPE1_MULTIPLE_NATURAL_PERSONS"
+        },
+        {
+          "name": "CLIENT_MAIN_TYPE1_ORGANISATION"
+        }
+      ]
+    },
+    {
+      "id": "e-4ae814a5be",
+      "name": "MultipleNaturalPersonsMifid1",
+      "kind": "enum",
+      "status": "draft",
+      "description": "MiFID client classification for the classification of clients according to EU Markets in Financial Instruments Directive\n\n@since 8.2019\nbuf:lint:ignore ENUM_ZERO_VALUE_SUFFIX\n\nsource: KDQE_MIFID_1 NUMBER(1)\n\n - MIFID1_UNSPECIFIED: Unspecified\n - MIFID1_PRIVATE_CLIENT: Private client with increased investor protection\n\nsource: PRIVATKUNDE\n - MIFID1_PROFESSIONAL_CLIENT: Professional client with reduced investor protection\n\nsource: PROFESSIONELLER_KUNDE\n - MIFID1_COUNTERPARTY: Counterparty within the meaning of the MiFID directive\n\nsource: GEGENPARTEI",
+      "values": [
+        {
+          "name": "MIFID1_UNSPECIFIED"
+        },
+        {
+          "name": "MIFID1_PRIVATE_CLIENT"
+        },
+        {
+          "name": "MIFID1_PROFESSIONAL_CLIENT"
+        },
+        {
+          "name": "MIFID1_COUNTERPARTY"
+        }
+      ]
+    },
+    {
+      "id": "e-fb931ed5ab",
+      "name": "MultipleNaturalPersonsMaritalStatus1",
+      "kind": "enum",
+      "status": "draft",
+      "description": "Marital status of natural persons for the legal classification of the family status\n\n@since 8.2019\nbuf:lint:ignore ENUM_ZERO_VALUE_SUFFIX\n\nsource: KDQE_ZIVILSTAND_1 NUMBER(2)\n\n - MARITAL_STATUS1_NONE: No marital status specified or not relevant\n\nsource: KEIN\n - MARITAL_STATUS1_SINGLE: Single and unmarried\n\nsource: LEDIG\n - MARITAL_STATUS1_MARRIED: Married with legal marriage\n\nsource: VERHEIRATET\n - MARITAL_STATUS1_DIVORCED: Divorced after final divorce\n\nsource: GESCHIEDEN\n - MARITAL_STATUS1_WIDOWED: Widowed after death of spouse\n\nsource: VERWITWET\n - MARITAL_STATUS1_LEGALLY_SEPARATED: Legally separated without implemented divorce\n\nsource: GERICHTLICH_GETRENNT\n - MARITAL_STATUS1_MARRIED_COMMUNITY_OF_PROPERTY: Married with community of property\n\nsource: VERHEIRATET_GUETERGEMEINSCHAFT\n - MARITAL_STATUS1_NOT_KNOWN: Marital status is not known or not specified\n\nsource: NICHT_BEKANNT\n - MARITAL_STATUS1_REGIST_PARTNERSHIP: Registered partnership\n\nsource: EINGETR_PARTNERSCHAFT\n - MARITAL_STATUS1_DISSOLV_REGIST_PARTNERSHIP: Dissolved registered partnership\n\nsource: AUFGEHOB_EINGETR_PARTNERSCHAFT",
+      "values": [
+        {
+          "name": "MARITAL_STATUS1_NONE"
+        },
+        {
+          "name": "MARITAL_STATUS1_SINGLE"
+        },
+        {
+          "name": "MARITAL_STATUS1_MARRIED"
+        },
+        {
+          "name": "MARITAL_STATUS1_DIVORCED"
+        },
+        {
+          "name": "MARITAL_STATUS1_WIDOWED"
+        },
+        {
+          "name": "MARITAL_STATUS1_LEGALLY_SEPARATED"
+        },
+        {
+          "name": "MARITAL_STATUS1_MARRIED_COMMUNITY_OF_PROPERTY"
+        },
+        {
+          "name": "MARITAL_STATUS1_NOT_KNOWN"
+        },
+        {
+          "name": "MARITAL_STATUS1_REGIST_PARTNERSHIP"
+        },
+        {
+          "name": "MARITAL_STATUS1_DISSOLV_REGIST_PARTNERSHIP"
+        }
+      ]
+    },
+    {
+      "id": "e-11867a8e2e",
+      "name": "MultipleNaturalPersonsLegalCategoryClient2",
+      "kind": "enum",
+      "status": "draft",
+      "description": "Counterparty category acc. to the Capital Adequacy Ordinance (ERV/OFR)\n\n@since 10.2025\nbuf:lint:ignore ENUM_ZERO_VALUE_SUFFIX\n\nsource: KDQE_EB_LEGAL_KAT_2 NUMBER(2)\n\n - LEGAL_CATEGORY_CLIENT2_UNDEFINED: Communication category is not defined or unknown\n\nsource: UNDEF\n - LEGAL_CATEGORY_CLIENT2_CENTRAL_GOVERNMENT_OR_BANK: Central government or central bank\n\nsource: ZENTRALREG_BANK\n - LEGAL_CATEGORY_CLIENT2_EU_ECB: European Union (EU), European Central Bank (ECB)\n\nsource: EU_EZB\n - LEGAL_CATEGORY_CLIENT2_CANTONS: State government\n\nsource: KANTONE\n - LEGAL_CATEGORY_CLIENT2_PSE_WITH_TAX_OR_STATE_GUARANTEED: Public sector entities with tax raising powers or state guarantee\n\nsource: OERK_STAATSGAR\n - LEGAL_CATEGORY_CLIENT2_OTHER_PSE: Other public sector entities\n\nsource: ANDERE_OERK\n - LEGAL_CATEGORY_CLIENT2_FINMA_DEVELOPMENT_BANKS_PLUS_BIZ_AND_IWF: Multilateral development banks designated by FINMA and BIZ and IMF\n\nsource: BEZ_ENTW_BANKEN\n - LEGAL_CATEGORY_CLIENT2_OTHER_DEVELOPMENT_BANKS: Multilateral development banks, other\n\nsource: AND_ENTW_BANKEN\n - LEGAL_CATEGORY_CLIENT2_RECOGNISED_JOINT_INSTITUTIONS_OF_BANKS: Recognised joint institutions of the banks\n\nsource: GEM_EINRICHT_BK\n - LEGAL_CATEGORY_CLIENT2_NATURAL_PERSONS: Natural persons\n\nsource: NATURL_PERSON\n - LEGAL_CATEGORY_CLIENT2_DEPOSIT_INSURANCE_HOLDERS: Deposit guarantee holder\n\nsource: EINLAGENVERSICH\n - LEGAL_CATEGORY_CLIENT2_DOMESTIC_MORTGAGE_BOND_INSTITUTIONS: Domestic mortgage bond institutions (e.g. KB central mortgage bond institution, ESG)\n\nsource: INL_PF_INSTITUT\n - LEGAL_CATEGORY_CLIENT2_STOCK_EXCHANGES_AND_CLEARING_HOUSES_FULFILMENT_GUARANTEED: Stock exchanges and clearing houses, according to Appendix 2, Pos.cl. 6.2 (fulfilment guaranteed)\n\nsource: BORSEN_ANH_2\n - LEGAL_CATEGORY_CLIENT2_COMPANIES: Companies and small companies acc. to art.49, para. 2,3\n\nsource: UNTERNEHMEN\n - LEGAL_CATEGORY_CLIENT2_GENERAL_BANKS: Banks in general\n\nsource: BANK_ALLGEMEIN\n - LEGAL_CATEGORY_CLIENT2_OTHER_COUNTERPARTIES: Other counterparties\n\nsource: AND_GEGENPARTEI\n - LEGAL_CATEGORY_CLIENT2_STOCK_EXCHANGES_AND_CLEARING_HOUSES_OTHERS: Stock exchanges and clearing houses, according to Appendix 2, Pos. cat. 6.1 (other)\n\nsource: BORSEN_ANDERE\n - LEGAL_CATEGORY_CLIENT2_STOCK_EXCHANGES_AND_CLEARING_HOUSES_SETTLEMENT_GUARANTEED: Stock exchanges and clearing houses, according to Appendix 2, Pos.cl. 6.3 (settlement guaranteed)\n\nsource: BORSEN_ABW_GAR\n - LEGAL_CATEGORY_CLIENT2_PUBLIC_NON_FINANCIAL_INSTITUTIONS: Public non-financial undertakings (S13)\n\nsource: OEFF_NICHTFIN_UNT\n - LEGAL_CATEGORY_CLIENT2_PUBLIC_NON_FINANCIAL_ENTERPRISES_GOVERNMENT: Public non-financial corproations Confederation/Central government (S1311)\n\nsource: OEFF_NICHTFIN_UNT_BUND\n - LEGAL_CATEGORY_CLIENT2_PUBLIC_NON_FINANCIAL_CANTONS: Public non-financial undertakings State government (S1312)\n\nsource: OEFF_NICHTFIN_UNT_KANTONE\n - LEGAL_CATEGORY_CLIENT2_PUBLIC_NON_FINANCIAL_ENTERPRISES_MUNICIPALITIES: Public non-financial undertakings Local government (S1313)\n\nsource: OEFF_NICHTFIN_UNT_GEMEINDEN\n - LEGAL_CATEGORY_CLIENT2_PUBLIC_BODIES_GUARANTEED_BY_PUBLIC_COMMUNITY: Public bodies guaranteed by a public community (S1313x)\n\nsource: OEK_GARANTIERT_DURCH_GEMEINW\n - LEGAL_CATEGORY_CLIENT2_GENERAL_GOVERNMENT: General government (sub-sector not identified) (S13U)\n\nsource: STAAT_UNBEST_TEILSEKTOR\n - LEGAL_CATEGORY_CLIENT2_NON_FINANCIAL_CORPORATIONS: Non-financial corporations (S11)\n\nsource: NICHTFIN_KAPITALGES\n - LEGAL_CATEGORY_CLIENT2_HOUSEHOLDS: Private households (S14)\n\nsource: PRIVATE_HAUSHALTE\n - LEGAL_CATEGORY_CLIENT2_REST_OF_WORLD: Rest of the world (S2)\n\nsource: UEBRIGE_WELT\n - LEGAL_CATEGORY_CLIENT2_PRIVATE_NON_PROFIT_ORGANISATIONS: Non-profit institutions serving households (S15)\n\nsource: PRIV_ORG_OHNE_ERWERBSZWECK\n - LEGAL_CATEGORY_CLIENT2_UNDEFINED_SECTOR: Unspecified sector (S9)\n\nsource: UNBESTIMMTER_SEKTOR\n - LEGAL_CATEGORY_CLIENT2_COMPANY_OWNED_INVESTORS: Captive financial institutions and money lenders (S127)\n\nsource: FIRMENEIGENE_FINANZ_EINR\n - LEGAL_CATEGORY_CLIENT2_FEDERATION_CENTRAL_GOVERNMENTS: Designates federal and central governments\n\nsource: BUND_ZENTRALREGIERUNGEN\n - LEGAL_CATEGORY_CLIENT2_EUROPEAN_COMMUNITY: Designates the European Community\n\nsource: EUROP_GEMEINSCHAFT\n - LEGAL_CATEGORY_CLIENT2_MUNICIPALITIES: Designates municipalities\n\nsource: GEMEINDEN\n - LEGAL_CATEGORY_CLIENT2_SOCIAL_SECURITY: Designates social security funds\n\nsource: SOZIALVERSICHERUNGEN\n - LEGAL_CATEGORY_CLIENT2_STATE_CHURCH: Designates state churches\n\nsource: STAATSKIRCHEN\n - LEGAL_CATEGORY_CLIENT2_COLLECTIVE_INVESTMENT_INSTITUTION: Denotes institutions for collective investment schemes\n\nsource: KOLLEKTIVANLAGEINSTITUTION",
+      "values": [
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_UNDEFINED"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_CENTRAL_GOVERNMENT_OR_BANK"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_EU_ECB"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_CANTONS"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_PSE_WITH_TAX_OR_STATE_GUARANTEED"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_OTHER_PSE"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_FINMA_DEVELOPMENT_BANKS_PLUS_BIZ_AND_IWF"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_OTHER_DEVELOPMENT_BANKS"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_RECOGNISED_JOINT_INSTITUTIONS_OF_BANKS"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_NATURAL_PERSONS"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_DEPOSIT_INSURANCE_HOLDERS"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_DOMESTIC_MORTGAGE_BOND_INSTITUTIONS"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_STOCK_EXCHANGES_AND_CLEARING_HOUSES_FULFILMENT_GUARANTEED"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_COMPANIES"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_GENERAL_BANKS"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_OTHER_COUNTERPARTIES"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_STOCK_EXCHANGES_AND_CLEARING_HOUSES_OTHERS"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_STOCK_EXCHANGES_AND_CLEARING_HOUSES_SETTLEMENT_GUARANTEED"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_PUBLIC_NON_FINANCIAL_INSTITUTIONS"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_PUBLIC_NON_FINANCIAL_ENTERPRISES_GOVERNMENT"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_PUBLIC_NON_FINANCIAL_CANTONS"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_PUBLIC_NON_FINANCIAL_ENTERPRISES_MUNICIPALITIES"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_PUBLIC_BODIES_GUARANTEED_BY_PUBLIC_COMMUNITY"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_GENERAL_GOVERNMENT"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_NON_FINANCIAL_CORPORATIONS"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_HOUSEHOLDS"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_REST_OF_WORLD"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_PRIVATE_NON_PROFIT_ORGANISATIONS"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_UNDEFINED_SECTOR"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_COMPANY_OWNED_INVESTORS"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_FEDERATION_CENTRAL_GOVERNMENTS"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_EUROPEAN_COMMUNITY"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_MUNICIPALITIES"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_SOCIAL_SECURITY"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_STATE_CHURCH"
+        },
+        {
+          "name": "LEGAL_CATEGORY_CLIENT2_COLLECTIVE_INVESTMENT_INSTITUTION"
+        }
+      ]
+    },
+    {
+      "id": "e-4cec9ae077",
+      "name": "MultipleNaturalPersonsClientGuiType1",
+      "kind": "enum",
+      "status": "draft",
+      "description": "Client type for the user interface to categorise different types of clients and business relationships\n\n@since 10.2022\nbuf:lint:ignore ENUM_ZERO_VALUE_SUFFIX\n\nsource: KDQE_TYP_1 NUMBER(1)\n\n - CLIENT_GUI_TYPE1_PRIVATE_INDIVIDUAL: Private individual as individual client\n\nsource: PRIVATE_EINZELPERSON\n - CLIENT_GUI_TYPE1_MARITAL_UNION: Married couple as joint client relationship of married partners\n\nsource: EHEGEMEINSCHAFT\n - CLIENT_GUI_TYPE1_TWO_PERSON_HOUSEHOLD: Two-person household as a common household of two persons\n\nsource: ZWEIER_GEMEINSCHAFT\n - CLIENT_GUI_TYPE1_NUMBERED_ACCOUNT_HOLDER: Numbered account holder with anonymous account maintenance\n\nsource: NUMMERNKUNDE\n - CLIENT_GUI_TYPE1_COMPANIES_AND_OTHER: Companies and other legal entities\n\nsource: FIRMEN_UND_SONSTIGE\n - CLIENT_GUI_TYPE1_NUMBERED_ACCOUNT_HOLDER_COMPANY: Numbered account holder as company structure with anonymous account maintenance\n\nsource: NUMMERNKUNDE_FIRMEN\n - CLIENT_GUI_TYPE1_OTHER_PRIVATE_COMMUNITY: Other private communities and associations\n\nsource: UEBRIGE_PRIVATGEM",
+      "values": [
+        {
+          "name": "CLIENT_GUI_TYPE1_PRIVATE_INDIVIDUAL"
+        },
+        {
+          "name": "CLIENT_GUI_TYPE1_MARITAL_UNION"
+        },
+        {
+          "name": "CLIENT_GUI_TYPE1_TWO_PERSON_HOUSEHOLD"
+        },
+        {
+          "name": "CLIENT_GUI_TYPE1_NUMBERED_ACCOUNT_HOLDER"
+        },
+        {
+          "name": "CLIENT_GUI_TYPE1_COMPANIES_AND_OTHER"
+        },
+        {
+          "name": "CLIENT_GUI_TYPE1_NUMBERED_ACCOUNT_HOLDER_COMPANY"
+        },
+        {
+          "name": "CLIENT_GUI_TYPE1_OTHER_PRIVATE_COMMUNITY"
+        }
+      ]
+    },
+    {
+      "id": "t-832dc230fc",
+      "name": "MultipleNaturalPerson2",
+      "kind": "case",
+      "status": "draft",
+      "description": "This type contains attributes for a two-person master record.\n\nsource: KDYI_MEHRERE_PERSONEN_2 MultipleNaturalPerson2",
+      "fields": [
+        {
+          "id": "f-27d91be936",
+          "name": "ahvNumber",
+          "type": "String",
+          "optional": true,
+          "description": "AHV/AVS number (social insurance)\n\nMax length: 20 characters\nCID\n\nsource: AHV_NR VARCHAR2(20)"
+        },
+        {
+          "id": "f-b2d790b6c6",
+          "name": "formOfAddressCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Form of address type\n\nMax digits: 4\nRelated lookup-view: FormOfAddress2\n\nsource: ANREDE_TYP NUMBER(4)"
+        },
+        {
+          "id": "f-03071cf11b",
+          "name": "formOfAddressPartnerCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Partner's form of address type\n\nMax digits: 4\nRelated lookup-view: FormOfAddress2\n\nsource: ANREDE_TYP_P NUMBER(4)"
+        },
+        {
+          "id": "f-84999baed5",
+          "name": "residencePermitCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Type of residence permit\n\nMax digits: 2\nRelated lookup-view: ResidencePermit2\n\nsource: AUFENT_BEWI_CD NUMBER(2)"
+        },
+        {
+          "id": "f-2a6a4a2f3a",
+          "name": "residencePermitPartnerCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Partner's residence permit category\n\nMax digits: 2\nRelated lookup-view: ResidencePermit2\n\nsource: AUFENT_BEWI_CD_PTN NUMBER(2)"
+        },
+        {
+          "id": "f-496e169547",
+          "name": "residencePermitDate",
+          "type": "t-a4adb224d9",
+          "optional": true,
+          "description": "Residence permit date\n\nNot time-zoned (ISO8601 e.g. 2025-06-27)\n\nsource: AUFENT_BEWI_DAT DATE"
+        },
+        {
+          "id": "f-49e05837b7",
+          "name": "residencePermitPartnerDate",
+          "type": "t-a4adb224d9",
+          "optional": true,
+          "description": "Partner's residence permit date\n\nNot time-zoned (ISO8601 e.g. 2025-06-27)\n\nsource: AUFENT_BEW_DAT_PTN DATE"
+        },
+        {
+          "id": "f-ccc26875f9",
+          "name": "closingDate",
+          "type": "t-a4adb224d9",
+          "optional": true,
+          "description": "Inactivation date\n\nNot time-zoned (ISO8601 e.g. 2025-06-27)\n\nsource: AUFHEB_DAT DATE"
+        },
+        {
+          "id": "f-7a7738aa21",
+          "name": "internalAnnotation",
+          "type": "String",
+          "optional": true,
+          "description": "Comment for internal bank use\n\nMax length: 2000 characters\nCID\n\nsource: BEM_INT VARCHAR2(2000)"
+        },
+        {
+          "id": "f-d620b5aa30",
+          "name": "consultingFirmCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Consulting firm\n\nMax digits: 4\nRelated lookup-view: ConsultingFirmSec1\n\nsource: BERFIRMA_NR NUMBER(4)"
+        },
+        {
+          "id": "f-a9b3e9a51a",
+          "name": "professionCode",
+          "type": "String",
+          "optional": true,
+          "description": "Code of the professional designation\n\nMax length: 10 characters\nRelated lookup-view: Profession1\n\nsource: BERUF_CD VARCHAR2(10)"
+        },
+        {
+          "id": "f-9c78b70aca",
+          "name": "salutation",
+          "type": "String",
+          "optional": true,
+          "description": "Salutation\n\nMax length: 500 characters\nCID\n\nsource: BRIEFANR VARCHAR2(500)"
+        },
+        {
+          "id": "f-cc472ae5c0",
+          "name": "isOccupationalPension",
+          "type": "Boolean",
+          "optional": true,
+          "description": "The client is covered by a BVG/LPP pension plan; if 'null', it is unknown\n\nsource: BVG_CD NUMBER(1)"
+        },
+        {
+          "id": "f-be1f1a6ad5",
+          "name": "formattedClientNumber",
+          "type": "String",
+          "optional": true,
+          "description": "External representation of the client number\n\nMax length: 20 characters\nCID\n\nsource: EDIT_KD_NR VARCHAR2(20)"
+        },
+        {
+          "id": "f-7db4a6529c",
+          "name": "openingDate",
+          "type": "t-a4adb224d9",
+          "optional": true,
+          "description": "Date of opening of the client\n\nNot time-zoned (ISO8601 e.g. 2025-06-27)\nCID\n\nsource: EROEFF_DAT DATE"
+        },
+        {
+          "id": "f-5a951d4646",
+          "name": "isFinancialIntermediary",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Is the client a financial intermediary?\n\nsource: FIN_VOLLM_CD NUMBER(1)"
+        },
+        {
+          "id": "f-f774176f18",
+          "name": "dateOfBirth",
+          "type": "t-a4adb224d9",
+          "optional": true,
+          "description": "Date of birth\n\nNot time-zoned (ISO8601 e.g. 2025-06-27)\nCID\n\nsource: GEBURT_DAT DATE"
+        },
+        {
+          "id": "f-14db8f03fc",
+          "name": "dateOfBirthPartner",
+          "type": "t-a4adb224d9",
+          "optional": true,
+          "description": "Partner's date of birth\n\nNot time-zoned (ISO8601 e.g. 2025-06-27)\nCID\n\nsource: GEBURT_DAT_P DATE"
+        },
+        {
+          "id": "f-a4a932c197",
+          "name": "placeOfBirth",
+          "type": "String",
+          "optional": true,
+          "description": "Place of birth, free text\n\nMax length: 35 characters\nCID\n\nsource: GEBURT_ORT VARCHAR2(35)"
+        },
+        {
+          "id": "f-ce57012761",
+          "name": "placeOfBirthPartner",
+          "type": "String",
+          "optional": true,
+          "description": "Partner's place of birth, free text\n\nMax length: 35 characters\nCID\n\nsource: GEBURT_ORT_P VARCHAR2(35)"
+        },
+        {
+          "id": "f-26a9d66b2a",
+          "name": "genderCode",
+          "type": "e-b4366353e8",
+          "optional": true,
+          "description": "Gender\n\nMax digits: 1\nValues from enum: Gender1\n\nsource: GESCHLECHT_CD NUMBER(1)"
+        },
+        {
+          "id": "f-7726f16800",
+          "name": "genderPartnerCode",
+          "type": "e-b4366353e8",
+          "optional": true,
+          "description": "Partner's gender\n\nMax digits: 1\nValues from enum: Gender1\n\nsource: GESCHLECHT_CD_P NUMBER(1)"
+        },
+        {
+          "id": "f-ae627f1423",
+          "name": "matrimonialPropertyRegimeCode",
+          "type": "e-269a252715",
+          "optional": true,
+          "description": "Matrimonial property regime\n\nMax digits: 1\nValues from enum: MatrimonialPropertyRegime1\n\nsource: GUETSTAND_CD NUMBER(1)"
+        },
+        {
+          "id": "f-7cd7525acb",
+          "name": "matrimonialPropertyRegimePartnerCode",
+          "type": "e-269a252715",
+          "optional": true,
+          "description": "Partner's matrimonial property regime\n\nMax digits: 1\nValues from enum: MatrimonialPropertyRegime1\n\nsource: GUETSTAND_CD_P NUMBER(1)"
+        },
+        {
+          "id": "f-27751358ba",
+          "name": "clientCategoryCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Client category\n\nMax digits: 2\nRelated lookup-view: ClientCategory2\n\nsource: KDKAT_CD NUMBER(2)"
+        },
+        {
+          "id": "f-aa67430322",
+          "name": "clientDesignation",
+          "type": "String",
+          "optional": true,
+          "description": "Designation of the client\n\nMax length: 35 characters\nCID\n\nsource: KD_BEZ VARCHAR2(35)"
+        },
+        {
+          "id": "f-927b402832",
+          "name": "clientDesignationLong",
+          "type": "String",
+          "optional": true,
+          "description": "Long designation of the client (is prepared in the client language)\n\nMax length: 120 characters\nCID\n\nsource: KD_BEZ_LANG VARCHAR2(120)"
+        },
+        {
+          "id": "f-15652180e9",
+          "name": "assetPotentialCode",
+          "type": "String",
+          "optional": true,
+          "description": "Development potential of the asset status\n\nMax length: 2 characters\nRelated lookup-view: AssetPotential1\n\nsource: KD_ENTWPOT_CD VARCHAR2(2)"
+        },
+        {
+          "id": "f-da5523fa62",
+          "name": "clientGroupTypeCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Client group type\n\nMax digits: 3\nRelated lookup-view: ClientGroupType1\n\nsource: KD_GRP_ART_CD NUMBER(3)"
+        },
+        {
+          "id": "f-e2e8a662a0",
+          "name": "clientMainTypeCode",
+          "type": "e-650181423d",
+          "optional": true,
+          "description": "Main client type\n\nMax digits: 1\nValues from enum: ClientMainType1\n\nsource: KD_HTYP_CD NUMBER(1)"
+        },
+        {
+          "id": "f-b79c172040",
+          "name": "isInternationalVisibility",
+          "type": "Boolean",
+          "optional": true,
+          "description": "May client identifications be displayed abroad?\n\nsource: KD_ID_AUSL_CD NUMBER(1)"
+        },
+        {
+          "id": "f-f8f1e6f5df",
+          "name": "clientContactFrequencyCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Frequency of client contact\n\nMax digits: 2\nRelated lookup-view: ClientContactFrequency1\n\nsource: KD_KONT_HAUEFI_CD NUMBER(2)"
+        },
+        {
+          "id": "f-3673d8adea",
+          "name": "clientKey",
+          "type": "String",
+          "optional": true,
+          "description": "Technical client key\n\nMax length: 22 characters\n\nsource: KD_LNR NUMBER(22)"
+        },
+        {
+          "id": "f-5ef531e9ad",
+          "name": "isBulkMailing",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Is the client to be included in bulk mailing?\n\nsource: KD_MASS_MAIL_CD NUMBER(1)"
+        },
+        {
+          "id": "f-61dabd1b0f",
+          "name": "isAndConnection",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Married couple with 'AND' connection\n\nsource: KD_MENGE_CD NUMBER(1)"
+        },
+        {
+          "id": "f-4d089815c1",
+          "name": "mifidCode",
+          "type": "e-4ae814a5be",
+          "optional": true,
+          "description": "MiFID code (Markets in Financial Instruments Directive)\n\nMax digits: 1\nValues from enum: Mifid1\n\nsource: KD_MIFID_CD NUMBER(1)"
+        },
+        {
+          "id": "f-643f4248c7",
+          "name": "clientNumber",
+          "type": "String",
+          "optional": true,
+          "description": "Client number\n\nMax length: 12 characters\nCID\n\nsource: KD_NR VARCHAR2(12)"
+        },
+        {
+          "id": "f-2788947fe1",
+          "name": "legalStatusCharacteristicCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Characteristic of the legal status\n\nMax digits: 4\nRelated lookup-view: LegalStatusCharacteristic1\n\nsource: KD_RSTAT_AUSP_CD NUMBER(4)"
+        },
+        {
+          "id": "f-11da201e2d",
+          "name": "legalStatusCharacteristic2Code",
+          "type": "Int",
+          "optional": true,
+          "description": "Legal status characteristic II\n\nMax digits: 4\nRelated lookup-view: LegalStatusCharacteristic1\n\nsource: KD_RSTAT_AUSP_CD_2 NUMBER(4)"
+        },
+        {
+          "id": "f-70b959be28",
+          "name": "legalStatusCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Legal status\n\nMax digits: 4\nRelated lookup-view: LegalStatus2\n\nsource: KD_RSTAT_CD NUMBER(4)"
+        },
+        {
+          "id": "f-dae82495ad",
+          "name": "clientSegmentCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Client segment\n\nMax digits: 2\nRelated lookup-view: ClientSegment1\n\nsource: KD_SEGM_CD NUMBER(2)"
+        },
+        {
+          "id": "f-4aa5055e62",
+          "name": "clientStatusCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Client status\n\nMax digits: 4\nRelated lookup-view: ClientStatus1\n\nsource: KD_STAT_CD NUMBER(4)"
+        },
+        {
+          "id": "f-9f6ebde3bf",
+          "name": "purposeBusRelationshipComment",
+          "type": "String",
+          "optional": true,
+          "description": "Comment regarding type and purpose of business relationship\n\nMax length: 4000 characters\nCID\n\nsource: KD_VERB_ZWECK_BEM VARCHAR2(4000)"
+        },
+        {
+          "id": "f-3a74f9e90a",
+          "name": "purposeBusRelationshipCode",
+          "type": "String",
+          "optional": true,
+          "description": "Type and purpose of business relationship\n\nMax length: 4 characters\nRelated lookup-view: ClientPurposeBusRelationship1\n\nsource: KD_VERB_ZWECK_CD VARCHAR2(4)"
+        },
+        {
+          "id": "f-7bc5951cb1",
+          "name": "isVip",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Is the client master a VIP? (Can only be activated with CRM and MY_CLIENTS)\n\nsource: KD_VIP_CD NUMBER(1)"
+        },
+        {
+          "id": "f-9c4c6dded8",
+          "name": "riskClassCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Risk class\n\nMax digits: 3\nRelated lookup-view: ClientRiskClassification2\n\nsource: KD_VW_CD NUMBER(3)"
+        },
+        {
+          "id": "f-00d5be9810",
+          "name": "zekId",
+          "type": "String",
+          "optional": true,
+          "description": "ZEK (Central Office for Credit Information) Client ID\n\nMax length: 12 characters\nCID\n\nsource: KD_ZEK_ID VARCHAR2(12)"
+        },
+        {
+          "id": "f-78913c2fa0",
+          "name": "countryOfBirthCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Country of place of birth\n\nMax digits: 4\nRelated lookup-view: Country1\n\nsource: LAND_LNR_GEBURT NUMBER(4)"
+        },
+        {
+          "id": "f-9df254077d",
+          "name": "countryOfBirthPartnerCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Partner's country of place of birth\n\nMax digits: 4\nRelated lookup-view: Country1\n\nsource: LAND_LNR_GEBURT_P NUMBER(4)"
+        },
+        {
+          "id": "f-631afc2c46",
+          "name": "nationalityCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Nationality\n\nMax digits: 4\nRelated lookup-view: Country1\n\nsource: LAND_LNR_NAT NUMBER(4)"
+        },
+        {
+          "id": "f-0580c997a1",
+          "name": "nationality2Code",
+          "type": "Int",
+          "optional": true,
+          "description": "Nationality in the case of dual nationals\n\nMax digits: 4\nRelated lookup-view: Country1\n\nsource: LAND_LNR_NAT_2 NUMBER(4)"
+        },
+        {
+          "id": "f-c0bd79d26a",
+          "name": "nationalityPartnerCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Partner's nationality\n\nMax digits: 4\nRelated lookup-view: Country1\n\nsource: LAND_LNR_NAT_P NUMBER(4)"
+        },
+        {
+          "id": "f-31b1946224",
+          "name": "nationality2PartnerCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Nationality of partner in the case of dual nationals\n\nMax digits: 4\nRelated lookup-view: Country1\n\nsource: LAND_LNR_NAT_P_2 NUMBER(4)"
+        },
+        {
+          "id": "f-6ebe0f2a6a",
+          "name": "isNewNamingLaw",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Determines the new naming law or wife's last name/last name before marriage placed in front; if null, information is taken over from the individual master records. Is only taken into account for one married couple; ignored for others.\n\nsource: NAMENSRECHT_NEU NUMBER(1)"
+        },
+        {
+          "id": "f-84b9a7fd26",
+          "name": "lastName",
+          "type": "String",
+          "optional": true,
+          "description": "Last name\n\nMax length: 35 characters\nCID\n\nsource: NAME_1 VARCHAR2(35)"
+        },
+        {
+          "id": "f-1fa069fb8d",
+          "name": "officialLastName",
+          "type": "String",
+          "optional": true,
+          "description": "Official last name\n\nMax length: 80 characters\nCID\n\nsource: NAME_1_L VARCHAR2(80)"
+        },
+        {
+          "id": "f-f4ef97b7b0",
+          "name": "lastNamePartner",
+          "type": "String",
+          "optional": true,
+          "description": "Partner's last name\n\nMax length: 35 characters\nCID\n\nsource: NAME_1_P VARCHAR2(35)"
+        },
+        {
+          "id": "f-067f9c2bf0",
+          "name": "officialLastNamePartner",
+          "type": "String",
+          "optional": true,
+          "description": "Partner's official last name\n\nMax length: 80 characters\nCID\n\nsource: NAME_1_P_L VARCHAR2(80)"
+        },
+        {
+          "id": "f-4a211e5ab9",
+          "name": "lastNameBeforeMarriage",
+          "type": "String",
+          "optional": true,
+          "description": "Last name before marriage\n\nMax length: 35 characters\nCID\n\nsource: NAME_HEIRAT VARCHAR2(35)"
+        },
+        {
+          "id": "f-a36489fb71",
+          "name": "officialLastNameBeforeMarriage",
+          "type": "String",
+          "optional": true,
+          "description": "Official last name before marriage\n\nMax length: 80 characters\nCID\n\nsource: NAME_HEIRAT_L VARCHAR2(80)"
+        },
+        {
+          "id": "f-75266ff5c3",
+          "name": "lastNameBeforeMarriagePartner",
+          "type": "String",
+          "optional": true,
+          "description": "Partner's last name before marriage\n\nMax length: 35 characters\nCID\n\nsource: NAME_HEIRAT_P VARCHAR2(35)"
+        },
+        {
+          "id": "f-4fc934d53c",
+          "name": "officialLastNameBeforeMarriagePartner",
+          "type": "String",
+          "optional": true,
+          "description": "Partner's official last name before marriage\n\nMax length: 80 characters\nCID\n\nsource: NAME_HEIRAT_P_L VARCHAR2(80)"
+        },
+        {
+          "id": "f-8ef2a246eb",
+          "name": "isLastNameWifePrefixed",
+          "type": "Boolean",
+          "optional": true,
+          "description": "The last name before marriage is placed in front (only relevant in the case of married women/without new naming law)\n\nsource: NAME_VORANG_FRAU NUMBER(1)"
+        },
+        {
+          "id": "f-34fd49603f",
+          "name": "isLastNameHusbandPrefixed",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Is the last name of the husband placed in front?\n\nsource: NAME_VORANG_MANN NUMBER(1)"
+        },
+        {
+          "id": "f-a8bddde7a2",
+          "name": "supplementNameCompany",
+          "type": "String",
+          "optional": true,
+          "description": "Name supplement\n\nMax length: 35 characters\nCID\n\nsource: NAME_ZUS VARCHAR2(35)"
+        },
+        {
+          "id": "f-e461095838",
+          "name": "placeOfBirthCode",
+          "type": "String",
+          "optional": true,
+          "description": "Place of birth\n\nMax length: 22 characters\nRelated lookup-view: Place1\n\nsource: ORT_LNR_GEBURT NUMBER(22)"
+        },
+        {
+          "id": "f-bcc1cc537f",
+          "name": "placeOfBirthPartnerCode",
+          "type": "String",
+          "optional": true,
+          "description": "Partner's place of birth\n\nMax length: 22 characters\nRelated lookup-view: Place1\n\nsource: ORT_LNR_GEBURT_P NUMBER(22)"
+        },
+        {
+          "id": "f-771adc4b7e",
+          "name": "placeOfOriginCode",
+          "type": "String",
+          "optional": true,
+          "description": "Place of origin of client\n\nMax length: 22 characters\nRelated lookup-view: Place1\n\nsource: ORT_LNR_HEIMAT NUMBER(22)"
+        },
+        {
+          "id": "f-c15b7f29a0",
+          "name": "placeOfOrigin2Code",
+          "type": "String",
+          "optional": true,
+          "description": "Second place of origin\n\nMax length: 22 characters\nRelated lookup-view: Place1\n\nsource: ORT_LNR_HEIMAT_2 NUMBER(22)"
+        },
+        {
+          "id": "f-3e5f9286fc",
+          "name": "placeOfOriginPartnerCode",
+          "type": "String",
+          "optional": true,
+          "description": "Partner's place of origin\n\nMax length: 22 characters\nRelated lookup-view: Place1\n\nsource: ORT_LNR_HEIMAT_P NUMBER(22)"
+        },
+        {
+          "id": "f-9bfa07c3bd",
+          "name": "placeOfOrigin2PartnerCode",
+          "type": "String",
+          "optional": true,
+          "description": "Second place of origin of partner\n\nMax length: 22 characters\nRelated lookup-view: Place1\n\nsource: ORT_LNR_HEIMAT_2_P NUMBER(22)"
+        },
+        {
+          "id": "f-65deeadf57",
+          "name": "isQrBill",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Does the client want QR-bills instead of ISR/IS?\n\nsource: QR_RECHNUNG NUMBER(1)"
+        },
+        {
+          "id": "f-39b4925bf4",
+          "name": "isSelfEmployed",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Is the client self-employed?\n\nsource: SELBSTAENDIG NUMBER(1)"
+        },
+        {
+          "id": "f-3df5234c15",
+          "name": "branchCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Number of the location/branch (within the bank)\n\nMax digits: 4\nRelated lookup-view: Branch1\n\nsource: SITZ_NR NUMBER(4)"
+        },
+        {
+          "id": "f-94ddabc163",
+          "name": "languageCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Client language\n\nMax digits: 4\nRelated lookup-view: Language1\n\nsource: SPRACHE_CD NUMBER(4)"
+        },
+        {
+          "id": "f-ef320a8a2a",
+          "name": "titleCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Title\n\nMax digits: 4\nRelated lookup-view: ClientTitel1\n\nsource: TITEL_CD NUMBER(4)"
+        },
+        {
+          "id": "f-239fc88cb4",
+          "name": "titlePartnerCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Partner's title\n\nMax digits: 4\nRelated lookup-view: ClientTitel1\n\nsource: TITEL_CD_P NUMBER(4)"
+        },
+        {
+          "id": "f-74b63d6956",
+          "name": "dateOfDeath",
+          "type": "t-a4adb224d9",
+          "optional": true,
+          "description": "Date of death\n\nNot time-zoned (ISO8601 e.g. 2025-06-27)\nCID\n\nsource: TOD_DAT DATE"
+        },
+        {
+          "id": "f-63283f0f45",
+          "name": "dateOfDeathPartner",
+          "type": "t-a4adb224d9",
+          "optional": true,
+          "description": "Date of death of partner\n\nNot time-zoned (ISO8601 e.g. 2025-06-27)\nCID\n\nsource: TOD_DAT_P DATE"
+        },
+        {
+          "id": "f-0aa1b00ae3",
+          "name": "firstName",
+          "type": "String",
+          "optional": true,
+          "description": "First name\n\nMax length: 15 characters\nCID\n\nsource: VORNAME VARCHAR2(15)"
+        },
+        {
+          "id": "f-c1e2897f7b",
+          "name": "officialFirstName",
+          "type": "String",
+          "optional": true,
+          "description": "Official first name\n\nMax length: 80 characters\nCID\n\nsource: VORNAME_L VARCHAR2(80)"
+        },
+        {
+          "id": "f-c76d06f760",
+          "name": "firstNamePartner",
+          "type": "String",
+          "optional": true,
+          "description": "First name of the partner\n\nMax length: 15 characters\nCID\n\nsource: VORNAME_P VARCHAR2(15)"
+        },
+        {
+          "id": "f-a045f30b0a",
+          "name": "officialFirstNamePartner",
+          "type": "String",
+          "optional": true,
+          "description": "Partner's official first name\n\nMax length: 80 characters\nCID\n\nsource: VORNAME_P_L VARCHAR2(80)"
+        },
+        {
+          "id": "f-e90d00c23b",
+          "name": "maritalStatusCode",
+          "type": "e-fb931ed5ab",
+          "optional": true,
+          "description": "Marital status\n\nMax digits: 2\nValues from enum: MaritalStatus1\n\nsource: ZIVILSTAND_CD NUMBER(2)"
+        },
+        {
+          "id": "f-2401bd1c20",
+          "name": "maritalStatusPartnerCode",
+          "type": "e-fb931ed5ab",
+          "optional": true,
+          "description": "Partner's marital status\n\nMax digits: 2\nValues from enum: MaritalStatus1\n\nsource: ZIVILSTAND_CD_P NUMBER(2)"
+        },
+        {
+          "id": "f-7d7cb61134",
+          "name": "maritalStatusDate",
+          "type": "t-a4adb224d9",
+          "optional": true,
+          "description": "Marital status since\n\nNot time-zoned (ISO8601 e.g. 2025-06-27)\n\nsource: ZIVILSTAND_SEIT DATE"
+        },
+        {
+          "id": "f-b0eaa018e4",
+          "name": "maritalStatusPartnerDate",
+          "type": "t-a4adb224d9",
+          "optional": true,
+          "description": "Partner's marital status since\n\nNot time-zoned (ISO8601 e.g. 2025-06-27)\n\nsource: ZIVILSTAND_SEIT_P DATE"
+        },
+        {
+          "id": "f-56cc3e6c59",
+          "name": "resourceVersionId",
+          "type": "String",
+          "optional": true,
+          "description": "Data record version\n\nMax length: 4000 characters\n\nsource: ROW_INFO VARCHAR2(4000)"
+        },
+        {
+          "id": "f-d9ed8b34af",
+          "name": "isMainBankDesignation",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Main bank relationship\n\nsource: KD_HAUPT_BK_CD NUMBER(1)"
+        },
+        {
+          "id": "f-f339bafeb0",
+          "name": "carreerProspects",
+          "type": "String",
+          "optional": true,
+          "description": "Career prospects, further training\n\nMax length: 500 characters\nCID\n\nsource: TEXT_BERUF VARCHAR2(500)"
+        },
+        {
+          "id": "f-05f1693767",
+          "name": "personalProspects",
+          "type": "String",
+          "optional": true,
+          "description": "Personal wishes, likes and dislikes\n\nMax length: 500 characters\nCID\n\nsource: TEXT_WUNSCH VARCHAR2(500)"
+        },
+        {
+          "id": "f-9f9047b88d",
+          "name": "legalCategoryCode",
+          "type": "e-11867a8e2e",
+          "optional": true,
+          "description": "Counterparty category according to CAO\n\nMax digits: 2\nValues from enum: LegalCategoryClient2\n\nsource: EB_LEGAL_KAT_CD NUMBER(2)"
+        },
+        {
+          "id": "f-faaabd8e49",
+          "name": "isDormant",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Is the client a dormant client?\n\nsource: KD_MSG_NO_CD NUMBER(1)"
+        },
+        {
+          "id": "f-d8d53f8eb8",
+          "name": "dormantSinceDate",
+          "type": "t-a4adb224d9",
+          "optional": true,
+          "description": "Check date for isDormant\n\nNot time-zoned (ISO8601 e.g. 2025-06-27)\n\nsource: KD_MSG_NO_CTL_DAT DATE"
+        },
+        {
+          "id": "f-449263081d",
+          "name": "clientGuiTypeCode",
+          "type": "e-4cec9ae077",
+          "optional": true,
+          "description": "Client type on GUI\n\nMax digits: 4\nValues from enum: ClientGuiType1\n\nsource: KD_TYP_CD NUMBER(4)"
+        },
+        {
+          "id": "f-bbe0add384",
+          "name": "isContactBrokenOff",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Code as to whether personal contact with the client has ceased\n\nsource: KD_KONT_END_CD NUMBER(1)"
+        },
+        {
+          "id": "f-ff73d0b5b0",
+          "name": "privateIndividualClientKey",
+          "type": "String",
+          "optional": true,
+          "description": "Client key for linked individual master record of the main person\n\nMax length: 22 characters\n\nsource: KD_LNR_PTN1 NUMBER(22)"
+        },
+        {
+          "id": "f-1f445ba5f2",
+          "name": "privateIndividualPartnerClientKey",
+          "type": "String",
+          "optional": true,
+          "description": "Client key for the partner's linked individual master record\n\nMax length: 22 characters\n\nsource: KD_LNR_PTN2 NUMBER(22)"
+        },
+        {
+          "id": "f-109000dba2",
+          "name": "isDesiredClient",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Indicates whether a client the bank wishes to acquire is considered a desired client\n\nsource: KD_WUNSCH_BK_CD NUMBER(1)"
+        },
+        {
+          "id": "f-b7a0c6ae84",
+          "name": "noga25Code",
+          "type": "String",
+          "optional": true,
+          "description": "Sector/NOGA code (economic sector) acc. to 2025 version\n\nMax length: 6 characters\nRelated lookup-view: Noga25Code1\n\nsource: NOGA_CD_25 VARCHAR2(6)"
+        },
+        {
+          "id": "f-e3857134e0",
+          "name": "sectorCode",
+          "type": "String",
+          "optional": true,
+          "description": "Sector code\n\nMax length: 5 characters\nRelated lookup-view: Sektorcode1\n\nsource: KD_SEKT_CD VARCHAR2(5)"
+        },
+        {
+          "id": "f-344174cc8b",
+          "name": "nogaCode",
+          "type": "String",
+          "optional": true,
+          "description": "NOGA code (economic sector) acc. to 2008 version\n\nMax length: 6 characters\nRelated lookup-view: Noga08Code1\n\nsource: NOGA_CD VARCHAR2(6)"
+        }
+      ]
+    },
+    {
+      "id": "t-6181adc6d5",
+      "name": "MultipleNaturalPersonsAddress2",
+      "kind": "case",
+      "status": "draft",
+      "description": "Types with the fields for the addresses.\n\nsource: KDYI_ADDRESS_2 Address2",
+      "fields": [
+        {
+          "id": "f-28b1a34b5c",
+          "name": "clientKey",
+          "type": "String",
+          "optional": true,
+          "description": "Client key\n\nMax length: 22 characters\n\nsource: KD_LNR NUMBER(22)"
+        },
+        {
+          "id": "f-7ad0da52ba",
+          "name": "addressTypeCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Address type\n\nMax digits: 2\nRelated lookup-view: AddressType1\n\nsource: ADR_TYP_CD NUMBER(2)"
+        },
+        {
+          "id": "f-521d56a724",
+          "name": "communicationGroupKey",
+          "type": "String",
+          "optional": true,
+          "description": "Reference to communication data\n\nMax length: 22 characters\n\nsource: KD_EMAIL_LNR NUMBER(22)"
+        },
+        {
+          "id": "f-a745f5a4a7",
+          "name": "validFromDate",
+          "type": "t-a4adb224d9",
+          "optional": true,
+          "description": "Earliest date of posting\n\nNot time-zoned (ISO8601 e.g. 2025-06-27)\n\nsource: VON_DAT DATE"
+        },
+        {
+          "id": "f-a7ba05f23a",
+          "name": "validUntilDate",
+          "type": "t-a4adb224d9",
+          "optional": true,
+          "description": "End date (incl.)\n\nNot time-zoned (ISO8601 e.g. 2025-06-27)\n\nsource: BIS_DAT DATE"
+        },
+        {
+          "id": "f-e9a78a1903",
+          "name": "recipientReference",
+          "type": "String",
+          "optional": true,
+          "description": "Address line: Recipient reference\n\nMax length: 35 characters\nCID\n\nsource: EMPF_REF VARCHAR2(35)"
+        },
+        {
+          "id": "f-317a73fc9b",
+          "name": "recipientReferenceAddition",
+          "type": "String",
+          "optional": true,
+          "description": "Additional recipient reference\n\nMax length: 35 characters\nCID\n\nsource: EMPF_REF_ZUS VARCHAR2(35)"
+        },
+        {
+          "id": "f-2fdf25fe97",
+          "name": "streetName",
+          "type": "String",
+          "optional": true,
+          "description": "Street designation\n\nMax length: 25 characters\nCID\n\nsource: STRASSE_BEZ VARCHAR2(25)"
+        },
+        {
+          "id": "f-19e36db806",
+          "name": "houseNumber",
+          "type": "String",
+          "optional": true,
+          "description": "House number\n\nMax length: 9 characters\n\nsource: HAUSNUMMER VARCHAR2(9)"
+        },
+        {
+          "id": "f-da3d838618",
+          "name": "poBoxCode",
+          "type": "Int",
+          "optional": true,
+          "description": "PO box code\n\nMax digits: 2\nRelated lookup-view: PoBox1\n\nsource: POSTFACH_CD NUMBER(2)"
+        },
+        {
+          "id": "f-642ca286a3",
+          "name": "poBoxNumber",
+          "type": "String",
+          "optional": true,
+          "description": "PO box number\n\nMax length: 35 characters\n\nsource: POSTFACH_NR VARCHAR2(35)"
+        },
+        {
+          "id": "f-636d6fb1bf",
+          "name": "poBox",
+          "type": "String",
+          "optional": true,
+          "description": "PO box\n\nMax length: 35 characters\nCID\n\nsource: POSTFACH VARCHAR2(35)"
+        },
+        {
+          "id": "f-1bddabcf09",
+          "name": "placeName",
+          "type": "String",
+          "optional": true,
+          "description": "Designation of the place\n\nMax length: 35 characters\nCID\n\nsource: ORT_BEZ VARCHAR2(35)"
+        },
+        {
+          "id": "f-e1426e5bb6",
+          "name": "placeCode",
+          "type": "String",
+          "optional": true,
+          "description": "Key of the place\n\nMax length: 22 characters\nRelated lookup-view: Place1\n\nsource: ORT_LNR NUMBER(22)"
+        },
+        {
+          "id": "f-8591139f5a",
+          "name": "postalCode",
+          "type": "String",
+          "optional": true,
+          "description": "Postcode\n\nMax length: 20 characters\nCID\n\nsource: PLZ VARCHAR2(20)"
+        },
+        {
+          "id": "f-7ddba1b757",
+          "name": "postcodeAddition",
+          "type": "Int",
+          "optional": true,
+          "description": "Supplement to the postcode\n\nMax digits: 2\nCID\n\nsource: PLZ_ZUS NUMBER(2)"
+        },
+        {
+          "id": "f-4b79c54b75",
+          "name": "regionCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Region\n\nMax digits: 4\nRelated lookup-view: Region1\n\nsource: REGION_CD NUMBER(4)"
+        },
+        {
+          "id": "f-a272ff9f9d",
+          "name": "countryCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Key of the country\n\nMax digits: 4\nRelated lookup-view: Country1\n\nsource: LAND_LNR NUMBER(4)"
+        },
+        {
+          "id": "f-fd62ceaa2a",
+          "name": "cantonCode",
+          "type": "String",
+          "optional": true,
+          "description": "Canton initials\n\nMax length: 2 characters\nRelated lookup-view: Canton1\n\nsource: KTN_NR VARCHAR2(2)"
+        },
+        {
+          "id": "f-629521bce2",
+          "name": "vatCountryCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Value added tax country (technical no.)\n\nMax digits: 4\nRelated lookup-view: Country1\n\nsource: LAND_LNR_MWST NUMBER(4)"
+        },
+        {
+          "id": "f-162b814275",
+          "name": "languageManualCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Correspondence language, manual\n\nMax digits: 4\nRelated lookup-view: Language1\n\nsource: SPRACHE_CD_MAN NUMBER(4)"
+        },
+        {
+          "id": "f-77b0ce7b82",
+          "name": "languageAutomaticCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Correspondence language, automatic\n\nMax digits: 4\nRelated lookup-view: Language1\n\nsource: SPRACHE_CD_SYS NUMBER(4)"
+        },
+        {
+          "id": "f-224870f7ef",
+          "name": "languageCalculatedCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Correspondence language, calculated\n\nMax digits: 4\nRelated lookup-view: Language1\n\nsource: SPRACHE_CD_BERECHNET NUMBER(4)"
+        },
+        {
+          "id": "f-fad91d647a",
+          "name": "communicationTypeCode",
+          "type": "String",
+          "optional": true,
+          "description": "Communication type\n\nMax length: 4 characters\nRelated lookup-view: DispatchType1\n\nsource: MAIL_ART_CD VARCHAR2(4)"
+        },
+        {
+          "id": "f-7c56b6585a",
+          "name": "initiatorNamePaymentTransaction",
+          "type": "String",
+          "optional": true,
+          "description": "Address Name (Used only if addressTypeCode = 16)\n\nMax length: 70 characters\nCID\n\nsource: ZV_KD_BEZ VARCHAR2(70)"
+        },
+        {
+          "id": "f-700d3105ea",
+          "name": "isAdvertisingUndesired",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Advertising permitted\n\nsource: KD_WERB_CD NUMBER(1)"
+        },
+        {
+          "id": "f-e16ddbd35a",
+          "name": "isCoAddress",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Is the address a c/o address (Yes/No code)?\n\nsource: KD_CAREOF_CD NUMBER(1)"
+        },
+        {
+          "id": "f-11011d4e93",
+          "name": "isCorrespondenceRule",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Address is used for a correspondence rule.\n\nsource: KORRRGL NUMBER(1)"
+        },
+        {
+          "id": "f-4342f9bc0f",
+          "name": "isInvalid",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Address set as invalid\n\nsource: INVALID NUMBER(1)"
+        },
+        {
+          "id": "f-7e9dc01953",
+          "name": "resourceVersionId",
+          "type": "String",
+          "optional": true,
+          "description": "Current version of the resource\n\nMax length: 4000 characters\n\nsource: ROW_INFO VARCHAR2(4000)"
+        },
+        {
+          "id": "f-077ef0aa33",
+          "name": "isStreetNumberBeforeStreetName",
+          "type": "Boolean",
+          "optional": true,
+          "description": "House number before street\n\nsource: KD_HSNR_VOR_STR_CD NUMBER(1)"
+        }
+      ]
+    },
+    {
+      "id": "t-440921bdca",
+      "name": "MultipleNaturalPersonAddressIdentification2",
+      "kind": "case",
+      "status": "draft",
+      "description": "Address identification\n\nsource: KDYI_ADDRESS_IDENTIFICATION_2 MultipleNaturalPersonAddressIdentification2",
+      "fields": [
+        {
+          "id": "f-1761ca27ea",
+          "name": "clientKey",
+          "type": "String",
+          "optional": true,
+          "description": "Client key\n\nMax length: 22 characters\n\nsource: KD_LNR NUMBER(22)"
+        },
+        {
+          "id": "f-ac0f78f03a",
+          "name": "addressTypeCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Address type\n\nMax digits: 2\nRelated lookup-view: AddressType1\n\nsource: ADR_TYP_CD NUMBER(2)"
+        },
+        {
+          "id": "f-43ae7e10db",
+          "name": "validFromDate",
+          "type": "t-a4adb224d9",
+          "optional": true,
+          "description": "Earliest date of posting\n\nNot time-zoned (ISO8601 e.g. 2025-06-27)\n\nsource: VON_DAT DATE"
+        }
+      ]
+    },
+    {
+      "id": "t-6c33cdc13d",
+      "name": "MultipleNaturalPersonAddressIdentification2List",
+      "kind": "case",
+      "status": "draft",
+      "description": "Address relationships to the communication address",
+      "fields": [
+        {
+          "id": "f-e7b7e0aff3",
+          "name": "items",
+          "type": "t-440921bdca",
+          "collection": true,
+          "optional": true,
+          "description": "Address identification"
+        }
+      ]
+    },
+    {
+      "id": "t-d8e57d27dd",
+      "name": "MultipleNaturalPersonsCommunicationData1",
+      "kind": "case",
+      "status": "draft",
+      "description": "Type with the fields for communication data including the associated addresses.\n\nsource: KDYI_ADRESSEN_KOMM_1 CommunicationData1",
+      "fields": [
+        {
+          "id": "f-cb11eb6589",
+          "name": "clientKey",
+          "type": "String",
+          "optional": true,
+          "description": "Client key\n\nMax length: 22 characters\n\nsource: KD_LNR NUMBER(22)"
+        },
+        {
+          "id": "f-b0b4869ffd",
+          "name": "communicationKey",
+          "type": "String",
+          "optional": true,
+          "description": "Technical key of the communication entry\n\nMax length: 22 characters\n\nsource: KD_EMAIL_KEY_LNR NUMBER(22)"
+        },
+        {
+          "id": "f-47fbf44e0f",
+          "name": "communicationGroupKey",
+          "type": "String",
+          "optional": true,
+          "description": "Technical number of the connection between address and communication (not unique). Assigns one or more communication entries to one (or more) address.\n\nMax length: 22 characters\n\nsource: KD_EMAIL_LNR NUMBER(22)"
+        },
+        {
+          "id": "f-5e2ca45c03",
+          "name": "addressTypeCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Contains the address type of the address for which the record is desired.\n\nMax digits: 2\nRelated lookup-view: AddressType1\n\nsource: KD_ADR_LNR NUMBER(2)"
+        },
+        {
+          "id": "f-c0a70cd96d",
+          "name": "communicationTypeCode",
+          "type": "String",
+          "optional": true,
+          "description": "Communication type\n\nMax length: 4 characters\nRelated lookup-view: DispatchType1\n\nsource: MAIL_ART_CD VARCHAR2(4)"
+        },
+        {
+          "id": "f-5b1973b2b6",
+          "name": "numberOrAddress",
+          "type": "String",
+          "optional": true,
+          "description": "Email address of the contract holder\n\nMax length: 50 characters\nCID\n\nsource: EMAIL_ADR VARCHAR2(50)"
+        },
+        {
+          "id": "f-b7231da341",
+          "name": "isRelevantEntry",
+          "type": "Boolean",
+          "optional": true,
+          "description": "The communication entry is marked as relevant (only used for the domicile address)\n\nsource: KD_RELE_COM_CD NUMBER(1)"
+        },
+        {
+          "id": "f-470040a49e",
+          "name": "relevantEntryTypeCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Type of communication relevance (telephone, email, other)\n\nMax digits: 1\nRelated lookup-view: RelevantEntryType1\n\nsource: RELE_TYP NUMBER(1)"
+        },
+        {
+          "id": "f-6fa1bd2448",
+          "name": "addressIdentification",
+          "type": "t-6c33cdc13d",
+          "optional": true,
+          "description": "Address relationships to the communication address\n\nsource: ADRESSEN COLLECTION of KDYI_ADDRESS_IDENTIFICATION_2"
+        },
+        {
+          "id": "f-7646b1159f",
+          "name": "comment",
+          "type": "String",
+          "optional": true,
+          "description": "Comment\n\nMax length: 50 characters\n\nsource: TEXT_COM VARCHAR2(50)"
+        },
+        {
+          "id": "f-4aa9646e9c",
+          "name": "isUsableForMarketing",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Can be used for marketing\n\nsource: KD_MKT_CD NUMBER(1)"
+        },
+        {
+          "id": "f-1edd03eb5f",
+          "name": "isMaskedNumberCallNotAllowed",
+          "type": "Boolean",
+          "optional": true,
+          "description": "Identification of numbers that are not to be called with a suppressed number (1: Suppression not desired).\n\nsource: KD_TEL_SUPR_CD NUMBER(1)"
+        },
+        {
+          "id": "f-08151c55af",
+          "name": "reachableFromTime",
+          "type": "LocalDateTime",
+          "optional": true,
+          "description": "Time from which the client is likely to be reachable.\n\nsource: ZEIT_VON DATETIME"
+        },
+        {
+          "id": "f-c1ac26ded0",
+          "name": "reachableUntilTime",
+          "type": "LocalDateTime",
+          "optional": true,
+          "description": "Time until which the client is likely to be reachable.\n\nsource: ZEIT_BIS DATETIME"
+        },
+        {
+          "id": "f-fc7bbaeb3d",
+          "name": "resourceVersionId",
+          "type": "String",
+          "optional": true,
+          "description": "Current version of the resource\n\nMax length: 2000 characters\n\nsource: ROW_INFO VARCHAR2(2000)"
+        }
+      ]
+    },
+    {
+      "id": "t-11b802ca76",
+      "name": "CreateMultipleNaturalPerson4Request",
+      "kind": "case",
+      "status": "draft",
+      "description": "Request message for CreateMultipleNaturalPerson4",
+      "fields": [
+        {
+          "id": "f-462a32c765",
+          "name": "multipleNaturalPerson",
+          "type": "t-832dc230fc",
+          "optional": true,
+          "description": "Identifies a two-person master record\n\nRequired Fields:\n * consulting_firm_code\n * is_financial_intermediary\n * matrimonial_property_regime_code\n * client_category_code\n * legal_status_code\n * last_name\n * is_qr_bill\n * is_self_employed\n * branch_code\n * language_code\n * marital_status_code\n\nIgnored Fields:\n * closing_date\n * formatted_client_number\n * gender_code\n * gender_partner_code\n * client_designation\n * client_designation_long\n * client_main_type_code\n * supplement_name_company\n * resource_version_id\n * date_of_death\n * date_of_death_partner\n * carreer_prospects\n * personal_prospects\n * is_main_bank_designation\n * legal_category_code\n * client_gui_type_code\n * is_contact_broken_off\n * private_individual_client_key\n * private_individual_partner_client_key\n\nsource: P_Kunde OBJECT_TYPE of KDYI_MEHRERE_PERSONEN_2"
+        },
+        {
+          "id": "f-7cdfdb2eb9",
+          "name": "domicileAddress",
+          "type": "t-6181adc6d5",
+          "optional": true,
+          "description": "A domicile address for the two-person master record.\n\nIgnored Fields:\n * language_calculated_code\n * address_type_code\n * client_key\n * valid_from_date\n * valid_until_date\n\nsource: P_Adresse OBJECT_TYPE of KDYI_ADDRESS_2"
+        },
+        {
+          "id": "f-f57c8c1fa8",
+          "name": "communicatonData",
+          "type": "t-d8e57d27dd",
+          "collection": true,
+          "optional": true,
+          "description": "Contains a collection with telephone and email communication data for the domicile address If the collection is empty, no email/telephone entries are entered.\n\nRequired Fields:\n * communication_type_code\n * number_or_address\n\nIgnored Fields:\n * client_key\n * address_type_code\n * relevant_entry_type_code\n\nsource: P_KommDaten COLLECTION of KDYI_ADRESSEN_KOMM_1"
+        },
+        {
+          "id": "f-d0acc94f54",
+          "name": "advisorKey",
+          "type": "String",
+          "optional": true,
+          "description": "Key of the assigned advisor. If null, the parameterised default advisor is taken over.\n\nMax length: 22 characters\n\nsource: P_BeraterLnr NUMBER(22)"
+        },
+        {
+          "id": "f-c63ea4af4c",
+          "name": "advisorRoleCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Role of the allocated advisor if advisorKey is not provided\n\nMax digits: 4\nRelated lookup-view: ClientAdvisorRole2\n\nsource: P_BeraterRolle NUMBER(4)"
+        },
+        {
+          "id": "f-23c8c31de5",
+          "name": "requestId",
+          "type": "String",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "e-9235fc9046",
+      "name": "NotificationType1EnumValues",
+      "kind": "enum",
+      "status": "draft",
+      "description": "This enum categorises the different types of messages that can be generated within the system. It is used for the classification of messages in order to simplify the decision for the API consumer as to how to proceed with the respective message. This enum is used in numerous business objects, including addresses, payments, natural persons, organisations and relationships.\n\n@since 5.2021\nbuf:lint:ignore ENUM_VALUE_PREFIX\nbuf:lint:ignore ENUM_ZERO_VALUE_SUFFIX\n\nsource: ALQE_MELDUNGSTYP_1 VARCHAR2(20)\n\n - NOTIFICATION_TYPE1_UNSPECIFIED: Unspecified\n - NOTIFICATION_TYPE1_INFO: Denotes messages that are purely informative and do not require any immediate action. These messages are only intended to notify the user of a particular state or process in the system.\n\nsource: INFO\n - NOTIFICATION_TYPE1_WARNING: Marks warnings that indicate potential problems or unusual situations that may require attention. The process may continue despite these warnings, but it is recommended to take the warning into account.\n\nsource: WARNUNG\n - NOTIFICATION_TYPE1_ERROR: Identifies error messages that indicate serious problems that prevent the successful completion of an operation. In the event of errors, correction or intervention is usually required before the process can be continued.\n\nsource: FEHLER\n - NOTIFICATION_TYPE1_CONFIRMATION: Designates confirmation messages that provide positive feedback about a successfully completed procedure. These messages confirm to the user that a requested action was performed as expected.\n\nsource: BESTAETIGUNG\n - NOTIFICATION_TYPE1_VALIDATION: Indicates validation messages that relate to the validation of data or inputs. These messages provide information about the result of a validation process and may indicate any necessary adjustments.\n\nsource: VALIDIERUNG",
+      "values": [
+        {
+          "name": "NOTIFICATION_TYPE1_UNSPECIFIED"
+        },
+        {
+          "name": "NOTIFICATION_TYPE1_INFO"
+        },
+        {
+          "name": "NOTIFICATION_TYPE1_WARNING"
+        },
+        {
+          "name": "NOTIFICATION_TYPE1_ERROR"
+        },
+        {
+          "name": "NOTIFICATION_TYPE1_CONFIRMATION"
+        },
+        {
+          "name": "NOTIFICATION_TYPE1_VALIDATION"
+        }
+      ]
+    },
+    {
+      "id": "t-dfbcb3bf6f",
+      "name": "MultipleNaturalPersonsNotificationType1",
+      "kind": "case",
+      "status": "draft",
+      "description": "Enum wrapper for NotificationType1\nThis enum categorises the different types of messages that can be generated within the system. It is used for the classification of messages in order to simplify the decision for the API consumer as to how to proceed with the respective message. This enum is used in numerous business objects, including addresses, payments, natural persons, organisations and relationships.\n\n@since 5.2021",
+      "fields": [
+        {
+          "id": "f-c4a21b83c7",
+          "name": "enumValue",
+          "type": "e-9235fc9046",
+          "optional": true,
+          "description": "This enum categorises the different types of messages that can be generated within the system. It is used for the classification of messages in order to simplify the decision for the API consumer as to how to proceed with the respective message. This enum is used in numerous business objects, including addresses, payments, natural persons, organisations and relationships.\n\n@since 5.2021\nbuf:lint:ignore ENUM_VALUE_PREFIX\nbuf:lint:ignore ENUM_ZERO_VALUE_SUFFIX\n\nsource: ALQE_MELDUNGSTYP_1 VARCHAR2(20)\n\n - NOTIFICATION_TYPE1_UNSPECIFIED: Unspecified\n - NOTIFICATION_TYPE1_INFO: Denotes messages that are purely informative and do not require any immediate action. These messages are only intended to notify the user of a particular state or process in the system.\n\nsource: INFO\n - NOTIFICATION_TYPE1_WARNING: Marks warnings that indicate potential problems or unusual situations that may require attention. The process may continue despite these warnings, but it is recommended to take the warning into account.\n\nsource: WARNUNG\n - NOTIFICATION_TYPE1_ERROR: Identifies error messages that indicate serious problems that prevent the successful completion of an operation. In the event of errors, correction or intervention is usually required before the process can be continued.\n\nsource: FEHLER\n - NOTIFICATION_TYPE1_CONFIRMATION: Designates confirmation messages that provide positive feedback about a successfully completed procedure. These messages confirm to the user that a requested action was performed as expected.\n\nsource: BESTAETIGUNG\n - NOTIFICATION_TYPE1_VALIDATION: Indicates validation messages that relate to the validation of data or inputs. These messages provide information about the result of a validation process and may indicate any necessary adjustments.\n\nsource: VALIDIERUNG"
+        },
+        {
+          "id": "f-b1a2194dfd",
+          "name": "rawValue",
+          "type": "String",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "t-384e8be3cd",
+      "name": "MultipleNaturalPersonMessageVariable1",
+      "kind": "case",
+      "status": "draft",
+      "description": "Contains a variable component of a message.\nIntended for the variable components of messages that are returned to an API consumer.\n\nsource: ALYI_MESSAGE_VARIABLE_1 MultipleNaturalPersonMessageVariable1",
+      "fields": [
+        {
+          "id": "f-c1bd1cb2f8",
+          "name": "variableName",
+          "type": "String",
+          "optional": true,
+          "description": "Identification of the variable message part\n\nMax length: 50 characters\n\nsource: VARIABLE_NAME VARCHAR2(50)"
+        },
+        {
+          "id": "f-0120394d63",
+          "name": "variableContent",
+          "type": "String",
+          "optional": true,
+          "description": "Content of the variable message part\n\nMax length: 1000 characters\nCID\n\nsource: VARIABLE_CONTENT VARCHAR2(1000)"
+        }
+      ]
+    },
+    {
+      "id": "t-38c20f754b",
+      "name": "MultipleNaturalPersonMessageVariable1List",
+      "kind": "case",
+      "status": "draft",
+      "description": "Variable components of the message, with the identification of the component and its content in each case.",
+      "fields": [
+        {
+          "id": "f-54cf10d2ae",
+          "name": "items",
+          "type": "t-384e8be3cd",
+          "collection": true,
+          "optional": true,
+          "description": "Contains a variable component of a message.\nIntended for the variable components of messages that are returned to an API consumer."
+        }
+      ]
+    },
+    {
+      "id": "t-215e8d1149",
+      "name": "MultipleNaturalPersonMessage1",
+      "kind": "case",
+      "status": "draft",
+      "description": "Message that can be returned to an API consumer.\nIntended in particular for validation APIs. Should be used to deliver non-technical messages, that therefore do not occur in connection with an exception.\nThe possible messages of an API as well as their technical meaning and the possible variable components in them are conclusively documented in the respective API. In principle, it is primarily the API consumer's responsibility to define and prepare the message appropriately, i.e. in particular to define the message text itself.\n\nsource: ALYI_MESSAGE_1 MultipleNaturalPersonMessage1",
+      "fields": [
+        {
+          "id": "f-7d3048a5bf",
+          "name": "messageType",
+          "type": "t-dfbcb3bf6f",
+          "optional": true,
+          "description": "Message type. Specifies the type of message concerned.\nThis should make it easier for the API consumer to decide how to proceed with the message.\n\nMax length: 20 characters\nValues from enum: NotificationType1\n\nsource: MESSAGE_TYPE VARCHAR2(20)"
+        },
+        {
+          "id": "f-be33bb59ff",
+          "name": "messageGroup",
+          "type": "String",
+          "optional": true,
+          "description": "Group or area of message.\nEnables groups of messages to be defined so that message IDs only need to be unique within this group.\nThis can but does not have to be a message element from the Finnova Message Administration. In principle, it is primarily the API consumer's responsibility to define and prepare the message appropriately for themselves.\n\nMax length: 100 characters\n\nsource: MESSAGE_GROUP VARCHAR2(100)"
+        },
+        {
+          "id": "f-b8375e9aa3",
+          "name": "messageId",
+          "type": "String",
+          "optional": true,
+          "description": "Within the messageGroup, this key is used for unique message identification. This may be a message ID from the Finnova Message Administration, but need not necessarily be one. In principle, it is the responsibility of the API consumer to define and prepare the message appropriately – in particular to determine the message text itself.\n\nMax length: 100 characters\n\nsource: MESSAGE_ID VARCHAR2(100)"
+        },
+        {
+          "id": "f-8ec441ff9d",
+          "name": "messageVariable",
+          "type": "t-38c20f754b",
+          "optional": true,
+          "description": "Variable components of the message, with the identification of the component and its content in each case.\n\nsource: MESSAGE_VARIABLE COLLECTION of ALYI_MESSAGE_VARIABLE_1"
+        },
+        {
+          "id": "f-661cc74cde",
+          "name": "correspondingField",
+          "type": "String",
+          "optional": true,
+          "description": "Name of the API field to which the message refers, provided that the message relates to a specific field. Can therefore be blank for general messages.\n\nMax length: 100 characters\n\nsource: CORRESPONDING_FIELD VARCHAR2(100)"
+        },
+        {
+          "id": "f-2d0647cf6e",
+          "name": "correctedValue",
+          "type": "String",
+          "optional": true,
+          "description": "Correction value for the field designated in correspondingField.\nOffers the possibility of returning a correction value or suggested correction for a field returned in correspondingField. Therefore, only makes sense in connection with a field name filled in correspondingField.\nThe following standard formats must be complied with for content outside of varchar2:\nPayments:\n- no leading zeros (except between 0.99999 and -0.99999)\n- no grouping separator\n- '.' as decimal separator\n- '.45' and '-.45' not permitted\n- '78.' not permitted\n- leading '+' not permitted Date/Time:\n- YYYY-MM-DD\n- YYYY-MM-DD HH24:MI:SS (e.g. 2018-11-15 13:43:15) Date objects are thus delivered for the consumer as converted to varchar2 with the above templates. The API function documents whether date or date-time is delivered.\n\nMax length: 100 characters\n\nsource: CORRECTED_VALUE VARCHAR2(100)"
+        },
+        {
+          "id": "f-1e6d231566",
+          "name": "correspondingKey",
+          "type": "String",
+          "optional": true,
+          "description": "Element number or key for the data record/object of a collection element\n\nMax length: 100 characters\n\nsource: CORRESPONDING_KEY VARCHAR2(100)"
+        }
+      ]
+    },
+    {
+      "id": "t-6515726c22",
+      "name": "MultipleNaturalPersonMessage1List",
+      "kind": "case",
+      "status": "draft",
+      "description": "Additional message structure that may contain records with notes/warnings depending on the context. Possible messages/warnings are included in the function descriptions. The constructor of the type that returns an instance of the type.",
+      "fields": [
+        {
+          "id": "f-383ab32b22",
+          "name": "items",
+          "type": "t-215e8d1149",
+          "collection": true,
+          "optional": true,
+          "description": "Message that can be returned to an API consumer.\nIntended in particular for validation APIs. Should be used to deliver non-technical messages, that therefore do not occur in connection with an exception.\nThe possible messages of an API as well as their technical meaning and the possible variable components in them are conclusively documented in the respective API. In principle, it is primarily the API consumer's responsibility to define and prepare the message appropriately, i.e. in particular to define the message text itself."
+        }
+      ]
+    },
+    {
+      "id": "t-010e3007ac",
+      "name": "MultipleNaturalPersonIdentification1",
+      "kind": "case",
+      "status": "draft",
+      "description": "This type contains attributes to be able to unambiguously identify a client.\nThis type has both the technical key and the external representation of the client number for this purpose.\nThe additional message field makes it possible to communicate a note depending on the context.\n\nsource: KDYI_CUSTOMER_IDENT MultipleNaturalPersonIdentification1",
+      "fields": [
+        {
+          "id": "f-5bef142b4a",
+          "name": "clientKey",
+          "type": "String",
+          "optional": true,
+          "description": "Client key\n\nMax length: 22 characters\n\nsource: KD_LNR NUMBER(22)"
+        },
+        {
+          "id": "f-b498cc8276",
+          "name": "formattedClientNumber",
+          "type": "String",
+          "optional": true,
+          "description": "External representation of the client number\n\nMax length: 20 characters\nCID\n\nsource: EDIT_KD_NR VARCHAR2(20)"
+        },
+        {
+          "id": "f-6b68e3efad",
+          "name": "messages",
+          "type": "t-6515726c22",
+          "optional": true,
+          "description": "Additional message structure that may contain records with notes/warnings depending on the context. Possible messages/warnings are included in the function descriptions. The constructor of the type that returns an instance of the type.\n\nsource: MESSAGES COLLECTION of ALYI_MESSAGE_1"
+        }
+      ]
+    },
+    {
+      "id": "t-733501c980",
+      "name": "CreateMultipleNaturalPerson4Response",
+      "kind": "case",
+      "status": "draft",
+      "description": "Response message for CreateMultipleNaturalPerson4\n\nsource: return OBJECT_TYPE of KDYI_CUSTOMER_IDENT",
+      "fields": [
+        {
+          "id": "f-d3f9681b29",
+          "name": "multipleNaturalPerson",
+          "type": "t-010e3007ac",
+          "optional": true,
+          "description": "The unambiguous identification of the created client\n\nsource: return OBJECT_TYPE of KDYI_CUSTOMER_IDENT"
+        }
+      ]
+    },
+    {
+      "id": "t-6e7019ac13",
+      "name": "ReadMultipleNaturalPerson2Request",
+      "kind": "case",
+      "status": "draft",
+      "description": "Request message for ReadMultipleNaturalPerson2",
+      "fields": [
+        {
+          "id": "f-3f460de10e",
+          "name": "clientKeys",
+          "type": "String",
+          "collection": true,
+          "optional": true,
+          "description": "Collection from client's technical numbers\n\nMax length: 22 characters\n\nsource: P_KdLnrs COLLECTION of SRYI_I22_1"
+        },
+        {
+          "id": "f-2055b6792a",
+          "name": "readFromFcs",
+          "type": "Boolean",
+          "optional": true,
+          "description": "If set to true, the data is read from FCS (consistent). If set to false, the data might be read from an eventually consistent source."
+        }
+      ]
+    },
+    {
+      "id": "t-176af2f833",
+      "name": "ReadMultipleNaturalPerson2Response",
+      "kind": "case",
+      "status": "draft",
+      "description": "Response message for ReadMultipleNaturalPerson2\n\nsource: return COLLECTION of KDYI_MEHRERE_PERSONEN_2",
+      "fields": [
+        {
+          "id": "f-4f3bb00755",
+          "name": "multipleNaturalPersons",
+          "type": "t-832dc230fc",
+          "collection": true,
+          "optional": true,
+          "description": "Collection from client data regarding a two-person master record\n\nsource: return COLLECTION of KDYI_MEHRERE_PERSONEN_2"
+        }
+      ]
+    },
+    {
+      "id": "t-4ee2e2793a",
+      "name": "In",
+      "kind": "case",
+      "status": "draft",
+      "interactionId": "svc-1419823a0e",
+      "fields": [
+        {
+          "id": "f-018e6b403d",
+          "name": "multipleNaturalPerson",
+          "type": "t-832dc230fc",
+          "optional": true,
+          "description": "Identifies a two-person master record\n\nRequired Fields:\n * consulting_firm_code\n * is_financial_intermediary\n * matrimonial_property_regime_code\n * client_category_code\n * legal_status_code\n * last_name\n * is_qr_bill\n * is_self_employed\n * branch_code\n * language_code\n * marital_status_code\n\nIgnored Fields:\n * closing_date\n * formatted_client_number\n * gender_code\n * gender_partner_code\n * client_designation\n * client_designation_long\n * client_main_type_code\n * supplement_name_company\n * resource_version_id\n * date_of_death\n * date_of_death_partner\n * carreer_prospects\n * personal_prospects\n * is_main_bank_designation\n * legal_category_code\n * client_gui_type_code\n * is_contact_broken_off\n * private_individual_client_key\n * private_individual_partner_client_key\n\nsource: P_Kunde OBJECT_TYPE of KDYI_MEHRERE_PERSONEN_2"
+        },
+        {
+          "id": "f-64b2898ec3",
+          "name": "domicileAddress",
+          "type": "t-6181adc6d5",
+          "optional": true,
+          "description": "A domicile address for the two-person master record.\n\nIgnored Fields:\n * language_calculated_code\n * address_type_code\n * client_key\n * valid_from_date\n * valid_until_date\n\nsource: P_Adresse OBJECT_TYPE of KDYI_ADDRESS_2"
+        },
+        {
+          "id": "f-f479807aaa",
+          "name": "communicatonData",
+          "type": "t-d8e57d27dd",
+          "collection": true,
+          "optional": true,
+          "description": "Contains a collection with telephone and email communication data for the domicile address If the collection is empty, no email/telephone entries are entered.\n\nRequired Fields:\n * communication_type_code\n * number_or_address\n\nIgnored Fields:\n * client_key\n * address_type_code\n * relevant_entry_type_code\n\nsource: P_KommDaten COLLECTION of KDYI_ADRESSEN_KOMM_1"
+        },
+        {
+          "id": "f-9624e766b5",
+          "name": "advisorKey",
+          "type": "String",
+          "optional": true,
+          "description": "Key of the assigned advisor. If null, the parameterised default advisor is taken over.\n\nMax length: 22 characters\n\nsource: P_BeraterLnr NUMBER(22)"
+        },
+        {
+          "id": "f-7bf1058d1a",
+          "name": "advisorRoleCode",
+          "type": "Int",
+          "optional": true,
+          "description": "Role of the allocated advisor if advisorKey is not provided\n\nMax digits: 4\nRelated lookup-view: ClientAdvisorRole2\n\nsource: P_BeraterRolle NUMBER(4)"
+        },
+        {
+          "id": "f-3aa52719d4",
+          "name": "requestId",
+          "type": "String",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "t-4616fe07d3",
+      "name": "Out",
+      "kind": "case",
+      "status": "draft",
+      "interactionId": "svc-1419823a0e",
+      "fields": [
+        {
+          "id": "f-036540e10f",
+          "name": "multipleNaturalPerson",
+          "type": "t-733501c980"
+        },
+        {
+          "id": "f-bb6622275b",
+          "name": "clientKey",
+          "type": "String"
+        }
+      ]
+    },
+    {
+      "id": "t-2fc2626ce3",
+      "name": "In",
+      "kind": "case",
+      "status": "draft",
+      "interactionId": "svc-35ce93f71c",
+      "fields": [
+        {
+          "id": "f-cc164799d0",
+          "name": "clientKeys",
+          "type": "String",
+          "collection": true,
+          "optional": true,
+          "description": "Collection from client's technical numbers\n\nMax length: 22 characters\n\nsource: P_KdLnrs COLLECTION of SRYI_I22_1"
+        },
+        {
+          "id": "f-2a39f07005",
+          "name": "readFromFcs",
+          "type": "Boolean",
+          "optional": true,
+          "description": "If set to true, the data is read from FCS (consistent). If set to false, the data might be read from an eventually consistent source."
+        }
+      ]
+    },
+    {
+      "id": "t-b9dfd21aeb",
+      "name": "Out",
+      "kind": "case",
+      "status": "draft",
+      "interactionId": "svc-35ce93f71c",
+      "fields": [
+        {
+          "id": "f-3ad85aa88b",
+          "name": "readMultipleNaturalPerson2Response",
+          "type": "t-176af2f833"
+        }
+      ]
+    }
+  ],
+  "services": [
+    {
+      "id": "svc-1419823a0e",
+      "name": "PostCreateMultipleNaturalPerson4",
+      "api": "createMultipleNaturalPerson4",
+      "apiVersion": 1,
+      "status": "draft",
+      "description": "Creates a client as a two-person master record.\n\nError handling:\nThis method may return the following gRPC error codes with additional error details:\n\n- INVALID_ARGUMENT\n  * common.finnova.com.ClientCommunicationTypeLimitExceeded:\n    When creating a two-person master record, multiple communication entries of the same type cannot be entered for the specified communication type.\n    Inserting would result in multiple communication entries with the same CommunicationData1.communicationTypeCode, which is not permitted. Each communication type may only occur once in the CreateMultipleNaturalPerson4.communicatonData collection.\n  * common.finnova.com.ClientForeignPhoneNumberNotAllowed:\n    A foreign telephone number is not allowed for the specified communication method.\n    According to the program parameter, a foreign telephone number is not permitted for the specified CommunicationData1.communicationTypeCode. The parameter CommunicationType1.isForeignPhoneNumberPermitted needs to be activated in order to use foreign telephone numbers for this type of communication.\n  * common.finnova.com.ClientOnlyOneRelevantCommEntryPerTypeAllowedError:\n    Only one communication entry marked as relevant per type is permitted.\n    Only one communication entry marked as relevant is permitted. The field CommunicationData1.isRelevantEntry may only be set to 'true' in case of a single entry in the CreateMultipleNaturalPerson4.communicatonDatacollection.\n  * common.finnova.com.ClientPhoneNumberInvalidFormat:\n    The formatting of the telephone number is invalid.\n    The formatting of the telephone number in the field CommunicationData1.numberOrAddress does not correspond to the defined formatting rules. Correct formatting has been defined depending on the country code in the fields Country1.exampleTelNumber1 and Country1.exampleTelNumber2 of the lookup view.\n  * common.finnova.com.ValidationFailed:\n    The transmitted data does not conform to the validation requirements.\n    The validation for the creation of a client as a two-person master record has failed. The required parameters CreateMultipleNaturalPerson4.multipleNaturalPerson, CreateMultipleNaturalPerson4.domicileAddress, CreateMultipleNaturalPerson4.communicatonData or CreateMultipleNaturalPerson4.advisorKey contain invalid or incomplete data.\n\n- FAILED_PRECONDITION\n  * common.finnova.com.ClientMandatoryCommunicationDataMissing:\n    Missing mandatory communication data\n    Mandatory communication entries for the creation of a client as a two-person master record are missing. Parameter CreateMultipleNaturalPerson4.communicatonData must contain the required fields CommunicationData1.communicationTypeCode and CommunicationData1.numberOrAddress.\n  * common.finnova.com.ClientMessagelessCorrespondenceRuleCreationFailed:\n    No corresponding correspondence rule could be created when setting the flag for dormant clients. The automatic creation of the required rule configuration to handle correspondence for dormant clients failed.\n    Correspondence rules cannot be created when setting the 'dormant' flag for the creation of a client as a two-person master record. Processing of the parameters CreateMultipleNaturalPerson4.multipleNaturalPerson, CreateMultipleNaturalPerson4.domicileAddress, CreateMultipleNaturalPerson4.communicatonData and CreateMultipleNaturalPerson4.advisorKey has failed due to this correspondence rule problem.\n  * common.finnova.com.ClientNameBeforeMarriageNotAllowed:\n    The marital status is 'single', but a last name before marriage has nevertheless been indicated. This is not permitted.\n    The fields for the last name before marriage (MultipleNaturalPerson2.lastNameBeforeMarriage, MultipleNaturalPerson2.officialLastNameBeforeMarriage, MultipleNaturalPerson2.lastNameBeforeMarriagePartner, MultipleNaturalPerson2.officialLastNameBeforeMarriagePartner) must not be filled when creating multiple natural persons.\n  * common.finnova.com.ClientProgramParameterAddressArchiveRuleMissing:\n    The program parameter KD_RGL_ADR / GNR_ARCHIV is missing or has not been correctly defined.\n    The program parameter 'KDWL_REGEL_PARAM_1.GNR_ARCHIV' for the creation of a client as two-person master record is missing or is not correctly defined. These parameters are required for correct processing of the parameters CreateMultipleNaturalPerson4.multipleNaturalPerson, CreateMultipleNaturalPerson4.domicileAddress, CreateMultipleNaturalPerson4.communicatonData and CreateMultipleNaturalPerson4.advisorKey.\n  * common.finnova.com.InvalidParameterisation:\n    The parameterisation of the application is invalid or incomplete.\n    The program parameters for the value range of the client numbers have not been defined correctly. In addition, the gender of the partner needs to have been defined in the case of a double form of address via the field FormOfAddress2.genderPartnerDoubleFormOfAddress in the lookup view.\n  * common.finnova.com.JsonConversionError:\n    The JSON conversion of the return value for ensuring idempotence could not be performed.\n\n- UNAVAILABLE\n  * common.finnova.com.RequestInProgress:\n    The idempotent operation is already being performed. The request can be repeated. If the transaction is completed at the repeat time, the result is returned.\n \n@since 10.2025\n@change 6.2026, If ClientParametrisation2.isOfficialNameAutoFilled is enabled, the official name fields (MultipleNaturalPerson2.officialLastName, MultipleNaturalPerson2.officialFirstName, MultipleNaturalPerson2.officialLastNamePartner, MultipleNaturalPerson2.officialFirstNamePartner) are automatically filled with the corresponding name fields, provided that they are blank.\n\nsource: F_CreateMehrerePersonen_4 returns return OBJECT_TYPE of KDYI_CUSTOMER_IDENT",
+      "method": "POST",
+      "path": "/api/ClientMaster/v1/MultipleNaturalPersons/CreateMultipleNaturalPerson4",
+      "operationId": "MultipleNaturalPersons_CreateMultipleNaturalPerson4",
+      "params": [],
+      "serviceIn": {
+        "type": "t-11b802ca76"
+      },
+      "bodyMappings": [
+        {
+          "name": "multipleNaturalPerson",
+          "expression": "= multipleNaturalPerson"
+        },
+        {
+          "name": "domicileAddress",
+          "expression": "= domicileAddress"
+        },
+        {
+          "name": "communicatonData",
+          "expression": "= communicatonData"
+        },
+        {
+          "name": "advisorKey",
+          "expression": "= advisorKey"
+        },
+        {
+          "name": "advisorRoleCode",
+          "expression": "= advisorRoleCode"
+        },
+        {
+          "name": "requestId",
+          "expression": "= requestId"
+        }
+      ],
+      "serviceOut": {
+        "type": "t-733501c980"
+      },
+      "responseStatus": 200,
+      "inTypeId": "t-4ee2e2793a",
+      "outTypeId": "t-4616fe07d3",
+      "outMappings": [
+        {
+          "name": "createMultipleNaturalPerson4Response",
+          "expression": "= body.multipleNaturalPerson"
+        },
+        {
+          "name": "multiplePerson",
+          "expression": "= body.multipleNaturalPerson"
+        },
+        {
+          "name": "multipleNaturalPerson",
+          "expression": "= body.multipleNaturalPerson"
+        },
+        {
+          "name": "clientKey",
+          "expression": "= body.multipleNaturalPerson.clientKey"
+        }
+      ]
+    },
+    {
+      "id": "svc-35ce93f71c",
+      "name": "PostReadMultipleNaturalPerson2",
+      "api": "readMultipleNaturalPerson2",
+      "apiVersion": 1,
+      "status": "draft",
+      "description": "The interface reads all fields from the client master that are relevant for a two-person master record for a collection from technical numbers of the client of two-person master records and returns these as a collection.\nTransferred client keys need to be available on the database and as main type 2 (multiple private individuals).\nThis version must be used if ClientParametrisation2.isNoga25Enabled has been set to 1.\nThis method reads data from BORD if the feature is enabled, the collection is available, and read_from_fcs is not set to true.\n\nError handling:\nThis method may return the following gRPC error codes with additional error details:\nDisclaimer: When data is read from BORD, only BORD related exceptions and annotation-based invalid argument exceptions will be thrown.\n\n- INVALID_ARGUMENT\n  * common.finnova.com.ValidationFailed:\n    The transmitted data does not conform to the validation requirements.\n    The validation for the reading of clients as two-person master records has failed. The parameter 'clientKeys' contains invalid technical numbers or the transferred client keys are not available in the database as main type 2 (multiple private individuals).\n \n@since 7.2024\n\nsource: F_ReadMehrerePersonen_2 returns return COLLECTION of KDYI_MEHRERE_PERSONEN_2",
+      "method": "POST",
+      "path": "/api/ClientMaster/v1/MultipleNaturalPersons/ReadMultipleNaturalPerson2",
+      "operationId": "MultipleNaturalPersons_ReadMultipleNaturalPerson2",
+      "params": [],
+      "serviceIn": {
+        "type": "t-6e7019ac13"
+      },
+      "bodyMappings": [
+        {
+          "name": "clientKeys",
+          "expression": "= clientKeys"
+        },
+        {
+          "name": "readFromFcs",
+          "expression": "= readFromFcs"
+        }
+      ],
+      "serviceOut": {
+        "type": "t-176af2f833"
+      },
+      "responseStatus": 200,
+      "inTypeId": "t-2fc2626ce3",
+      "outTypeId": "t-b9dfd21aeb",
+      "outMappings": [
+        {
+          "name": "readMultipleNaturalPerson2Response",
+          "expression": "= body"
+        }
+      ]
+    }
+  ],
+  "source": {
+    "title": "Integration Service ClientMaster - MultipleNaturalPersons",
+    "version": "261013",
+    "file": "multiple_natural_persons.swagger.json"
+  },
+  "serviceLabel": "Integration Service ClientMaster - MultipleNaturalPersons"
+}
