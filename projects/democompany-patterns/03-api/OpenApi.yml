@@ -3,8 +3,8 @@ info:
   title: Patterns
   version: 0.1.0-SNAPSHOT
   summary: "\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns - je Pattern\
-    \ ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated at 11/2/26,\
-    \ 4:46 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated at 11/3/26,\
+    \ 11:14 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -469,11 +469,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > In`\n- Output: `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-initProcessV1-71508\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-initProcessV1-71508'), height: '95%',\
+        \ id=\"patterns-initProcessV1-32904\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-initProcessV1-32904'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-initProcessV1.bpmn](diagrams/patterns-initProcessV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-71508')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-32904')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -641,12 +641,12 @@ paths:
         \ `democompany-patterns-identityV1` (to define in the Call Activity)\n\n\n\
         \n---\n\n\n\n\n- Input:  `democompany.patterns.domain.identity.v1.Identity\
         \ > In`\n- Output: `democompany.patterns.domain.identity.v1.Identity > Out`\n\
-        \n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"patterns-identityV1-68777\"\
+        \n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"patterns-identityV1-21369\"\
         >\n    <img onLoad=\"openFromUrl('patterns-identityV1.bpmn', new BpmnJS({\
-        \ container: $('#patterns-identityV1-68777'), height: '95%', width: '95%'\
+        \ container: $('#patterns-identityV1-21369'), height: '95%', width: '95%'\
         \ }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-identityV1.bpmn](diagrams/patterns-identityV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-identityV1-68777')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-identityV1-21369')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -1138,11 +1138,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
         \ > In`\n- Output: `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-propagateMocksV1-8872\">\n    <img onLoad=\"openFromUrl('patterns-propagateMocksV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-propagateMocksV1-8872'), height: '95%',\
+        \ id=\"patterns-propagateMocksV1-61074\">\n    <img onLoad=\"openFromUrl('patterns-propagateMocksV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-propagateMocksV1-61074'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-propagateMocksV1.bpmn](diagrams/patterns-propagateMocksV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-propagateMocksV1-8872')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-propagateMocksV1-61074')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -1422,11 +1422,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution\
         \ > In`\n- Output: `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-uniqueExecutionV1-59330\">\n    <img onLoad=\"openFromUrl('patterns-uniqueExecutionV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-uniqueExecutionV1-59330'), height:\
+        \ id=\"patterns-uniqueExecutionV1-13706\">\n    <img onLoad=\"openFromUrl('patterns-uniqueExecutionV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-uniqueExecutionV1-13706'), height:\
         \ '95%', width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-uniqueExecutionV1.bpmn](diagrams/patterns-uniqueExecutionV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-uniqueExecutionV1-59330')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-uniqueExecutionV1-13706')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -1595,7 +1595,7 @@ paths:
 
 
         - Input:  `democompany.patterns.domain.uniqueExecution.v1.EditRequestUT > In`
-        - Output: `orchescala.domain.NoOutput`
+        - Output: `democompany.patterns.domain.uniqueExecution.v1.EditRequestUT > Out`
 
         <p/>
         <details>
@@ -1671,7 +1671,7 @@ paths:
 
 
         - Input:  `democompany.patterns.domain.uniqueExecution.v1.EditRequestUT > In`
-        - Output: `orchescala.domain.NoOutput`
+        - Output: `democompany.patterns.domain.uniqueExecution.v1.EditRequestUT > Out`
 
         <p/>
         <details>
@@ -1697,6 +1697,16 @@ paths:
         schema:
           type: string
         example: '{{userTaskInstanceId}}'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditRequestUT.Out'
+            examples:
+              EditRequestUT:
+                value:
+                  isOk: true
+        required: true
       responses:
         '200':
           description: ''
@@ -1792,11 +1802,11 @@ paths:
         \ Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.processStatus.v1.ProcessStatusExample\
         \ > In`\n- Output: `democompany.patterns.domain.processStatus.v1.ProcessStatusExample\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-processStatusV1-8826\">\n    <img onLoad=\"openFromUrl('patterns-processStatusV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-processStatusV1-8826'), height: '95%',\
+        \ id=\"patterns-processStatusV1-23465\">\n    <img onLoad=\"openFromUrl('patterns-processStatusV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-processStatusV1-23465'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-processStatusV1.bpmn](diagrams/patterns-processStatusV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-processStatusV1-8826')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-processStatusV1-23465')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -1963,11 +1973,11 @@ paths:
         \ Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.stopWithError.v1.StopWithError\
         \ > In`\n- Output: `democompany.patterns.domain.stopWithError.v1.StopWithError\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-stopWithErrorV1-86820\">\n    <img onLoad=\"openFromUrl('patterns-stopWithErrorV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-stopWithErrorV1-86820'), height: '95%',\
+        \ id=\"patterns-stopWithErrorV1-52164\">\n    <img onLoad=\"openFromUrl('patterns-stopWithErrorV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-stopWithErrorV1-52164'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-stopWithErrorV1.bpmn](diagrams/patterns-stopWithErrorV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-stopWithErrorV1-86820')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-stopWithErrorV1-52164')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -2124,6 +2134,337 @@ paths:
               examples:
                 InitIn:
                   value: {}
+  /process/democompany-patterns-sendProcessEventV1/async:
+    post:
+      tags:
+      - Send Process Event V1
+      summary: Process start
+      description: "\nBeispiel für das Pattern «Prozess-Event senden»: der Prozess\
+        \ meldet zu Beginn `started` und am Ende\n`finished` an den Event-Prozess\
+        \ `democompany-patterns-processEventV1` (ein Dummy) - je eine Call\nActivity\
+        \ mit dem Event, der Prozess-ID und der Instanz. Danach endet er mit `succeeded`.\n\
+        \n\n---\n\n- **Called Element**: `democompany-patterns-sendProcessEventV1`\
+        \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.sendProcessEvent.v1.SendProcessEvent\
+        \ > In`\n- Output: `democompany.patterns.domain.sendProcessEvent.v1.SendProcessEvent\
+        \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
+        \ id=\"patterns-sendProcessEventV1-98475\">\n    <img onLoad=\"openFromUrl('patterns-sendProcessEventV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-sendProcessEventV1-98475'), height:\
+        \ '95%', width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [patterns-sendProcessEventV1.bpmn](diagrams/patterns-sendProcessEventV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-sendProcessEventV1-98475')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
+        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"processStatus,customerName\",\n...\n```\n\n**outputMock**:\n\n```json\n\
+        ...\n\"outputMock\": {\n  \"processStatus\" : \"succeeded\",\n  \"customerName\"\
+        \ : \"Peter Muster\"\n},\n...\n```\n\n</p>\n</details>\n</p>\n      \n\n\n\
+        **Used in no other Process.**\n\n**Uses no other Processes.**\n<p/>\n<details>\n\
+        <summary><b><i>General Information</i></b></summary>\n<p>\n\nThis describes\
+        \ the <b>Input</b> to start the Process with.\n\nBe aware that running this\
+        \ request with Postman,\nyou will not get the <b>Output</b> but the <i>processInstanceId</i>,\
+        \ as starting a process is asynchronous.\n\nTo get the <b>Output</b> you need\
+        \ to use the `Process variables` request.\n\n</p>\n</details>"
+      operationId: Process start
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendProcessEvent.In'
+            examples:
+              democompany-patterns-sendProcessEventV1:
+                value:
+                  customerName: Peter Muster
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessInfo'
+              example:
+                processInstanceId: f150c3f1-13f5-11ec-936e-0242ac1d0007
+                businessKey: ORDER-2025-12345
+                status: Active
+                engineType: C7
+  /process/democompany-patterns-sendProcessEventV1/{processInstanceId}/variables:
+    get:
+      tags:
+      - Send Process Event V1
+      summary: Process variables
+      description: "\nBeispiel für das Pattern «Prozess-Event senden»: der Prozess\
+        \ meldet zu Beginn `started` und am Ende\n`finished` an den Event-Prozess\
+        \ `democompany-patterns-processEventV1` (ein Dummy) - je eine Call\nActivity\
+        \ mit dem Event, der Prozess-ID und der Instanz. Danach endet er mit `succeeded`.\n\
+        \n\n---\n\n- **Called Element**: `democompany-patterns-sendProcessEventV1`\
+        \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.sendProcessEvent.v1.SendProcessEvent\
+        \ > In`\n- Output: `democompany.patterns.domain.sendProcessEvent.v1.SendProcessEvent\
+        \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
+        </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,customerName\"\
+        ,\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ : \"succeeded\",\n  \"customerName\" : \"Peter Muster\"\n},\n...\n```\n\n\
+        </p>\n</details>\n</p>\n      <p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Output</b> of the Process you get. Be aware this\
+        \ does not check if the process is finished (TODO).\n\n  \n</p>\n</details>"
+      operationId: Process variables
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: processStatus,customerName
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendProcessEvent.Out'
+              examples:
+                democompany-patterns-sendProcessEventV1:
+                  value:
+                    processStatus: succeeded
+                    customerName: Peter Muster
+  /worker/democompany-patterns-sendProcessEventV1:
+    post:
+      tags:
+      - Send Process Event V1
+      summary: Init Worker
+      description: |2
+
+        <details>
+        <summary><b>General Information</b></summary>
+
+        The Init Worker has the following responsibilities:
+
+          - Validates the Process Input (`In`). -> by Orchescala
+          - Maps the Configuration to Process Variables (`InConfig`). -> by Orchescala
+          - Custom validation the Process Input (`In`, e.g. combining 2 variables). -> Process Specific
+          - Initializes the default Variables with `In` as input (see _Process_ description) and `InitIn` as output. -> Process Specific
+
+        The Input is the same as the `In` object of the _Process_.
+
+        `NoInput` means there is no initialization needed.
+        </details>
+      operationId: Init Worker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendProcessEvent.In'
+            examples:
+              democompany-patterns-sendProcessEventV1:
+                value:
+                  customerName: Peter Muster
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoInput'
+              examples:
+                InitIn:
+                  value: {}
+  /process/democompany-patterns-processEventV1/async:
+    post:
+      tags:
+      - Process Event V1
+      summary: Process start
+      description: "\nDummy-Event-Prozess für das Pattern «Prozess-Event senden»:\
+        \ nimmt das Event entgegen und endet mit\n`succeeded`. Ein echter Event-Prozess\
+        \ würde es z. B. einem Fremdsystem melden. Die Eingaben sind\ndie, die das\
+        \ Pattern mitgibt; zurück gibt er nichts.\n\n\n---\n\n- **Called Element**:\
+        \ `democompany-patterns-processEventV1` (to define in the Call Activity)\n\
+        \n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.processEvent.v1.ProcessEvent\
+        \ > In`\n- Output: `democompany.patterns.domain.processEvent.v1.ProcessEvent\
+        \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
+        \ id=\"patterns-processEventV1-41110\">\n    <img onLoad=\"openFromUrl('patterns-processEventV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-processEventV1-41110'), height: '95%',\
+        \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [patterns-processEventV1.bpmn](diagrams/patterns-processEventV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-processEventV1-41110')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
+        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"processStatus\",\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\"\
+        : {\n  \"processStatus\" : \"succeeded\"\n},\n...\n```\n\n</p>\n</details>\n\
+        </p>\n      \n\n\n**Used in no other Process.**\n\n**Uses no other Processes.**\n\
+        <p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n<p>\n\
+        \nThis describes the <b>Input</b> to start the Process with.\n\nBe aware that\
+        \ running this request with Postman,\nyou will not get the <b>Output</b> but\
+        \ the <i>processInstanceId</i>, as starting a process is asynchronous.\n\n\
+        To get the <b>Output</b> you need to use the `Process variables` request.\n\
+        \n</p>\n</details>"
+      operationId: Process start
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessEvent.In'
+            examples:
+              democompany-patterns-processEventV1:
+                value:
+                  eventKey: started
+                  processDefinitionKey: democompany-patterns-sendProcessEventV1
+                  processInstanceId: '4711'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessInfo'
+              example:
+                processInstanceId: f150c3f1-13f5-11ec-936e-0242ac1d0007
+                businessKey: ORDER-2025-12345
+                status: Active
+                engineType: C7
+  /process/democompany-patterns-processEventV1/{processInstanceId}/variables:
+    get:
+      tags:
+      - Process Event V1
+      summary: Process variables
+      description: "\nDummy-Event-Prozess für das Pattern «Prozess-Event senden»:\
+        \ nimmt das Event entgegen und endet mit\n`succeeded`. Ein echter Event-Prozess\
+        \ würde es z. B. einem Fremdsystem melden. Die Eingaben sind\ndie, die das\
+        \ Pattern mitgibt; zurück gibt er nichts.\n\n\n---\n\n- **Called Element**:\
+        \ `democompany-patterns-processEventV1` (to define in the Call Activity)\n\
+        \n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.processEvent.v1.ProcessEvent\
+        \ > In`\n- Output: `democompany.patterns.domain.processEvent.v1.ProcessEvent\
+        \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
+        </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus\",\n\
+        ...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ : \"succeeded\"\n},\n...\n```\n\n</p>\n</details>\n</p>\n      <p/>\n<details>\n\
+        <summary><b><i>General Information</i></b></summary>\n<p>\n\nThis describes\
+        \ the <b>Output</b> of the Process you get. Be aware this does not check if\
+        \ the process is finished (TODO).\n\n  \n</p>\n</details>"
+      operationId: Process variables
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: processStatus
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessEvent.Out'
+              examples:
+                democompany-patterns-processEventV1:
+                  value:
+                    processStatus: succeeded
+  /worker/democompany-patterns-processEventV1:
+    post:
+      tags:
+      - Process Event V1
+      summary: Init Worker
+      description: |2
+
+        <details>
+        <summary><b>General Information</b></summary>
+
+        The Init Worker has the following responsibilities:
+
+          - Validates the Process Input (`In`). -> by Orchescala
+          - Maps the Configuration to Process Variables (`InConfig`). -> by Orchescala
+          - Custom validation the Process Input (`In`, e.g. combining 2 variables). -> Process Specific
+          - Initializes the default Variables with `In` as input (see _Process_ description) and `InitIn` as output. -> Process Specific
+
+        The Input is the same as the `In` object of the _Process_.
+
+        `NoInput` means there is no initialization needed.
+        </details>
+      operationId: Init Worker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessEvent.In'
+            examples:
+              democompany-patterns-processEventV1:
+                value:
+                  eventKey: started
+                  processDefinitionKey: democompany-patterns-sendProcessEventV1
+                  processInstanceId: '4711'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoInput'
+              examples:
+                InitIn:
+                  value: {}
 components:
   schemas:
     Address:
@@ -2266,6 +2607,14 @@ components:
       properties:
         customerName:
           type: string
+    EditRequestUT.Out:
+      title: EditRequestUT.Out
+      type: object
+      required:
+      - isOk
+      properties:
+        isOk:
+          type: boolean
     EngineType:
       title: EngineType
       description: Type of the engine
@@ -2374,6 +2723,31 @@ components:
     NoInput:
       title: NoInput
       type: object
+    ProcessEvent.In:
+      title: ProcessEvent.In
+      type: object
+      required:
+      - eventKey
+      - processDefinitionKey
+      - processInstanceId
+      properties:
+        eventKey:
+          description: Was passiert ist, z. B. `started`, `finished`.
+          type: string
+        processDefinitionKey:
+          description: Die ID des Prozesses, der das Event meldet.
+          type: string
+        processInstanceId:
+          description: Die Instanz des Prozesses, der das Event meldet.
+          type: string
+    ProcessEvent.Out:
+      title: ProcessEvent.Out
+      type: object
+      required:
+      - processStatus
+      properties:
+        processStatus:
+          $ref: '#/components/schemas/ProcessStatus1'
     ProcessInfo:
       title: ProcessInfo
       description: Contains information about a process instance or execution
@@ -2490,6 +2864,27 @@ components:
         client:
           $ref: '#/components/schemas/Client'
           description: Der Kunde - aus «Kunde laden».
+    SendProcessEvent.In:
+      title: SendProcessEvent.In
+      type: object
+      required:
+      - customerName
+      properties:
+        customerName:
+          description: Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker
+            `validation-failed`).
+          type: string
+    SendProcessEvent.Out:
+      title: SendProcessEvent.Out
+      type: object
+      required:
+      - processStatus
+      - customerName
+      properties:
+        processStatus:
+          $ref: '#/components/schemas/ProcessStatus1'
+        customerName:
+          type: string
     StopWithError.In:
       title: StopWithError.In
       type: object
@@ -2537,6 +2932,15 @@ components:
           description: Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker
             `validation-failed`).
           type: string
+        inConfig:
+          $ref: '#/components/schemas/UniqueExecution.InConfig'
+    UniqueExecution.InConfig:
+      title: UniqueExecution.InConfig
+      description: |-
+        A way to override process configuration.
+
+        **SHOULD NOT BE USED on Production!**
+      type: object
     UniqueExecution.InitIn:
       title: UniqueExecution.InitIn
       type: object

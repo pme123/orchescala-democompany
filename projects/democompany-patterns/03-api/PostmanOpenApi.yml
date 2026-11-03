@@ -5,7 +5,7 @@ info:
   summary: "\n**This is for Postman - to have example requests. Be aware the Output\
     \ is not provided!**\n\n\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns\
     \ - je Pattern ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated\
-    \ at 11/2/26, 4:46 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ at 11/3/26, 11:14 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -1115,7 +1115,10 @@ paths:
             examples:
               EditRequestUT:
                 value:
-                  variables: {}
+                  variables:
+                    isOk:
+                      value: true
+                      type: Boolean
                   withVariablesInReturn: true
         required: true
       responses:
@@ -1257,6 +1260,98 @@ paths:
                       value: false
                       type: Boolean
                   businessKey: democompany-patterns-stopWithErrorV1
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /process-definition/key/democompany-patterns-sendProcessEventV1/start:
+    post:
+      tags:
+      - democompany-patterns-sendProcessEventV1
+      summary: 'Bpmn: sendProcessEventV1'
+      description: |2
+
+        Beispiel für das Pattern «Prozess-Event senden»: der Prozess meldet zu Beginn `started` und am Ende
+        `finished` an den Event-Prozess `democompany-patterns-processEventV1` (ein Dummy) - je eine Call
+        Activity mit dem Event, der Prozess-ID und der Instanz. Danach endet er mit `succeeded`.
+
+
+        ---
+
+        - **Called Element**: `democompany-patterns-sendProcessEventV1` (to define in the Call Activity)
+
+
+
+        ---
+
+
+
+
+        See API Doc: [Bpmn: sendProcessEventV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20sendProcessEventV1)
+      operationId: postProcess-definitionKeyDemocompany-patterns-sendprocesseventv1Start
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-patterns-sendProcessEventV1:
+                value:
+                  variables:
+                    customerName:
+                      value: Peter Muster
+                      type: String
+                  businessKey: democompany-patterns-sendProcessEventV1
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /process-definition/key/democompany-patterns-processEventV1/start:
+    post:
+      tags:
+      - democompany-patterns-processEventV1
+      summary: 'Bpmn: processEventV1'
+      description: |2
+
+        Dummy-Event-Prozess für das Pattern «Prozess-Event senden»: nimmt das Event entgegen und endet mit
+        `succeeded`. Ein echter Event-Prozess würde es z. B. einem Fremdsystem melden. Die Eingaben sind
+        die, die das Pattern mitgibt; zurück gibt er nichts.
+
+
+        ---
+
+        - **Called Element**: `democompany-patterns-processEventV1` (to define in the Call Activity)
+
+
+
+        ---
+
+
+
+
+        See API Doc: [Bpmn: processEventV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20processEventV1)
+      operationId: postProcess-definitionKeyDemocompany-patterns-processeventv1Start
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-patterns-processEventV1:
+                value:
+                  variables:
+                    eventKey:
+                      value: started
+                      type: String
+                    processDefinitionKey:
+                      value: democompany-patterns-sendProcessEventV1
+                      type: String
+                    processInstanceId:
+                      value: '4711'
+                      type: String
+                  businessKey: democompany-patterns-processEventV1
                   withVariablesInReturn: true
         required: true
       responses:
