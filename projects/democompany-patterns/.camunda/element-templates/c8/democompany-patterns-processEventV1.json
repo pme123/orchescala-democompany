@@ -1,0 +1,123 @@
+[
+  {
+    "name" : "democompany-patterns-processEventV1",
+    "id" : "democompany-patterns-processEventV1",
+    "description" : "\nDummy-Event-Prozess für das Pattern «Prozess-Event senden»: nimmt das Event entgegen und endet mit\n`succeeded`. Ein echter Event-Prozess würde es z. B. einem Fremdsystem melden. Die Eingaben sind\ndie, die das Pattern mitgibt; zurück gibt er nichts.\n\n\n",
+    "version" : 0,
+    "appliesTo" : [
+      "bpmn:Activity"
+    ],
+    "elementType" : {
+      "value" : "bpmn:CallActivity"
+    },
+    "properties" : [
+      {
+        "value" : "eventKey",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "eventKey"
+        },
+        "label" : "eventKey",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "processDefinitionKey",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "processDefinitionKey"
+        },
+        "label" : "processDefinitionKey",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "processInstanceId",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "processInstanceId"
+        },
+        "label" : "processInstanceId",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "processStatus",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "processStatus"
+        },
+        "label" : "processStatus",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "_servicesMocked",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "_servicesMocked"
+        },
+        "label" : "_servicesMocked",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "_mockedWorkers",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "_mockedWorkers"
+        },
+        "label" : "_mockedWorkers",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "_outputMock",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "_outputMock"
+        },
+        "label" : "_outputMock",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "impersonateUserId",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "impersonateUserId"
+        },
+        "label" : "impersonateUserId",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "_identityCorrelation",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "_identityCorrelation"
+        },
+        "label" : "_identityCorrelation",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "Process Event V1",
+        "binding" : {
+          "type" : "property",
+          "name" : "name"
+        },
+        "label" : "",
+        "description" : "",
+        "type" : "Hidden"
+      }
+    ],
+    "$schema" : "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
+    "groups" : [
+    ],
+    "entriesVisible" : true,
+    "engines" : {
+      "camunda" : "^8.6"
+    }
+  }
+]

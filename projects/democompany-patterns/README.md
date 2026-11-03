@@ -6,8 +6,8 @@ für Camunda 7 und Camunda 8 und eine Simulation je Engine, die den Baustein auf
 durchspielt. Später sollen die BPMN auch als Testdaten für die Orch Spec dienen.
 
 Bis jetzt: **«Init Process»**, **«Identität übernehmen / zurücksetzen»**,
-**«Mocks und Identität weitergeben»**, **«Einmalige Ausführung»**, **«Prozess-Status am Ende»** und
-**«Prozess mit Fehler stoppen»**.
+**«Mocks und Identität weitergeben»**, **«Einmalige Ausführung»**, **«Prozess-Status am Ende»**,
+**«Prozess mit Fehler stoppen»** und **«Prozess-Event senden»**.
 
 ## Init Process – `democompany-patterns-initProcessV1`
 
@@ -471,6 +471,63 @@ aufgelöst, wertet Zeebe das Mapping neu aus – der Prozess bleibt stehen, wie 
 
 Bleiben die Instanzen der Szenarien 2 und 3 stehen, ist das gewollt – in Cockpit bzw. Operate abbrechen
 oder (Szenario 3) per Modification weiterschieben.
+
+## Prozess-Event senden – `democompany-patterns-sendProcessEventV1`
+
+```
+Start ─▶ [Init Process] ─▶ [Prozess-Event: gestartet] ─▶ [Prozess-Event: beendet] ─▶ (succeeded)
+                                  │ ruft                        │ ruft
+                                  ▼                             ▼
+                     democompany-patterns-processEventV1:  (Event) ─▶ (entgegengenommen)
+```
+
+Das Pattern **meldet einen Schritt des Prozesses an einen eigenen Event-Prozess** – hier zu Beginn
+`started` und am Ende `finished`. Es sitzt an einer **Call Activity**; welchen Prozess sie ruft, wählt
+man im Pattern (`eventProcess`, Auswahl aus den Prozessen des Katalogs – ohne Wahl zeigt die Orch Spec
+einen Hinweis). Der Event-Prozess bekommt:
+
+| Eingabe | Inhalt |
+|---|---|
+| `eventKey` | was passiert ist – Parameter `eventKey`, Text oder FEEL (Vorgabe `started`) |
+| `processDefinitionKey` | die ID des meldenden Prozesses |
+| `processInstanceId` | seine Instanz |
+
+Zurück gibt er nichts. Was er mit dem Event macht – einem Fremdsystem melden, protokollieren – ist seine
+Sache; hier ist es ein **Dummy** (`democompany-patterns-processEventV1`), der das Event entgegennimmt
+und mit `succeeded` endet. Die Eingaben sieht man in Cockpit bzw. Operate an seiner Instanz.
+
+| | Camunda 7 | Camunda 8 |
+|---|---|---|
+| gerufener Prozess | `calledElement` | `zeebe:calledElement processId`, `propagateAllParentVariables` und `propagateAllChildVariables` aus |
+| Prozess-ID | `${execution.getProcessDefinition().getKey()}` | die ID als Text (`="democompany-patterns-sendProcessEventV1"`) |
+| Instanz | `${execution.getProcessInstanceId()}` | `=processInstanceId` – setzt der InitWorker, der Prozess braucht «Init Process» |
+
+Sollen Mocks und Identität auch im Event-Prozess gelten, trägt dieselbe Call Activity zusätzlich
+«Mocks und Identität weitergeben» – die Orch Spec erkennt beide.
+
+| Datei | Inhalt |
+|---|---|
+| [`SendProcessEvent.scala`](01-domain/src/main/scala/democompany/patterns/domain/sendProcessEvent/v1/SendProcessEvent.scala) | `In`, `Out` |
+| [`ProcessEvent.scala`](01-domain/src/main/scala/democompany/patterns/domain/processEvent/v1/ProcessEvent.scala) | der Dummy: `In` (`eventKey`, `processDefinitionKey`, `processInstanceId`), `Out` |
+| [`SendProcessEventWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/sendProcessEvent/v1/SendProcessEventWorker.scala) | InitWorker: Prüfung des In |
+| [`camunda/patterns-sendProcessEventV1.bpmn`](src/main/resources/camunda/patterns-sendProcessEventV1.bpmn), [`camunda/patterns-processEventV1.bpmn`](src/main/resources/camunda/patterns-processEventV1.bpmn) | Camunda 7 |
+| [`camunda8/patterns-sendProcessEventV1.bpmn`](src/main/resources/camunda8/patterns-sendProcessEventV1.bpmn), [`camunda8/patterns-processEventV1.bpmn`](src/main/resources/camunda8/patterns-processEventV1.bpmn) | Camunda 8 |
+| [`SendProcessEventSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/SendProcessEventSimulation.scala) | die Szenarien, für beide Engines gleich |
+
+### Simulationen
+
+1. **`SendProcessEvent succeeded`** – meldet `started` und `finished` und endet mit
+   `processStatus = succeeded`. Fehlte der Event-Prozess, bliebe der Prozess mit einem Incident an der
+   Call Activity stehen.
+2. **`SendProcessEvent mocked`** – endet über den Pfad `output-mocked` von «Init Process», ohne Event.
+3. **`ProcessEvent dummy`** – der Dummy für sich: nimmt das Event entgegen und endet mit `succeeded`.
+
+```bash
+./helper.scala deploy SendProcessEventC7Simulation
+```
+```bash
+./helper.scala deploy SendProcessEventC8Simulation
+```
 
 ## Offene Punkte
 
