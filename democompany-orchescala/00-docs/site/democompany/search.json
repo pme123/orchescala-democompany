@@ -412,5 +412,209 @@
     "tag" : "Identity V1",
     "path" : "/userTask/CloseRequestUT/{userTaskInstanceId}/complete",
     "summary" : "UserTask complete: CloseRequestUT"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Propagate Mocks V1 · Process start",
+    "operationId" : "Process start",
+    "tag" : "Propagate Mocks V1",
+    "path" : "/process/democompany-patterns-propagateMocksV1/async",
+    "summary" : "Process start"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Propagate Mocks V1 · Process variables",
+    "operationId" : "Process variables",
+    "tag" : "Propagate Mocks V1",
+    "path" : "/process/democompany-patterns-propagateMocksV1/{processInstanceId}/variables",
+    "summary" : "Process variables"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Propagate Mocks V1 · Init Worker",
+    "operationId" : "Init Worker",
+    "tag" : "Propagate Mocks V1",
+    "path" : "/worker/democompany-patterns-propagateMocksV1",
+    "topic" : "democompany-patterns-propagateMocksV1",
+    "summary" : "Init Worker"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Bpmn: propagateMocksSubV1",
+    "operationId" : "Bpmn: propagateMocksSubV1",
+    "tag" : "Propagate Mocks V1",
+    "path" : "/process/democompany-patterns-propagateMocksSubV1/{processInstanceId}/variables",
+    "summary" : "Bpmn: propagateMocksSubV1"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Unique Execution V1 · Process start",
+    "operationId" : "Process start",
+    "tag" : "Unique Execution V1",
+    "path" : "/process/democompany-patterns-uniqueExecutionV1/async",
+    "summary" : "Process start"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Unique Execution V1 · Process variables",
+    "operationId" : "Process variables",
+    "tag" : "Unique Execution V1",
+    "path" : "/process/democompany-patterns-uniqueExecutionV1/{processInstanceId}/variables",
+    "summary" : "Process variables"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Unique Execution V1 · Init Worker",
+    "operationId" : "Init Worker",
+    "tag" : "Unique Execution V1",
+    "path" : "/worker/democompany-patterns-uniqueExecutionV1",
+    "topic" : "democompany-patterns-uniqueExecutionV1",
+    "summary" : "Init Worker"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "UserTask variables: EditRequestUT",
+    "operationId" : "UserTask variables: EditRequestUT",
+    "tag" : "Unique Execution V1",
+    "path" : "/process/{processInstanceId}/userTask/EditRequestUT/variables",
+    "summary" : "UserTask variables: EditRequestUT"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "UserTask complete: EditRequestUT",
+    "operationId" : "UserTask complete: EditRequestUT",
+    "tag" : "Unique Execution V1",
+    "path" : "/userTask/EditRequestUT/{userTaskInstanceId}/complete",
+    "summary" : "UserTask complete: EditRequestUT"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Message: uniqueExecutionV1",
+    "operationId" : "Message: uniqueExecutionV1",
+    "tag" : "Unique Execution V1",
+    "path" : "/message/democompany-patterns-uniqueExecutionV1",
+    "summary" : "Message: uniqueExecutionV1"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Process Status V1 · Process start",
+    "operationId" : "Process start",
+    "tag" : "Process Status V1",
+    "path" : "/process/democompany-patterns-processStatusV1/async",
+    "summary" : "Process start"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Process Status V1 · Process variables",
+    "operationId" : "Process variables",
+    "tag" : "Process Status V1",
+    "path" : "/process/democompany-patterns-processStatusV1/{processInstanceId}/variables",
+    "summary" : "Process variables"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Process Status V1 · Init Worker",
+    "operationId" : "Init Worker",
+    "tag" : "Process Status V1",
+    "path" : "/worker/democompany-patterns-processStatusV1",
+    "topic" : "democompany-patterns-processStatusV1",
+    "summary" : "Init Worker"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Stop With Error V1 · Process start",
+    "operationId" : "Process start",
+    "tag" : "Stop With Error V1",
+    "path" : "/process/democompany-patterns-stopWithErrorV1/async",
+    "summary" : "Process start"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Stop With Error V1 · Process variables",
+    "operationId" : "Process variables",
+    "tag" : "Stop With Error V1",
+    "path" : "/process/democompany-patterns-stopWithErrorV1/{processInstanceId}/variables",
+    "summary" : "Process variables"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Stop With Error V1 · Init Worker",
+    "operationId" : "Init Worker",
+    "tag" : "Stop With Error V1",
+    "path" : "/worker/democompany-patterns-stopWithErrorV1",
+    "topic" : "democompany-patterns-stopWithErrorV1",
+    "summary" : "Init Worker"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Send Process Event V1 · Process start",
+    "operationId" : "Process start",
+    "tag" : "Send Process Event V1",
+    "path" : "/process/democompany-patterns-sendProcessEventV1/async",
+    "summary" : "Process start"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Send Process Event V1 · Process variables",
+    "operationId" : "Process variables",
+    "tag" : "Send Process Event V1",
+    "path" : "/process/democompany-patterns-sendProcessEventV1/{processInstanceId}/variables",
+    "summary" : "Process variables"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Send Process Event V1 · Init Worker",
+    "operationId" : "Init Worker",
+    "tag" : "Send Process Event V1",
+    "path" : "/worker/democompany-patterns-sendProcessEventV1",
+    "topic" : "democompany-patterns-sendProcessEventV1",
+    "summary" : "Init Worker"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Process Event V1 · Process start",
+    "operationId" : "Process start",
+    "tag" : "Process Event V1",
+    "path" : "/process/democompany-patterns-processEventV1/async",
+    "summary" : "Process start"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Process Event V1 · Process variables",
+    "operationId" : "Process variables",
+    "tag" : "Process Event V1",
+    "path" : "/process/democompany-patterns-processEventV1/{processInstanceId}/variables",
+    "summary" : "Process variables"
+  },
+  {
+    "company" : "democompany",
+    "project" : "democompany-patterns",
+    "id" : "Process Event V1 · Init Worker",
+    "operationId" : "Init Worker",
+    "tag" : "Process Event V1",
+    "path" : "/worker/democompany-patterns-processEventV1",
+    "topic" : "democompany-patterns-processEventV1",
+    "summary" : "Init Worker"
   }
 ]

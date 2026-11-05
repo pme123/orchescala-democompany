@@ -820,7 +820,7 @@
       "id" : "democompany-patterns-identityV1-CheckIdentity",
       "name" : "CheckIdentity",
       "group" : "democompany-patterns",
-      "description" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.",
+      "description" : "Identität prüfen - hängt den Benutzernamen der Identität des Prozesses an `checkedUsernames` an.",
       "topic" : "democompany-patterns-identityV1-CheckIdentity",
       "kind" : "service",
       "inputs" : [
@@ -845,7 +845,7 @@
         {
           "name" : "identityChecked",
           "expression" : "= identityChecked",
-          "description" : "Der Service wurde mit der (geprüften) Identität des Prozesses aufgerufen.",
+          "description" : "Die Identität des Prozesses wurde geprüft.",
           "required" : true
         },
         {
@@ -885,6 +885,252 @@
         {
           "name" : "greetingMessage",
           "expression" : "= greetingMessage",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-patterns-processEventV1",
+      "name" : "democompany-patterns-processEventV1",
+      "group" : "democompany-patterns",
+      "description" : "Dummy-Event-Prozess für das Pattern «Prozess-Event senden»: nimmt das Event entgegen und endet mit",
+      "kind" : "call",
+      "calledProcess" : "democompany-patterns-processEventV1",
+      "inputs" : [
+        {
+          "name" : "eventKey",
+          "expression" : "= eventKey",
+          "description" : "Was passiert ist, z. B. `started`, `finished`.",
+          "required" : true
+        },
+        {
+          "name" : "processDefinitionKey",
+          "expression" : "= processDefinitionKey",
+          "description" : "Die ID des Prozesses, der das Event meldet.",
+          "required" : true
+        },
+        {
+          "name" : "processInstanceId",
+          "expression" : "= processInstanceId",
+          "description" : "Die Instanz des Prozesses, der das Event meldet.",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "processStatus",
+          "expression" : "= processStatus",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-patterns-processStatusV1",
+      "name" : "democompany-patterns-processStatusV1",
+      "group" : "democompany-patterns",
+      "description" : "Beispiel für das Pattern «Prozess-Status am Ende»: jedes Ende setzt `processStatus` -",
+      "kind" : "call",
+      "calledProcess" : "democompany-patterns-processStatusV1",
+      "inputs" : [
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "description" : "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "required" : true
+        },
+        {
+          "name" : "approved",
+          "expression" : "= approved",
+          "description" : "Ist der Antrag bewilligt? Ja: Ende «succeeded», nein: Ende «canceled».",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "processStatus",
+          "expression" : "= processStatus",
+          "description" : "Wie der Prozess ausgegangen ist - gesetzt vom Ende, an dem er angekommen ist.",
+          "required" : true
+        },
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "required" : true
+        },
+        {
+          "name" : "approved",
+          "expression" : "= approved",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-patterns-propagateMocksV1",
+      "name" : "democompany-patterns-propagateMocksV1",
+      "group" : "democompany-patterns",
+      "description" : "Beispiel für das Pattern «Mocks und Identität weitergeben».",
+      "kind" : "call",
+      "calledProcess" : "democompany-patterns-propagateMocksV1",
+      "inputs" : [
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "description" : "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "required" : true
+        },
+        {
+          "name" : "clientId",
+          "expression" : "= clientId",
+          "description" : "Id des Kunden - der Teilprozess lädt ihn mit dem Service `GetClientsClientId`.",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "processStatus",
+          "expression" : "= processStatus",
+          "required" : true
+        },
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "required" : true
+        },
+        {
+          "name" : "subProcessStatus",
+          "expression" : "= subProcessStatus",
+          "description" : "Der `processStatus`, mit dem der Teilprozess endete.",
+          "required" : true
+        },
+        {
+          "name" : "client",
+          "expression" : "= client",
+          "description" : "Der Kunde, den der Teilprozess geladen hat."
+        }
+      ]
+    },
+    {
+      "id" : "democompany-patterns-sendProcessEventV1",
+      "name" : "democompany-patterns-sendProcessEventV1",
+      "group" : "democompany-patterns",
+      "description" : "Beispiel für das Pattern «Prozess-Event senden»: der Prozess meldet zu Beginn `started` und am Ende",
+      "kind" : "call",
+      "calledProcess" : "democompany-patterns-sendProcessEventV1",
+      "inputs" : [
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "description" : "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "processStatus",
+          "expression" : "= processStatus",
+          "required" : true
+        },
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-patterns-stopWithErrorV1",
+      "name" : "democompany-patterns-stopWithErrorV1",
+      "group" : "democompany-patterns",
+      "description" : "Beispiel für das Pattern «Prozess mit Fehler stoppen»: ist der Kunde gesperrt (`blocked`), bleibt",
+      "kind" : "call",
+      "calledProcess" : "democompany-patterns-stopWithErrorV1",
+      "inputs" : [
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "description" : "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "required" : true
+        },
+        {
+          "name" : "blocked",
+          "expression" : "= blocked",
+          "description" : "Ist der Kunde gesperrt? Ja: der Prozess bleibt am Ende mit einem Incident stehen.",
+          "required" : true
+        },
+        {
+          "name" : "limitExceeded",
+          "expression" : "= limitExceeded",
+          "description" : "Ist das Limit überschritten? Ja: der Prozess bleibt an einem Zwischenereignis mit einem Incident stehen.",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "processStatus",
+          "expression" : "= processStatus",
+          "required" : true
+        },
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "required" : true
+        },
+        {
+          "name" : "blocked",
+          "expression" : "= blocked",
+          "required" : true
+        },
+        {
+          "name" : "limitExceeded",
+          "expression" : "= limitExceeded",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-patterns-uniqueExecutionV1",
+      "name" : "democompany-patterns-uniqueExecutionV1",
+      "group" : "democompany-patterns",
+      "description" : "Beispiel für das Pattern «Einmalige Ausführung».",
+      "kind" : "call",
+      "calledProcess" : "democompany-patterns-uniqueExecutionV1",
+      "inputs" : [
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "description" : "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "processStatus",
+          "expression" : "= processStatus",
+          "required" : true
+        },
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "required" : true
+        },
+        {
+          "name" : "alreadyRunning",
+          "expression" : "= alreadyRunning",
+          "description" : "Kam die Start-Nachricht ein zweites Mal, während der Prozess lief?",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-patterns.signal.uniqueExecutionV1",
+      "name" : "uniqueExecutionV1",
+      "group" : "democompany-patterns",
+      "kind" : "send",
+      "inputs" : [
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "description" : "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
           "required" : true
         }
       ]
@@ -932,6 +1178,26 @@
           "name" : "closed",
           "expression" : "= closed",
           "description" : "Antrag abgeschlossen?",
+          "required" : true
+        }
+      ]
+    },
+    {
+      "id" : "democompany-patterns.userTask.EditRequestUT",
+      "name" : "EditRequestUT",
+      "group" : "democompany-patterns",
+      "kind" : "user",
+      "inputs" : [
+        {
+          "name" : "customerName",
+          "expression" : "= customerName",
+          "required" : true
+        }
+      ],
+      "outputs" : [
+        {
+          "name" : "isOk",
+          "expression" : "= isOk",
           "required" : true
         }
       ]
@@ -3189,9 +3455,8 @@
         }
       ],
       "topicName" : "democompany-patterns-identityV1-CheckIdentity",
-      "dsl" : "ServiceTask",
-      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.",
-      "ownerPath" : "GET: identity"
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Identität prüfen - hängt den Benutzernamen der Identität des Prozesses an `checkedUsernames` an."
     },
     {
       "id" : "democompany.patterns.domain.identity.v1.CheckIdentity.Out",
@@ -3206,7 +3471,7 @@
           "name" : "identityChecked",
           "type" : "Boolean",
           "default" : "true",
-          "description" : "Der Service wurde mit der (geprüften) Identität des Prozesses aufgerufen.",
+          "description" : "Die Identität des Prozesses wurde geprüft.",
           "example" : "true"
         },
         {
@@ -3218,37 +3483,8 @@
         }
       ],
       "topicName" : "democompany-patterns-identityV1-CheckIdentity",
-      "dsl" : "ServiceTask",
-      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.",
-      "ownerPath" : "GET: identity"
-    },
-    {
-      "id" : "democompany.patterns.domain.identity.v1.CheckIdentity.ServiceIn",
-      "name" : "CheckIdentity.ServiceIn",
-      "pkg" : "democompany.patterns.domain.identity.v1",
-      "kind" : "alias",
-      "owner" : "CheckIdentity",
-      "importPath" : "democompany.patterns.domain.identity.v1.CheckIdentity",
-      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala",
-      "target" : "NoInput",
-      "topicName" : "democompany-patterns-identityV1-CheckIdentity",
-      "dsl" : "ServiceTask",
-      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.",
-      "ownerPath" : "GET: identity"
-    },
-    {
-      "id" : "democompany.patterns.domain.identity.v1.CheckIdentity.ServiceOut",
-      "name" : "CheckIdentity.ServiceOut",
-      "pkg" : "democompany.patterns.domain.identity.v1",
-      "kind" : "alias",
-      "owner" : "CheckIdentity",
-      "importPath" : "democompany.patterns.domain.identity.v1.CheckIdentity",
-      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala",
-      "target" : "NoOutput",
-      "topicName" : "democompany-patterns-identityV1-CheckIdentity",
-      "dsl" : "ServiceTask",
-      "ownerDescr" : "Identität prüfen - ein Service-Aufruf mit der Identität des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.",
-      "ownerPath" : "GET: identity"
+      "dsl" : "CustomTask",
+      "ownerDescr" : "Identität prüfen - hängt den Benutzernamen der Identität des Prozesses an `checkedUsernames` an."
     },
     {
       "id" : "democompany.patterns.domain.identity.v1.CloseRequestUT.In",
@@ -3456,6 +3692,57 @@
       "ownerDescr" : "Beispiel für das Pattern «Init Process»: der erste Schritt ist ein Service-Task mit der Prozess-ID als Topic.\nDer InitWorker prüft das In, setzt die Vorgaben aus dem InConfig und liefert gemockte Ausgaben -\nist der Prozess gemockt, endet er über den Pfad `output-mocked` mit `processStatus = output-mocked`."
     },
     {
+      "id" : "democompany.patterns.domain.processEvent.v1.ProcessEvent.In",
+      "name" : "ProcessEvent.In",
+      "pkg" : "democompany.patterns.domain.processEvent.v1",
+      "kind" : "case",
+      "owner" : "ProcessEvent",
+      "importPath" : "democompany.patterns.domain.processEvent.v1.ProcessEvent",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/processEvent/v1/ProcessEvent.scala",
+      "fields" : [
+        {
+          "name" : "eventKey",
+          "type" : "String",
+          "description" : "Was passiert ist, z. B. `started`, `finished`.",
+          "example" : "\"started\""
+        },
+        {
+          "name" : "processDefinitionKey",
+          "type" : "String",
+          "description" : "Die ID des Prozesses, der das Event meldet.",
+          "example" : "\"democompany-patterns-sendProcessEventV1\""
+        },
+        {
+          "name" : "processInstanceId",
+          "type" : "String",
+          "description" : "Die Instanz des Prozesses, der das Event meldet.",
+          "example" : "\"4711\""
+        }
+      ],
+      "processName" : "democompany-patterns-processEventV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Dummy-Event-Prozess für das Pattern «Prozess-Event senden»: nimmt das Event entgegen und endet mit\n`succeeded`. Ein echter Event-Prozess würde es z. B. einem Fremdsystem melden. Die Eingaben sind\ndie, die das Pattern mitgibt; zurück gibt er nichts."
+    },
+    {
+      "id" : "democompany.patterns.domain.processEvent.v1.ProcessEvent.Out",
+      "name" : "ProcessEvent.Out",
+      "pkg" : "democompany.patterns.domain.processEvent.v1",
+      "kind" : "case",
+      "owner" : "ProcessEvent",
+      "importPath" : "democompany.patterns.domain.processEvent.v1.ProcessEvent",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/processEvent/v1/ProcessEvent.scala",
+      "fields" : [
+        {
+          "name" : "processStatus",
+          "type" : "ProcessStatus",
+          "example" : "ProcessStatus.succeeded"
+        }
+      ],
+      "processName" : "democompany-patterns-processEventV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Dummy-Event-Prozess für das Pattern «Prozess-Event senden»: nimmt das Event entgegen und endet mit\n`succeeded`. Ein echter Event-Prozess würde es z. B. einem Fremdsystem melden. Die Eingaben sind\ndie, die das Pattern mitgibt; zurück gibt er nichts."
+    },
+    {
       "id" : "democompany.patterns.domain.processStatus.v1.ProcessStatus.In",
       "name" : "ProcessStatus.In",
       "pkg" : "democompany.patterns.domain.processStatus.v1",
@@ -3476,84 +3763,465 @@
       "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
     },
     {
+      "id" : "democompany.patterns.domain.processStatus.v1.ProcessStatusExample.In",
+      "name" : "ProcessStatusExample.In",
+      "pkg" : "democompany.patterns.domain.processStatus.v1",
+      "kind" : "case",
+      "owner" : "ProcessStatusExample",
+      "importPath" : "democompany.patterns.domain.processStatus.v1.ProcessStatusExample",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/processStatus/v1/ProcessStatusExample.scala",
+      "fields" : [
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "description" : "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "example" : "\"Peter Muster\""
+        },
+        {
+          "name" : "approved",
+          "type" : "Boolean",
+          "default" : "true",
+          "description" : "Ist der Antrag bewilligt? Ja: Ende «succeeded», nein: Ende «canceled».",
+          "example" : "true"
+        }
+      ],
+      "processName" : "democompany-patterns-processStatusV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Prozess-Status am Ende»: jedes Ende setzt `processStatus` -\nso sieht der Aufrufer (und die Simulation), wie der Prozess ausgegangen ist.\nIst der Antrag bewilligt (`approved`), endet der Prozess mit `succeeded`, sonst mit `canceled`."
+    },
+    {
+      "id" : "democompany.patterns.domain.processStatus.v1.ProcessStatusExample.Out",
+      "name" : "ProcessStatusExample.Out",
+      "pkg" : "democompany.patterns.domain.processStatus.v1",
+      "kind" : "case",
+      "owner" : "ProcessStatusExample",
+      "importPath" : "democompany.patterns.domain.processStatus.v1.ProcessStatusExample",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/processStatus/v1/ProcessStatusExample.scala",
+      "fields" : [
+        {
+          "name" : "processStatus",
+          "type" : "ProcessStatus",
+          "description" : "Wie der Prozess ausgegangen ist - gesetzt vom Ende, an dem er angekommen ist.",
+          "example" : "ProcessStatus.succeeded"
+        },
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "example" : "In.example.customerName"
+        },
+        {
+          "name" : "approved",
+          "type" : "Boolean",
+          "default" : "true",
+          "example" : "true"
+        }
+      ],
+      "processName" : "democompany-patterns-processStatusV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Prozess-Status am Ende»: jedes Ende setzt `processStatus` -\nso sieht der Aufrufer (und die Simulation), wie der Prozess ausgegangen ist.\nIst der Antrag bewilligt (`approved`), endet der Prozess mit `succeeded`, sonst mit `canceled`."
+    },
+    {
       "id" : "democompany.patterns.domain.propagateMocks.v1.PropagateMocks.In",
       "name" : "PropagateMocks.In",
       "pkg" : "democompany.patterns.domain.propagateMocks.v1",
-      "kind" : "member",
+      "kind" : "case",
       "owner" : "PropagateMocks",
       "importPath" : "democompany.patterns.domain.propagateMocks.v1.PropagateMocks",
-      "descr" : "Prozess «propagateMocksV1» aus democompany-patterns",
-      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocks.scala",
+      "imports" : [
+        "democompany.services.domain.clients.v1.defaultClientId",
+        "democompany.services.domain.clients.v1.schema.Client"
+      ],
+      "fields" : [
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "description" : "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "example" : "\"Peter Muster\""
+        },
+        {
+          "name" : "clientId",
+          "type" : "Long",
+          "description" : "Id des Kunden - der Teilprozess lädt ihn mit dem Service `GetClientsClientId`.",
+          "example" : "defaultClientId"
+        }
+      ],
+      "processName" : "democompany-patterns-propagateMocksV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Mocks und Identität weitergeben».\nDie Call Activity «Teilprozess aufrufen» gibt `_servicesMocked`, `_mockedWorkers` und\n`_identityCorrelation` an den Teilprozess weiter - so greifen Mocks und Identität auch dort."
     },
     {
       "id" : "democompany.patterns.domain.propagateMocks.v1.PropagateMocks.Out",
       "name" : "PropagateMocks.Out",
       "pkg" : "democompany.patterns.domain.propagateMocks.v1",
-      "kind" : "member",
+      "kind" : "case",
       "owner" : "PropagateMocks",
       "importPath" : "democompany.patterns.domain.propagateMocks.v1.PropagateMocks",
-      "descr" : "Prozess «propagateMocksV1» aus democompany-patterns",
-      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocks.scala",
+      "imports" : [
+        "democompany.services.domain.clients.v1.defaultClientId",
+        "democompany.services.domain.clients.v1.schema.Client"
+      ],
+      "fields" : [
+        {
+          "name" : "processStatus",
+          "type" : "ProcessStatus",
+          "example" : "ProcessStatus.succeeded"
+        },
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "example" : "In.example.customerName"
+        },
+        {
+          "name" : "subProcessStatus",
+          "type" : "ProcessStatus",
+          "description" : "Der `processStatus`, mit dem der Teilprozess endete.",
+          "example" : "PropagateMocksSub.Out.example.processStatus"
+        },
+        {
+          "name" : "client",
+          "type" : "Option[Client]",
+          "default" : "None",
+          "description" : "Der Kunde, den der Teilprozess geladen hat.",
+          "example" : "Some(PropagateMocksSub.Out.example.client)"
+        }
+      ],
+      "processName" : "democompany-patterns-propagateMocksV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Mocks und Identität weitergeben».\nDie Call Activity «Teilprozess aufrufen» gibt `_servicesMocked`, `_mockedWorkers` und\n`_identityCorrelation` an den Teilprozess weiter - so greifen Mocks und Identität auch dort."
     },
     {
-      "id" : "democompany.patterns.domain.propagateMocksSub.v1.PropagateMocksSub.In",
+      "id" : "democompany.patterns.domain.propagateMocks.v1.PropagateMocksSub.In",
       "name" : "PropagateMocksSub.In",
-      "pkg" : "democompany.patterns.domain.propagateMocksSub.v1",
-      "kind" : "member",
+      "pkg" : "democompany.patterns.domain.propagateMocks.v1",
+      "kind" : "case",
       "owner" : "PropagateMocksSub",
-      "importPath" : "democompany.patterns.domain.propagateMocksSub.v1.PropagateMocksSub",
-      "descr" : "Prozess «propagateMocksSubV1» aus democompany-patterns",
-      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+      "importPath" : "democompany.patterns.domain.propagateMocks.v1.PropagateMocksSub",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocksSub.scala",
+      "imports" : [
+        "democompany.services.domain.clients.v1.GetClientsClientId",
+        "democompany.services.domain.clients.v1.schema.Client"
+      ],
+      "fields" : [
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "description" : "Name des Kunden - vom Aufrufer.",
+          "example" : "PropagateMocks.In.example.customerName"
+        },
+        {
+          "name" : "clientId",
+          "type" : "Long",
+          "description" : "Id des Kunden - vom Aufrufer.",
+          "example" : "PropagateMocks.In.example.clientId"
+        }
+      ],
+      "processName" : "democompany-patterns-propagateMocksSubV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Teilprozess zum Pattern «Mocks und Identität weitergeben».\n«Kunde laden» ruft den Service `GetClientsClientId` (democompany-services) auf - gemockt,\nwenn `_servicesMocked` vom Aufrufer kommt; vorher prüft der ServiceWorker die weitergegebene\n`_identityCorrelation`."
     },
     {
-      "id" : "democompany.patterns.domain.propagateMocksSub.v1.PropagateMocksSub.Out",
+      "id" : "democompany.patterns.domain.propagateMocks.v1.PropagateMocksSub.Out",
       "name" : "PropagateMocksSub.Out",
-      "pkg" : "democompany.patterns.domain.propagateMocksSub.v1",
-      "kind" : "member",
+      "pkg" : "democompany.patterns.domain.propagateMocks.v1",
+      "kind" : "case",
       "owner" : "PropagateMocksSub",
-      "importPath" : "democompany.patterns.domain.propagateMocksSub.v1.PropagateMocksSub",
-      "descr" : "Prozess «propagateMocksSubV1» aus democompany-patterns",
-      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+      "importPath" : "democompany.patterns.domain.propagateMocks.v1.PropagateMocksSub",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocksSub.scala",
+      "imports" : [
+        "democompany.services.domain.clients.v1.GetClientsClientId",
+        "democompany.services.domain.clients.v1.schema.Client"
+      ],
+      "fields" : [
+        {
+          "name" : "processStatus",
+          "type" : "ProcessStatus",
+          "example" : "ProcessStatus.succeeded"
+        },
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "example" : "In.example.customerName"
+        },
+        {
+          "name" : "client",
+          "type" : "Client",
+          "description" : "Der Kunde - aus «Kunde laden».",
+          "example" : "GetClientsClientId.Out.example.client"
+        }
+      ],
+      "processName" : "democompany-patterns-propagateMocksSubV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Teilprozess zum Pattern «Mocks und Identität weitergeben».\n«Kunde laden» ruft den Service `GetClientsClientId` (democompany-services) auf - gemockt,\nwenn `_servicesMocked` vom Aufrufer kommt; vorher prüft der ServiceWorker die weitergegebene\n`_identityCorrelation`."
+    },
+    {
+      "id" : "democompany.patterns.domain.sendProcessEvent.v1.SendProcessEvent.In",
+      "name" : "SendProcessEvent.In",
+      "pkg" : "democompany.patterns.domain.sendProcessEvent.v1",
+      "kind" : "case",
+      "owner" : "SendProcessEvent",
+      "importPath" : "democompany.patterns.domain.sendProcessEvent.v1.SendProcessEvent",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/sendProcessEvent/v1/SendProcessEvent.scala",
+      "fields" : [
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "description" : "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "example" : "\"Peter Muster\""
+        }
+      ],
+      "processName" : "democompany-patterns-sendProcessEventV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Prozess-Event senden»: der Prozess meldet zu Beginn `started` und am Ende\n`finished` an den Event-Prozess `democompany-patterns-processEventV1` (ein Dummy) - je eine Call\nActivity mit dem Event, der Prozess-ID und der Instanz. Danach endet er mit `succeeded`."
+    },
+    {
+      "id" : "democompany.patterns.domain.sendProcessEvent.v1.SendProcessEvent.Out",
+      "name" : "SendProcessEvent.Out",
+      "pkg" : "democompany.patterns.domain.sendProcessEvent.v1",
+      "kind" : "case",
+      "owner" : "SendProcessEvent",
+      "importPath" : "democompany.patterns.domain.sendProcessEvent.v1.SendProcessEvent",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/sendProcessEvent/v1/SendProcessEvent.scala",
+      "fields" : [
+        {
+          "name" : "processStatus",
+          "type" : "ProcessStatus",
+          "example" : "ProcessStatus.succeeded"
+        },
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "example" : "In.example.customerName"
+        }
+      ],
+      "processName" : "democompany-patterns-sendProcessEventV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Prozess-Event senden»: der Prozess meldet zu Beginn `started` und am Ende\n`finished` an den Event-Prozess `democompany-patterns-processEventV1` (ein Dummy) - je eine Call\nActivity mit dem Event, der Prozess-ID und der Instanz. Danach endet er mit `succeeded`."
     },
     {
       "id" : "democompany.patterns.domain.stopWithError.v1.StopWithError.In",
       "name" : "StopWithError.In",
       "pkg" : "democompany.patterns.domain.stopWithError.v1",
-      "kind" : "member",
+      "kind" : "case",
       "owner" : "StopWithError",
       "importPath" : "democompany.patterns.domain.stopWithError.v1.StopWithError",
-      "descr" : "Prozess «stopWithErrorV1» aus democompany-patterns",
-      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/stopWithError/v1/StopWithError.scala",
+      "fields" : [
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "description" : "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "example" : "\"Peter Muster\""
+        },
+        {
+          "name" : "blocked",
+          "type" : "Boolean",
+          "default" : "false",
+          "description" : "Ist der Kunde gesperrt? Ja: der Prozess bleibt am Ende mit einem Incident stehen.",
+          "example" : "false"
+        },
+        {
+          "name" : "limitExceeded",
+          "type" : "Boolean",
+          "default" : "false",
+          "description" : "Ist das Limit überschritten? Ja: der Prozess bleibt an einem Zwischenereignis mit einem Incident stehen.",
+          "example" : "false"
+        }
+      ],
+      "processName" : "democompany-patterns-stopWithErrorV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Prozess mit Fehler stoppen»: ist der Kunde gesperrt (`blocked`), bleibt\nder Prozess am Ende mit einem Incident stehen - Meldung «Kunde <Name> ist gesperrt.». Ist das Limit\nüberschritten (`limitExceeded`), bleibt er an einem Zwischenereignis stehen - «Limit von <Name>\nüberschritten.»; schieben DevOps ihn danach weiter, endet er mit `succeeded`. Sonst endet er gleich\nmit `succeeded`."
     },
     {
       "id" : "democompany.patterns.domain.stopWithError.v1.StopWithError.Out",
       "name" : "StopWithError.Out",
       "pkg" : "democompany.patterns.domain.stopWithError.v1",
-      "kind" : "member",
+      "kind" : "case",
       "owner" : "StopWithError",
       "importPath" : "democompany.patterns.domain.stopWithError.v1.StopWithError",
-      "descr" : "Prozess «stopWithErrorV1» aus democompany-patterns",
-      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/stopWithError/v1/StopWithError.scala",
+      "fields" : [
+        {
+          "name" : "processStatus",
+          "type" : "ProcessStatus",
+          "example" : "ProcessStatus.succeeded"
+        },
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "example" : "In.example.customerName"
+        },
+        {
+          "name" : "blocked",
+          "type" : "Boolean",
+          "default" : "false",
+          "example" : "false"
+        },
+        {
+          "name" : "limitExceeded",
+          "type" : "Boolean",
+          "default" : "false",
+          "example" : "false"
+        }
+      ],
+      "processName" : "democompany-patterns-stopWithErrorV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Prozess mit Fehler stoppen»: ist der Kunde gesperrt (`blocked`), bleibt\nder Prozess am Ende mit einem Incident stehen - Meldung «Kunde <Name> ist gesperrt.». Ist das Limit\nüberschritten (`limitExceeded`), bleibt er an einem Zwischenereignis stehen - «Limit von <Name>\nüberschritten.»; schieben DevOps ihn danach weiter, endet er mit `succeeded`. Sonst endet er gleich\nmit `succeeded`."
+    },
+    {
+      "id" : "democompany.patterns.domain.uniqueExecution.v1.EditRequestUT.In",
+      "name" : "EditRequestUT.In",
+      "pkg" : "democompany.patterns.domain.uniqueExecution.v1",
+      "kind" : "case",
+      "owner" : "EditRequestUT",
+      "importPath" : "democompany.patterns.domain.uniqueExecution.v1.EditRequestUT",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/EditRequestUT.scala",
+      "fields" : [
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "example" : "UniqueExecution.In.example.customerName"
+        }
+      ],
+      "dsl" : "UserTask",
+      "keyName" : "name",
+      "key" : "EditRequestUT",
+      "ownerDescr" : "Antrag bearbeiten - solange die Aufgabe offen ist, läuft der Prozess; ein zweiter Start landet hier."
+    },
+    {
+      "id" : "democompany.patterns.domain.uniqueExecution.v1.EditRequestUT.Out",
+      "name" : "EditRequestUT.Out",
+      "pkg" : "democompany.patterns.domain.uniqueExecution.v1",
+      "kind" : "case",
+      "owner" : "EditRequestUT",
+      "importPath" : "democompany.patterns.domain.uniqueExecution.v1.EditRequestUT",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/EditRequestUT.scala",
+      "fields" : [
+        {
+          "name" : "isOk",
+          "type" : "Boolean",
+          "example" : "true"
+        }
+      ],
+      "dsl" : "UserTask",
+      "keyName" : "name",
+      "key" : "EditRequestUT",
+      "ownerDescr" : "Antrag bearbeiten - solange die Aufgabe offen ist, läuft der Prozess; ein zweiter Start landet hier."
+    },
+    {
+      "id" : "democompany.patterns.domain.uniqueExecution.v1.StartAgainME.In",
+      "name" : "StartAgainME.In",
+      "pkg" : "democompany.patterns.domain.uniqueExecution.v1",
+      "kind" : "member",
+      "owner" : "StartAgainME",
+      "importPath" : "democompany.patterns.domain.uniqueExecution.v1.StartAgainME",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/StartAgainME.scala",
+      "dsl" : "MessageEvent",
+      "keyName" : "messageName",
+      "key" : "UniqueExecution.processName",
+      "ownerDescr" : "Dieselbe Start-Nachricht ein zweites Mal - mit dem `businessKey` der laufenden Instanz."
+    },
+    {
+      "id" : "democompany.patterns.domain.uniqueExecution.v1.StartAgainME.Out",
+      "name" : "StartAgainME.Out",
+      "pkg" : "democompany.patterns.domain.uniqueExecution.v1",
+      "kind" : "member",
+      "owner" : "StartAgainME",
+      "importPath" : "democompany.patterns.domain.uniqueExecution.v1.StartAgainME",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/StartAgainME.scala",
+      "dsl" : "MessageEvent",
+      "keyName" : "messageName",
+      "key" : "UniqueExecution.processName",
+      "ownerDescr" : "Dieselbe Start-Nachricht ein zweites Mal - mit dem `businessKey` der laufenden Instanz."
     },
     {
       "id" : "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution.In",
       "name" : "UniqueExecution.In",
       "pkg" : "democompany.patterns.domain.uniqueExecution.v1",
-      "kind" : "member",
+      "kind" : "case",
       "owner" : "UniqueExecution",
       "importPath" : "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution",
-      "descr" : "Prozess «uniqueExecutionV1» aus democompany-patterns",
-      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/UniqueExecution.scala",
+      "fields" : [
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "description" : "Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker `validation-failed`).",
+          "example" : "\"Peter Muster\""
+        },
+        {
+          "name" : "inConfig",
+          "type" : "Option[InConfig]",
+          "default" : "None"
+        }
+      ],
+      "processName" : "democompany-patterns-uniqueExecutionV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Einmalige Ausführung».\nDer Prozess startet über eine Nachricht (Name = Prozess-ID) mit einem `businessKey`. Solange er\nläuft, fängt ein nicht unterbrechender Ereignis-Subprozess dieselbe Nachricht - ein zweiter Start\nmit demselben `businessKey` landet in der laufenden Instanz (`alreadyRunning = true`) statt eine\nzweite zu starten."
+    },
+    {
+      "id" : "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution.InConfig",
+      "name" : "UniqueExecution.InConfig",
+      "pkg" : "democompany.patterns.domain.uniqueExecution.v1",
+      "kind" : "case",
+      "owner" : "UniqueExecution",
+      "importPath" : "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/UniqueExecution.scala",
+      "processName" : "democompany-patterns-uniqueExecutionV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Einmalige Ausführung».\nDer Prozess startet über eine Nachricht (Name = Prozess-ID) mit einem `businessKey`. Solange er\nläuft, fängt ein nicht unterbrechender Ereignis-Subprozess dieselbe Nachricht - ein zweiter Start\nmit demselben `businessKey` landet in der laufenden Instanz (`alreadyRunning = true`) statt eine\nzweite zu starten."
+    },
+    {
+      "id" : "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution.InitIn",
+      "name" : "UniqueExecution.InitIn",
+      "pkg" : "democompany.patterns.domain.uniqueExecution.v1",
+      "kind" : "case",
+      "owner" : "UniqueExecution",
+      "importPath" : "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution",
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/UniqueExecution.scala",
+      "fields" : [
+        {
+          "name" : "alreadyRunning",
+          "type" : "Boolean",
+          "default" : "false",
+          "description" : "`false` beim Start - der Ereignis-Subprozess «Prozess läuft schon» setzt ihn auf `true`.",
+          "example" : "false"
+        }
+      ],
+      "processName" : "democompany-patterns-uniqueExecutionV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Einmalige Ausführung».\nDer Prozess startet über eine Nachricht (Name = Prozess-ID) mit einem `businessKey`. Solange er\nläuft, fängt ein nicht unterbrechender Ereignis-Subprozess dieselbe Nachricht - ein zweiter Start\nmit demselben `businessKey` landet in der laufenden Instanz (`alreadyRunning = true`) statt eine\nzweite zu starten."
     },
     {
       "id" : "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution.Out",
       "name" : "UniqueExecution.Out",
       "pkg" : "democompany.patterns.domain.uniqueExecution.v1",
-      "kind" : "member",
+      "kind" : "case",
       "owner" : "UniqueExecution",
       "importPath" : "democompany.patterns.domain.uniqueExecution.v1.UniqueExecution",
-      "descr" : "Prozess «uniqueExecutionV1» aus democompany-patterns",
-      "source" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala/00-docs/src/docs/catalog.md"
+      "source" : "democompany-patterns/01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/UniqueExecution.scala",
+      "fields" : [
+        {
+          "name" : "processStatus",
+          "type" : "ProcessStatus",
+          "example" : "ProcessStatus.succeeded"
+        },
+        {
+          "name" : "customerName",
+          "type" : "String",
+          "example" : "In.example.customerName"
+        },
+        {
+          "name" : "alreadyRunning",
+          "type" : "Boolean",
+          "description" : "Kam die Start-Nachricht ein zweites Mal, während der Prozess lief?",
+          "example" : "false"
+        }
+      ],
+      "processName" : "democompany-patterns-uniqueExecutionV1",
+      "dsl" : "Process",
+      "ownerDescr" : "Beispiel für das Pattern «Einmalige Ausführung».\nDer Prozess startet über eine Nachricht (Name = Prozess-ID) mit einem `businessKey`. Solange er\nläuft, fängt ein nicht unterbrechender Ereignis-Subprozess dieselbe Nachricht - ein zweiter Start\nmit demselben `businessKey` landet in der laufenden Instanz (`alreadyRunning = true`) statt eine\nzweite zu starten."
     },
     {
       "id" : "democompany.services.domain.clients.v1.GetClientsClientId.In",
@@ -3869,7 +4537,7 @@
       "name" : "democompany-orchescala",
       "path" : "/Users/pme/dev/Github/pme123/orchescala-democompany/democompany-orchescala",
       "types" : 3,
-      "scannedAt" : "2026-11-03T09:33:18.879Z"
+      "scannedAt" : "2026-11-05T15:23:28.954Z"
     },
     {
       "id" : "p-democompany-cards",
@@ -3879,7 +4547,7 @@
       "dependencies" : [
         "democompany-services"
       ],
-      "scannedAt" : "2026-11-03T09:33:18.886Z"
+      "scannedAt" : "2026-11-05T15:23:28.959Z"
     },
     {
       "id" : "p-democompany-customer",
@@ -3889,16 +4557,17 @@
       "dependencies" : [
         "democompany-services"
       ],
-      "scannedAt" : "2026-11-03T09:33:18.895Z"
+      "scannedAt" : "2026-11-05T15:23:28.963Z"
     },
     {
       "id" : "p-democompany-patterns",
       "name" : "democompany-patterns",
       "path" : "/Users/pme/dev/Github/pme123/git-temp/democompany-patterns",
-      "types" : 14,
+      "types" : 32,
       "dependencies" : [
+        "democompany-services"
       ],
-      "scannedAt" : "2026-11-03T09:33:18.901Z"
+      "scannedAt" : "2026-11-05T15:23:28.966Z"
     },
     {
       "id" : "p-democompany-services",
@@ -3907,7 +4576,7 @@
       "types" : 11,
       "dependencies" : [
       ],
-      "scannedAt" : "2026-11-03T09:33:18.904Z"
+      "scannedAt" : "2026-11-05T15:23:28.968Z"
     }
   ],
   "projectColors" : {

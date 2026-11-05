@@ -1,0 +1,124 @@
+{
+  "kind": "serviceCollection",
+  "version": 1,
+  "slug": "z9nai-finnovaneois-integration-service-clientmaster-partner",
+  "title": "Integration Service ClientMaster Partner",
+  "project": "z9nai-finnovaNeoIs",
+  "api": "clientMasterPartner",
+  "apiVersion": 1,
+  "status": "draft",
+  "createdAt": "2026-11-04T07:49:11+01:00",
+  "updatedAt": "2026-11-05T12:20:36+01:00",
+  "types": [
+    {
+      "id": "e-d99a04acd9",
+      "name": "PartnerClientMainType1",
+      "kind": "enum",
+      "status": "draft",
+      "description": "Main type of the client for basic categorisation of various client types\n\n@since 10.2019\nbuf:lint:ignore ENUM_ZERO_VALUE_SUFFIX\n\nsource: KDQE_HTYP_1 NUMBER(1)\n\n - CLIENT_MAIN_TYPE1_UNSPECIFIED: Unspecified\n - CLIENT_MAIN_TYPE1_NATURAL_PERSON: Private individual as natural person\n\nsource: PRIVATE_EINZELPERSON\n - CLIENT_MAIN_TYPE1_MULTIPLE_NATURAL_PERSONS: Multiple private individuals in a joint client relationship\n\nsource: MEHRERE_PRIVATPERSONEN\n - CLIENT_MAIN_TYPE1_ORGANISATION: Companies and other organisational entities\n\nsource: FIRMEN_UND_SONSTIGE",
+      "values": [
+        {
+          "name": "CLIENT_MAIN_TYPE1_UNSPECIFIED"
+        },
+        {
+          "name": "CLIENT_MAIN_TYPE1_NATURAL_PERSON"
+        },
+        {
+          "name": "CLIENT_MAIN_TYPE1_MULTIPLE_NATURAL_PERSONS"
+        },
+        {
+          "name": "CLIENT_MAIN_TYPE1_ORGANISATION"
+        }
+      ]
+    },
+    {
+      "id": "t-70c8441a8f",
+      "name": "In",
+      "kind": "case",
+      "status": "draft",
+      "interactionId": "svc-a86ea23b75",
+      "fields": [
+        {
+          "id": "f-15612a7645",
+          "name": "clientKey",
+          "type": "String",
+          "optional": true,
+          "description": "Client key\n\nMax length: 22 characters\n\nsource: P_KdLnr NUMBER(22)"
+        },
+        {
+          "id": "f-31d94f3f7f",
+          "name": "readFromFcs",
+          "type": "Boolean",
+          "optional": true,
+          "description": "If set to true, the data is read from FCS (consistent). If set to false, the data might be read from an eventually consistent source."
+        }
+      ]
+    },
+    {
+      "id": "t-c57f87f328",
+      "name": "Out",
+      "kind": "case",
+      "status": "draft",
+      "interactionId": "svc-a86ea23b75",
+      "fields": [
+        {
+          "id": "f-92b73ae0bd",
+          "name": "clientMainType",
+          "type": "e-d99a04acd9"
+        }
+      ],
+      "description": ""
+    }
+  ],
+  "services": [
+    {
+      "id": "svc-a86ea23b75",
+      "name": "GetPartnerGetClientMainTypeByClient1",
+      "api": "clientMasterPartner",
+      "apiVersion": 1,
+      "status": "draft",
+      "description": "Determines the main client type (ClientMainType1) of a client so that the correct interface for reading the client data can be called.\nClientMainType1.NATURAL_PERSON -> CreateNaturalPerson ClientMainType1.MULTIPLE_NATURAL_PERSONS -> CreateMultipleNaturalPerson ClientMainType1.ORGANISATION -> CreateOrganisation\n\nError handling:\nThis method may return the following gRPC error codes with additional error details:\n\n- INVALID_ARGUMENT\n  * common.finnova.com.ValidationFailed:\n    The transmitted data does not conform to the validation requirements.\n    The validation of the input parameters for determining the main client type has failed. The parameter 'clientKey' is invalid or missing.\n \n@since 5.2025\n\nsource: F_GetKdArtByKunde_1 returns return NUMBER(1)",
+      "method": "GET",
+      "path": "/api/ClientMaster/v1/Partner/GetClientMainTypeByClient1",
+      "operationId": "Partner_GetClientMainTypeByClient1",
+      "params": [
+        {
+          "name": "clientKey",
+          "in": "query",
+          "type": "String",
+          "description": "Client key\n\nMax length: 22 characters\n\nsource: P_KdLnr NUMBER(22)",
+          "expression": "= clientKey"
+        },
+        {
+          "name": "readFromFcs",
+          "in": "query",
+          "type": "Boolean",
+          "description": "If set to true, the data is read from FCS (consistent). If set to false, the data might be read from an eventually consistent source.",
+          "expression": "= readFromFcs"
+        }
+      ],
+      "serviceOut": {
+        "type": "t-7ad4ba74c9"
+      },
+      "responseStatus": 200,
+      "inTypeId": "t-70c8441a8f",
+      "outTypeId": "t-c57f87f328",
+      "outMappings": [
+        {
+          "name": "partnerGetClientMainTypeByClient1Response",
+          "expression": "= body.clientMainTypeCode"
+        },
+        {
+          "name": "clientMainType",
+          "expression": "= body.clientMainTypeCode"
+        }
+      ]
+    }
+  ],
+  "source": {
+    "title": "Integration Service ClientMaster - Partner",
+    "version": "261013",
+    "file": "partner.swagger.json"
+  },
+  "serviceLabel": "Integration Service ClientMaster - Partner"
+}

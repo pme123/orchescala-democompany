@@ -33,7 +33,7 @@ flowchart TB
    style democompany-cards fill:#c8feda
 
 
-   democompany-patterns
+   democompany-patterns --> democompany-services
    click democompany-patterns href "../../democompany/democompany-patterns/OpenApi.html" "democompany-patterns API Documentation"
    style democompany-patterns fill:#dbe8fb
 
@@ -82,5 +82,5 @@ flowchart TB
 
 ## general
 - **democompany-services:** [API Doc](../democompany-services/OpenApi.html "democompany-services API Documentation") 
-- **democompany-patterns:** [API Doc](../democompany-patterns/OpenApi.html "democompany-patterns API Documentation") 
+- **democompany-patterns:** [API Doc](../democompany-patterns/OpenApi.html "democompany-patterns API Documentation") - [Dependencies](../2026-10/dependencies/democompany-patterns.html "democompany-patterns Dependencies")
 

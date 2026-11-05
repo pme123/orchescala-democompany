@@ -4,7 +4,7 @@
   "release" : {
     "tag" : "2026-10",
     "released" : true,
-    "createdDay" : "03.11.2026",
+    "createdDay" : "05.11.2026",
     "jiraUrl" : "https://yourReleasePage/versions/64209",
     "notes" : "- **Kundentermine** (democompany-customer): Termine buchen ohne Login, Bestätigung durch den Berater, Einladung als .ics - auf Operaton, mit Seiten aus orch-spec und dem Gateway als einzigem Einstieg.\n- Orchescala 0.9: Gateway mit öffentlichem Zugang, `CustomError.refused`, der Renderer der Seiten.",
     "olderReleases" : [
@@ -56,15 +56,19 @@
       "name" : "democompany-patterns",
       "group" : "general",
       "color" : "#dbe8fb",
-      "version" : "0.2.0",
-      "workerVersion" : "0.2.0",
+      "version" : "0.3.0",
+      "workerVersion" : "0.3.0",
       "apiDocUrl" : "democompany-patterns/OpenApi.html",
-      "hasDependencies" : false
+      "hasDependencies" : true
     }
   ],
   "graph" : [
     {
       "from" : "democompany-cards",
+      "to" : "democompany-services"
+    },
+    {
+      "from" : "democompany-patterns",
       "to" : "democompany-services"
     },
     {
@@ -85,6 +89,16 @@
     },
     {
       "project" : "democompany-customer",
+      "version" : "0.1",
+      "dependsOn" : [
+        {
+          "project" : "democompany-services",
+          "version" : "0.1"
+        }
+      ]
+    },
+    {
+      "project" : "democompany-patterns",
       "version" : "0.1",
       "dependsOn" : [
         {
@@ -129,7 +143,7 @@
           "previousVersion" : "0.2.0",
           "status" : "new",
           "uses" : {
-            
+            "democompany-services" : "0.1.0-SNAPSHOT"
           }
         },
         {
@@ -177,7 +191,7 @@
           "previousVersion" : "0.2.0",
           "status" : "new",
           "uses" : {
-            
+            "democompany-services" : "0.1.0-SNAPSHOT"
           }
         },
         {
@@ -316,6 +330,11 @@
         },
         {
           "kind" : "Bpmn",
+          "name" : "processEventV1",
+          "url" : "/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20processEventV1"
+        },
+        {
+          "kind" : "Bpmn",
           "name" : "processStatusV1",
           "url" : "/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20processStatusV1"
         },
@@ -328,6 +347,11 @@
           "kind" : "Bpmn",
           "name" : "propagateMocksV1",
           "url" : "/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20propagateMocksV1"
+        },
+        {
+          "kind" : "Bpmn",
+          "name" : "sendProcessEventV1",
+          "url" : "/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20sendProcessEventV1"
         },
         {
           "kind" : "Bpmn",
@@ -388,8 +412,8 @@
         },
         {
           "project" : "democompany-patterns",
-          "lines" : 143,
-          "files" : 7
+          "lines" : 164,
+          "files" : 8
         },
         {
           "project" : "democompany-services",
@@ -398,8 +422,8 @@
         }
       ],
       "total" : {
-        "lines" : 250,
-        "files" : 10
+        "lines" : 271,
+        "files" : 11
       }
     },
     {
@@ -475,8 +499,8 @@
         },
         {
           "project" : "democompany-patterns",
-          "lines" : 2138,
-          "files" : 14
+          "lines" : 2493,
+          "files" : 18
         },
         {
           "project" : "democompany-services",
@@ -485,8 +509,8 @@
         }
       ],
       "total" : {
-        "lines" : 4850,
-        "files" : 21
+        "lines" : 5205,
+        "files" : 25
       }
     },
     {
@@ -533,8 +557,8 @@
         },
         {
           "project" : "democompany-patterns",
-          "lines" : 1436,
-          "files" : 45
+          "lines" : 1681,
+          "files" : 52
         },
         {
           "project" : "democompany-services",
@@ -543,8 +567,8 @@
         }
       ],
       "total" : {
-        "lines" : 5963,
-        "files" : 159
+        "lines" : 6208,
+        "files" : 166
       }
     }
   ],

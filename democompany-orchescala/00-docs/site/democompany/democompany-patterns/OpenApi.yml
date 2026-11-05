@@ -3,8 +3,8 @@ info:
   title: Patterns
   version: 0.1.0-SNAPSHOT
   summary: "\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns - je Pattern\
-    \ ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated at 10/28/26,\
-    \ 1:52 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated at 11/3/26,\
+    \ 11:14 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -42,17 +42,18 @@ info:
     \ here: [democompany-patterns](../../dependencies/democompany-patterns.html)**\n\
     \n<details>\n<summary>PROJECT.conf</summary>\n<p>\n\n```\n\n// Project configuration\n\
     \nprojectName: democompany-patterns\nprojectVersion: 0.1.0-SNAPSHOT\nsubProjects:\
-    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n]\n\n```\n\n</p>\n\
-    </details>\n\n\nKatalog mit Beispielprozessen für die **Orchescala-Patterns**\
+    \ [\n  // subProject1\n  // subProject2\n]\ndependencies: [\n  democompany-services\n\
+    ]\n\n```\n\n</p>\n</details>\n\n\nKatalog mit Beispielprozessen für die **Orchescala-Patterns**\
     \ – kleine BPMN-Bausteine, die die\nOrch Spec in einen Prozess einfügt und wiedererkennt.\
     \ Je Pattern gibt es einen Beispielprozess\nfür Camunda 7 und Camunda 8 und eine\
     \ Simulation je Engine, die den Baustein auf einer echten Engine\ndurchspielt.\
     \ Später sollen die BPMN auch als Testdaten für die Orch Spec dienen.\n\nBis jetzt:\
-    \ **«Init Process»** und **«Identität übernehmen / zurücksetzen»**.\n\n## Init\
-    \ Process – `democompany-patterns-initProcessV1`\n\n```\nStart ─▶ [Init Process]\
-    \ ─▶ (succeeded)\n              │ output-mocked (Fehler-Boundary)\n          \
-    \    ▼\n         ⇨ output-mocked (Link-Wurf)\n\n⇨ output-mocked (Link-Ziel) ─▶\
-    \ (output-mocked)\n```\n\nDer erste Schritt des Prozesses ist ein Service-Task\
+    \ **«Init Process»**, **«Identität übernehmen / zurücksetzen»**,\n**«Mocks und\
+    \ Identität weitergeben»**, **«Einmalige Ausführung»**, **«Prozess-Status am Ende»\
+    ** und\n**«Prozess mit Fehler stoppen»**.\n\n## Init Process – `democompany-patterns-initProcessV1`\n\
+    \n```\nStart ─▶ [Init Process] ─▶ (succeeded)\n              │ output-mocked (Fehler-Boundary)\n\
+    \              ▼\n         ⇨ output-mocked (Link-Wurf)\n\n⇨ output-mocked (Link-Ziel)\
+    \ ─▶ (output-mocked)\n```\n\nDer erste Schritt des Prozesses ist ein Service-Task\
     \ mit der **Prozess-ID als Topic**. Den Task\nbearbeitet der InitWorker (`InitProcessWorker`):\n\
     \n- er **prüft das In** – ein leerer `customerName` ist ungültig (`validation-failed`),\n\
     - er **setzt die Vorgaben aus dem InConfig** – fehlt `inConfig` im In, steht danach\n\
@@ -124,24 +125,29 @@ info:
     \ (fehlt sie, bleibt die bisherige).\n- **«Identität zurücksetzen»** – ein leeres\
     \ Zwischenereignis, überall möglich:\n  `_identityCorrelation = _identityCorrelationBefore`.\n\
     \nDie Signatur bindet die Identität an die Prozessinstanz, nicht an den Namen\
-    \ der Variable – nach dem\nKopieren prüfen die Worker sie wie bisher. Das zeigt\
-    \ **«Identität prüfen»**: ein ServiceWorker nach dem\nÜbernehmen und nach dem\
-    \ Zurücksetzen. Er ist im BPMN gemockt (`_servicesMocked = true`), prüft aber\n\
-    vorher die Signatur von `_identityCorrelation` – eine ungültige lässt den Job\
-    \ scheitern. Den\nBenutzernamen dieser Identität hängt er an `checkedUsernames`\
-    \ an; das BPMN mappt ihn als Input\n`identityUsername` (C7 `${_identityCorrelation.prop(\"\
-    username\").stringValue()}`, C8\n`=_identityCorrelation.username`), denn ein ServiceWorker\
-    \ kommt selbst nicht an die Identität.\n\n | Camunda 7 | Camunda 8 |\n---|---|---|\n\
-    \ übernehmen | zwei Execution Listener (`start`) mit `execution.setVariable(...)`\
-    \ und `execution.getVariableTyped(...)` | Output-Mappings – die Quellen werden\
-    \ alle vor dem Setzen gelesen |\n zurücksetzen | ein Execution Listener | ein\
-    \ Output-Mapping |\n\n**C8:** die Output-Mappings stehen auf dem leeren Zwischenereignis\
+    \ der Variable – nach dem\nKopieren prüfen die ServiceWorker sie wie bisher. Welche\
+    \ Identität der Prozess gerade hat, zeigt\n**«Identität prüfen»**: ein CustomTask\
+    \ nach dem Übernehmen und nach dem Zurücksetzen. Er hängt den\nBenutzernamen dieser\
+    \ Identität an `checkedUsernames` an; das BPMN mappt ihn als Input\n`identityUsername`\
+    \ (C7 `${_identityCorrelation.prop(\"username\").stringValue()}`, C8\n`=_identityCorrelation.username`).\
+    \ Die Signatur prüft ein CustomWorker nicht – das tun nur\nServiceWorker (siehe\
+    \ «Mocks und Identität weitergeben»). Ein CustomTask ist er, damit die Orch Spec\n\
+    ihn als Worker des Prozesses mit seinem In/Out erkennt.\n\n | Camunda 7 | Camunda\
+    \ 8 |\n---|---|---|\n übernehmen | zwei Execution Listener (`start`) mit `execution.setVariable(...)`\
+    \ und `execution.getVariableTyped(...)` | zwei Output-Mappings – **die Reihenfolge\
+    \ zählt**: Zeebe wendet sie nacheinander an, also erst `_identityCorrelationBefore`\
+    \ sichern, dann `_identityCorrelation` überschreiben (umgekehrt wäre «Before»\
+    \ schon der Actor) |\n zurücksetzen | ein Execution Listener | ein Output-Mapping\
+    \ |\n\n**C8:** fehlt eine Variable, liest FEEL `null` – ohne Identität gibt es\
+    \ also keinen Incident, die Variablen stehen dann auf `null` (auf c8run 8.9 nachgeprü\
+    ft, wie die Reihenfolge). Die Output-Mappings stehen auf dem leeren Zwischenereignis\
     \ – nicht auf der Benutzeraufgabe\n(mit einem Output-Mapping übernimmt Zeebe dort\
     \ sonst nur noch die gemappten Variablen).\n\n Datei | Inhalt |\n---|---|\n [`Identity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/Identity.scala)\
     \ | `In`, `Out` |\n [`ApproveRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/ApproveRequestUT.scala)\
     \ | «Antrag freigeben» – wer sie erledigt, wird übernommen |\n [`CheckIdentity.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CheckIdentity.scala)\
-    \ | «Identität prüfen» – Service-Aufruf mit der Identität des Prozesses |\n [`CheckIdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/CheckIdentityWorker.scala)\
-    \ | der ServiceWorker dazu (gemockt) |\n [`CloseRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala)\
+    \ | «Identität prüfen» – CustomTask: Benutzername der Identität des Prozesses\
+    \ |\n [`CheckIdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/CheckIdentityWorker.scala)\
+    \ | der CustomWorker dazu |\n [`CloseRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/identity/v1/CloseRequestUT.scala)\
     \ | «Antrag abschliessen» – hier hat der Prozess die übernommene Identität |\n\
     \ [`IdentityWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/identity/v1/IdentityWorker.scala)\
     \ | InitWorker: Prüfung des In |\n [`camunda/patterns-identityV1.bpmn`](src/main/resources/camunda/patterns-identityV1.bpmn)\
@@ -164,21 +170,211 @@ info:
     \n wann | `_identityCorrelation` |\n---|---|\n bei «Antrag freigeben» | `starter`\
     \ |\n bei «Antrag abschliessen» | `approver` (übernommen) |\n am Ende | `starter`\
     \ (zurückgesetzt) – `_identityCorrelationBefore = starter` |\n\n«Identität prü\
-    fen» hat dabei beide Male die Signatur des Gateways akzeptiert (`approver`, dann\
-    \ `starter`).\n\n### Voraussetzung: Orchescala\n\n`_identityCorrelationOfActor`\
-    \ setzt das Gateway erst ab dem Orchescala-Branch\n`claude/gateway-actor-identity-b424f0`\
-    \ (0.9.0-SNAPSHOT, noch nicht gemergt). Mit einem älteren\nGateway überschreibt\
-    \ der Abschluss einer Aufgabe die Identität selbst: C8 immer, C7 nur mit\n`doOverrideImpersonation\
-    \ = true`.\n\nDass `example.exists(...)` das Szenario nach dem `val` benennt (`Identity\
-    \ approved`), braucht\nOrchescala ab pme123/orchescala#87 (in develop) – vorher\
-    \ hiess es `example`.\n\n`actingAs` und die zweite Test-Identität `testActorIdentityCorrelation`\
-    \ gibt es ab dem\nOrchescala-Branch `feat/simulation-second-test-identity` (0.9.0-SNAPSHOT,\
-    \ noch nicht gemergt).\n\n## Offene Punkte\n\n- Im gemockten Lauf auf C8 setzt\
-    \ der InitWorker `processInstanceId` nicht (im normalen Lauf schon) –\n  die Variablen\
-    \ kommen dort über den Fehler `output-mocked`, nicht über das Abschliessen des\
-    \ Jobs.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n<p>\n\n\
-    \nAll notable changes to this project will be documented in this file.\n\n* Types\
-    \ of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
+    fen» – damals noch ein ServiceWorker – hat dabei beide Male die Signatur des Gateways\n\
+    akzeptiert (`approver`, dann `starter`).\n\n### Voraussetzung: Orchescala\n\n\
+    `_identityCorrelationOfActor` setzt das Gateway ab pme123/orchescala#90 (in develop,\n\
+    0.9.0-SNAPSHOT). Mit einem älteren\nGateway überschreibt der Abschluss einer Aufgabe\
+    \ die Identität selbst: C8 immer, C7 nur mit\n`doOverrideImpersonation = true`.\n\
+    \nDass `example.exists(...)` das Szenario nach dem `val` benennt (`Identity approved`),\
+    \ braucht\nOrchescala ab pme123/orchescala#87 (in develop) – vorher hiess es `example`.\n\
+    \n`actingAs` und die zweite Test-Identität `testActorIdentityCorrelation` gibt\
+    \ es ab\npme123/orchescala#92 (in develop).\n\n## Mocks und Identität weitergeben\
+    \ – `democompany-patterns-propagateMocksV1`\n\n```\nStart ─▶ [Init Process] ─▶\
+    \ [Teilprozess aufrufen] ─▶ (succeeded)\n                                  │\n\
+    \                                  ▼  democompany-patterns-propagateMocksSubV1\n\
+    \                    Start ─▶ [Init Process] ─▶ [Kunde laden] ─▶ (succeeded)\n\
+    ```\n\nEin Teilprozess (Call Activity) sieht nur die Variablen, die ihm der Aufruf\
+    \ mitgibt. Damit Mocks\nund Identität auch dort gelten, gibt die Call Activity\
+    \ diese drei weiter:\n\n- **`_servicesMocked`** – die Services im Teilprozess\
+    \ sind gemockt,\n- **`_mockedWorkers`** – gemockte Worker, auch der InitWorker\
+    \ des Teilprozesses (dessen Prozess-ID),\n- **`_identityCorrelation`** – die signierte\
+    \ Identität des Starts.\n\nDazu das In (`customerName`, `clientId`); zurück kommen\
+    \ `processStatus` des Teilprozesses als\n`subProcessStatus` und `client`.\n\n\
+    **«Kunde laden»** zeigt, dass beides ankommt: der Service `GetClientsClientId`\
+    \ aus\n**democompany-services** (Topic `democompany-services-clientsV1-GetClientsClientId`,\
+    \ wie in\ndemocompany-cards). Seinen ServiceWorker führt die Worker-App dieses\
+    \ Projekts mit\n(`dependencies(democompany.services.worker.WorkerApp)`, die Abhä\
+    ngigkeit steht in `PROJECT.conf`).\nGemockt ist er nur, wenn `_servicesMocked`\
+    \ im Teilprozess angekommen ist – und vorher prüft er die\nSignatur von `_identityCorrelation`.\
+    \ Die Identität ist an die Prozessinstanz des **Starts**\ngebunden; im Teilprozess\
+    \ akzeptiert der Worker sie, weil das die Root-Instanz seines Jobs ist.\n\nWeil\
+    \ das Topic nicht mit der Prozess-ID beginnt, sieht die Orch Spec den Schritt\
+    \ als Service aus dem\nKatalog – nicht als eigenen Worker des Prozesses.\n\n |\
+    \ Camunda 7 | Camunda 8 |\n---|---|---|\n Aufruf | `calledElement=\"<processId>\"\
+    ` | `zeebe:calledElement processId=\"<processId>\"` mit `propagateAllChildVariables=\"\
+    false\"` und `propagateAllParentVariables=\"false\"` |\n hinein | `camunda:in\
+    \ source=… target=…` | `zeebe:input` |\n zurück | `camunda:out source=… target=…\
+    ` | `zeebe:output` |\n Root-Instanz des Jobs | der Worker liest sie aus der History\
+    \ | kommt mit dem Job – über gRPC nicht, dann fragt der Worker die Engine (siehe\
+    \ unten) |\n\n Datei | Inhalt |\n---|---|\n [`PropagateMocks.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocks.scala)\
+    \ | `In`, `Out` des aufrufenden Prozesses |\n [`PropagateMocksSub.scala`](01-domain/src/main/scala/democompany/patterns/domain/propagateMocks/v1/PropagateMocksSub.scala)\
+    \ | `In`, `Out` des Teilprozesses |\n [`PropagateMocksWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksWorker.scala)\
+    \ | InitWorker: Prüfung des In |\n [`PropagateMocksSubWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/propagateMocks/v1/PropagateMocksSubWorker.scala)\
+    \ | InitWorker des Teilprozesses |\n [`camunda/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksV1.bpmn),\
+    \ [`camunda/patterns-propagateMocksSubV1.bpmn`](src/main/resources/camunda/patterns-propagateMocksSubV1.bpmn)\
+    \ | Camunda 7 |\n [`camunda8/patterns-propagateMocksV1.bpmn`](src/main/resources/camunda8/patterns-propagateMocksV1.bpmn),\
+    \ [`camunda8/patterns-propagateMocksSubV1.bpmn`](src/main/resources/camunda8/patterns-propagateMocksSubV1.bpmn)\
+    \ | Camunda 8 |\n [`PropagateMocksSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/PropagateMocksSimulation.scala)\
+    \ | die Szenarien, für beide Engines gleich |\n\n### Simulationen\n\n1. **`PropagateMocks\
+    \ services mocked`** – `.mockServices`: «Kunde laden» ist im Teilprozess\n   gemockt\
+    \ und akzeptiert die Identität des Starts; endet mit `subProcessStatus = succeeded`\
+    \ und dem\n   Kunden aus dem Mock (`client`).\n2. **`PropagateMocks sub worker\
+    \ mocked`** – zusätzlich `.mockWorker(PropagateMocksSub.processName)`:\n   der\
+    \ Teilprozess endet über `output-mocked` (`subProcessStatus = output-mocked`),\
+    \ der aufrufende\n   Prozess mit `processStatus = succeeded`.\n3. **`PropagateMocks\
+    \ invalid In`** – `customerName = \" \"`: Incident `validation-failed`.\n\n```bash\n\
+    ./helper.scala deploy PropagateMocksC7Simulation\n```\n```bash\n./helper.scala\
+    \ deploy PropagateMocksC8Simulation\n```\n\n### Voraussetzung: Orchescala (C8)\n\
+    \nÜber gRPC liefert der Camunda-Client 8.9 die Root-Instanz eines Jobs nicht mit\n\
+    (`rootProcessInstanceKey` ist leer). Ohne sie lehnt der Worker im Teilprozess\
+    \ die Identität des\nStarts ab («bound to process instance …, not to the job's\
+    \ … (root: -)»). Ab pme123/orchescala#96\n(in develop, 0.9.0-SNAPSHOT) fragt der\
+    \ C8-Worker die Root-Instanz dann bei der Engine nach\n(`GET /v2/process-instances/{key}`)\
+    \ – erneut nur bei einem 404, solange ein eben gestarteter\nTeilprozess dort noch\
+    \ fehlt. C7 braucht das nicht.\n\n## Einmalige Ausführung – `democompany-patterns-uniqueExecutionV1`\n\
+    \n```\n✉ Start ─▶ [Init Process] ─▶ [Antrag bearbeiten] ─▶ (succeeded)\n\n┌ Prozess\
+    \ läuft schon (Ereignis-Subprozess, nicht unterbrechend) ┐\n│  ✉ Start-Nachricht\
+    \ nochmals ─▶ (läuft schon: alreadyRunning = true) │\n└───────────────────────\
+    ─────────────────────────────────────────┘\n```\n\nDerselbe Prozess soll für denselben\
+    \ Fall nur einmal laufen. Er startet deshalb über ein\n**Nachrichten-Startereignis**\
+    \ (Name der Nachricht = Prozess-ID) mit einem **`businessKey`**. Solange\ner lä\
+    uft, fängt ein nicht unterbrechender Ereignis-Subprozess **dieselbe Nachricht**:\
+    \ ein zweiter\nStart mit demselben `businessKey` landet in der laufenden Instanz\
+    \ (`alreadyRunning = true`) – eine\nzweite gibt es nicht.\n\n- Der InitWorker\
+    \ setzt `alreadyRunning = false`; das Ende des Ereignis-Subprozesses setzt es\
+    \ auf `true`.\n- Die Nachricht trägt das In mit – ein zweiter Start überschreibt\
+    \ also dessen Variablen in der\n  laufenden Instanz.\n\n | Camunda 7 | Camunda\
+    \ 8 |\n---|---|---|\n Start | `messageEventDefinition` – der `businessKey` ist\
+    \ der der Instanz | ebenso – Orchescala setzt dazu die Variable `businessKey`\
+    \ |\n Ereignis-Subprozess | fängt die Nachricht, weil C7 sie zuerst laufenden\
+    \ Instanzen mit diesem `businessKey` zuordnet | die Nachricht hat `zeebe:subscription\
+    \ correlationKey=\"=businessKey\"` – das Abo öffnet beim Start |\n `alreadyRunning\
+    \ = true` | Execution Listener (`start`) am Ende | Output-Mapping am Ende |\n\
+    \ zweiter Start über Orchescala | wird abgelehnt (409: «correlated to a running\
+    \ process instance») | ebenso – Orchescala schickt den `businessKey` als Korrelationsschlü\
+    ssel mit (siehe unten) |\n\n Datei | Inhalt |\n---|---|\n [`UniqueExecution.scala`](01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/UniqueExecution.scala)\
+    \ | `In`, `InitIn` (`alreadyRunning`), `Out` |\n [`EditRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/EditRequestUT.scala)\
+    \ | «Antrag bearbeiten» – solange sie offen ist, läuft der Prozess |\n [`StartAgainME.scala`](01-domain/src/main/scala/democompany/patterns/domain/uniqueExecution/v1/StartAgainME.scala)\
+    \ | die Start-Nachricht ein zweites Mal |\n [`UniqueExecutionWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/uniqueExecution/v1/UniqueExecutionWorker.scala)\
+    \ | InitWorker: Prüfung des In, `alreadyRunning = false` |\n [`camunda/patterns-uniqueExecutionV1.bpmn`](src/main/resources/camunda/patterns-uniqueExecutionV1.bpmn)\
+    \ | Camunda 7 |\n [`camunda8/patterns-uniqueExecutionV1.bpmn`](src/main/resources/camunda8/patterns-uniqueExecutionV1.bpmn)\
+    \ | Camunda 8 |\n [`UniqueExecutionSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/UniqueExecutionSimulation.scala)\
+    \ | die Szenarien, für beide Engines gleich |\n\n### Simulationen\n\nBeide Szenarien\
+    \ starten mit der Nachricht (`.startWithMsg`); der `businessKey` ist der Name\
+    \ des\nSzenarios. Ein Szenario mit ungültigem In gibt es hier nicht (das prüft\
+    \ die Simulation von «Init\nProcess»): Seine Instanz bliebe mit dem Incident stehen,\
+    \ und die Nachricht des nächsten Laufs\n(gleicher `businessKey`) käme dann in\
+    \ ihr an – genau das, was das Pattern tut (409). Direkt starten\nlässt sich der\
+    \ Prozess in C8 nicht, er hat dort nur den Nachrichten-Start.\n\n1. **`UniqueExecution\
+    \ started`** – einmal gestartet, «Antrag bearbeiten» erledigt: endet mit\n   `alreadyRunning\
+    \ = false`.\n2. **`UniqueExecution started twice`** – während «Antrag bearbeiten»\
+    \ offen ist, kommt die\n   Start-Nachricht mit demselben `businessKey` nochmals\
+    \ (`StartAgainME.withBusinessKey(...)`): der\n   Ereignis-Subprozess fängt sie,\
+    \ der Prozess endet mit `alreadyRunning = true`. Die Nachricht wartet,\n   bis\
+    \ der InitWorker `alreadyRunning = false` gesetzt hat (`.waitFor(\"alreadyRunning\"\
+    , false)`) –\n   sonst überschreibt er das `true`.\n\n```bash\n./helper.scala\
+    \ deploy UniqueExecutionC7Simulation\n```\n```bash\n./helper.scala deploy UniqueExecutionC8Simulation\n\
+    ```\n\nBleibt eine Instanz eines Szenarios stehen (ein abgebrochener Lauf, ein\
+    \ zweiter Worker, der den Job\nhält), lehnt der nächste Lauf dessen Start mit\
+    \ 409 ab – das Pattern wirkt. Dann die Instanz in\nCockpit bzw. Operate abbrechen.\n\
+    \n### Voraussetzung: Orchescala (C8)\n\nAb Orchescala 0.9.0 ([pme123/orchescala#98](https://github.com/pme123/orchescala/pull/98))\
+    \ schickt der Start über Orchescala (`POST /process/{messageName}/message?businessKey=…\
+    `,\n`C8ProcessInstanceService.startProcessByMessage`) den `businessKey` als Korrelationsschlü\
+    ssel mit:\n\n- **Mit dem Pattern** landet ein zweiter Start in der laufenden Instanz\
+    \ – Orchescala antwortet wie in\n  C7 mit 409 und setzt dort keine Identität.\n\
+    - **Ohne das Pattern** startet ein zweiter Start weiter eine neue Instanz, wie\
+    \ bisher und wie in C7:\n  Zeebe lässt pro Korrelationsschlüssel nur eine laufende\
+    \ Instanz eines Nachrichten-Starts zu – lehnt\n  es ab, schickt Orchescala die\
+    \ Nachricht nochmals ohne Schlüssel.\n\nOb die Nachricht eine neue Instanz gestartet\
+    \ hat, sieht Orchescala am Key: eine neue ist jünger als\ndie Nachricht (auf ihrer\
+    \ Partition), eine laufende älter. Auf c8run 8.9.21 nachgeprüft.\n\nVorher schickte\
+    \ der C8-Start keinen Schlüssel mit – dann passte das Abo des Ereignis-Subprozesses\n\
+    nicht, und jeder Start legte eine neue Instanz an.\n\n## Prozess-Status am Ende\
+    \ – `democompany-patterns-processStatusV1`\n\n```\nStart ─▶ [Init Process] ─▶\
+    \ ◇ Antrag bewilligt? ─ ja ──▶ (succeeded)\n                                 \
+    \ └─ nein ─▶ (canceled)\n```\n\nJedes Ende setzt **`processStatus`** – so sieht\
+    \ der Aufrufer (und die Simulation), wie der Prozess\nausgegangen ist. Den Wert\
+    \ gibt man beim Einfügen als Parameter `processStatus` an (Vorgabe\n`succeeded`);\
+    \ er ist Text, kein Ausdruck. Ein Status von Orchescala (`ProcessStatus`: `succeeded`,\n\
+    `canceled`, `failed`, `notValid`, `output-mocked`) wird im `Out` ein fester Fall.\n\
+    \nHier entscheidet ein Gateway über `approved` aus dem In: bewilligt endet der\
+    \ Prozess mit\n`succeeded`, sonst mit `canceled`.\n\n | Camunda 7 | Camunda 8\
+    \ |\n---|---|---|\n `processStatus` am Ende | Execution Listener (`start`): `execution.setVariable(\"\
+    processStatus\", \"…\")` | Output-Mapping `zeebe:output source=\"=&quot;…&quot;\"\
+    \ target=\"processStatus\"` |\n\nDie anderen Beispielprozesse tragen das Pattern\
+    \ an ihrem Ende `succeeded` schon. Das Ende\n`output-mocked` setzt `processStatus`\
+    \ auch – es gehört aber zu «Init Process», nicht zu diesem\nPattern: die Orch\
+    \ Spec erkennt dort nur «Init Process».\n\n Datei | Inhalt |\n---|---|\n [`ProcessStatusExample.scala`](01-domain/src/main/scala/democompany/patterns/domain/processStatus/v1/ProcessStatusExample.scala)\
+    \ | `In` (`approved`), `Out` |\n [`ProcessStatusExampleWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/processStatus/v1/ProcessStatusExampleWorker.scala)\
+    \ | InitWorker: Prüfung des In |\n [`camunda/patterns-processStatusV1.bpmn`](src/main/resources/camunda/patterns-processStatusV1.bpmn)\
+    \ | Camunda 7 |\n [`camunda8/patterns-processStatusV1.bpmn`](src/main/resources/camunda8/patterns-processStatusV1.bpmn)\
+    \ | Camunda 8 |\n [`ProcessStatusSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/ProcessStatusSimulation.scala)\
+    \ | die Szenarien, für beide Engines gleich |\n\nDas Objekt heisst `ProcessStatusExample`,\
+    \ nicht `ProcessStatus` – sonst verdeckte es den Typ\n`ProcessStatus` von Orchescala.\n\
+    \n### Simulationen\n\n1. **`ProcessStatus succeeded`** – `approved = true`: endet\
+    \ mit `processStatus = succeeded`.\n2. **`ProcessStatus canceled`** – `approved\
+    \ = false`: endet mit `processStatus = canceled`.\n3. **`ProcessStatus mocked`**\
+    \ – endet über den Pfad `output-mocked` von «Init Process».\n\nEin Szenario mit\
+    \ ungültigem In gibt es hier nicht – das prüft die Simulation von «Init Process»\
+    .\n\n```bash\n./helper.scala deploy ProcessStatusC7Simulation\n```\n```bash\n\
+    ./helper.scala deploy ProcessStatusC8Simulation\n```\n\n## Prozess mit Fehler\
+    \ stoppen – `democompany-patterns-stopWithErrorV1`\n\n```\n                  \
+    \                                    ┌─ ja ──▶ ○ Limit überschritten ⚡ Incident\
+    \ ─┐\nStart ─▶ [Init Process] ─▶ ◇ Kunde gesperrt? ─ nein ─▶ ◇ Limit überschritten?\
+    \ ─ nein ─────────────▶ (succeeded)\n                                  └─ ja ─\
+    ─▶ (Kunde gesperrt) ⚡ Incident\n```\n\nDas Pattern **unterbricht den Prozess mit\
+    \ einem Fehler, den DevOps im Cockpit (C7) bzw. in Operate (C8)\nbehandeln**:\
+    \ der Prozess bleibt sofort mit einem **Incident** stehen, dessen Meldung das\
+    \ Problem\nbeschreibt. Das Ereignis ist **orange** – ohne Blitz: ein Fehler-Endereignis\
+    \ würfe in C8 den BPMN-Fehler,\nohne die Mappings auszuwerten (der Incident hiesse\
+    \ dann nur «… not caught»), und ein Aufrufer könnte ihn\nfangen. Es passt an ein\
+    \ End-Ereignis oder an ein werfendes Zwischenereignis; die Meldung\n(`message`)\
+    \ ist Text oder FEEL – hier `= \"Kunde \" + customerName + \" ist gesperrt.\"\
+    ` am Ende und\n`= \"Limit von \" + customerName + \" überschritten.\"` am Zwischenereignis.\n\
+    \n**Ende oder Zwischenereignis:** am Ende ist der Prozess fertig, wenn DevOps\
+    \ ihn behandelt haben (meist\nabbrechen). Am Zwischenereignis kann er weiterlaufen:\
+    \ nachdem die Ursache behoben ist, schieben DevOps\ndie Instanz per Modification\
+    \ hinter das Ereignis – hier geht sie dann zu `succeeded`.\n\n**Behandeln:** ein\
+    \ Retry wirft denselben Fehler wieder – der Incident ist kein vorübergehender\n\
+    Fehler, sondern eine Stelle, an der jemand entscheiden muss. DevOps brechen die\
+    \ Instanz ab oder schieben\nsie per Process Instance Modification weiter (C7:\
+    \ Cockpit, C8: Operate), nachdem die Ursache behoben ist.\n\n | Camunda 7 | Camunda\
+    \ 8 |\n---|---|---|\n Meldung | `camunda:inputParameter _errorMessage` – FEEL\
+    \ wird JUEL (`${\"Kunde \".concat(customerName)…}`) | Output-Mapping `_errorMessage`\
+    \ |\n stoppen | Groovy-Listener (`end`): `throw new IllegalArgumentException(…\
+    )`; `asyncBefore`, damit der Incident am Ereignis entsteht, und `failedJobRetryTimeCycle`\
+    \ `R1/PT0S` – ein Versuch | Output-Mapping `_stopped = assert(false, false, string(_errorMessage))`\
+    \ |\n Incident | Meldung der Exception | `IO_MAPPING_ERROR` – «Assertion failure\
+    \ …: Kunde Peter Muster ist gesperrt.» |\n\n**C7:** die Exception kommt im Job\
+    \ von `asyncBefore`. `failedJobRetryTimeCycle` `R1/PT0S` lässt ihn nur\neinmal\
+    \ laufen – der Incident entsteht sofort, gleich wie die Engine Retries sonst einstellt.\n\
+    `asyncBefore` ist eine Transaktionsgrenze am Ereignis.\n\n**C8:** Zeebe fasst\
+    \ die Output-Mappings zu einem FEEL-Kontext zusammen (`{_errorMessage: …, _stopped:\n\
+    …}`) – ein späterer Eintrag sieht die früheren. Ein Ziel zweimal gäbe es darin\
+    \ nur einmal; deshalb\nsteht `assert` unter einem eigenen Namen. `assert` ist\
+    \ auf c8run 8.9 nachgeprüft. Wird der Incident\naufgelöst, wertet Zeebe das Mapping\
+    \ neu aus – der Prozess bleibt stehen, wie in C7. Fester Text mit\n`\"` geht als\
+    \ C8-Meldung nicht (er stünde in einer FEEL-Zeichenkette) – dann als FEEL schreiben.\n\
+    \n Datei | Inhalt |\n---|---|\n [`StopWithError.scala`](01-domain/src/main/scala/democompany/patterns/domain/stopWithError/v1/StopWithError.scala)\
+    \ | `In` (`blocked`, `limitExceeded`), `Out` |\n [`StopWithErrorWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/stopWithError/v1/StopWithErrorWorker.scala)\
+    \ | InitWorker: Prüfung des In |\n [`camunda/patterns-stopWithErrorV1.bpmn`](src/main/resources/camunda/patterns-stopWithErrorV1.bpmn)\
+    \ | Camunda 7 |\n [`camunda8/patterns-stopWithErrorV1.bpmn`](src/main/resources/camunda8/patterns-stopWithErrorV1.bpmn)\
+    \ | Camunda 8 |\n [`StopWithErrorSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/StopWithErrorSimulation.scala)\
+    \ | die Szenarien, für beide Engines gleich |\n\n### Simulationen\n\n1. **`StopWithError\
+    \ succeeded`** – `blocked = false`: endet mit `processStatus = succeeded`.\n2.\
+    \ **`StopWithError blocked`** – `blocked = true`: Incident am Ende mit «Kunde\
+    \ Peter Muster ist\n   gesperrt.» (`incidentScenario`).\n3. **`StopWithError limit\
+    \ exceeded`** – `limitExceeded = true`: Incident am Zwischenereignis mit «Limit\n\
+    \   von Peter Muster überschritten.».\n4. **`StopWithError mocked`** – endet ü\
+    ber den Pfad `output-mocked` von «Init Process».\n\n```bash\n./helper.scala deploy\
+    \ StopWithErrorC7Simulation\n```\n```bash\n./helper.scala deploy StopWithErrorC8Simulation\n\
+    ```\n\nBleiben die Instanzen der Szenarien 2 und 3 stehen, ist das gewollt – in\
+    \ Cockpit bzw. Operate abbrechen\noder (Szenario 3) per Modification weiterschieben.\n\
+    \n## Offene Punkte\n\n- Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId`\
+    \ nicht (im normalen Lauf schon) –\n  die Variablen kommen dort über den Fehler\
+    \ `output-mocked`, nicht über das Abschliessen des Jobs.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
+    <p>\n\n\nAll notable changes to this project will be documented in this file.\n\
+    \n* Types of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
     \ functionality\n  * Deprecated: soon-to-be-removed features\n  * Removed: now\
     \ removed features\n  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\
     \n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\n\
@@ -273,11 +469,11 @@ paths:
         \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > In`\n- Output: `democompany.patterns.domain.initProcess.v1.InitProcess\
         \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
-        \ id=\"patterns-initProcessV1-82058\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
-        \ new BpmnJS({ container: $('#patterns-initProcessV1-82058'), height: '95%',\
+        \ id=\"patterns-initProcessV1-32904\">\n    <img onLoad=\"openFromUrl('patterns-initProcessV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-initProcessV1-32904'), height: '95%',\
         \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-initProcessV1.bpmn](diagrams/patterns-initProcessV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-82058')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-initProcessV1-32904')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -445,12 +641,12 @@ paths:
         \ `democompany-patterns-identityV1` (to define in the Call Activity)\n\n\n\
         \n---\n\n\n\n\n- Input:  `democompany.patterns.domain.identity.v1.Identity\
         \ > In`\n- Output: `democompany.patterns.domain.identity.v1.Identity > Out`\n\
-        \n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"patterns-identityV1-99010\"\
+        \n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\" id=\"patterns-identityV1-21369\"\
         >\n    <img onLoad=\"openFromUrl('patterns-identityV1.bpmn', new BpmnJS({\
-        \ container: $('#patterns-identityV1-99010'), height: '95%', width: '95%'\
+        \ container: $('#patterns-identityV1-21369'), height: '95%', width: '95%'\
         \ }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
         \ />\n  </div>\n</div>\n\nDownload: [patterns-identityV1.bpmn](diagrams/patterns-identityV1.bpmn)\n\
-        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-identityV1-99010')\"\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-identityV1-21369')\"\
         >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
         \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
         \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
@@ -743,32 +939,35 @@ paths:
       tags:
       - Identity V1
       summary: 'Worker: CheckIdentity'
-      description: "\n\n\n**Topic:** `democompany-patterns-identityV1-CheckIdentity`\
-        \ (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_\
-        \ of type _External_)\n\nIdentität prüfen - ein Service-Aufruf mit der Identitä\
-        t des Prozesses; der ServiceWorker prüft vorher die Signatur von `_identityCorrelation`.\n\
-        \n---\n\n\n\n<details>\n<summary><b>Wrapped Service:</b>\n\n(Patterns Identity\
-        \ 1.0 - v1.0 - GET: identity)\n</summary>\n<p>\nInput Body: `orchescala.domain.NoInput`:\n\
-        \n\nExample Response: `orchescala.domain.NoOutput`:\n\n```json\n{\n  \"respStatus\"\
-        \ : 204,\n  \"respBody\" : {\n    \n  },\n  \"respHeaders\" : [\n  ]\n}\n\
-        ```\n</p>\n</details>\n</p>\n\n---\n\n\n- Input:  `democompany.patterns.domain.identity.v1.CheckIdentity\
-        \ > In`\n- Output: `democompany.patterns.domain.identity.v1.CheckIdentity\
-        \ > Out`\n\n\n\nYou can test this worker using the generic process _**orchescala-externalTask-generic**_\
-        \ (e.g. with Postman).\n\n- ServiceOut:  `orchescala.domain.MockedServiceResponse`\n\
-        \n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n</summary>\n\n\
-        <p>\n\n**outputVariables**:\n\nJust take the variable you need in your process!\n\
-        ```json\n...\n\"outputVariables\": \"identityChecked,checkedUsernames\",\n\
-        ...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"identityChecked\"\
-        \ : true,\n  \"checkedUsernames\" : [\n    \"actor\"\n  ]\n},\n...\n```\n\n\
-        **outputServiceMock**:\n```json\n...\n\"outputServiceMock\": {\n  \"respStatus\"\
-        \ : 200,\n  \"respBody\" : {\n    \"respStatus\" : 204,\n    \"respBody\"\
-        \ : {\n      \n    },\n    \"respHeaders\" : [\n    ]\n  },\n  \"respHeaders\"\
-        \ : [\n  ]\n},\n...\n```\n</p>\n</details>\n</p>\n      \n    \n\n\n**Used\
-        \ in no other Process.**\n\n**Uses no other Processes.**\n<p/>\n<details>\n\
-        <summary><b><i>General Information</i></b></summary>\n<p>\n\nThis describes\
-        \ the <b>Input</b> and the <b>Output</b> of the Worker.\n\nRunning this request\
-        \ with Postman, it will run the Worker directly, no Process will be started.\n\
-        \n</p>\n</details>"
+      description: |2-
+
+        **Topic:** `democompany-patterns-identityV1-CheckIdentity` (to define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of type _External_)
+
+        Identität prüfen - hängt den Benutzernamen der Identität des Prozesses an `checkedUsernames` an.
+
+        - Input:  `democompany.patterns.domain.identity.v1.CheckIdentity > In`
+        - Output: `democompany.patterns.domain.identity.v1.CheckIdentity > Out`
+
+
+
+        You can test this worker using the generic process _**orchescala-externalTask-generic**_ (e.g. with Postman).
+
+
+
+        **Used in no other Process.**
+
+        **Uses no other Processes.**
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        This describes the <b>Input</b> and the <b>Output</b> of the Worker.
+
+        Running this request with Postman, it will run the Worker directly, no Process will be started.
+
+        </p>
+        </details>
       operationId: 'Worker: CheckIdentity'
       requestBody:
         content:
@@ -927,8 +1126,1369 @@ paths:
       responses:
         '200':
           description: ''
+  /process/democompany-patterns-propagateMocksV1/async:
+    post:
+      tags:
+      - Propagate Mocks V1
+      summary: Process start
+      description: "\nBeispiel für das Pattern «Mocks und Identität weitergeben».\n\
+        Die Call Activity «Teilprozess aufrufen» gibt `_servicesMocked`, `_mockedWorkers`\
+        \ und\n`_identityCorrelation` an den Teilprozess weiter - so greifen Mocks\
+        \ und Identität auch dort.\n\n\n---\n\n- **Called Element**: `democompany-patterns-propagateMocksV1`\
+        \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
+        \ > In`\n- Output: `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
+        \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
+        \ id=\"patterns-propagateMocksV1-61074\">\n    <img onLoad=\"openFromUrl('patterns-propagateMocksV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-propagateMocksV1-61074'), height: '95%',\
+        \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [patterns-propagateMocksV1.bpmn](diagrams/patterns-propagateMocksV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-propagateMocksV1-61074')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
+        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"processStatus,customerName,subProcessStatus,client\",\n...\n```\n\n**outputMock**:\n\
+        \n```json\n...\n\"outputMock\": {\n  \"processStatus\" : \"succeeded\",\n\
+        \  \"customerName\" : \"Peter Muster\",\n  \"subProcessStatus\" : \"succeeded\"\
+        ,\n  \"client\" : {\n    \"id\" : 1,\n    \"firstName\" : \"John\",\n    \"\
+        lastName\" : \"Doe\",\n    \"email\" : \"john.doe@example.com\",\n    \"tel\"\
+        \ : \"+411234567890\",\n    \"address\" : {\n      \"street\" : \"Main Street\"\
+        ,\n      \"number\" : \"123\",\n      \"zip\" : \"12345\",\n      \"city\"\
+        \ : \"Anytown\",\n      \"country\" : \"Germany\",\n      \"additionalInfo\"\
+        \ : \"Additional Info\"\n    },\n    \"gender\" : {\n      \"type\" : \"Male\"\
+        \n    },\n    \"fullName\" : \"John Doe\",\n    \"salutation\" : \"Mr.\",\n\
+        \    \"dateOfBirth\" : \"1970-01-01\",\n    \"createdAt\" : \"2021-01-01T00:00:00\"\
+        \n  }\n},\n...\n```\n\n</p>\n</details>\n</p>\n      \n\n\n**Used in no other\
+        \ Process.**\n\n**Uses no other Processes.**\n<p/>\n<details>\n<summary><b><i>General\
+        \ Information</i></b></summary>\n<p>\n\nThis describes the <b>Input</b> to\
+        \ start the Process with.\n\nBe aware that running this request with Postman,\n\
+        you will not get the <b>Output</b> but the <i>processInstanceId</i>, as starting\
+        \ a process is asynchronous.\n\nTo get the <b>Output</b> you need to use the\
+        \ `Process variables` request.\n\n</p>\n</details>"
+      operationId: Process start
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropagateMocks.In'
+            examples:
+              democompany-patterns-propagateMocksV1:
+                value:
+                  customerName: Peter Muster
+                  clientId: 1234
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessInfo'
+              example:
+                processInstanceId: f150c3f1-13f5-11ec-936e-0242ac1d0007
+                businessKey: ORDER-2025-12345
+                status: Active
+                engineType: C7
+  /process/democompany-patterns-propagateMocksV1/{processInstanceId}/variables:
+    get:
+      tags:
+      - Propagate Mocks V1
+      summary: Process variables
+      description: "\nBeispiel für das Pattern «Mocks und Identität weitergeben».\n\
+        Die Call Activity «Teilprozess aufrufen» gibt `_servicesMocked`, `_mockedWorkers`\
+        \ und\n`_identityCorrelation` an den Teilprozess weiter - so greifen Mocks\
+        \ und Identität auch dort.\n\n\n---\n\n- **Called Element**: `democompany-patterns-propagateMocksV1`\
+        \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
+        \ > In`\n- Output: `democompany.patterns.domain.propagateMocks.v1.PropagateMocks\
+        \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
+        </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,customerName,subProcessStatus,client\"\
+        ,\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ : \"succeeded\",\n  \"customerName\" : \"Peter Muster\",\n  \"subProcessStatus\"\
+        \ : \"succeeded\",\n  \"client\" : {\n    \"id\" : 1,\n    \"firstName\" :\
+        \ \"John\",\n    \"lastName\" : \"Doe\",\n    \"email\" : \"john.doe@example.com\"\
+        ,\n    \"tel\" : \"+411234567890\",\n    \"address\" : {\n      \"street\"\
+        \ : \"Main Street\",\n      \"number\" : \"123\",\n      \"zip\" : \"12345\"\
+        ,\n      \"city\" : \"Anytown\",\n      \"country\" : \"Germany\",\n     \
+        \ \"additionalInfo\" : \"Additional Info\"\n    },\n    \"gender\" : {\n \
+        \     \"type\" : \"Male\"\n    },\n    \"fullName\" : \"John Doe\",\n    \"\
+        salutation\" : \"Mr.\",\n    \"dateOfBirth\" : \"1970-01-01\",\n    \"createdAt\"\
+        \ : \"2021-01-01T00:00:00\"\n  }\n},\n...\n```\n\n</p>\n</details>\n</p>\n\
+        \      <p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Output</b> of the Process you get. Be aware this\
+        \ does not check if the process is finished (TODO).\n\n  \n</p>\n</details>"
+      operationId: Process variables
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: processStatus,customerName,subProcessStatus,client
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropagateMocks.Out'
+              examples:
+                democompany-patterns-propagateMocksV1:
+                  value:
+                    processStatus: succeeded
+                    customerName: Peter Muster
+                    subProcessStatus: succeeded
+                    client:
+                      id: 1
+                      firstName: John
+                      lastName: Doe
+                      email: john.doe@example.com
+                      tel: '+411234567890'
+                      address:
+                        street: Main Street
+                        number: '123'
+                        zip: '12345'
+                        city: Anytown
+                        country: Germany
+                        additionalInfo: Additional Info
+                      gender:
+                        type: Male
+                      fullName: John Doe
+                      salutation: Mr.
+                      dateOfBirth: '1970-01-01'
+                      createdAt: '2021-01-01T00:00:00'
+  /worker/democompany-patterns-propagateMocksV1:
+    post:
+      tags:
+      - Propagate Mocks V1
+      summary: Init Worker
+      description: |2
+
+        <details>
+        <summary><b>General Information</b></summary>
+
+        The Init Worker has the following responsibilities:
+
+          - Validates the Process Input (`In`). -> by Orchescala
+          - Maps the Configuration to Process Variables (`InConfig`). -> by Orchescala
+          - Custom validation the Process Input (`In`, e.g. combining 2 variables). -> Process Specific
+          - Initializes the default Variables with `In` as input (see _Process_ description) and `InitIn` as output. -> Process Specific
+
+        The Input is the same as the `In` object of the _Process_.
+
+        `NoInput` means there is no initialization needed.
+        </details>
+      operationId: Init Worker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropagateMocks.In'
+            examples:
+              democompany-patterns-propagateMocksV1:
+                value:
+                  customerName: Peter Muster
+                  clientId: 1234
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoInput'
+              examples:
+                InitIn:
+                  value: {}
+  /process/democompany-patterns-propagateMocksSubV1/{processInstanceId}/variables:
+    post:
+      tags:
+      - Propagate Mocks V1
+      summary: 'Bpmn: propagateMocksSubV1'
+      description: "\nTeilprozess zum Pattern «Mocks und Identität weitergeben».\n\
+        «Kunde laden» ruft den Service `GetClientsClientId` (democompany-services)\
+        \ auf - gemockt,\nwenn `_servicesMocked` vom Aufrufer kommt; vorher prüft\
+        \ der ServiceWorker die weitergegebene\n`_identityCorrelation`.\n\n\n---\n\
+        \n- **Called Element**: `democompany-patterns-propagateMocksSubV1` (to define\
+        \ in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.propagateMocks.v1.PropagateMocksSub\
+        \ > In`\n- Output: `democompany.patterns.domain.propagateMocks.v1.PropagateMocksSub\
+        \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
+        </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,customerName,client\"\
+        ,\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ : \"succeeded\",\n  \"customerName\" : \"Peter Muster\",\n  \"client\" :\
+        \ {\n    \"id\" : 1,\n    \"firstName\" : \"John\",\n    \"lastName\" : \"\
+        Doe\",\n    \"email\" : \"john.doe@example.com\",\n    \"tel\" : \"+411234567890\"\
+        ,\n    \"address\" : {\n      \"street\" : \"Main Street\",\n      \"number\"\
+        \ : \"123\",\n      \"zip\" : \"12345\",\n      \"city\" : \"Anytown\",\n\
+        \      \"country\" : \"Germany\",\n      \"additionalInfo\" : \"Additional\
+        \ Info\"\n    },\n    \"gender\" : {\n      \"type\" : \"Male\"\n    },\n\
+        \    \"fullName\" : \"John Doe\",\n    \"salutation\" : \"Mr.\",\n    \"dateOfBirth\"\
+        \ : \"1970-01-01\",\n    \"createdAt\" : \"2021-01-01T00:00:00\"\n  }\n},\n\
+        ...\n```\n\n</p>\n</details>\n</p>\n      \n\n\n**Used in no other Process.**\n\
+        \n**Uses no other Processes.**\n<p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Output</b> of the Process you get. Be aware this\
+        \ does not check if the process is finished (TODO).\n\n  \n</p>\n</details>"
+      operationId: 'Bpmn: propagateMocksSubV1'
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: processStatus,customerName,client
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropagateMocksSub.Out'
+              examples:
+                democompany-patterns-propagateMocksSubV1:
+                  value:
+                    processStatus: succeeded
+                    customerName: Peter Muster
+                    client:
+                      id: 1
+                      firstName: John
+                      lastName: Doe
+                      email: john.doe@example.com
+                      tel: '+411234567890'
+                      address:
+                        street: Main Street
+                        number: '123'
+                        zip: '12345'
+                        city: Anytown
+                        country: Germany
+                        additionalInfo: Additional Info
+                      gender:
+                        type: Male
+                      fullName: John Doe
+                      salutation: Mr.
+                      dateOfBirth: '1970-01-01'
+                      createdAt: '2021-01-01T00:00:00'
+  /process/democompany-patterns-uniqueExecutionV1/async:
+    post:
+      tags:
+      - Unique Execution V1
+      summary: Process start
+      description: "\nBeispiel für das Pattern «Einmalige Ausführung».\nDer Prozess\
+        \ startet über eine Nachricht (Name = Prozess-ID) mit einem `businessKey`.\
+        \ Solange er\nläuft, fängt ein nicht unterbrechender Ereignis-Subprozess dieselbe\
+        \ Nachricht - ein zweiter Start\nmit demselben `businessKey` landet in der\
+        \ laufenden Instanz (`alreadyRunning = true`) statt eine\nzweite zu starten.\n\
+        \n\n---\n\n- **Called Element**: `democompany-patterns-uniqueExecutionV1`\
+        \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution\
+        \ > In`\n- Output: `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution\
+        \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
+        \ id=\"patterns-uniqueExecutionV1-13706\">\n    <img onLoad=\"openFromUrl('patterns-uniqueExecutionV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-uniqueExecutionV1-13706'), height:\
+        \ '95%', width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [patterns-uniqueExecutionV1.bpmn](diagrams/patterns-uniqueExecutionV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-uniqueExecutionV1-13706')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
+        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"processStatus,customerName,alreadyRunning\",\n...\n```\n\n**outputMock**:\n\
+        \n```json\n...\n\"outputMock\": {\n  \"processStatus\" : \"succeeded\",\n\
+        \  \"customerName\" : \"Peter Muster\",\n  \"alreadyRunning\" : false\n},\n\
+        ...\n```\n\n</p>\n</details>\n</p>\n      \n\n\n**Used in no other Process.**\n\
+        \n**Uses no other Processes.**\n<p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Input</b> to start the Process with.\n\nBe aware\
+        \ that running this request with Postman,\nyou will not get the <b>Output</b>\
+        \ but the <i>processInstanceId</i>, as starting a process is asynchronous.\n\
+        \nTo get the <b>Output</b> you need to use the `Process variables` request.\n\
+        \n</p>\n</details>"
+      operationId: Process start
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UniqueExecution.In'
+            examples:
+              democompany-patterns-uniqueExecutionV1:
+                value:
+                  customerName: Peter Muster
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessInfo'
+              example:
+                processInstanceId: f150c3f1-13f5-11ec-936e-0242ac1d0007
+                businessKey: ORDER-2025-12345
+                status: Active
+                engineType: C7
+  /process/democompany-patterns-uniqueExecutionV1/{processInstanceId}/variables:
+    get:
+      tags:
+      - Unique Execution V1
+      summary: Process variables
+      description: "\nBeispiel für das Pattern «Einmalige Ausführung».\nDer Prozess\
+        \ startet über eine Nachricht (Name = Prozess-ID) mit einem `businessKey`.\
+        \ Solange er\nläuft, fängt ein nicht unterbrechender Ereignis-Subprozess dieselbe\
+        \ Nachricht - ein zweiter Start\nmit demselben `businessKey` landet in der\
+        \ laufenden Instanz (`alreadyRunning = true`) statt eine\nzweite zu starten.\n\
+        \n\n---\n\n- **Called Element**: `democompany-patterns-uniqueExecutionV1`\
+        \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution\
+        \ > In`\n- Output: `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution\
+        \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
+        </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,customerName,alreadyRunning\"\
+        ,\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ : \"succeeded\",\n  \"customerName\" : \"Peter Muster\",\n  \"alreadyRunning\"\
+        \ : false\n},\n...\n```\n\n</p>\n</details>\n</p>\n      <p/>\n<details>\n\
+        <summary><b><i>General Information</i></b></summary>\n<p>\n\nThis describes\
+        \ the <b>Output</b> of the Process you get. Be aware this does not check if\
+        \ the process is finished (TODO).\n\n  \n</p>\n</details>"
+      operationId: Process variables
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: processStatus,customerName,alreadyRunning
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UniqueExecution.Out'
+              examples:
+                democompany-patterns-uniqueExecutionV1:
+                  value:
+                    processStatus: succeeded
+                    customerName: Peter Muster
+                    alreadyRunning: false
+  /worker/democompany-patterns-uniqueExecutionV1:
+    post:
+      tags:
+      - Unique Execution V1
+      summary: Init Worker
+      description: |2
+
+        <details>
+        <summary><b>General Information</b></summary>
+
+        The Init Worker has the following responsibilities:
+
+          - Validates the Process Input (`In`). -> by Orchescala
+          - Maps the Configuration to Process Variables (`InConfig`). -> by Orchescala
+          - Custom validation the Process Input (`In`, e.g. combining 2 variables). -> Process Specific
+          - Initializes the default Variables with `In` as input (see _Process_ description) and `InitIn` as output. -> Process Specific
+
+        The Input is the same as the `In` object of the _Process_.
+
+        `NoInput` means there is no initialization needed.
+        </details>
+      operationId: Init Worker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UniqueExecution.In'
+            examples:
+              democompany-patterns-uniqueExecutionV1:
+                value:
+                  customerName: Peter Muster
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UniqueExecution.InitIn'
+              examples:
+                InitIn:
+                  value:
+                    alreadyRunning: false
+  /process/{processInstanceId}/userTask/EditRequestUT/variables:
+    get:
+      tags:
+      - Unique Execution V1
+      summary: 'UserTask variables: EditRequestUT'
+      description: |2-
+
+        Antrag bearbeiten - solange die Aufgabe offen ist, läuft der Prozess; ein zweiter Start landet hier.
+
+        - _taskDefinitionKey_: `EditRequestUT`
+
+        ---
+
+
+
+
+        - Input:  `democompany.patterns.domain.uniqueExecution.v1.EditRequestUT > In`
+        - Output: `democompany.patterns.domain.uniqueExecution.v1.EditRequestUT > Out`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        A <b>UserTask</b> consists of two steps (variables and complete).
+        This is the <b>first step</b>:
+
+        1. Wait for the UserTask and get then the Variables.
+
+        The <b>Output</b> are the Variables you want for your UserTask Form.
+
+
+        </p>
+        </details>
+      operationId: 'UserTask variables: EditRequestUT'
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: customerName
+      - name: timeoutInSec
+        in: query
+        description: The maximum number of seconds to wait for the user task to become
+          active (0 - 60). If not provided, it will wait 10 seconds.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 60
+        example: 10
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditRequestUT.In'
+              examples:
+                EditRequestUT:
+                  value:
+                    customerName: Peter Muster
+  /userTask/EditRequestUT/{userTaskInstanceId}/complete:
+    post:
+      tags:
+      - Unique Execution V1
+      summary: 'UserTask complete: EditRequestUT'
+      description: |2-
+
+        Antrag bearbeiten - solange die Aufgabe offen ist, läuft der Prozess; ein zweiter Start landet hier.
+
+        - _taskDefinitionKey_: `EditRequestUT`
+
+        ---
+
+
+
+
+        - Input:  `democompany.patterns.domain.uniqueExecution.v1.EditRequestUT > In`
+        - Output: `democompany.patterns.domain.uniqueExecution.v1.EditRequestUT > Out`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+
+        A <b>UserTask</b> consists of two steps (variables and complete).
+        This is the <b>second step</b>:
+
+        2. Complete the UserTask
+
+        The <b>Input</b> are the Variables you want to set when completing the task.
+
+
+        </p>
+        </details>
+      operationId: 'UserTask complete: EditRequestUT'
+      parameters:
+      - name: userTaskInstanceId
+        in: path
+        description: User task instance ID (obtained from getUserTaskVariables)
+        required: true
+        schema:
+          type: string
+        example: '{{userTaskInstanceId}}'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditRequestUT.Out'
+            examples:
+              EditRequestUT:
+                value:
+                  isOk: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /message/democompany-patterns-uniqueExecutionV1:
+    post:
+      tags:
+      - Unique Execution V1
+      summary: 'Message: uniqueExecutionV1'
+      description: |2-
+
+        Dieselbe Start-Nachricht ein zweites Mal - mit dem `businessKey` der laufenden Instanz.
+
+        - _messageName_: `democompany-patterns-uniqueExecutionV1`
+
+        ---
+
+
+
+
+        - Input:  `democompany.patterns.domain.uniqueExecution.v1.UniqueExecution > In`
+        - Output: `orchescala.domain.NoOutput`
+
+        <p/>
+        <details>
+        <summary><b><i>General Information</i></b></summary>
+        <p>
+        Send a Message to the Process.
+        Process is waiting at a Message Event, or has the possibility to interact with a Message,
+        e.g. in a Boundary Event.
+
+        </p>
+        </details>
+      operationId: 'Message: uniqueExecutionV1'
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: timeToLiveInSec
+        in: query
+        description: 'The time in seconds the message is buffered, waiting for correlation.
+          The default value is 0 seconds (no buffering). Only supported in C8 - BE
+          AWARE that if set, it is fire and forget: Camunda will just try to correlate
+          for the configured time.'
+        required: false
+        schema:
+          type: integer
+          format: int32
+        example: 10
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      - name: processInstanceId
+        in: query
+        description: Process instance ID to correlate the message to a specific process
+          instance.
+        required: false
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UniqueExecution.In'
+            examples:
+              democompany-patterns-uniqueExecutionV1:
+                value:
+                  customerName: Peter Muster
+        required: true
+      responses:
+        '200':
+          description: ''
+  /process/democompany-patterns-processStatusV1/async:
+    post:
+      tags:
+      - Process Status V1
+      summary: Process start
+      description: "\nBeispiel für das Pattern «Prozess-Status am Ende»: jedes Ende\
+        \ setzt `processStatus` -\nso sieht der Aufrufer (und die Simulation), wie\
+        \ der Prozess ausgegangen ist.\nIst der Antrag bewilligt (`approved`), endet\
+        \ der Prozess mit `succeeded`, sonst mit `canceled`.\n\n\n---\n\n- **Called\
+        \ Element**: `democompany-patterns-processStatusV1` (to define in the Call\
+        \ Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.processStatus.v1.ProcessStatusExample\
+        \ > In`\n- Output: `democompany.patterns.domain.processStatus.v1.ProcessStatusExample\
+        \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
+        \ id=\"patterns-processStatusV1-23465\">\n    <img onLoad=\"openFromUrl('patterns-processStatusV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-processStatusV1-23465'), height: '95%',\
+        \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [patterns-processStatusV1.bpmn](diagrams/patterns-processStatusV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-processStatusV1-23465')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
+        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"processStatus,customerName,approved\",\n...\n```\n\n**outputMock**:\n\n\
+        ```json\n...\n\"outputMock\": {\n  \"processStatus\" : \"succeeded\",\n  \"\
+        customerName\" : \"Peter Muster\",\n  \"approved\" : true\n},\n...\n```\n\n\
+        </p>\n</details>\n</p>\n      \n\n\n**Used in no other Process.**\n\n**Uses\
+        \ no other Processes.**\n<p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Input</b> to start the Process with.\n\nBe aware\
+        \ that running this request with Postman,\nyou will not get the <b>Output</b>\
+        \ but the <i>processInstanceId</i>, as starting a process is asynchronous.\n\
+        \nTo get the <b>Output</b> you need to use the `Process variables` request.\n\
+        \n</p>\n</details>"
+      operationId: Process start
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessStatusExample.In'
+            examples:
+              democompany-patterns-processStatusV1:
+                value:
+                  customerName: Peter Muster
+                  approved: true
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessInfo'
+              example:
+                processInstanceId: f150c3f1-13f5-11ec-936e-0242ac1d0007
+                businessKey: ORDER-2025-12345
+                status: Active
+                engineType: C7
+  /process/democompany-patterns-processStatusV1/{processInstanceId}/variables:
+    get:
+      tags:
+      - Process Status V1
+      summary: Process variables
+      description: "\nBeispiel für das Pattern «Prozess-Status am Ende»: jedes Ende\
+        \ setzt `processStatus` -\nso sieht der Aufrufer (und die Simulation), wie\
+        \ der Prozess ausgegangen ist.\nIst der Antrag bewilligt (`approved`), endet\
+        \ der Prozess mit `succeeded`, sonst mit `canceled`.\n\n\n---\n\n- **Called\
+        \ Element**: `democompany-patterns-processStatusV1` (to define in the Call\
+        \ Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.processStatus.v1.ProcessStatusExample\
+        \ > In`\n- Output: `democompany.patterns.domain.processStatus.v1.ProcessStatusExample\
+        \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
+        </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,customerName,approved\"\
+        ,\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ : \"succeeded\",\n  \"customerName\" : \"Peter Muster\",\n  \"approved\"\
+        \ : true\n},\n...\n```\n\n</p>\n</details>\n</p>\n      <p/>\n<details>\n\
+        <summary><b><i>General Information</i></b></summary>\n<p>\n\nThis describes\
+        \ the <b>Output</b> of the Process you get. Be aware this does not check if\
+        \ the process is finished (TODO).\n\n  \n</p>\n</details>"
+      operationId: Process variables
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: processStatus,customerName,approved
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessStatusExample.Out'
+              examples:
+                democompany-patterns-processStatusV1:
+                  value:
+                    processStatus: succeeded
+                    customerName: Peter Muster
+                    approved: true
+  /worker/democompany-patterns-processStatusV1:
+    post:
+      tags:
+      - Process Status V1
+      summary: Init Worker
+      description: |2
+
+        <details>
+        <summary><b>General Information</b></summary>
+
+        The Init Worker has the following responsibilities:
+
+          - Validates the Process Input (`In`). -> by Orchescala
+          - Maps the Configuration to Process Variables (`InConfig`). -> by Orchescala
+          - Custom validation the Process Input (`In`, e.g. combining 2 variables). -> Process Specific
+          - Initializes the default Variables with `In` as input (see _Process_ description) and `InitIn` as output. -> Process Specific
+
+        The Input is the same as the `In` object of the _Process_.
+
+        `NoInput` means there is no initialization needed.
+        </details>
+      operationId: Init Worker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessStatusExample.In'
+            examples:
+              democompany-patterns-processStatusV1:
+                value:
+                  customerName: Peter Muster
+                  approved: true
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoInput'
+              examples:
+                InitIn:
+                  value: {}
+  /process/democompany-patterns-stopWithErrorV1/async:
+    post:
+      tags:
+      - Stop With Error V1
+      summary: Process start
+      description: "\nBeispiel für das Pattern «Prozess mit Fehler stoppen»: ist der\
+        \ Kunde gesperrt (`blocked`), bleibt\nder Prozess am Ende mit einem Incident\
+        \ stehen - Meldung «Kunde <Name> ist gesperrt.». Ist das Limit\nüberschritten\
+        \ (`limitExceeded`), bleibt er an einem Zwischenereignis stehen - «Limit von\
+        \ <Name>\nüberschritten.»; schieben DevOps ihn danach weiter, endet er mit\
+        \ `succeeded`. Sonst endet er gleich\nmit `succeeded`.\n\n\n---\n\n- **Called\
+        \ Element**: `democompany-patterns-stopWithErrorV1` (to define in the Call\
+        \ Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.stopWithError.v1.StopWithError\
+        \ > In`\n- Output: `democompany.patterns.domain.stopWithError.v1.StopWithError\
+        \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
+        \ id=\"patterns-stopWithErrorV1-52164\">\n    <img onLoad=\"openFromUrl('patterns-stopWithErrorV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-stopWithErrorV1-52164'), height: '95%',\
+        \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [patterns-stopWithErrorV1.bpmn](diagrams/patterns-stopWithErrorV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-stopWithErrorV1-52164')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
+        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"processStatus,customerName,blocked,limitExceeded\",\n...\n```\n\n**outputMock**:\n\
+        \n```json\n...\n\"outputMock\": {\n  \"processStatus\" : \"succeeded\",\n\
+        \  \"customerName\" : \"Peter Muster\",\n  \"blocked\" : false,\n  \"limitExceeded\"\
+        \ : false\n},\n...\n```\n\n</p>\n</details>\n</p>\n      \n\n\n**Used in no\
+        \ other Process.**\n\n**Uses no other Processes.**\n<p/>\n<details>\n<summary><b><i>General\
+        \ Information</i></b></summary>\n<p>\n\nThis describes the <b>Input</b> to\
+        \ start the Process with.\n\nBe aware that running this request with Postman,\n\
+        you will not get the <b>Output</b> but the <i>processInstanceId</i>, as starting\
+        \ a process is asynchronous.\n\nTo get the <b>Output</b> you need to use the\
+        \ `Process variables` request.\n\n</p>\n</details>"
+      operationId: Process start
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StopWithError.In'
+            examples:
+              democompany-patterns-stopWithErrorV1:
+                value:
+                  customerName: Peter Muster
+                  blocked: false
+                  limitExceeded: false
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessInfo'
+              example:
+                processInstanceId: f150c3f1-13f5-11ec-936e-0242ac1d0007
+                businessKey: ORDER-2025-12345
+                status: Active
+                engineType: C7
+  /process/democompany-patterns-stopWithErrorV1/{processInstanceId}/variables:
+    get:
+      tags:
+      - Stop With Error V1
+      summary: Process variables
+      description: "\nBeispiel für das Pattern «Prozess mit Fehler stoppen»: ist der\
+        \ Kunde gesperrt (`blocked`), bleibt\nder Prozess am Ende mit einem Incident\
+        \ stehen - Meldung «Kunde <Name> ist gesperrt.». Ist das Limit\nüberschritten\
+        \ (`limitExceeded`), bleibt er an einem Zwischenereignis stehen - «Limit von\
+        \ <Name>\nüberschritten.»; schieben DevOps ihn danach weiter, endet er mit\
+        \ `succeeded`. Sonst endet er gleich\nmit `succeeded`.\n\n\n---\n\n- **Called\
+        \ Element**: `democompany-patterns-stopWithErrorV1` (to define in the Call\
+        \ Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.stopWithError.v1.StopWithError\
+        \ > In`\n- Output: `democompany.patterns.domain.stopWithError.v1.StopWithError\
+        \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
+        </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,customerName,blocked,limitExceeded\"\
+        ,\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ : \"succeeded\",\n  \"customerName\" : \"Peter Muster\",\n  \"blocked\"\
+        \ : false,\n  \"limitExceeded\" : false\n},\n...\n```\n\n</p>\n</details>\n\
+        </p>\n      <p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Output</b> of the Process you get. Be aware this\
+        \ does not check if the process is finished (TODO).\n\n  \n</p>\n</details>"
+      operationId: Process variables
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: processStatus,customerName,blocked,limitExceeded
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StopWithError.Out'
+              examples:
+                democompany-patterns-stopWithErrorV1:
+                  value:
+                    processStatus: succeeded
+                    customerName: Peter Muster
+                    blocked: false
+                    limitExceeded: false
+  /worker/democompany-patterns-stopWithErrorV1:
+    post:
+      tags:
+      - Stop With Error V1
+      summary: Init Worker
+      description: |2
+
+        <details>
+        <summary><b>General Information</b></summary>
+
+        The Init Worker has the following responsibilities:
+
+          - Validates the Process Input (`In`). -> by Orchescala
+          - Maps the Configuration to Process Variables (`InConfig`). -> by Orchescala
+          - Custom validation the Process Input (`In`, e.g. combining 2 variables). -> Process Specific
+          - Initializes the default Variables with `In` as input (see _Process_ description) and `InitIn` as output. -> Process Specific
+
+        The Input is the same as the `In` object of the _Process_.
+
+        `NoInput` means there is no initialization needed.
+        </details>
+      operationId: Init Worker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StopWithError.In'
+            examples:
+              democompany-patterns-stopWithErrorV1:
+                value:
+                  customerName: Peter Muster
+                  blocked: false
+                  limitExceeded: false
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoInput'
+              examples:
+                InitIn:
+                  value: {}
+  /process/democompany-patterns-sendProcessEventV1/async:
+    post:
+      tags:
+      - Send Process Event V1
+      summary: Process start
+      description: "\nBeispiel für das Pattern «Prozess-Event senden»: der Prozess\
+        \ meldet zu Beginn `started` und am Ende\n`finished` an den Event-Prozess\
+        \ `democompany-patterns-processEventV1` (ein Dummy) - je eine Call\nActivity\
+        \ mit dem Event, der Prozess-ID und der Instanz. Danach endet er mit `succeeded`.\n\
+        \n\n---\n\n- **Called Element**: `democompany-patterns-sendProcessEventV1`\
+        \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.sendProcessEvent.v1.SendProcessEvent\
+        \ > In`\n- Output: `democompany.patterns.domain.sendProcessEvent.v1.SendProcessEvent\
+        \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
+        \ id=\"patterns-sendProcessEventV1-98475\">\n    <img onLoad=\"openFromUrl('patterns-sendProcessEventV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-sendProcessEventV1-98475'), height:\
+        \ '95%', width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [patterns-sendProcessEventV1.bpmn](diagrams/patterns-sendProcessEventV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-sendProcessEventV1-98475')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
+        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"processStatus,customerName\",\n...\n```\n\n**outputMock**:\n\n```json\n\
+        ...\n\"outputMock\": {\n  \"processStatus\" : \"succeeded\",\n  \"customerName\"\
+        \ : \"Peter Muster\"\n},\n...\n```\n\n</p>\n</details>\n</p>\n      \n\n\n\
+        **Used in no other Process.**\n\n**Uses no other Processes.**\n<p/>\n<details>\n\
+        <summary><b><i>General Information</i></b></summary>\n<p>\n\nThis describes\
+        \ the <b>Input</b> to start the Process with.\n\nBe aware that running this\
+        \ request with Postman,\nyou will not get the <b>Output</b> but the <i>processInstanceId</i>,\
+        \ as starting a process is asynchronous.\n\nTo get the <b>Output</b> you need\
+        \ to use the `Process variables` request.\n\n</p>\n</details>"
+      operationId: Process start
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendProcessEvent.In'
+            examples:
+              democompany-patterns-sendProcessEventV1:
+                value:
+                  customerName: Peter Muster
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessInfo'
+              example:
+                processInstanceId: f150c3f1-13f5-11ec-936e-0242ac1d0007
+                businessKey: ORDER-2025-12345
+                status: Active
+                engineType: C7
+  /process/democompany-patterns-sendProcessEventV1/{processInstanceId}/variables:
+    get:
+      tags:
+      - Send Process Event V1
+      summary: Process variables
+      description: "\nBeispiel für das Pattern «Prozess-Event senden»: der Prozess\
+        \ meldet zu Beginn `started` und am Ende\n`finished` an den Event-Prozess\
+        \ `democompany-patterns-processEventV1` (ein Dummy) - je eine Call\nActivity\
+        \ mit dem Event, der Prozess-ID und der Instanz. Danach endet er mit `succeeded`.\n\
+        \n\n---\n\n- **Called Element**: `democompany-patterns-sendProcessEventV1`\
+        \ (to define in the Call Activity)\n\n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.sendProcessEvent.v1.SendProcessEvent\
+        \ > In`\n- Output: `democompany.patterns.domain.sendProcessEvent.v1.SendProcessEvent\
+        \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
+        </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus,customerName\"\
+        ,\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ : \"succeeded\",\n  \"customerName\" : \"Peter Muster\"\n},\n...\n```\n\n\
+        </p>\n</details>\n</p>\n      <p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Output</b> of the Process you get. Be aware this\
+        \ does not check if the process is finished (TODO).\n\n  \n</p>\n</details>"
+      operationId: Process variables
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: processStatus,customerName
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendProcessEvent.Out'
+              examples:
+                democompany-patterns-sendProcessEventV1:
+                  value:
+                    processStatus: succeeded
+                    customerName: Peter Muster
+  /worker/democompany-patterns-sendProcessEventV1:
+    post:
+      tags:
+      - Send Process Event V1
+      summary: Init Worker
+      description: |2
+
+        <details>
+        <summary><b>General Information</b></summary>
+
+        The Init Worker has the following responsibilities:
+
+          - Validates the Process Input (`In`). -> by Orchescala
+          - Maps the Configuration to Process Variables (`InConfig`). -> by Orchescala
+          - Custom validation the Process Input (`In`, e.g. combining 2 variables). -> Process Specific
+          - Initializes the default Variables with `In` as input (see _Process_ description) and `InitIn` as output. -> Process Specific
+
+        The Input is the same as the `In` object of the _Process_.
+
+        `NoInput` means there is no initialization needed.
+        </details>
+      operationId: Init Worker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendProcessEvent.In'
+            examples:
+              democompany-patterns-sendProcessEventV1:
+                value:
+                  customerName: Peter Muster
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoInput'
+              examples:
+                InitIn:
+                  value: {}
+  /process/democompany-patterns-processEventV1/async:
+    post:
+      tags:
+      - Process Event V1
+      summary: Process start
+      description: "\nDummy-Event-Prozess für das Pattern «Prozess-Event senden»:\
+        \ nimmt das Event entgegen und endet mit\n`succeeded`. Ein echter Event-Prozess\
+        \ würde es z. B. einem Fremdsystem melden. Die Eingaben sind\ndie, die das\
+        \ Pattern mitgibt; zurück gibt er nichts.\n\n\n---\n\n- **Called Element**:\
+        \ `democompany-patterns-processEventV1` (to define in the Call Activity)\n\
+        \n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.processEvent.v1.ProcessEvent\
+        \ > In`\n- Output: `democompany.patterns.domain.processEvent.v1.ProcessEvent\
+        \ > Out`\n\n\n\n\n<div class=\"diagramCanvas\">\n  <div class=\"diagram\"\
+        \ id=\"patterns-processEventV1-41110\">\n    <img onLoad=\"openFromUrl('patterns-processEventV1.bpmn',\
+        \ new BpmnJS({ container: $('#patterns-processEventV1-41110'), height: '95%',\
+        \ width: '95%' }));\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\"\
+        \ />\n  </div>\n</div>\n\nDownload: [patterns-processEventV1.bpmn](diagrams/patterns-processEventV1.bpmn)\n\
+        \n\n<div>\n  <button onclick=\"downloadSVG('patterns-processEventV1-41110')\"\
+        >Download Diagram as SVG</button>\n</div>\n\n\n<details>\n<summary>\n<b><i>General\
+        \ Variable(s)</i></b>\n</summary>\n\n<p>\n\n**outputVariables**:\n\nJust take\
+        \ the variable you need in your process!\n```json\n...\n\"outputVariables\"\
+        : \"processStatus\",\n...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\"\
+        : {\n  \"processStatus\" : \"succeeded\"\n},\n...\n```\n\n</p>\n</details>\n\
+        </p>\n      \n\n\n**Used in no other Process.**\n\n**Uses no other Processes.**\n\
+        <p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n<p>\n\
+        \nThis describes the <b>Input</b> to start the Process with.\n\nBe aware that\
+        \ running this request with Postman,\nyou will not get the <b>Output</b> but\
+        \ the <i>processInstanceId</i>, as starting a process is asynchronous.\n\n\
+        To get the <b>Output</b> you need to use the `Process variables` request.\n\
+        \n</p>\n</details>"
+      operationId: Process start
+      parameters:
+      - name: tenantId
+        in: query
+        description: If you have a multi tenant setup, you must specify the Tenant
+          ID.
+        required: false
+        schema:
+          default: '{{tenantId}}'
+          type: string
+      - name: businessKey
+        in: query
+        description: Business Key, be aware that in Camunda 8 this is an additional
+          process variable.
+        required: false
+        schema:
+          default: From Test Client
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessEvent.In'
+            examples:
+              democompany-patterns-processEventV1:
+                value:
+                  eventKey: started
+                  processDefinitionKey: democompany-patterns-sendProcessEventV1
+                  processInstanceId: '4711'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessInfo'
+              example:
+                processInstanceId: f150c3f1-13f5-11ec-936e-0242ac1d0007
+                businessKey: ORDER-2025-12345
+                status: Active
+                engineType: C7
+  /process/democompany-patterns-processEventV1/{processInstanceId}/variables:
+    get:
+      tags:
+      - Process Event V1
+      summary: Process variables
+      description: "\nDummy-Event-Prozess für das Pattern «Prozess-Event senden»:\
+        \ nimmt das Event entgegen und endet mit\n`succeeded`. Ein echter Event-Prozess\
+        \ würde es z. B. einem Fremdsystem melden. Die Eingaben sind\ndie, die das\
+        \ Pattern mitgibt; zurück gibt er nichts.\n\n\n---\n\n- **Called Element**:\
+        \ `democompany-patterns-processEventV1` (to define in the Call Activity)\n\
+        \n\n\n---\n\n\n\n\n- Input:  `democompany.patterns.domain.processEvent.v1.ProcessEvent\
+        \ > In`\n- Output: `democompany.patterns.domain.processEvent.v1.ProcessEvent\
+        \ > Out`\n\n\n\n\n\n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n\
+        </summary>\n\n<p>\n\n**outputVariables**:\n\nJust take the variable you need\
+        \ in your process!\n```json\n...\n\"outputVariables\": \"processStatus\",\n\
+        ...\n```\n\n**outputMock**:\n\n```json\n...\n\"outputMock\": {\n  \"processStatus\"\
+        \ : \"succeeded\"\n},\n...\n```\n\n</p>\n</details>\n</p>\n      <p/>\n<details>\n\
+        <summary><b><i>General Information</i></b></summary>\n<p>\n\nThis describes\
+        \ the <b>Output</b> of the Process you get. Be aware this does not check if\
+        \ the process is finished (TODO).\n\n  \n</p>\n</details>"
+      operationId: Process variables
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: |+
+          The processInstanceId of the Process.
+
+          > This is the result id of the `StartProcess`. And should automatically be set in Postman - see _Postman Instructions_.
+
+        required: true
+        schema:
+          default: '{{processInstanceId}}'
+          type: string
+      - name: variableFilter
+        in: query
+        description: A comma-separated String of variable names. E.g. `name,firstName`
+        required: false
+        schema:
+          type: string
+        example: processStatus
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessEvent.Out'
+              examples:
+                democompany-patterns-processEventV1:
+                  value:
+                    processStatus: succeeded
+  /worker/democompany-patterns-processEventV1:
+    post:
+      tags:
+      - Process Event V1
+      summary: Init Worker
+      description: |2
+
+        <details>
+        <summary><b>General Information</b></summary>
+
+        The Init Worker has the following responsibilities:
+
+          - Validates the Process Input (`In`). -> by Orchescala
+          - Maps the Configuration to Process Variables (`InConfig`). -> by Orchescala
+          - Custom validation the Process Input (`In`, e.g. combining 2 variables). -> Process Specific
+          - Initializes the default Variables with `In` as input (see _Process_ description) and `InitIn` as output. -> Process Specific
+
+        The Input is the same as the `In` object of the _Process_.
+
+        `NoInput` means there is no initialization needed.
+        </details>
+      operationId: Init Worker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessEvent.In'
+            examples:
+              democompany-patterns-processEventV1:
+                value:
+                  eventKey: started
+                  processDefinitionKey: democompany-patterns-sendProcessEventV1
+                  processInstanceId: '4711'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoInput'
+              examples:
+                InitIn:
+                  value: {}
 components:
   schemas:
+    Address:
+      title: Address
+      type: object
+      required:
+      - street
+      - number
+      - zip
+      - city
+      - country
+      properties:
+        street:
+          type: string
+        number:
+          type: string
+        zip:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        additionalInfo:
+          type: string
     ApproveRequestUT.In:
       title: ApproveRequestUT.In
       type: object
@@ -972,14 +2532,53 @@ components:
       - checkedUsernames
       properties:
         identityChecked:
-          description: Der Service wurde mit der (geprüften) Identität des Prozesses
-            aufgerufen.
+          description: Die Identität des Prozesses wurde geprüft.
           type: boolean
         checkedUsernames:
           description: Die Benutzernamen aller Prüfungen bis hier, in ihrer Reihenfolge.
           type: array
           items:
             type: string
+    Client:
+      title: Client
+      type: object
+      required:
+      - id
+      - firstName
+      - lastName
+      - address
+      - gender
+      - fullName
+      - salutation
+      - dateOfBirth
+      - createdAt
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        tel:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+        gender:
+          $ref: '#/components/schemas/Gender'
+        fullName:
+          type: string
+        salutation:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
     CloseRequestUT.In:
       title: CloseRequestUT.In
       type: object
@@ -1000,6 +2599,22 @@ components:
         closed:
           description: Antrag abgeschlossen?
           type: boolean
+    EditRequestUT.In:
+      title: EditRequestUT.In
+      type: object
+      required:
+      - customerName
+      properties:
+        customerName:
+          type: string
+    EditRequestUT.Out:
+      title: EditRequestUT.Out
+      type: object
+      required:
+      - isOk
+      properties:
+        isOk:
+          type: boolean
     EngineType:
       title: EngineType
       description: Type of the engine
@@ -1009,6 +2624,14 @@ components:
       - C8
       - Gateway
       - Op
+    Female:
+      title: Female
+      type: object
+    Gender:
+      oneOf:
+      - $ref: '#/components/schemas/Female'
+      - $ref: '#/components/schemas/Male'
+      - $ref: '#/components/schemas/Unknown'
     Identity.In:
       title: Identity.In
       type: object
@@ -1094,9 +2717,37 @@ components:
             In keine hat.
         greetingMessage:
           type: string
+    Male:
+      title: Male
+      type: object
     NoInput:
       title: NoInput
       type: object
+    ProcessEvent.In:
+      title: ProcessEvent.In
+      type: object
+      required:
+      - eventKey
+      - processDefinitionKey
+      - processInstanceId
+      properties:
+        eventKey:
+          description: Was passiert ist, z. B. `started`, `finished`.
+          type: string
+        processDefinitionKey:
+          description: Die ID des Prozesses, der das Event meldet.
+          type: string
+        processInstanceId:
+          description: Die Instanz des Prozesses, der das Event meldet.
+          type: string
+    ProcessEvent.Out:
+      title: ProcessEvent.Out
+      type: object
+      required:
+      - processStatus
+      properties:
+        processStatus:
+          $ref: '#/components/schemas/ProcessStatus1'
     ProcessInfo:
       title: ProcessInfo
       description: Contains information about a process instance or execution
@@ -1134,4 +2785,189 @@ components:
       - notValid
       - output-mocked
       - succeeded
+    ProcessStatusExample.In:
+      title: ProcessStatusExample.In
+      type: object
+      required:
+      - customerName
+      - approved
+      properties:
+        customerName:
+          description: Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker
+            `validation-failed`).
+          type: string
+        approved:
+          description: 'Ist der Antrag bewilligt? Ja: Ende «succeeded», nein: Ende
+            «canceled».'
+          type: boolean
+    ProcessStatusExample.Out:
+      title: ProcessStatusExample.Out
+      type: object
+      required:
+      - processStatus
+      - customerName
+      - approved
+      properties:
+        processStatus:
+          $ref: '#/components/schemas/ProcessStatus1'
+          description: Wie der Prozess ausgegangen ist - gesetzt vom Ende, an dem
+            er angekommen ist.
+        customerName:
+          type: string
+        approved:
+          type: boolean
+    PropagateMocks.In:
+      title: PropagateMocks.In
+      type: object
+      required:
+      - customerName
+      - clientId
+      properties:
+        customerName:
+          description: Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker
+            `validation-failed`).
+          type: string
+        clientId:
+          description: Id des Kunden - der Teilprozess lädt ihn mit dem Service `GetClientsClientId`.
+          type: integer
+          format: int64
+    PropagateMocks.Out:
+      title: PropagateMocks.Out
+      type: object
+      required:
+      - processStatus
+      - customerName
+      - subProcessStatus
+      properties:
+        processStatus:
+          $ref: '#/components/schemas/ProcessStatus1'
+        customerName:
+          type: string
+        subProcessStatus:
+          $ref: '#/components/schemas/ProcessStatus1'
+          description: Der `processStatus`, mit dem der Teilprozess endete.
+        client:
+          $ref: '#/components/schemas/Client'
+          description: Der Kunde, den der Teilprozess geladen hat.
+    PropagateMocksSub.Out:
+      title: PropagateMocksSub.Out
+      type: object
+      required:
+      - processStatus
+      - customerName
+      - client
+      properties:
+        processStatus:
+          $ref: '#/components/schemas/ProcessStatus1'
+        customerName:
+          type: string
+        client:
+          $ref: '#/components/schemas/Client'
+          description: Der Kunde - aus «Kunde laden».
+    SendProcessEvent.In:
+      title: SendProcessEvent.In
+      type: object
+      required:
+      - customerName
+      properties:
+        customerName:
+          description: Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker
+            `validation-failed`).
+          type: string
+    SendProcessEvent.Out:
+      title: SendProcessEvent.Out
+      type: object
+      required:
+      - processStatus
+      - customerName
+      properties:
+        processStatus:
+          $ref: '#/components/schemas/ProcessStatus1'
+        customerName:
+          type: string
+    StopWithError.In:
+      title: StopWithError.In
+      type: object
+      required:
+      - customerName
+      - blocked
+      - limitExceeded
+      properties:
+        customerName:
+          description: Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker
+            `validation-failed`).
+          type: string
+        blocked:
+          description: 'Ist der Kunde gesperrt? Ja: der Prozess bleibt am Ende mit
+            einem Incident stehen.'
+          type: boolean
+        limitExceeded:
+          description: 'Ist das Limit überschritten? Ja: der Prozess bleibt an einem
+            Zwischenereignis mit einem Incident stehen.'
+          type: boolean
+    StopWithError.Out:
+      title: StopWithError.Out
+      type: object
+      required:
+      - processStatus
+      - customerName
+      - blocked
+      - limitExceeded
+      properties:
+        processStatus:
+          $ref: '#/components/schemas/ProcessStatus1'
+        customerName:
+          type: string
+        blocked:
+          type: boolean
+        limitExceeded:
+          type: boolean
+    UniqueExecution.In:
+      title: UniqueExecution.In
+      type: object
+      required:
+      - customerName
+      properties:
+        customerName:
+          description: Name des Kunden - darf nicht leer sein (sonst meldet der InitWorker
+            `validation-failed`).
+          type: string
+        inConfig:
+          $ref: '#/components/schemas/UniqueExecution.InConfig'
+    UniqueExecution.InConfig:
+      title: UniqueExecution.InConfig
+      description: |-
+        A way to override process configuration.
+
+        **SHOULD NOT BE USED on Production!**
+      type: object
+    UniqueExecution.InitIn:
+      title: UniqueExecution.InitIn
+      type: object
+      required:
+      - alreadyRunning
+      properties:
+        alreadyRunning:
+          description: '`false` beim Start - der Ereignis-Subprozess «Prozess läuft
+            schon» setzt ihn auf `true`.'
+          type: boolean
+    UniqueExecution.Out:
+      title: UniqueExecution.Out
+      type: object
+      required:
+      - processStatus
+      - customerName
+      - alreadyRunning
+      properties:
+        processStatus:
+          $ref: '#/components/schemas/ProcessStatus1'
+        customerName:
+          type: string
+        alreadyRunning:
+          description: Kam die Start-Nachricht ein zweites Mal, während der Prozess
+            lief?
+          type: boolean
+    Unknown:
+      title: Unknown
+      type: object
 tags: []

@@ -10,10 +10,10 @@ File- and Line count for **InitWorkerDsl** files:
 
  - democompany-cards: 19 of 1 Files
  - democompany-customer: 88 of 2 Files
- - democompany-patterns: 143 of 7 Files
+ - democompany-patterns: 164 of 8 Files
  - democompany-services: 0 of 0 Files
 
-**Total** scala: **250** of **10** Files
+**Total** scala: **271** of **11** Files
 
 ********************
 
@@ -44,10 +44,10 @@ File- and Line count for **bpmn** files:
 
  - democompany-cards: 1385 of 3 Files
  - democompany-customer: 1327 of 4 Files
- - democompany-patterns: 2138 of 14 Files
+ - democompany-patterns: 2493 of 18 Files
  - democompany-services: 0 of 0 Files
 
-**Total** bpmn: **4850** of **21** Files
+**Total** bpmn: **5205** of **25** Files
 
 ********************
 
@@ -66,10 +66,10 @@ File- and Line count for **scala** files:
 
  - democompany-cards: 1101 of 30 Files
  - democompany-customer: 2612 of 58 Files
- - democompany-patterns: 1436 of 45 Files
+ - democompany-patterns: 1681 of 52 Files
  - democompany-services: 814 of 26 Files
 
-**Total** scala: **5963** of **159** Files
+**Total** scala: **6208** of **166** Files
 
 
         

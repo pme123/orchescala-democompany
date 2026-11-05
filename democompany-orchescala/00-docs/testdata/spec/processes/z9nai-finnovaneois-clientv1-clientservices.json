@@ -1,0 +1,241 @@
+{
+  "version": 1,
+  "slug": "z9nai-finnovaneois-clientv1-clientservices",
+  "name": "ClientServices",
+  "title": "Client Services",
+  "processId": "z9nai-finnovaNeoIs-clientV1-ClientServices",
+  "project": "z9nai-finnovaNeoIs",
+  "engine": "c8",
+  "status": "draft",
+  "description": "",
+  "createdAt": "2026-11-04T08:07:13+01:00",
+  "updatedAt": "2026-11-05T10:59:54+01:00",
+  "variables": [],
+  "steps": [
+    {
+      "id": "StartEvent",
+      "kind": "start",
+      "name": "Start",
+      "status": "draft"
+    },
+    {
+      "id": "CallService",
+      "kind": "service",
+      "name": "Service aufrufen",
+      "status": "draft",
+      "manualOutMapping": false,
+      "topic": "z9nai-finnovaNeoIs-getClientMainTypeByClient1V1.GetPartnerGetClientMainTypeByClient1",
+      "serviceId": "z9nai-finnovaNeoIs-getClientMainTypeByClient1V1.GetPartnerGetClientMainTypeByClient1",
+      "inputs": [
+        {
+          "name": "clientKey",
+          "expression": "= clientKey"
+        },
+        {
+          "name": "readFromFcs",
+          "expression": "= readFromFcs",
+          "description": "If set to true, the data is read from FCS (consistent). If set to false, the data might be read from an eventually consistent source.",
+          "disabled": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "clientMainType",
+          "expression": "= clientMainType",
+          "fromService": true,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "id": "Gateway_0l5bn7t",
+      "kind": "gateway",
+      "name": "clientMainType?",
+      "status": "draft",
+      "gatewayType": "exclusive",
+      "branches": [
+        {
+          "id": "Flow_1cyt3sc",
+          "label": "Person",
+          "steps": [
+            {
+              "id": "Activity_0b2hnz2",
+              "kind": "service",
+              "name": "Read Person",
+              "status": "draft",
+              "manualOutMapping": false,
+              "topic": "z9nai-finnovaNeoIs-readNaturalPerson2V1.PostReadNaturalPerson2",
+              "serviceId": "z9nai-finnovaNeoIs-readNaturalPerson2V1.PostReadNaturalPerson2",
+              "outputs": [
+                {
+                  "name": "naturalPersons",
+                  "expression": "= naturalPersons",
+                  "disabled": true,
+                  "fromService": true
+                },
+                {
+                  "name": "naturalPerson",
+                  "expression": "= naturalPerson",
+                  "disabled": true,
+                  "fromService": true
+                }
+              ],
+              "inputs": [
+                {
+                  "name": "readFromFcs",
+                  "expression": "= readFromFcs",
+                  "disabled": true
+                },
+                {
+                  "name": "clientKeys",
+                  "expression": "= clientKeys",
+                  "description": "Collection from client keys\n\nMax length: 22 characters\n\nsource: P_KdLnrs COLLECTION of SRYI_I22_1",
+                  "disabled": true
+                },
+                {
+                  "name": "clientKey",
+                  "expression": "= clientKey",
+                  "description": "Max length: 22 characters\n\nsource: P_KdLnrs COLLECTION of SRYI_I22_1",
+                  "disabled": true
+                }
+              ]
+            }
+          ],
+          "condition": "= clientType == \"\""
+        },
+        {
+          "id": "Flow_0vel2gf",
+          "label": "Multiple Persons",
+          "steps": [
+            {
+              "id": "Activity_1skixaf",
+              "kind": "service",
+              "name": "Read Multiple Person",
+              "status": "draft",
+              "manualOutMapping": false,
+              "topic": "z9nai-finnovaNeoIs-readMultipleNaturalPerson2V1.PostReadMultipleNaturalPerson2",
+              "serviceId": "z9nai-finnovaNeoIs-readMultipleNaturalPerson2V1.PostReadMultipleNaturalPerson2",
+              "outputs": [
+                {
+                  "name": "readMultipleNaturalPerson2Response",
+                  "expression": "= readMultipleNaturalPerson2Response",
+                  "fromService": true,
+                  "disabled": true
+                }
+              ],
+              "inputs": [
+                {
+                  "name": "readFromFcs",
+                  "expression": "= readFromFcs",
+                  "disabled": true
+                },
+                {
+                  "name": "clientKeys",
+                  "expression": "= clientKeys",
+                  "description": "Collection from client keys\n\nMax length: 22 characters\n\nsource: P_KdLnrs COLLECTION of SRYI_I22_1",
+                  "disabled": true
+                },
+                {
+                  "name": "clientKey",
+                  "expression": "= clientKey",
+                  "description": "Max length: 22 characters\n\nsource: P_KdLnrs COLLECTION of SRYI_I22_1",
+                  "disabled": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "Flow_0sq2chk",
+          "label": "Company",
+          "steps": [
+            {
+              "id": "Activity_17g43yf",
+              "kind": "service",
+              "name": "Read Company",
+              "status": "draft",
+              "manualOutMapping": false,
+              "topic": "z9nai-finnovaNeoIs-readOrganisation2V1.PostReadOrganisation2",
+              "serviceId": "z9nai-finnovaNeoIs-readOrganisation2V1.PostReadOrganisation2",
+              "outputs": [
+                {
+                  "name": "organisations",
+                  "expression": "= organisations",
+                  "disabled": true,
+                  "fromService": true
+                },
+                {
+                  "name": "organisation",
+                  "expression": "= organisation",
+                  "disabled": true,
+                  "fromService": true
+                }
+              ],
+              "inputs": [
+                {
+                  "name": "readFromFcs",
+                  "expression": "= readFromFcs",
+                  "disabled": true
+                },
+                {
+                  "name": "clientKeys",
+                  "expression": "= clientKeys",
+                  "description": "Collection from client keys\n\nMax length: 22 characters\n\nsource: P_KdLnrs COLLECTION of SRYI_I22_1",
+                  "disabled": true
+                },
+                {
+                  "name": "clientKey",
+                  "expression": "= clientKey",
+                  "description": "Max length: 22 characters\n\nsource: P_KdLnrs COLLECTION of SRYI_I22_1",
+                  "disabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Activity_1xcwlav",
+      "kind": "service",
+      "name": "Create Client",
+      "status": "draft",
+      "manualOutMapping": false
+    },
+    {
+      "id": "EndEvent",
+      "kind": "end",
+      "name": "Ende",
+      "status": "draft"
+    }
+  ],
+  "types": [
+    {
+      "id": "t-fa55a180d0",
+      "name": "In",
+      "kind": "case",
+      "status": "draft",
+      "fields": [
+        {
+          "id": "f-c1eab93b8d",
+          "name": "clientKey",
+          "type": "String"
+        }
+      ],
+      "root": true
+    },
+    {
+      "id": "t-097dcf4be3",
+      "name": "Out",
+      "kind": "case",
+      "status": "draft",
+      "fields": [],
+      "processOut": true
+    }
+  ],
+  "service": {
+    "api": "client",
+    "apiVersion": 1,
+    "name": "ClientServices"
+  }
+}

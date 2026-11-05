@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_z9nai-finnovaNeoIs-clientV1-ClientServices" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="z9nai-finnovaNeoIs-clientV1-ClientServices" name="Client Services" isExecutable="false">
+    <bpmn:startEvent id="StartEvent" name="Start">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="CallService" name="Service aufrufen">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent" name="Ende">
+      <bpmn:incoming>Flow_1a4l59p</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent" targetRef="CallService" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="CallService" targetRef="Gateway_0l5bn7t" />
+    <bpmn:exclusiveGateway id="Gateway_0l5bn7t" name="clientMainType?">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_1cyt3sc</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0vel2gf</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0sq2chk</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1cyt3sc" name="Person" sourceRef="Gateway_0l5bn7t" targetRef="Activity_0b2hnz2" />
+    <bpmn:sequenceFlow id="Flow_18di0d6" sourceRef="Activity_0b2hnz2" targetRef="Gateway_0olbpi8" />
+    <bpmn:sequenceFlow id="Flow_1a4l59p" sourceRef="Activity_1xcwlav" targetRef="EndEvent" />
+    <bpmn:serviceTask id="Activity_1xcwlav" name="Create Client">
+      <bpmn:incoming>Flow_1h214nb</bpmn:incoming>
+      <bpmn:outgoing>Flow_1a4l59p</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_0b2hnz2" name="Read Person">
+      <bpmn:incoming>Flow_1cyt3sc</bpmn:incoming>
+      <bpmn:outgoing>Flow_18di0d6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_0olbpi8">
+      <bpmn:incoming>Flow_18di0d6</bpmn:incoming>
+      <bpmn:incoming>Flow_167hoav</bpmn:incoming>
+      <bpmn:incoming>Flow_0gei60o</bpmn:incoming>
+      <bpmn:outgoing>Flow_1h214nb</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1h214nb" sourceRef="Gateway_0olbpi8" targetRef="Activity_1xcwlav" />
+    <bpmn:sequenceFlow id="Flow_0vel2gf" name="Multiple Persons" sourceRef="Gateway_0l5bn7t" targetRef="Activity_1skixaf" />
+    <bpmn:sequenceFlow id="Flow_167hoav" sourceRef="Activity_1skixaf" targetRef="Gateway_0olbpi8" />
+    <bpmn:serviceTask id="Activity_1skixaf" name="Read Multiple Person">
+      <bpmn:incoming>Flow_0vel2gf</bpmn:incoming>
+      <bpmn:outgoing>Flow_167hoav</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_17g43yf" name="Read Company">
+      <bpmn:incoming>Flow_0sq2chk</bpmn:incoming>
+      <bpmn:outgoing>Flow_0gei60o</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0sq2chk" name="Company" sourceRef="Gateway_0l5bn7t" targetRef="Activity_17g43yf" />
+    <bpmn:sequenceFlow id="Flow_0gei60o" sourceRef="Activity_17g43yf" targetRef="Gateway_0olbpi8" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_1">
+    <bpmndi:BPMNPlane id="Plane_1" bpmnElement="z9nai-finnovaNeoIs-clientV1-ClientServices">
+      <bpmndi:BPMNShape id="StartEvent_di" bpmnElement="StartEvent">
+        <dc:Bounds x="-108" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-102" y="138" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CallService_di" bpmnElement="CallService">
+        <dc:Bounds x="-10" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0l5bn7t_di" bpmnElement="Gateway_0l5bn7t" isMarkerVisible="true">
+        <dc:Bounds x="145" y="95" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="180" y="138" width="80" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_di" bpmnElement="EndEvent">
+        <dc:Bounds x="742" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="747" y="138" width="26" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0bv8ksk_di" bpmnElement="Activity_1xcwlav">
+        <dc:Bounds x="590" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0olbpi8_di" bpmnElement="Gateway_0olbpi8" isMarkerVisible="true">
+        <dc:Bounds x="485" y="95" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_11inonr_di" bpmnElement="Activity_0b2hnz2">
+        <dc:Bounds x="320" y="-70" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1krvepa_di" bpmnElement="Activity_1skixaf">
+        <dc:Bounds x="320" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1714xvz" bpmnElement="Activity_17g43yf">
+        <dc:Bounds x="320" y="240" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="-72" y="120" />
+        <di:waypoint x="-10" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="90" y="120" />
+        <di:waypoint x="145" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1cyt3sc_di" bpmnElement="Flow_1cyt3sc">
+        <di:waypoint x="170" y="95" />
+        <di:waypoint x="170" y="-30" />
+        <di:waypoint x="320" y="-30" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="228" y="-48" width="35" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18di0d6_di" bpmnElement="Flow_18di0d6">
+        <di:waypoint x="420" y="-30" />
+        <di:waypoint x="510" y="-30" />
+        <di:waypoint x="510" y="95" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1a4l59p_di" bpmnElement="Flow_1a4l59p">
+        <di:waypoint x="690" y="120" />
+        <di:waypoint x="742" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1h214nb_di" bpmnElement="Flow_1h214nb">
+        <di:waypoint x="535" y="120" />
+        <di:waypoint x="590" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vel2gf_di" bpmnElement="Flow_0vel2gf">
+        <di:waypoint x="195" y="120" />
+        <di:waypoint x="320" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="217" y="102" width="82" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_167hoav_di" bpmnElement="Flow_167hoav">
+        <di:waypoint x="420" y="120" />
+        <di:waypoint x="485" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0sq2chk_di" bpmnElement="Flow_0sq2chk">
+        <di:waypoint x="170" y="145" />
+        <di:waypoint x="170" y="280" />
+        <di:waypoint x="320" y="280" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="186" y="209.5" width="48" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0gei60o_di" bpmnElement="Flow_0gei60o">
+        <di:waypoint x="420" y="280" />
+        <di:waypoint x="510" y="280" />
+        <di:waypoint x="510" y="145" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
