@@ -4,6 +4,7 @@ package democompany.services.worker
 object WorkerApp extends CompanyWorkerApp:
   workers(
     clientsV1Workers,
+    eventsV1Workers,
     mailsV1Workers,
     smtpV1Workers
   )
@@ -12,6 +13,9 @@ object WorkerApp extends CompanyWorkerApp:
 
   private lazy val clientsV1Workers = Seq(
     clients.v1.GetClientsClientIdWorker()
+  )
+  private lazy val eventsV1Workers = Seq(
+    events.v1.PostEventWorker()
   )
   private lazy val mailsV1Workers = Seq(
     mails.v1.SendEmailWorker()

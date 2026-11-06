@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: democompany-services
   version: 0.1.0-SNAPSHOT
-  summary: "\n\nMy services for the democompany\n\nCreated at 10/20/26, 3:08 PM\n\n\
+  summary: "\n\nMy services for the democompany\n\nCreated at 11/6/26, 4:27 PM\n\n\
     **See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
@@ -101,7 +101,8 @@ info:
     \ for binding user identity to the process instance using HMAC-SHA256 signatures.\n\
     This prevents replay attacks and tampering by cryptographically binding the user\
     \ identity to a specific process instance.\nThe correlation is automatically signed\
-    \ with the process instance ID when starting a process or completing a user task.\n\
+    \ with the process instance ID when starting a process.\nCompleting a user task\
+    \ or sending a message does not change it - see `_identityCorrelationOfActor`.\n\
     Configure the signing key via environment variable `ORCHESCALA_IDENTITY_SIGNING_KEY`\
     \ or in `EngineConfig`.\n\n- DSL:\n```scala\nval identity = IdentityCorrelation(\n\
     \  username = \"alice@example.com\",\n  email = Some(\"alice@example.com\"),\n\
@@ -110,9 +111,21 @@ info:
     : {\n  \"username\": \"alice@example.com\",\n  \"email\": \"alice@example.com\"\
     ,\n  \"impersonateProcessValue\": \"department-123\",\n  \"issuedAt\": 1706371200000,\n\
     \  \"processInstanceId\": \"12345\",\n  \"signature\": \"abc123...\"\n},\n...\n\
-    ```\n\n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api\
-    \ v0.9.0-SNAPSHOT](https://github.com/pme123/orchescala)\n> - democompany-orchescala-api\
-    \ 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\n"
+    ```\n\n\n**_identityCorrelationOfActor**:\n\nSet by the engine only: the signed\
+    \ identity of the person who completed a user task or sent a message\n(only with\
+    \ a `processInstanceId` - the signature needs the process instance).\n`_identityCorrelation`\
+    \ stays as set at the start - the BPMN decides whether the process takes over\
+    \ the actor's identity.\nThe signature is valid for `_identityCorrelation` as\
+    \ well, so a worker can verify it after the copy.\n\n- DSL:\n```scala\n// in the\
+    \ BPMN, e.g. output mappings of an empty intermediate event right after the user\
+    \ task:\n//   _identityCorrelationBefore = _identityCorrelation\n//   _identityCorrelation\
+    \       = _identityCorrelationOfActor\n// and to reset:\n//   _identityCorrelation\
+    \       = _identityCorrelationBefore\n```\n\n- Json\n```json\n...\n\"_identityCorrelationOfActor\"\
+    : {\n  \"username\": \"bob@example.com\",\n  \"issuedAt\": 1706371200000,\n  \"\
+    processInstanceId\": \"12345\",\n  \"signature\": \"def456...\"\n},\n...\n```\n\
+    \n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api v0.9.0-SNAPSHOT](https://github.com/pme123/orchescala)\n\
+    > - democompany-orchescala-api 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\
+    \n"
 paths:
   /worker/democompany-services-clientsV1-GetClientsClientId:
     post:
@@ -210,6 +223,59 @@ paths:
                       createdAt: '2021-01-01T00:00:00'
                     etag: 12345.234324234.2343423432
                     email: john.doe@example.com
+  /worker/democompany-services-eventsV1-PostEvent:
+    post:
+      tags:
+      - Events 1.0
+      summary: 'Worker: PostEvent'
+      description: "\n\n\n**Topic:** `democompany-services-eventsV1-PostEvent` (to\
+        \ define in the _**Topic**_ of the _**External Task**_ > _Service Task_ of\
+        \ type _External_)\n\nReport an event of a process - what happened, in which\
+        \ process and instance\n\n---\n\n\n\n<details>\n<summary><b>Wrapped Service:</b>\n\
+        \n(Events 1.0 - v1.0 - POST: events)\n</summary>\n<p>\nInput Body: `democompany.services.domain.events.v1.PostEvent$In`:\n\
+        \n```json\n{\n  \"eventKey\" : \"started\",\n  \"processDefinitionKey\" :\
+        \ \"democompany-patterns-sendProcessEventV1\",\n  \"processInstanceId\" :\
+        \ \"4711\"\n}\n```\n\n\nExample Response: `orchescala.domain.NoOutput`:\n\n\
+        ```json\n{\n  \"respStatus\" : 204,\n  \"respBody\" : {\n    \n  },\n  \"\
+        respHeaders\" : [\n  ]\n}\n```\n</p>\n</details>\n</p>\n\n---\n\n\n- Input:\
+        \  `democompany.services.domain.events.v1.PostEvent > In`\n- Output: `democompany.services.domain.events.v1.PostEvent\
+        \ > Out`\n\n\n\nYou can test this worker using the generic process _**orchescala-externalTask-generic**_\
+        \ (e.g. with Postman).\n\n- ServiceOut:  `orchescala.domain.MockedServiceResponse`\n\
+        \n<details>\n<summary>\n<b><i>General Variable(s)</i></b>\n</summary>\n\n\
+        <p>\n\n**outputVariables**:\n\nJust take the variable you need in your process!\n\
+        ```json\n...\n\"outputVariables\": \"\",\n...\n```\n\n**outputMock**:\n\n\
+        ```json\n...\n\"outputMock\": {\n  \n},\n...\n```\n\n**outputServiceMock**:\n\
+        ```json\n...\n\"outputServiceMock\": {\n  \"respStatus\" : 200,\n  \"respBody\"\
+        \ : {\n    \"respStatus\" : 204,\n    \"respBody\" : {\n      \n    },\n \
+        \   \"respHeaders\" : [\n    ]\n  },\n  \"respHeaders\" : [\n  ]\n},\n...\n\
+        ```\n</p>\n</details>\n</p>\n      \n    \n\n\n**Used in no other Process.**\n\
+        \n**Uses no other Processes.**\n<p/>\n<details>\n<summary><b><i>General Information</i></b></summary>\n\
+        <p>\n\nThis describes the <b>Input</b> and the <b>Output</b> of the Worker.\n\
+        \nRunning this request with Postman, it will run the Worker directly, no Process\
+        \ will be started.\n\n</p>\n</details>"
+      operationId: 'Worker: PostEvent'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostEvent.In'
+            examples:
+              democompany-services-eventsV1-PostEvent:
+                value:
+                  eventKey: started
+                  processDefinitionKey: democompany-patterns-sendProcessEventV1
+                  processInstanceId: '4711'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostEvent.Out'
+              examples:
+                democompany-services-eventsV1-PostEvent:
+                  value: {}
   /worker/democompany-services-mailsV1-SendEmail:
     post:
       tags:
@@ -339,7 +405,7 @@ paths:
               examples:
                 democompany-services-smtpV1-SendMail:
                   value:
-                    sentAt: '2026-10-20T15:08:38.571783'
+                    sentAt: '2026-11-06T16:27:03.42962'
 components:
   schemas:
     Address:
@@ -437,6 +503,26 @@ components:
     Male:
       title: Male
       type: object
+    PostEvent.In:
+      title: PostEvent.In
+      type: object
+      required:
+      - eventKey
+      - processDefinitionKey
+      - processInstanceId
+      properties:
+        eventKey:
+          description: What happened, e.g. `started`, `finished`.
+          type: string
+        processDefinitionKey:
+          description: The id of the process that reports the event.
+          type: string
+        processInstanceId:
+          description: The instance of the process that reports the event.
+          type: string
+    PostEvent.Out:
+      title: PostEvent.Out
+      type: object
     SendEmail.In:
       title: SendEmail.In
       type: object
@@ -491,6 +577,9 @@ tags:
 - name: Clients 1.0
   description: ''
   x-displayName: Clients 1.0
+- name: Events 1.0
+  description: ''
+  x-displayName: Events 1.0
 - name: Mails 1.0
   description: ''
   x-displayName: Mails 1.0
