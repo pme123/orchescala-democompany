@@ -21,6 +21,9 @@
           <zeebe:input source="=&#34;started&#34;" target="eventKey" />
           <zeebe:input source="=&#34;democompany-patterns-sendProcessEventV1&#34;" target="processDefinitionKey" />
           <zeebe:input source="=string(camunda.processInstance.key)" target="processInstanceId" />
+          <zeebe:input source="=_servicesMocked" target="_servicesMocked" />
+          <zeebe:input source="=_mockedWorkers" target="_mockedWorkers" />
+          <zeebe:input source="=_identityCorrelation" target="_identityCorrelation" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>InitProcessFlow</bpmn:incoming>
@@ -33,6 +36,9 @@
           <zeebe:input source="=&#34;finished&#34;" target="eventKey" />
           <zeebe:input source="=&#34;democompany-patterns-sendProcessEventV1&#34;" target="processDefinitionKey" />
           <zeebe:input source="=string(camunda.processInstance.key)" target="processInstanceId" />
+          <zeebe:input source="=_servicesMocked" target="_servicesMocked" />
+          <zeebe:input source="=_mockedWorkers" target="_mockedWorkers" />
+          <zeebe:input source="=_identityCorrelation" target="_identityCorrelation" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>StartedEventFlow</bpmn:incoming>

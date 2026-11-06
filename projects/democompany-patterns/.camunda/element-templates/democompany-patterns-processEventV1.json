@@ -1,7 +1,7 @@
 {
   "name" : "democompany-patterns-processEventV1",
   "id" : "democompany-patterns-processEventV1",
-  "description" : "\nDummy-Event-Prozess für das Pattern «Prozess-Event senden»: nimmt das Event entgegen und endet mit\n`succeeded`. Ein echter Event-Prozess würde es z. B. einem Fremdsystem melden. Die Eingaben sind\ndie, die das Pattern mitgibt; zurück gibt er nichts.\n\n\n",
+  "description" : "\nEvent-Prozess für das Pattern «Prozess-Event senden»: «Event melden» gibt das Event an den Service\n`PostEvent` (democompany-services) weiter, dann endet er mit `succeeded`. Was mit einem Event\ngeschieht, legt jede Firma in ihrem Event-Prozess fest. Die Eingaben sind die, die das Pattern\nmitgibt; zurück gibt er nichts.\n\n\n",
   "version" : 0,
   "appliesTo" : [
     "bpmn:Activity"

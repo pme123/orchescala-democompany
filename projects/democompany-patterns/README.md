@@ -478,7 +478,9 @@ oder (Szenario 3) per Modification weiterschieben.
 Start ─▶ [Init Process] ─▶ [Prozess-Event: gestartet] ─▶ [Prozess-Event: beendet] ─▶ (succeeded)
                                   │ ruft                        │ ruft
                                   ▼                             ▼
-                     democompany-patterns-processEventV1:  (Event) ─▶ (entgegengenommen)
+                 democompany-patterns-processEventV1:  (Event) ─▶ [Event melden] ─▶ (gemeldet)
+                                                                       │
+                                                                       ▼  Service PostEvent
 ```
 
 Das Pattern **meldet einen Schritt des Prozesses an einen eigenen Event-Prozess** – hier zu Beginn
@@ -492,9 +494,16 @@ einen Hinweis). Der Event-Prozess bekommt:
 | `processDefinitionKey` | die ID des meldenden Prozesses |
 | `processInstanceId` | seine Instanz |
 
-Zurück gibt er nichts. Was er mit dem Event macht – einem Fremdsystem melden, protokollieren – ist seine
-Sache; hier ist es ein **Dummy** (`democompany-patterns-processEventV1`), der das Event entgegennimmt
-und mit `succeeded` endet. Die Eingaben sieht man in Cockpit bzw. Operate an seiner Instanz.
+Zurück gibt er nichts. Was er mit dem Event macht, ist seine Sache – **das ist der Teil, den jede Firma
+selbst festlegt**: Der meldende Prozess kennt nur das Pattern und den Event-Prozess; ob das Event an ein
+Fremdsystem, ein Monitoring oder in mehrere Schritte geht, ändert man im Event-Prozess, ohne die
+meldenden Prozesse anzufassen.
+
+Hier (`democompany-patterns-processEventV1`) gibt **«Event melden»** das Event an den Service
+**`PostEvent`** aus **democompany-services** weiter (Topic `democompany-services-eventsV1-PostEvent`,
+`POST events` mit `eventKey`, `processDefinitionKey`, `processInstanceId`) und endet mit `succeeded`.
+Seinen ServiceWorker führt die Worker-App dieses Projekts mit (wie «Kunde laden» bei «Mocks und
+Identität weitergeben»).
 
 | | Camunda 7 | Camunda 8 |
 |---|---|---|
@@ -502,13 +511,15 @@ und mit `succeeded` endet. Die Eingaben sieht man in Cockpit bzw. Operate an sei
 | Prozess-ID | `${execution.getProcessDefinition().getKey()}` | die ID als Text (`="democompany-patterns-sendProcessEventV1"`) |
 | Instanz | `${execution.getProcessInstanceId()}` | `=string(camunda.processInstance.key)` – ab Camunda 8.10, ohne «Init Process» |
 
-Sollen Mocks und Identität auch im Event-Prozess gelten, trägt dieselbe Call Activity zusätzlich
-«Mocks und Identität weitergeben» – die Orch Spec erkennt beide.
+Damit der Service im Test gemockt ist, tragen beide Call Activities zusätzlich **«Mocks und Identität
+weitergeben»** (`_servicesMocked`, `_mockedWorkers`, `_identityCorrelation`) – die Orch Spec erkennt
+beide Patterns an derselben Call Activity.
 
 | Datei | Inhalt |
 |---|---|
 | [`SendProcessEvent.scala`](01-domain/src/main/scala/democompany/patterns/domain/sendProcessEvent/v1/SendProcessEvent.scala) | `In`, `Out` |
-| [`ProcessEvent.scala`](01-domain/src/main/scala/democompany/patterns/domain/processEvent/v1/ProcessEvent.scala) | der Dummy: `In` (`eventKey`, `processDefinitionKey`, `processInstanceId`), `Out` |
+| [`ProcessEvent.scala`](01-domain/src/main/scala/democompany/patterns/domain/processEvent/v1/ProcessEvent.scala) | der Event-Prozess: `In` (`eventKey`, `processDefinitionKey`, `processInstanceId`), `Out` |
+| [`PostEvent.scala`](../democompany-services/01-domain/src/main/scala/democompany/services/domain/events/v1/PostEvent.scala) | der Service «Event melden» (democompany-services) |
 | [`SendProcessEventWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/sendProcessEvent/v1/SendProcessEventWorker.scala) | InitWorker: Prüfung des In |
 | [`camunda/patterns-sendProcessEventV1.bpmn`](src/main/resources/camunda/patterns-sendProcessEventV1.bpmn), [`camunda/patterns-processEventV1.bpmn`](src/main/resources/camunda/patterns-processEventV1.bpmn) | Camunda 7 |
 | [`camunda8/patterns-sendProcessEventV1.bpmn`](src/main/resources/camunda8/patterns-sendProcessEventV1.bpmn), [`camunda8/patterns-processEventV1.bpmn`](src/main/resources/camunda8/patterns-processEventV1.bpmn) | Camunda 8 |
@@ -516,11 +527,12 @@ Sollen Mocks und Identität auch im Event-Prozess gelten, trägt dieselbe Call A
 
 ### Simulationen
 
-1. **`SendProcessEvent succeeded`** – meldet `started` und `finished` und endet mit
-   `processStatus = succeeded`. Fehlte der Event-Prozess, bliebe der Prozess mit einem Incident an der
-   Call Activity stehen.
+1. **`SendProcessEvent succeeded`** – `.mockServices`: meldet `started` und `finished`, «Event melden»
+   ist im Event-Prozess gemockt; endet mit `processStatus = succeeded`. Fehlte der Event-Prozess, bliebe
+   der Prozess mit einem Incident an der Call Activity stehen.
 2. **`SendProcessEvent mocked`** – endet über den Pfad `output-mocked` von «Init Process», ohne Event.
-3. **`ProcessEvent dummy`** – der Dummy für sich: nimmt das Event entgegen und endet mit `succeeded`.
+3. **`ProcessEvent reported`** – der Event-Prozess für sich, `.mockServices`: meldet das Event und
+   endet mit `succeeded`.
 
 ```bash
 ./helper.scala deploy SendProcessEventC7Simulation

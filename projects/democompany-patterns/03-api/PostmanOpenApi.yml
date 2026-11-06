@@ -5,7 +5,7 @@ info:
   summary: "\n**This is for Postman - to have example requests. Be aware the Output\
     \ is not provided!**\n\n\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns\
     \ - je Pattern ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated\
-    \ at 11/6/26, 6:35 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ at 11/6/26, 4:28 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -78,15 +78,15 @@ info:
     \ type=\"<processId>\"` |\n `_handledErrors` | `camunda:inputParameter` | `zeebe:input\
     \ source=\"=&quot;output-mocked&quot;\"` |\n `processStatus` am Ende | Execution\
     \ Listener (`execution.setVariable(...)`) | Output-Mapping (`zeebe:output`) |\n\
-    \ `processInstanceId` | gibt es in der Engine (`execution.processInstanceId`)\
-    \ | setzt der InitWorker als Variable (der `processInstanceKey`) – nur im normalen\
-    \ Lauf, siehe unten |\n\nIn Camunda 8 landen die Variablen der gemockten Ausgabe\
-    \ (der Fehler `output-mocked`) zuerst im\nScope der Boundary (dort steht `processStatus\
-    \ = succeeded` aus dem gemockten `Out`); im Prozess\nsteht danach `processStatus\
-    \ = output-mocked` aus dem Output-Mapping des Endes.\n\n## Simulationen\n\nDrei\
-    \ Szenarien je Engine:\n\n1. **`InitProcess`** – normaler Lauf: endet mit `processStatus\
-    \ = succeeded`, `inConfig` mit den Vorgaben.\n2. **`InitProcess mocked`** – Prozess-Output\
-    \ gemockt: endet über den Pfad `output-mocked` mit\n   `processStatus = output-mocked`.\n\
+    \ eigene Instanz | gibt es in der Engine (`execution.processInstanceId`) | in\
+    \ FEEL `string(camunda.processInstance.key)` – ab Camunda 8.10, keine Variable\
+    \ |\n\nIn Camunda 8 landen die Variablen der gemockten Ausgabe (der Fehler `output-mocked`)\
+    \ zuerst im\nScope der Boundary (dort steht `processStatus = succeeded` aus dem\
+    \ gemockten `Out`); im Prozess\nsteht danach `processStatus = output-mocked` aus\
+    \ dem Output-Mapping des Endes.\n\n## Simulationen\n\nDrei Szenarien je Engine:\n\
+    \n1. **`InitProcess`** – normaler Lauf: endet mit `processStatus = succeeded`,\
+    \ `inConfig` mit den Vorgaben.\n2. **`InitProcess mocked`** – Prozess-Output gemockt:\
+    \ endet über den Pfad `output-mocked` mit\n   `processStatus = output-mocked`.\n\
     3. **`InitProcess invalid In`** – `customerName = \" \"`: der InitWorker meldet\n\
     \   `validation-failed: customerName must not be empty.` – nicht freigegeben,\
     \ also ein Incident.\n\nDie Simulation startet den Prozess **ohne Prüfung über\
@@ -376,40 +376,51 @@ info:
     Start ─▶ [Init Process] ─▶ [Prozess-Event: gestartet] ─▶ [Prozess-Event: beendet]\
     \ ─▶ (succeeded)\n                                  │ ruft                   \
     \     │ ruft\n                                  ▼                            \
-    \ ▼\n                     democompany-patterns-processEventV1:  (Event) ─▶ (entgegengenommen)\n\
-    ```\n\nDas Pattern **meldet einen Schritt des Prozesses an einen eigenen Event-Prozess**\
-    \ – hier zu Beginn\n`started` und am Ende `finished`. Es sitzt an einer **Call\
-    \ Activity**; welchen Prozess sie ruft, wählt\nman im Pattern (`eventProcess`,\
-    \ Auswahl aus den Prozessen des Katalogs – ohne Wahl zeigt die Orch Spec\neinen\
-    \ Hinweis). Der Event-Prozess bekommt:\n\n Eingabe | Inhalt |\n---|---|\n `eventKey`\
-    \ | was passiert ist – Parameter `eventKey`, Text oder FEEL (Vorgabe `started`)\
-    \ |\n `processDefinitionKey` | die ID des meldenden Prozesses |\n `processInstanceId`\
-    \ | seine Instanz |\n\nZurück gibt er nichts. Was er mit dem Event macht – einem\
-    \ Fremdsystem melden, protokollieren – ist seine\nSache; hier ist es ein **Dummy**\
-    \ (`democompany-patterns-processEventV1`), der das Event entgegennimmt\nund mit\
-    \ `succeeded` endet. Die Eingaben sieht man in Cockpit bzw. Operate an seiner\
-    \ Instanz.\n\n Camunda 7 | Camunda 8 |\n---|---|---|\n gerufener Prozess | `calledElement`\
-    \ | `zeebe:calledElement processId`, `propagateAllParentVariables` und `propagateAllChildVariables`\
-    \ aus |\n Prozess-ID | `${execution.getProcessDefinition().getKey()}` | die ID\
-    \ als Text (`=\"democompany-patterns-sendProcessEventV1\"`) |\n Instanz | `${execution.getProcessInstanceId()}`\
-    \ | `=processInstanceId` – setzt der InitWorker, der Prozess braucht «Init Process»\
-    \ |\n\nSollen Mocks und Identität auch im Event-Prozess gelten, trägt dieselbe\
-    \ Call Activity zusätzlich\n«Mocks und Identität weitergeben» – die Orch Spec\
-    \ erkennt beide.\n\n Datei | Inhalt |\n---|---|\n [`SendProcessEvent.scala`](01-domain/src/main/scala/democompany/patterns/domain/sendProcessEvent/v1/SendProcessEvent.scala)\
+    \ ▼\n                 democompany-patterns-processEventV1:  (Event) ─▶ [Event\
+    \ melden] ─▶ (gemeldet)\n                                                    \
+    \                   │\n                                                      \
+    \                 ▼  Service PostEvent\n```\n\nDas Pattern **meldet einen Schritt\
+    \ des Prozesses an einen eigenen Event-Prozess** – hier zu Beginn\n`started` und\
+    \ am Ende `finished`. Es sitzt an einer **Call Activity**; welchen Prozess sie\
+    \ ruft, wählt\nman im Pattern (`eventProcess`, Auswahl aus den Prozessen des Katalogs\
+    \ – ohne Wahl zeigt die Orch Spec\neinen Hinweis). Der Event-Prozess bekommt:\n\
+    \n Eingabe | Inhalt |\n---|---|\n `eventKey` | was passiert ist – Parameter `eventKey`,\
+    \ Text oder FEEL (Vorgabe `started`) |\n `processDefinitionKey` | die ID des meldenden\
+    \ Prozesses |\n `processInstanceId` | seine Instanz |\n\nZurück gibt er nichts.\
+    \ Was er mit dem Event macht, ist seine Sache – **das ist der Teil, den jede Firma\n\
+    selbst festlegt**: Der meldende Prozess kennt nur das Pattern und den Event-Prozess;\
+    \ ob das Event an ein\nFremdsystem, ein Monitoring oder in mehrere Schritte geht,\
+    \ ändert man im Event-Prozess, ohne die\nmeldenden Prozesse anzufassen.\n\nHier\
+    \ (`democompany-patterns-processEventV1`) gibt **«Event melden»** das Event an\
+    \ den Service\n**`PostEvent`** aus **democompany-services** weiter (Topic `democompany-services-eventsV1-PostEvent`,\n\
+    `POST events` mit `eventKey`, `processDefinitionKey`, `processInstanceId`) und\
+    \ endet mit `succeeded`.\nSeinen ServiceWorker führt die Worker-App dieses Projekts\
+    \ mit (wie «Kunde laden» bei «Mocks und\nIdentität weitergeben»).\n\n Camunda\
+    \ 7 | Camunda 8 |\n---|---|---|\n gerufener Prozess | `calledElement` | `zeebe:calledElement\
+    \ processId`, `propagateAllParentVariables` und `propagateAllChildVariables` aus\
+    \ |\n Prozess-ID | `${execution.getProcessDefinition().getKey()}` | die ID als\
+    \ Text (`=\"democompany-patterns-sendProcessEventV1\"`) |\n Instanz | `${execution.getProcessInstanceId()}`\
+    \ | `=string(camunda.processInstance.key)` – ab Camunda 8.10, ohne «Init Process»\
+    \ |\n\nDamit der Service im Test gemockt ist, tragen beide Call Activities zusä\
+    tzlich **«Mocks und Identität\nweitergeben»** (`_servicesMocked`, `_mockedWorkers`,\
+    \ `_identityCorrelation`) – die Orch Spec erkennt\nbeide Patterns an derselben\
+    \ Call Activity.\n\n Datei | Inhalt |\n---|---|\n [`SendProcessEvent.scala`](01-domain/src/main/scala/democompany/patterns/domain/sendProcessEvent/v1/SendProcessEvent.scala)\
     \ | `In`, `Out` |\n [`ProcessEvent.scala`](01-domain/src/main/scala/democompany/patterns/domain/processEvent/v1/ProcessEvent.scala)\
-    \ | der Dummy: `In` (`eventKey`, `processDefinitionKey`, `processInstanceId`),\
-    \ `Out` |\n [`SendProcessEventWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/sendProcessEvent/v1/SendProcessEventWorker.scala)\
+    \ | der Event-Prozess: `In` (`eventKey`, `processDefinitionKey`, `processInstanceId`),\
+    \ `Out` |\n [`PostEvent.scala`](../democompany-services/01-domain/src/main/scala/democompany/services/domain/events/v1/PostEvent.scala)\
+    \ | der Service «Event melden» (democompany-services) |\n [`SendProcessEventWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/sendProcessEvent/v1/SendProcessEventWorker.scala)\
     \ | InitWorker: Prüfung des In |\n [`camunda/patterns-sendProcessEventV1.bpmn`](src/main/resources/camunda/patterns-sendProcessEventV1.bpmn),\
     \ [`camunda/patterns-processEventV1.bpmn`](src/main/resources/camunda/patterns-processEventV1.bpmn)\
     \ | Camunda 7 |\n [`camunda8/patterns-sendProcessEventV1.bpmn`](src/main/resources/camunda8/patterns-sendProcessEventV1.bpmn),\
     \ [`camunda8/patterns-processEventV1.bpmn`](src/main/resources/camunda8/patterns-processEventV1.bpmn)\
     \ | Camunda 8 |\n [`SendProcessEventSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/SendProcessEventSimulation.scala)\
     \ | die Szenarien, für beide Engines gleich |\n\n### Simulationen\n\n1. **`SendProcessEvent\
-    \ succeeded`** – meldet `started` und `finished` und endet mit\n   `processStatus\
-    \ = succeeded`. Fehlte der Event-Prozess, bliebe der Prozess mit einem Incident\
-    \ an der\n   Call Activity stehen.\n2. **`SendProcessEvent mocked`** – endet ü\
-    ber den Pfad `output-mocked` von «Init Process», ohne Event.\n3. **`ProcessEvent\
-    \ dummy`** – der Dummy für sich: nimmt das Event entgegen und endet mit `succeeded`.\n\
+    \ succeeded`** – `.mockServices`: meldet `started` und `finished`, «Event melden»\
+    \n   ist im Event-Prozess gemockt; endet mit `processStatus = succeeded`. Fehlte\
+    \ der Event-Prozess, bliebe\n   der Prozess mit einem Incident an der Call Activity\
+    \ stehen.\n2. **`SendProcessEvent mocked`** – endet über den Pfad `output-mocked`\
+    \ von «Init Process», ohne Event.\n3. **`ProcessEvent reported`** – der Event-Prozess\
+    \ für sich, `.mockServices`: meldet das Event und\n   endet mit `succeeded`.\n\
     \n```bash\n./helper.scala deploy SendProcessEventC7Simulation\n```\n```bash\n\
     ./helper.scala deploy SendProcessEventC8Simulation\n```\n\n## Abbruch per Signal\
     \ – `democompany-patterns-cancelBySignalV1`\n\n```\nStart ─▶ [Init Process] ─▶\
@@ -429,12 +440,11 @@ info:
     \ Orchescala mit dem Platzhalter `{processInstanceId}` im Namen\n(`cancel-{processInstanceId}`,\
     \ siehe [`CancelSE.scala`](01-domain/src/main/scala/democompany/patterns/domain/cancelBySignal/v1/CancelSE.scala)),\n\
     oder aus einem anderen Element des Prozesses mit einem Signal-Ende bzw. -Zwischenereignis\
-    \ desselben Namens.\n\n**Camunda 8 braucht 8.10.** Erst ab 8.10 kennt FEEL `camunda.processInstance.key`.\
-    \ Eine Variable wie\n`processInstanceId` gibt es beim Start noch nicht (sie setzt\
-    \ erst der InitWorker) – auf 8.9 bleibt jede\nInstanz deshalb schon beim Start\
-    \ mit einem Incident stehen\n(«Expected result of the expression … to be 'STRING',\
-    \ but was 'NULL'»; auf c8run 8.9.21 nachgeprüft).\nDie Simulationen für C8 laufen\
-    \ auf c8run 8.10.8.\n\n Datei | Inhalt |\n---|---|\n [`CancelBySignal.scala`](01-domain/src/main/scala/democompany/patterns/domain/cancelBySignal/v1/CancelBySignal.scala)\
+    \ desselben Namens.\n\n**Camunda 8 braucht 8.10.** Erst ab 8.10 kennt FEEL `camunda.processInstance.key`\
+    \ – auf 8.9 bleibt jede\nInstanz schon beim Start mit einem Incident stehen\n\
+    («Expected result of the expression … to be 'STRING', but was 'NULL'»; auf c8run\
+    \ 8.9.21 nachgeprüft).\nDie Simulationen für C8 laufen auf c8run 8.10.8.\n\n Datei\
+    \ | Inhalt |\n---|---|\n [`CancelBySignal.scala`](01-domain/src/main/scala/democompany/patterns/domain/cancelBySignal/v1/CancelBySignal.scala)\
     \ | `In`, `InitIn` (`waitForSignal`), `Out` |\n [`EditRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/cancelBySignal/v1/EditRequestUT.scala)\
     \ | «Antrag bearbeiten» – hier wartet der Prozess |\n [`CancelSE.scala`](01-domain/src/main/scala/democompany/patterns/domain/cancelBySignal/v1/CancelSE.scala)\
     \ | das Signal `cancel-{processInstanceId}` |\n [`CancelBySignalWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/cancelBySignal/v1/CancelBySignalWorker.scala)\
@@ -451,16 +461,14 @@ info:
     \ Process».\n\nWie die anderen Pattern-Simulationen startet sie ohne Prüfung ü\
     ber die Worker-App\n(`validateProcess(false)`) – das In prüft der InitWorker in\
     \ der Engine.\n\n```bash\n./helper.scala deploy CancelBySignalC7Simulation\n```\n\
-    ```bash\n./helper.scala deploy CancelBySignalC8Simulation\n```\n\n## Offene Punkte\n\
-    \n- Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId` nicht (im\
-    \ normalen Lauf schon) –\n  die Variablen kommen dort über den Fehler `output-mocked`,\
-    \ nicht über das Abschliessen des Jobs.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
-    <p>\n\n\nAll notable changes to this project will be documented in this file.\n\
-    \n* Types of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
-    \ functionality\n  * Deprecated: soon-to-be-removed features\n  * Removed: now\
-    \ removed features\n  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\
-    \n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\n\
-    and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
+    ```bash\n./helper.scala deploy CancelBySignalC8Simulation\n```\n\n\n<details>\n\
+    <summary><b><i>CHANGELOG.md</i></b></summary>\n<p>\n\n\nAll notable changes to\
+    \ this project will be documented in this file.\n\n* Types of Changes (L3):\n\
+    \  * Added: new features\n  * Changed: changes in existing functionality\n  *\
+    \ Deprecated: soon-to-be-removed features\n  * Removed: now removed features\n\
+    \  * Fixed: any bug fixes\n  * Security: in case of vulnerabilities\n\n\nThe format\
+    \ is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this\
+    \ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\
     \n\n</p>\n</details>\n\n\n<p/>\n<details>\n<summary>\n<b><i>General Variables</i></b>\n\
     </summary>\n\n<p>\n\n### Mocking\n\n**_servicesMocked**:\n\nMock all the _ServiceWorkers_\
     \ in your process with their default Mock:\n\n- DSL:\n```scala\nprocess(..)\n\
@@ -1354,8 +1362,9 @@ paths:
       description: |2
 
         Beispiel für das Pattern «Prozess-Event senden»: der Prozess meldet zu Beginn `started` und am Ende
-        `finished` an den Event-Prozess `democompany-patterns-processEventV1` (ein Dummy) - je eine Call
-        Activity mit dem Event, der Prozess-ID und der Instanz. Danach endet er mit `succeeded`.
+        `finished` an den Event-Prozess `democompany-patterns-processEventV1` - je eine Call Activity mit
+        dem Event, der Prozess-ID und der Instanz. Der Event-Prozess gibt es an den Service `PostEvent`
+        weiter. Danach endet der Prozess mit `succeeded`.
 
 
         ---
@@ -1396,9 +1405,10 @@ paths:
       summary: 'Bpmn: processEventV1'
       description: |2
 
-        Dummy-Event-Prozess für das Pattern «Prozess-Event senden»: nimmt das Event entgegen und endet mit
-        `succeeded`. Ein echter Event-Prozess würde es z. B. einem Fremdsystem melden. Die Eingaben sind
-        die, die das Pattern mitgibt; zurück gibt er nichts.
+        Event-Prozess für das Pattern «Prozess-Event senden»: «Event melden» gibt das Event an den Service
+        `PostEvent` (democompany-services) weiter, dann endet er mit `succeeded`. Was mit einem Event
+        geschieht, legt jede Firma in ihrem Event-Prozess fest. Die Eingaben sind die, die das Pattern
+        mitgibt; zurück gibt er nichts.
 
 
         ---

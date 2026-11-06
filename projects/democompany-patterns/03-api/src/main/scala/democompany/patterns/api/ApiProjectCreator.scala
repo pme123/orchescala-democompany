@@ -59,7 +59,7 @@ object ApiProjectCreator extends CompanyApiCreator:
     import democompany.patterns.domain.sendProcessEvent.v1.*
     api(SendProcessEvent.example)()
 
-  // the dummy event process of «Prozess-Event senden»
+  // the event process of «Prozess-Event senden» - it calls the service PostEvent
   private lazy val processEventApi =
     import democompany.patterns.domain.processEvent.v1.*
     api(ProcessEvent.example)()

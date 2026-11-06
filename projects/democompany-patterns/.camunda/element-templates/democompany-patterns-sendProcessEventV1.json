@@ -1,7 +1,7 @@
 {
   "name" : "democompany-patterns-sendProcessEventV1",
   "id" : "democompany-patterns-sendProcessEventV1",
-  "description" : "\nBeispiel für das Pattern «Prozess-Event senden»: der Prozess meldet zu Beginn `started` und am Ende\n`finished` an den Event-Prozess `democompany-patterns-processEventV1` (ein Dummy) - je eine Call\nActivity mit dem Event, der Prozess-ID und der Instanz. Danach endet er mit `succeeded`.\n\n\n",
+  "description" : "\nBeispiel für das Pattern «Prozess-Event senden»: der Prozess meldet zu Beginn `started` und am Ende\n`finished` an den Event-Prozess `democompany-patterns-processEventV1` - je eine Call Activity mit\ndem Event, der Prozess-ID und der Instanz. Der Event-Prozess gibt es an den Service `PostEvent`\nweiter. Danach endet der Prozess mit `succeeded`.\n\n\n",
   "version" : 0,
   "appliesTo" : [
     "bpmn:Activity"
