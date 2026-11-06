@@ -1,4 +1,5 @@
 ### Patterns
+- [Bpmn: cancelBySignalV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20cancelBySignalV1)
 - [Bpmn: identityV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20identityV1)
 - [Bpmn: initProcessV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20initProcessV1)
 - [Bpmn: processEventV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20processEventV1)
@@ -9,7 +10,9 @@
 - [Bpmn: stopWithErrorV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20stopWithErrorV1)
 - [Bpmn: uniqueExecutionV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20uniqueExecutionV1)
 - [Message: uniqueExecutionV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Message:%20uniqueExecutionV1)
+- [Signal: cancel-{processInstanceId}](/site/democompany/democompany-patterns/OpenApi.html#operation/Signal:%20cancel-{processInstanceId})
 - [UserTask variables: ApproveRequestUT](/site/democompany/democompany-patterns/OpenApi.html#operation/UserTask%20variables:%20ApproveRequestUT)
 - [UserTask variables: CloseRequestUT](/site/democompany/democompany-patterns/OpenApi.html#operation/UserTask%20variables:%20CloseRequestUT)
+- [UserTask variables: EditRequestUT](/site/democompany/democompany-patterns/OpenApi.html#operation/UserTask%20variables:%20EditRequestUT)
 - [UserTask variables: EditRequestUT](/site/democompany/democompany-patterns/OpenApi.html#operation/UserTask%20variables:%20EditRequestUT)
 - [Worker: CheckIdentity](/site/democompany/democompany-patterns/OpenApi.html#operation/Worker:%20CheckIdentity)

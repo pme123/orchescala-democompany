@@ -7,7 +7,7 @@ durchspielt. Später sollen die BPMN auch als Testdaten für die Orch Spec diene
 
 Bis jetzt: **«Init Process»**, **«Identität übernehmen / zurücksetzen»**,
 **«Mocks und Identität weitergeben»**, **«Einmalige Ausführung»**, **«Prozess-Status am Ende»**,
-**«Prozess mit Fehler stoppen»** und **«Prozess-Event senden»**.
+**«Prozess mit Fehler stoppen»**, **«Prozess-Event senden»** und **«Abbruch per Signal»**.
 
 ## Init Process – `democompany-patterns-initProcessV1`
 
@@ -527,4 +527,65 @@ Sollen Mocks und Identität auch im Event-Prozess gelten, trägt dieselbe Call A
 ```
 ```bash
 ./helper.scala deploy SendProcessEventC8Simulation
+```
+
+## Abbruch per Signal – `democompany-patterns-cancelBySignalV1`
+
+```
+Start ─▶ [Init Process] ─▶ [Antrag bearbeiten] ─▶ (succeeded)
+
+┌ Abbruch (Ereignis-Subprozess, unterbrechend) ──────────┐
+│ (Signal cancel-<Instanz>) ─▶ (canceled)                 │
+└─────────────────────────────────────────────────────────┘
+```
+
+Das Pattern **bricht eine Instanz von aussen ab**: ein unterbrechender Ereignis-Subprozess wartet auf das
+Signal `cancel-<Instanz>`. Kommt es, beendet er den Prozess – egal, wo er gerade wartet – und setzt
+`processStatus = canceled`. Ohne Signal wird «Antrag bearbeiten» erledigt, und der Prozess endet mit
+`succeeded`. Das Pattern sitzt am **Prozess**; das Präfix des Signals ist ein Parameter
+(`signalPrefix`, Vorgabe `cancel-`).
+
+Das Signal ist an **diese eine Instanz** gebunden – sein Name wird beim Start der Instanz gebildet:
+
+| | Camunda 7 | Camunda 8 (ab 8.10) |
+|---|---|---|
+| Signalname | `cancel-${execution.processInstanceId}` | `="cancel-" + string(camunda.processInstance.key)` |
+| Status | Listener am Ende `canceled` | Output-Mapping am Ende `canceled` |
+
+Senden lässt es sich über Orchescala mit dem Platzhalter `{processInstanceId}` im Namen
+(`cancel-{processInstanceId}`, siehe [`CancelSE.scala`](01-domain/src/main/scala/democompany/patterns/domain/cancelBySignal/v1/CancelSE.scala)),
+oder aus einem anderen Element des Prozesses mit einem Signal-Ende bzw. -Zwischenereignis desselben Namens.
+
+**Camunda 8 braucht 8.10.** Erst ab 8.10 kennt FEEL `camunda.processInstance.key` – auf 8.9 bleibt jede
+Instanz schon beim Start mit einem Incident stehen
+(«Expected result of the expression … to be 'STRING', but was 'NULL'»; auf c8run 8.9.21 nachgeprüft).
+Die Simulationen für C8 laufen auf c8run 8.10.8.
+
+| Datei | Inhalt |
+|---|---|
+| [`CancelBySignal.scala`](01-domain/src/main/scala/democompany/patterns/domain/cancelBySignal/v1/CancelBySignal.scala) | `In`, `InitIn` (`waitForSignal`), `Out` |
+| [`EditRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/cancelBySignal/v1/EditRequestUT.scala) | «Antrag bearbeiten» – hier wartet der Prozess |
+| [`CancelSE.scala`](01-domain/src/main/scala/democompany/patterns/domain/cancelBySignal/v1/CancelSE.scala) | das Signal `cancel-{processInstanceId}` |
+| [`CancelBySignalWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/cancelBySignal/v1/CancelBySignalWorker.scala) | InitWorker: Prüfung des In, `waitForSignal = true` |
+| [`camunda/patterns-cancelBySignalV1.bpmn`](src/main/resources/camunda/patterns-cancelBySignalV1.bpmn) | Camunda 7 |
+| [`camunda8/patterns-cancelBySignalV1.bpmn`](src/main/resources/camunda8/patterns-cancelBySignalV1.bpmn) | Camunda 8 (ab 8.10) |
+| [`CancelBySignalSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/CancelBySignalSimulation.scala) | die Szenarien, für beide Engines gleich |
+
+### Simulationen
+
+1. **`CancelBySignal succeeded`** – kein Signal: «Antrag bearbeiten» wird erledigt, der Prozess endet mit
+   `processStatus = succeeded`.
+2. **`CancelBySignal canceled`** – das Signal kommt, während der Prozess an «Antrag bearbeiten» wartet:
+   der Ereignis-Subprozess bricht ab, der Prozess endet mit `processStatus = canceled`. Die Simulation
+   schickt das Signal erst, wenn der InitWorker durch ist (`waitForSignal = true`).
+3. **`CancelBySignal mocked`** – endet über den Pfad `output-mocked` von «Init Process».
+
+Wie die anderen Pattern-Simulationen startet sie ohne Prüfung über die Worker-App
+(`validateProcess(false)`) – das In prüft der InitWorker in der Engine.
+
+```bash
+./helper.scala deploy CancelBySignalC7Simulation
+```
+```bash
+./helper.scala deploy CancelBySignalC8Simulation
 ```
