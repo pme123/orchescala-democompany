@@ -18,6 +18,9 @@
         <camunda:in sourceExpression="started" target="eventKey" />
         <camunda:in sourceExpression="${execution.getProcessDefinition().getKey()}" target="processDefinitionKey" />
         <camunda:in sourceExpression="${execution.getProcessInstanceId()}" target="processInstanceId" />
+        <camunda:in source="_servicesMocked" target="_servicesMocked" />
+        <camunda:in source="_mockedWorkers" target="_mockedWorkers" />
+        <camunda:in source="_identityCorrelation" target="_identityCorrelation" />
       </bpmn:extensionElements>
       <bpmn:incoming>InitProcessFlow</bpmn:incoming>
       <bpmn:outgoing>StartedEventFlow</bpmn:outgoing>
@@ -27,6 +30,9 @@
         <camunda:in sourceExpression="finished" target="eventKey" />
         <camunda:in sourceExpression="${execution.getProcessDefinition().getKey()}" target="processDefinitionKey" />
         <camunda:in sourceExpression="${execution.getProcessInstanceId()}" target="processInstanceId" />
+        <camunda:in source="_servicesMocked" target="_servicesMocked" />
+        <camunda:in source="_mockedWorkers" target="_mockedWorkers" />
+        <camunda:in source="_identityCorrelation" target="_identityCorrelation" />
       </bpmn:extensionElements>
       <bpmn:incoming>StartedEventFlow</bpmn:incoming>
       <bpmn:outgoing>FinishedEventFlow</bpmn:outgoing>

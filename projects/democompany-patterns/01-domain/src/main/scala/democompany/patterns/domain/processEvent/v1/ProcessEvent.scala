@@ -1,17 +1,19 @@
 package democompany.patterns
 package domain.processEvent.v1
 
-/** The event process of the example for «Prozess-Event senden» - a dummy: it takes the event and
-  * ends. A real one would report it, e.g. to another system. Its inputs are what the pattern
-  * passes.
+/** The event process of the example for «Prozess-Event senden»: «Event melden» passes the event to
+  * the service `PostEvent` (democompany-services) and ends. This is the part each company sets up
+  * its own way - another one reports to another system or does more steps. Its inputs are what the
+  * pattern passes.
   */
 object ProcessEvent extends CompanyBpmnProcessDsl:
 
   val processName   = "democompany-patterns-processEventV1"
   val descr: String =
-    """Dummy-Event-Prozess für das Pattern «Prozess-Event senden»: nimmt das Event entgegen und endet mit
-      |`succeeded`. Ein echter Event-Prozess würde es z. B. einem Fremdsystem melden. Die Eingaben sind
-      |die, die das Pattern mitgibt; zurück gibt er nichts.
+    """Event-Prozess für das Pattern «Prozess-Event senden»: «Event melden» gibt das Event an den Service
+      |`PostEvent` (democompany-services) weiter, dann endet er mit `succeeded`. Was mit einem Event
+      |geschieht, legt jede Firma in ihrem Event-Prozess fest. Die Eingaben sind die, die das Pattern
+      |mitgibt; zurück gibt er nichts.
       |""".stripMargin
 
   case class In(
