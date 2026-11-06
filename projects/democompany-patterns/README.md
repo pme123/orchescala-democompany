@@ -50,7 +50,7 @@ Layout und IDs des Pattern-Blocks (`OutputMockedBoundary`, `OutputMockedThrow`,
 | Topic | `camunda:type="external" camunda:topic="<processId>"` | `zeebe:taskDefinition type="<processId>"` |
 | `_handledErrors` | `camunda:inputParameter` | `zeebe:input source="=&quot;output-mocked&quot;"` |
 | `processStatus` am Ende | Execution Listener (`execution.setVariable(...)`) | Output-Mapping (`zeebe:output`) |
-| `processInstanceId` | gibt es in der Engine (`execution.processInstanceId`) | setzt der InitWorker als Variable (der `processInstanceKey`) – nur im normalen Lauf, siehe unten |
+| eigene Instanz | gibt es in der Engine (`execution.processInstanceId`) | in FEEL `string(camunda.processInstance.key)` – ab Camunda 8.10, keine Variable |
 
 In Camunda 8 landen die Variablen der gemockten Ausgabe (der Fehler `output-mocked`) zuerst im
 Scope der Boundary (dort steht `processStatus = succeeded` aus dem gemockten `Out`); im Prozess
@@ -500,7 +500,7 @@ und mit `succeeded` endet. Die Eingaben sieht man in Cockpit bzw. Operate an sei
 |---|---|---|
 | gerufener Prozess | `calledElement` | `zeebe:calledElement processId`, `propagateAllParentVariables` und `propagateAllChildVariables` aus |
 | Prozess-ID | `${execution.getProcessDefinition().getKey()}` | die ID als Text (`="democompany-patterns-sendProcessEventV1"`) |
-| Instanz | `${execution.getProcessInstanceId()}` | `=processInstanceId` – setzt der InitWorker, der Prozess braucht «Init Process» |
+| Instanz | `${execution.getProcessInstanceId()}` | `=string(camunda.processInstance.key)` – ab Camunda 8.10, ohne «Init Process» |
 
 Sollen Mocks und Identität auch im Event-Prozess gelten, trägt dieselbe Call Activity zusätzlich
 «Mocks und Identität weitergeben» – die Orch Spec erkennt beide.
@@ -556,9 +556,8 @@ Senden lässt es sich über Orchescala mit dem Platzhalter `{processInstanceId}`
 (`cancel-{processInstanceId}`, siehe [`CancelSE.scala`](01-domain/src/main/scala/democompany/patterns/domain/cancelBySignal/v1/CancelSE.scala)),
 oder aus einem anderen Element des Prozesses mit einem Signal-Ende bzw. -Zwischenereignis desselben Namens.
 
-**Camunda 8 braucht 8.10.** Erst ab 8.10 kennt FEEL `camunda.processInstance.key`. Eine Variable wie
-`processInstanceId` gibt es beim Start noch nicht (sie setzt erst der InitWorker) – auf 8.9 bleibt jede
-Instanz deshalb schon beim Start mit einem Incident stehen
+**Camunda 8 braucht 8.10.** Erst ab 8.10 kennt FEEL `camunda.processInstance.key` – auf 8.9 bleibt jede
+Instanz schon beim Start mit einem Incident stehen
 («Expected result of the expression … to be 'STRING', but was 'NULL'»; auf c8run 8.9.21 nachgeprüft).
 Die Simulationen für C8 laufen auf c8run 8.10.8.
 
@@ -590,8 +589,3 @@ Wie die anderen Pattern-Simulationen startet sie ohne Prüfung über die Worker-
 ```bash
 ./helper.scala deploy CancelBySignalC8Simulation
 ```
-
-## Offene Punkte
-
-- Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId` nicht (im normalen Lauf schon) –
-  die Variablen kommen dort über den Fehler `output-mocked`, nicht über das Abschliessen des Jobs.
