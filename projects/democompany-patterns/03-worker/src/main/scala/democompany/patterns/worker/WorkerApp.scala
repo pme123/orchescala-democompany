@@ -10,7 +10,8 @@ object WorkerApp extends CompanyWorkerApp:
     uniqueExecutionWorkers,
     processStatusWorkers,
     stopWithErrorWorkers,
-    sendProcessEventWorkers
+    sendProcessEventWorkers,
+    cancelBySignalWorkers
   )
   // «Kunde laden» (GetClientsClientId) is a service of democompany-services - run by this app
   dependencies(
@@ -71,4 +72,11 @@ object WorkerApp extends CompanyWorkerApp:
       new SendProcessEventWorker()
     )
   end sendProcessEventWorkers
+
+  private lazy val cancelBySignalWorkers =
+    import democompany.patterns.worker.cancelBySignal.v1.*
+    Seq(
+      new CancelBySignalWorker()
+    )
+  end cancelBySignalWorkers
 end WorkerApp
