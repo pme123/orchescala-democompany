@@ -5,7 +5,7 @@ info:
   summary: "\n**This is for Postman - to have example requests. Be aware the Output\
     \ is not provided!**\n\n\n\nKatalog mit Beispielprozessen für die Orchescala-Patterns\
     \ - je Pattern ein Prozess mit Simulationen für Camunda 7 und Camunda 8.\n\nCreated\
-    \ at 11/4/26, 7:23 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ at 11/6/26, 6:35 AM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -51,8 +51,9 @@ info:
     \ Später sollen die BPMN auch als Testdaten für die Orch Spec dienen.\n\nBis jetzt:\
     \ **«Init Process»**, **«Identität übernehmen / zurücksetzen»**,\n**«Mocks und\
     \ Identität weitergeben»**, **«Einmalige Ausführung»**, **«Prozess-Status am Ende»\
-    ** und\n**«Prozess mit Fehler stoppen»**.\n\n## Init Process – `democompany-patterns-initProcessV1`\n\
-    \n```\nStart ─▶ [Init Process] ─▶ (succeeded)\n              │ output-mocked (Fehler-Boundary)\n\
+    **,\n**«Prozess mit Fehler stoppen»**, **«Prozess-Event senden»** und **«Abbruch\
+    \ per Signal»**.\n\n## Init Process – `democompany-patterns-initProcessV1`\n\n\
+    ```\nStart ─▶ [Init Process] ─▶ (succeeded)\n              │ output-mocked (Fehler-Boundary)\n\
     \              ▼\n         ⇨ output-mocked (Link-Wurf)\n\n⇨ output-mocked (Link-Ziel)\
     \ ─▶ (output-mocked)\n```\n\nDer erste Schritt des Prozesses ist ein Service-Task\
     \ mit der **Prozess-ID als Topic**. Den Task\nbearbeitet der InitWorker (`InitProcessWorker`):\n\
@@ -371,9 +372,89 @@ info:
     \ StopWithErrorC7Simulation\n```\n```bash\n./helper.scala deploy StopWithErrorC8Simulation\n\
     ```\n\nBleiben die Instanzen der Szenarien 2 und 3 stehen, ist das gewollt – in\
     \ Cockpit bzw. Operate abbrechen\noder (Szenario 3) per Modification weiterschieben.\n\
-    \n## Offene Punkte\n\n- Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId`\
-    \ nicht (im normalen Lauf schon) –\n  die Variablen kommen dort über den Fehler\
-    \ `output-mocked`, nicht über das Abschliessen des Jobs.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
+    \n## Prozess-Event senden – `democompany-patterns-sendProcessEventV1`\n\n```\n\
+    Start ─▶ [Init Process] ─▶ [Prozess-Event: gestartet] ─▶ [Prozess-Event: beendet]\
+    \ ─▶ (succeeded)\n                                  │ ruft                   \
+    \     │ ruft\n                                  ▼                            \
+    \ ▼\n                     democompany-patterns-processEventV1:  (Event) ─▶ (entgegengenommen)\n\
+    ```\n\nDas Pattern **meldet einen Schritt des Prozesses an einen eigenen Event-Prozess**\
+    \ – hier zu Beginn\n`started` und am Ende `finished`. Es sitzt an einer **Call\
+    \ Activity**; welchen Prozess sie ruft, wählt\nman im Pattern (`eventProcess`,\
+    \ Auswahl aus den Prozessen des Katalogs – ohne Wahl zeigt die Orch Spec\neinen\
+    \ Hinweis). Der Event-Prozess bekommt:\n\n Eingabe | Inhalt |\n---|---|\n `eventKey`\
+    \ | was passiert ist – Parameter `eventKey`, Text oder FEEL (Vorgabe `started`)\
+    \ |\n `processDefinitionKey` | die ID des meldenden Prozesses |\n `processInstanceId`\
+    \ | seine Instanz |\n\nZurück gibt er nichts. Was er mit dem Event macht – einem\
+    \ Fremdsystem melden, protokollieren – ist seine\nSache; hier ist es ein **Dummy**\
+    \ (`democompany-patterns-processEventV1`), der das Event entgegennimmt\nund mit\
+    \ `succeeded` endet. Die Eingaben sieht man in Cockpit bzw. Operate an seiner\
+    \ Instanz.\n\n Camunda 7 | Camunda 8 |\n---|---|---|\n gerufener Prozess | `calledElement`\
+    \ | `zeebe:calledElement processId`, `propagateAllParentVariables` und `propagateAllChildVariables`\
+    \ aus |\n Prozess-ID | `${execution.getProcessDefinition().getKey()}` | die ID\
+    \ als Text (`=\"democompany-patterns-sendProcessEventV1\"`) |\n Instanz | `${execution.getProcessInstanceId()}`\
+    \ | `=processInstanceId` – setzt der InitWorker, der Prozess braucht «Init Process»\
+    \ |\n\nSollen Mocks und Identität auch im Event-Prozess gelten, trägt dieselbe\
+    \ Call Activity zusätzlich\n«Mocks und Identität weitergeben» – die Orch Spec\
+    \ erkennt beide.\n\n Datei | Inhalt |\n---|---|\n [`SendProcessEvent.scala`](01-domain/src/main/scala/democompany/patterns/domain/sendProcessEvent/v1/SendProcessEvent.scala)\
+    \ | `In`, `Out` |\n [`ProcessEvent.scala`](01-domain/src/main/scala/democompany/patterns/domain/processEvent/v1/ProcessEvent.scala)\
+    \ | der Dummy: `In` (`eventKey`, `processDefinitionKey`, `processInstanceId`),\
+    \ `Out` |\n [`SendProcessEventWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/sendProcessEvent/v1/SendProcessEventWorker.scala)\
+    \ | InitWorker: Prüfung des In |\n [`camunda/patterns-sendProcessEventV1.bpmn`](src/main/resources/camunda/patterns-sendProcessEventV1.bpmn),\
+    \ [`camunda/patterns-processEventV1.bpmn`](src/main/resources/camunda/patterns-processEventV1.bpmn)\
+    \ | Camunda 7 |\n [`camunda8/patterns-sendProcessEventV1.bpmn`](src/main/resources/camunda8/patterns-sendProcessEventV1.bpmn),\
+    \ [`camunda8/patterns-processEventV1.bpmn`](src/main/resources/camunda8/patterns-processEventV1.bpmn)\
+    \ | Camunda 8 |\n [`SendProcessEventSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/SendProcessEventSimulation.scala)\
+    \ | die Szenarien, für beide Engines gleich |\n\n### Simulationen\n\n1. **`SendProcessEvent\
+    \ succeeded`** – meldet `started` und `finished` und endet mit\n   `processStatus\
+    \ = succeeded`. Fehlte der Event-Prozess, bliebe der Prozess mit einem Incident\
+    \ an der\n   Call Activity stehen.\n2. **`SendProcessEvent mocked`** – endet ü\
+    ber den Pfad `output-mocked` von «Init Process», ohne Event.\n3. **`ProcessEvent\
+    \ dummy`** – der Dummy für sich: nimmt das Event entgegen und endet mit `succeeded`.\n\
+    \n```bash\n./helper.scala deploy SendProcessEventC7Simulation\n```\n```bash\n\
+    ./helper.scala deploy SendProcessEventC8Simulation\n```\n\n## Abbruch per Signal\
+    \ – `democompany-patterns-cancelBySignalV1`\n\n```\nStart ─▶ [Init Process] ─▶\
+    \ [Antrag bearbeiten] ─▶ (succeeded)\n\n┌ Abbruch (Ereignis-Subprozess, unterbrechend)\
+    \ ──────────┐\n│ (Signal cancel-<Instanz>) ─▶ (canceled)                 │\n└─\
+    ────────────────────────────────────────────────────────┘\n```\n\nDas Pattern\
+    \ **bricht eine Instanz von aussen ab**: ein unterbrechender Ereignis-Subprozess\
+    \ wartet auf das\nSignal `cancel-<Instanz>`. Kommt es, beendet er den Prozess\
+    \ – egal, wo er gerade wartet – und setzt\n`processStatus = canceled`. Ohne Signal\
+    \ wird «Antrag bearbeiten» erledigt, und der Prozess endet mit\n`succeeded`. Das\
+    \ Pattern sitzt am **Prozess**; das Präfix des Signals ist ein Parameter\n(`signalPrefix`,\
+    \ Vorgabe `cancel-`).\n\nDas Signal ist an **diese eine Instanz** gebunden – sein\
+    \ Name wird beim Start der Instanz gebildet:\n\n Camunda 7 | Camunda 8 (ab 8.10)\
+    \ |\n---|---|---|\n Signalname | `cancel-${execution.processInstanceId}` | `=\"\
+    cancel-\" + string(camunda.processInstance.key)` |\n Status | Listener am Ende\
+    \ `canceled` | Output-Mapping am Ende `canceled` |\n\nSenden lässt es sich über\
+    \ Orchescala mit dem Platzhalter `{processInstanceId}` im Namen\n(`cancel-{processInstanceId}`,\
+    \ siehe [`CancelSE.scala`](01-domain/src/main/scala/democompany/patterns/domain/cancelBySignal/v1/CancelSE.scala)),\n\
+    oder aus einem anderen Element des Prozesses mit einem Signal-Ende bzw. -Zwischenereignis\
+    \ desselben Namens.\n\n**Camunda 8 braucht 8.10.** Erst ab 8.10 kennt FEEL `camunda.processInstance.key`.\
+    \ Eine Variable wie\n`processInstanceId` gibt es beim Start noch nicht (sie setzt\
+    \ erst der InitWorker) – auf 8.9 bleibt jede\nInstanz deshalb schon beim Start\
+    \ mit einem Incident stehen\n(«Expected result of the expression … to be 'STRING',\
+    \ but was 'NULL'»; auf c8run 8.9.21 nachgeprüft).\nDie Simulationen für C8 laufen\
+    \ auf c8run 8.10.8.\n\n Datei | Inhalt |\n---|---|\n [`CancelBySignal.scala`](01-domain/src/main/scala/democompany/patterns/domain/cancelBySignal/v1/CancelBySignal.scala)\
+    \ | `In`, `InitIn` (`waitForSignal`), `Out` |\n [`EditRequestUT.scala`](01-domain/src/main/scala/democompany/patterns/domain/cancelBySignal/v1/EditRequestUT.scala)\
+    \ | «Antrag bearbeiten» – hier wartet der Prozess |\n [`CancelSE.scala`](01-domain/src/main/scala/democompany/patterns/domain/cancelBySignal/v1/CancelSE.scala)\
+    \ | das Signal `cancel-{processInstanceId}` |\n [`CancelBySignalWorker.scala`](03-worker/src/main/scala/democompany/patterns/worker/cancelBySignal/v1/CancelBySignalWorker.scala)\
+    \ | InitWorker: Prüfung des In, `waitForSignal = true` |\n [`camunda/patterns-cancelBySignalV1.bpmn`](src/main/resources/camunda/patterns-cancelBySignalV1.bpmn)\
+    \ | Camunda 7 |\n [`camunda8/patterns-cancelBySignalV1.bpmn`](src/main/resources/camunda8/patterns-cancelBySignalV1.bpmn)\
+    \ | Camunda 8 (ab 8.10) |\n [`CancelBySignalSimulation.scala`](03-simulation/src/test/scala/democompany/patterns/simulation/CancelBySignalSimulation.scala)\
+    \ | die Szenarien, für beide Engines gleich |\n\n### Simulationen\n\n1. **`CancelBySignal\
+    \ succeeded`** – kein Signal: «Antrag bearbeiten» wird erledigt, der Prozess endet\
+    \ mit\n   `processStatus = succeeded`.\n2. **`CancelBySignal canceled`** – das\
+    \ Signal kommt, während der Prozess an «Antrag bearbeiten» wartet:\n   der Ereignis-Subprozess\
+    \ bricht ab, der Prozess endet mit `processStatus = canceled`. Die Simulation\n\
+    \   schickt das Signal erst, wenn der InitWorker durch ist (`waitForSignal = true`).\n\
+    3. **`CancelBySignal mocked`** – endet über den Pfad `output-mocked` von «Init\
+    \ Process».\n\nWie die anderen Pattern-Simulationen startet sie ohne Prüfung ü\
+    ber die Worker-App\n(`validateProcess(false)`) – das In prüft der InitWorker in\
+    \ der Engine.\n\n```bash\n./helper.scala deploy CancelBySignalC7Simulation\n```\n\
+    ```bash\n./helper.scala deploy CancelBySignalC8Simulation\n```\n\n## Offene Punkte\n\
+    \n- Im gemockten Lauf auf C8 setzt der InitWorker `processInstanceId` nicht (im\
+    \ normalen Lauf schon) –\n  die Variablen kommen dort über den Fehler `output-mocked`,\
+    \ nicht über das Abschliessen des Jobs.\n\n\n<details>\n<summary><b><i>CHANGELOG.md</i></b></summary>\n\
     <p>\n\n\nAll notable changes to this project will be documented in this file.\n\
     \n* Types of Changes (L3):\n  * Added: new features\n  * Changed: changes in existing\
     \ functionality\n  * Deprecated: soon-to-be-removed features\n  * Removed: now\
@@ -1354,6 +1435,76 @@ paths:
                   businessKey: democompany-patterns-processEventV1
                   withVariablesInReturn: true
         required: true
+      responses:
+        '200':
+          description: ''
+  /process-definition/key/democompany-patterns-cancelBySignalV1/start:
+    post:
+      tags:
+      - democompany-patterns-cancelBySignalV1
+      summary: 'Bpmn: cancelBySignalV1'
+      description: |2
+
+        Beispiel für das Pattern «Abbruch per Signal»: ein unterbrechender Ereignis-Subprozess wartet auf
+        das Signal `cancel-<Instanz>`. Kommt es, bricht er den Prozess ab - egal, wo er gerade wartet - und
+        endet mit `canceled`. Ohne Signal wird «Antrag bearbeiten» erledigt, und der Prozess endet mit
+        `succeeded`. Auf C8 braucht das Pattern Camunda 8.10 (`camunda.processInstance.key`).
+
+
+        ---
+
+        - **Called Element**: `democompany-patterns-cancelBySignalV1` (to define in the Call Activity)
+
+
+
+        ---
+
+
+
+
+        See API Doc: [Bpmn: cancelBySignalV1](/site/democompany/democompany-patterns/OpenApi.html#operation/Bpmn:%20cancelBySignalV1)
+      operationId: postProcess-definitionKeyDemocompany-patterns-cancelbysignalv1Start
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProcessIn'
+            examples:
+              democompany-patterns-cancelBySignalV1:
+                value:
+                  variables:
+                    customerName:
+                      value: Peter Muster
+                      type: String
+                  businessKey: democompany-patterns-cancelBySignalV1
+                  withVariablesInReturn: true
+        required: true
+      responses:
+        '200':
+          description: ''
+  /signal/--REMOVE:cancel-%7BprocessInstanceId%7D--:
+    post:
+      tags:
+      - democompany-patterns-cancelBySignalV1
+      summary: 'Signal: cancel-{processInstanceId}'
+      description: |2
+
+
+        Bricht die Instanz ab - der Ereignis-Subprozess «Abbruch» fängt das Signal und beendet den Prozess mit `canceled`.
+
+        - _messageName_: `cancel-{processInstanceId}`
+
+        ---
+
+
+
+
+        Signal:
+        - _messageName_: `cancel-{processInstanceId}`,
+
+
+        See API Doc: [Signal: cancel-{processInstanceId}](/site/democompany/democompany-patterns/OpenApi.html#operation/Signal:%20cancel-{processInstanceId})
+      operationId: postSignal--remove:cancel-{processinstanceid}--
       responses:
         '200':
           description: ''

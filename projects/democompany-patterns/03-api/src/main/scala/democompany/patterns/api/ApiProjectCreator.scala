@@ -18,7 +18,8 @@ object ApiProjectCreator extends CompanyApiCreator:
     processStatusApi,
     stopWithErrorApi,
     sendProcessEventApi,
-    processEventApi
+    processEventApi,
+    cancelBySignalApi
   )
 
   private lazy val initProcessApi =
@@ -62,4 +63,11 @@ object ApiProjectCreator extends CompanyApiCreator:
   private lazy val processEventApi =
     import democompany.patterns.domain.processEvent.v1.*
     api(ProcessEvent.example)()
+
+  private lazy val cancelBySignalApi =
+    import democompany.patterns.domain.cancelBySignal.v1.*
+    api(CancelBySignal.example)(
+      EditRequestUT.example,
+      CancelSE.example
+    )
 end ApiProjectCreator
