@@ -9,6 +9,11 @@ lazy val userPrefix = s"SSO_$ssoRealm--"
 
 val impersonateDiscriminator = ":::"
 
-// workers with roles (requiredRoles) need verified tokens - TOKEN_ISSUER, see CompanyTokenValidation
+// workers with roles (requiredRoles) need verified tokens - TOKEN_ISSUER, see CompanyTokenValidation;
+// deploy on start with DEPLOY_ON_START_GATEWAY_URL, see CompanyDeployOnStart
 lazy val companyWorkerConfig =
-  DefaultWorkerConfig(engineConfig = companyEngineConfig, tokenValidation = CompanyTokenValidation.fromEnv)
+  DefaultWorkerConfig(
+    engineConfig = companyEngineConfig,
+    tokenValidation = CompanyTokenValidation.fromEnv,
+    deployOnStart = CompanyDeployOnStart.fromEnv
+  )
