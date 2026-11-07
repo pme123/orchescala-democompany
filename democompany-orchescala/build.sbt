@@ -19,7 +19,7 @@ lazy val root = (project in file("."))
     simulation,
     worker,
     gateway,
-    platform,
+    studio,
     helper,
     docs
   )
@@ -79,15 +79,15 @@ lazy val gateway = project
   .dependsOn(worker)
   .enablePlugins(JavaAppPackaging)
 
-// The platform app of the company (orch-platform): orch-doc, orch-spec and orch-ops with the
-// company's documentation - `sbt platform/run`, then http://localhost:8880/site/
-lazy val platform = project
-  .in(file("./04-platform"))
-  // not generalSettings: its auto imports (circe, tapir) are no dependencies of the platform
-  .settings(scalaVersion := scalaV, name := s"$projectName-platform")
+// The studio of the company (orchescala-orch-studio, Orch Platform): orch-doc, orch-spec and orch-ops
+// with the company's documentation - `sbt studio/run`, then http://localhost:8880/site/
+lazy val studio = project
+  .in(file("./04-studio"))
+  // not generalSettings: its auto imports (circe, tapir) are no dependencies of the studio
+  .settings(scalaVersion := scalaV, name := s"$projectName-studio")
   .settings(publicationSettings)
-  .settings(libraryDependencies ++= platformDeps)
-  .settings(platformSiteSettings(docs))
+  .settings(libraryDependencies ++= studioDeps)
+  .settings(studioSiteSettings(docs))
   .enablePlugins(JavaAppPackaging)
 
 lazy val helper = project
