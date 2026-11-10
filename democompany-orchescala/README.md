@@ -172,18 +172,14 @@ GitHub Pages: <https://pme123.github.io/orchescala-democompany/>
 
 ### Studio
 
-The module `studio` (`04-studio`) builds the company's studio of
-[Orch Platform](https://github.com/z9nai/orch-platform) with `orchescala-orch-studio`: orch-doc
-with the company's docs, orch-spec and orch-ops - the docs (`00-docs/site`) are on its
-classpath as `site/`, the apps come from the `orchescala-orch-doc` jar.
+The studio of [Orch Platform](https://github.com/z9nai/orch-platform) - orch-doc with the
+company's docs, orch-spec and orch-ops, and the AI of orch-spec - is one image from Orchescala
+(`06-orch-studio`), the same for every company. The company does not build it, it configures it:
+its docs as a folder (`STUDIO_SITE_DIR=00-docs/site`, after `prepareDocs`), its skills
+(`STUDIO_SKILLS_DIR`) and the key of the AI. The stack `studio/` of orch-platform runs it for the
+democompany on <http://localhost:8881/site/>.
 
-```bash
-sbt studio/run   # http://localhost:8880/site/ · /site/spec/ · /site/ops/
-```
-
-- `orchescala-orch-studio` comes with Orchescala (`06-orch-studio`), as SNAPSHOT from a local publish.
-- No login yet (PoC) - it listens on `localhost` only. `STUDIO_PORT`, `STUDIO_SITE_DIR`
-  (the docs from a folder, e.g. right after `prepareDocs`).
+- No login yet (PoC) - it listens on `localhost` only.
 
 ## Examples
 
