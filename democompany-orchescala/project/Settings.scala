@@ -146,29 +146,6 @@ object Settings {
     "io.github.pme123" %% "orchescala-gateway" % orchescalaV
   )
 
-  lazy val studioDeps = Seq(
-    "io.github.pme123" %% "orchescala-orch-studio" % orchescalaV
-  )
-
-  /** The company's documentation (`00-docs/site`, assembled by `prepareDocs` / `publishDocs`) in the
-    * studio as `site/` - like the gateway has it. Copied on every build: a page removed from the
-    * documentation does not stay in the app. `sbt studio/run` from the company's folder, so the
-    * app finds the orch-spec and orch-ops folders in `00-docs/testdata`.
-    */
-  def studioSiteSettings(docs: Project) = Seq(
-    Compile / resourceGenerators += Def.task {
-      val src = (docs / baseDirectory).value / "site"
-      val out = (Compile / resourceManaged).value / "site"
-      IO.delete(out)
-      val files = (src ** -DirectoryFilter).get().pair(Path.rebase(src, out))
-      IO.copy(files, CopyOptions().withOverwrite(true))
-      files.map(_._2)
-    }.taskValue,
-    run / fork := true,
-    run / baseDirectory := (LocalRootProject / baseDirectory).value,
-    run / connectInput := true
-  )
-
   lazy val helperDeps = apiDeps ++ Seq(
     "io.github.pme123" %% "orchescala-helper" % orchescalaV
   )

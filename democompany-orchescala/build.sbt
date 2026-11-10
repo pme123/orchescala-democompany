@@ -19,7 +19,6 @@ lazy val root = (project in file("."))
     simulation,
     worker,
     gateway,
-    studio,
     helper,
     docs
   )
@@ -77,17 +76,6 @@ lazy val gateway = project
   .settings(zioTestSettings)
   .settings(libraryDependencies ++= gatewayDeps)
   .dependsOn(worker)
-  .enablePlugins(JavaAppPackaging)
-
-// The studio of the company (orchescala-orch-studio, Orch Platform): orch-doc, orch-spec and orch-ops
-// with the company's documentation - `sbt studio/run`, then http://localhost:8880/site/
-lazy val studio = project
-  .in(file("./04-studio"))
-  // not generalSettings: its auto imports (circe, tapir) are no dependencies of the studio
-  .settings(scalaVersion := scalaV, name := s"$projectName-studio")
-  .settings(publicationSettings)
-  .settings(libraryDependencies ++= studioDeps)
-  .settings(studioSiteSettings(docs))
   .enablePlugins(JavaAppPackaging)
 
 lazy val helper = project
