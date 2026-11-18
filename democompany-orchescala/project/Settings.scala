@@ -1,21 +1,12 @@
 
-import com.typesafe.config.ConfigFactory
-import laika.ast.Path.Root
-import laika.config.{LinkValidation, SyntaxHighlighting, Version, Versions}
-import laika.format.Markdown.GitHubFlavor
-import laika.helium.Helium
-import laika.helium.config.{Favicon, HeliumIcon, IconLink}
-import laika.sbt.LaikaPlugin.autoImport.*
 import sbt.*
 import sbt.Keys.*
 import sbtbuildinfo.BuildInfoPlugin.autoImport.{BuildInfoKey, buildInfoKeys, buildInfoPackage}
 
-import scala.jdk.CollectionConverters.asScalaBufferConverter
-
 object Settings {
 
-  val scalaV       = "3.8.3"
-  val orchescalaV  = "0.10.0-SNAPSHOT"
+  val scalaV       = "3.10.1"
+  val orchescalaV  = "0.11.0-SNAPSHOT"
   val camundaV     = "7.24.0" // only as info
   val mUnitVersion = "1.2.4"
   val zioVersion = "2.1.24"
@@ -31,9 +22,10 @@ object Settings {
   def buildInfoSettings(additionalKeys: BuildInfoKey*) = Seq(
     buildInfoKeys := Seq[BuildInfoKey](
       BuildInfoKey("name", s"$projectOrg-orchescala"),
-      version,
-      scalaVersion,
-      sbtVersion,
+      // BuildInfoKey(...) around the keys: Scala 3 (sbt 2) converts them only in .sbt files
+      BuildInfoKey(version),
+      BuildInfoKey(scalaVersion),
+      BuildInfoKey(sbtVersion),
       BuildInfoKey("orchescalaV", orchescalaV),
     ) ++ additionalKeys,
     buildInfoPackage := s"$projectOrg.orchescala"
@@ -43,7 +35,8 @@ object Settings {
     scalaVersion := scalaV,
     autoImportSetting(module),
     scalacOptions ++= Seq(
-      "-Xmax-inlines:200" // is declared as erased, but is in fact used
+      "-Xmax-inlines:200", // is declared as erased, but is in fact used
+      "-Xmax-fuel:2000" // Scala 3.10: the derivation of large classes needs more than the default 550
       // "-Vprofile",
     )
 
@@ -58,43 +51,6 @@ object Settings {
           "io.circe.generic.semiauto", "io.circe.derivation", "io.circe.syntax", "sttp.tapir",
           "sttp.tapir.json.circe"
         )).mkString(start = "-Yimports:", sep = ",", end = "")
-
-  // docs
-  lazy val laikaSettings = Seq(
-    sourcesInBase := false,
-    laikaConfig := LaikaConfig.defaults
-      .withConfigValue(LinkValidation.Local)
-      .withConfigValue("orchescala.docs", "https://pme123.github.io/orchescala/")
-      .withRawContent,
-    Laika / sourceDirectories := Seq(baseDirectory.value / "src" / "docs")
-    //  .failOnMessages(MessageFilter.None)
-    //  .renderMessages(MessageFilter.None)
-    ,
-    laikaExtensions := Seq(GitHubFlavor, SyntaxHighlighting),
-    laikaTheme := Helium.defaults.site
-      .topNavigationBar(
-        homeLink = IconLink.internal(Root / "index.md", HeliumIcon.home)
-      )
-      .site
-      .favIcons(
-        Favicon.internal(Root / "favicon.ico", sizes = "32x32")
-      )
-      .site
-      .versions(versions)
-      .build
-  )
-
-  lazy val config = ConfigFactory.parseFile(new File("00-docs/CONFIG.conf"))
-  lazy val currentVersion = config.getString("release.tag")
-  lazy val released = config.getBoolean("released")
-  lazy val olderVersions = config.getList("releases.older").asScala
-  lazy val versions = Versions
-    .forCurrentVersion(Version(currentVersion, currentVersion).withLabel(if (released)
-      "Stable"
-    else "Dev"))
-    .withOlderVersions(
-      olderVersions.map(_.unwrapped().toString).map(v => Version(v, v)) *
-    )
 
   def loadingMessage = s"""Successfully started.
                           |- Project: $projectOrg : $projectName : $projectV
@@ -125,7 +81,7 @@ object Settings {
     // cross versions, which sbt refuses. The engine works fine with
     // geny_3, so the 2.13 one is excluded here as well as upstream.
     ("io.github.pme123" %% "orchescala-dmntester-server" % orchescalaV)
-      .exclude("com.lihaoyi", "geny_2.13")
+      .excludeAll(ExclusionRule("com.lihaoyi", "geny_2.13"))
   )
   lazy val simulationDeps = Seq(
     "io.github.pme123" %% "orchescala-simulation" % orchescalaV,
@@ -173,13 +129,13 @@ object Settings {
   lazy val publicationSettings = Seq(
     // publishMavenStyle := true,
     pomIncludeRepository := { _ => false },
-    licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
-    homepage := Some(url(githubUrl)),
+    licenses += License.MIT,
+    homepage := Some(uri(githubUrl)),
     startYear := Some(2021),
     // logLevel := Level.Debug,
     scmInfo := Some(
       ScmInfo(
-        url(githubUrl),
+        uri(githubUrl),
         "scm:git:github.com:/pme123/orchescala"
       )
     ),
@@ -190,7 +146,7 @@ object Settings {
       id = "pme123",
       name = "Pascal Mengelt",
       email = "pascal.mengelt@gmail.com",
-      url = url("https://github.com/pme123")
+      url = uri("https://github.com/pme123")
     )
   )
 

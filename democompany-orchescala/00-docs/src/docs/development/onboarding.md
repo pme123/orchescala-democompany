@@ -1,8 +1,3 @@
-{%
-// auto generated - do not change!
-helium.site.pageNavigation.depth = 2
-helium.site.pageNavigation.enabled = true
-%}
 # Onboarding
 
 The general Onboarding you find here:
