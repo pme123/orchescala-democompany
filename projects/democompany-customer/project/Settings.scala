@@ -7,19 +7,19 @@ import sbt.Keys.*
 
 object Settings {
 
-  val scalaV = "3.8.3"
+  val scalaV = "3.10.1"
   val customer = ProjectDef.org
   val customerOrchescalaV = "0.1.0-SNAPSHOT"
   // to override the version defined in customerOrchescala
-  val orchescalaV = "0.10.0-SNAPSHOT"
+  val orchescalaV = "0.11.0-SNAPSHOT"
 
   // other dependencies
   // run worker
-  val mUnitVersion = "1.2.4"
+  val mUnitVersion = "1.3.6"
   val mUnit = "org.scalameta" %% "munit" % mUnitVersion % Test
-  val zioVersion = "2.1.24"
-  val logbackVersion = "1.5.32"
-  val jaxbApiVersion = "4.0.2"
+  val zioVersion = "2.1.27"
+  val logbackVersion = "1.6.7"
+  val jaxbApiVersion = "4.0.5"
   
   def projectSettings(
                        module: Option[String] = None,
@@ -33,6 +33,7 @@ object Settings {
       "-deprecation", // Emit warning and location for usages of deprecated APIs.
       "-feature", // Emit warning and location for usages of features that should be imported explicitly.
       "-Xmax-inlines:200", // is declared as erased, but is in fact used
+      "-Xmax-fuel:2000", // Scala 3.10: the derivation of large classes needs more than the default 550
       "-language:implicitConversions", // allow feature - as the DSLs use it - otherwise there are feature warnings
       // "-rewrite", "-source", "3.4-migration", // migrate automatically to scala 3.4
       // "-Vprofile",
@@ -72,7 +73,7 @@ object Settings {
     Seq(
       customer %% s"$customer-orchescala-dmn" % customerOrchescalaV,
       ("io.github.pme123" %% "orchescala-dmntester-server" % orchescalaV)
-        .exclude("com.lihaoyi", "geny_2.13")
+        .excludeAll(ExclusionRule("com.lihaoyi", "geny_2.13"))
     )
 
   lazy val simulationDeps = 
@@ -114,7 +115,11 @@ object Settings {
     "???"
   lazy val releaseRepo: MavenRepository = "gitlab" at releaseRepoStr
 
-  lazy val dockerSettings = Seq()
+  // the options of `docker build` (SbtConfig.dockerBuildOptions in CompanyDevConfig)
+  lazy val dockerBuildSettings: Seq[Setting[?]] = Seq(
+    dockerBuildOptions ++= Seq("--platform", "linux/amd64")
+  )
+  lazy val dockerSettings = Seq(dockerBaseImage := "eclipse-temurin:21-jre")
   lazy val testSettings = Seq(
     libraryDependencies += mUnit,
     Test / parallelExecution := true,

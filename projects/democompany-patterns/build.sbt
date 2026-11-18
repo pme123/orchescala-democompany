@@ -6,6 +6,8 @@ ThisBuild / versionScheme := Some("semver-spec")
 ThisBuild / libraryDependencySchemes += "io.github.pme123" %% "orchescala-api" % "early-semver"
 ThisBuild / evictionErrorLevel := Level.Warn
 ThisBuild / usePipelining := true
+// sbt 2 keeps the build loaded in a server - reload it when `./helper.scala update` changed it
+Global / onChangedBuildSource := ReloadOnSourceChanges
 
 
 lazy val root = project

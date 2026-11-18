@@ -31,7 +31,6 @@ object CompanyDevConfig:
     scalaVersion = BuildInfo.scalaVersion,
     orchescalaVersion = BuildInfo.orchescalaV,
     companyOrchescalaVersion = BuildInfo.version,
-    sbtVersion = BuildInfo.sbtVersion,
     otherVersions = Map()
   )
 
