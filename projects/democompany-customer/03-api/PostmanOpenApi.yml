@@ -4,7 +4,7 @@ info:
   version: 0.1.0-SNAPSHOT
   summary: "\n**This is for Postman - to have example requests. Be aware the Output\
     \ is not provided!**\n\n\n\nKunden-PoCs der democompany - zuerst die Terminbuchung\
-    \ (appointments).\n\nCreated at 10/20/26, 3:08 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
+    \ (appointments).\n\nCreated at 11/18/26, 4:19 PM\n\n**See the [Orchescala Documentation](https://pme123.github.io/orchescala/)**\n\
     \n<details>\n<summary><b><i>Postman Instructions</i></b></summary>\n<p>\nYou can\
     \ directly import this OpenApi YAML to [Postman](https://www.postman.com/):\n\
     **[OpenApi.yml](OpenApi.yml)**\n\nOnly thing you need to adjust is in the Collection.\n\
@@ -103,7 +103,8 @@ info:
     \ for binding user identity to the process instance using HMAC-SHA256 signatures.\n\
     This prevents replay attacks and tampering by cryptographically binding the user\
     \ identity to a specific process instance.\nThe correlation is automatically signed\
-    \ with the process instance ID when starting a process or completing a user task.\n\
+    \ with the process instance ID when starting a process.\nCompleting a user task\
+    \ or sending a message does not change it - see `_identityCorrelationOfActor`.\n\
     Configure the signing key via environment variable `ORCHESCALA_IDENTITY_SIGNING_KEY`\
     \ or in `EngineConfig`.\n\n- DSL:\n```scala\nval identity = IdentityCorrelation(\n\
     \  username = \"alice@example.com\",\n  email = Some(\"alice@example.com\"),\n\
@@ -112,9 +113,21 @@ info:
     : {\n  \"username\": \"alice@example.com\",\n  \"email\": \"alice@example.com\"\
     ,\n  \"impersonateProcessValue\": \"department-123\",\n  \"issuedAt\": 1706371200000,\n\
     \  \"processInstanceId\": \"12345\",\n  \"signature\": \"abc123...\"\n},\n...\n\
-    ```\n\n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api\
-    \ v0.9.0-SNAPSHOT](https://github.com/pme123/orchescala)\n> - democompany-orchescala-api\
-    \ 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\n\n"
+    ```\n\n\n**_identityCorrelationOfActor**:\n\nSet by the engine only: the signed\
+    \ identity of the person who completed a user task or sent a message\n(only with\
+    \ a `processInstanceId` - the signature needs the process instance).\n`_identityCorrelation`\
+    \ stays as set at the start - the BPMN decides whether the process takes over\
+    \ the actor's identity.\nThe signature is valid for `_identityCorrelation` as\
+    \ well, so a worker can verify it after the copy.\n\n- DSL:\n```scala\n// in the\
+    \ BPMN, e.g. output mappings of an empty intermediate event right after the user\
+    \ task:\n//   _identityCorrelationBefore = _identityCorrelation\n//   _identityCorrelation\
+    \       = _identityCorrelationOfActor\n// and to reset:\n//   _identityCorrelation\
+    \       = _identityCorrelationBefore\n```\n\n- Json\n```json\n...\n\"_identityCorrelationOfActor\"\
+    : {\n  \"username\": \"bob@example.com\",\n  \"issuedAt\": 1706371200000,\n  \"\
+    processInstanceId\": \"12345\",\n  \"signature\": \"def456...\"\n},\n...\n```\n\
+    \n</p>\n</details>\n<p/>\n        \n\n> Created with:\n> - [orchescala-api v0.11.0-SNAPSHOT](https://github.com/pme123/orchescala)\n\
+    > - democompany-orchescala-api 0.1.0-SNAPSHOT\n> - democompany-orchescala-helper\n\
+    \n\n"
 servers:
 - url: http://localhost:8080/engine-rest
   description: Local Developer Server
@@ -178,8 +191,8 @@ paths:
                           "advisorId" : "anna.berater",
                           "advisorName" : "Anna Berater",
                           "advisorEmail" : "anna.berater@democompany.ch",
-                          "start" : "2026-10-20T15:08:48.164443",
-                          "end" : "2026-10-20T15:08:48.164455",
+                          "start" : "2026-11-18T16:19:01.372073",
+                          "end" : "2026-11-18T16:19:01.372123",
                           "topic" : "advice",
                           "channel" : "branch"
                         }
@@ -284,8 +297,8 @@ paths:
                           "advisorId" : "anna.berater",
                           "advisorName" : "Anna Berater",
                           "advisorEmail" : "anna.berater@democompany.ch",
-                          "start" : "2026-10-20T15:08:48.164443",
-                          "end" : "2026-10-20T15:08:48.164455",
+                          "start" : "2026-11-18T16:19:01.372073",
+                          "end" : "2026-11-18T16:19:01.372123",
                           "topic" : "advice",
                           "channel" : "branch"
                         }
@@ -331,7 +344,7 @@ paths:
                   businessKey: democompany-customer-bookAppointmentV1-emailVerified
                   processVariables:
                     verifiedAt:
-                      value: '2026-10-20T15:08:48.195841'
+                      value: '2026-11-18T16:19:01.394135'
                       type: String
                   all: false
                   resultEnabled: true
@@ -346,7 +359,7 @@ paths:
       - democompany-customer-bookAppointmentV1
       summary: 'Worker: AssignCustomer'
       description: |
-        Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest.
+        Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest: nach dem Opt-in läuft sie nicht mehr ab, bis der Berater entschieden hat.
 
         See API Doc: [Worker: AssignCustomer](/site/democompany/democompany-customer/OpenApi.html#operation/Worker:%20AssignCustomer)
       operationId: postProcess-definitionKeyOrchescala-externaltask-genericStart--remove:democompany-customer-bookappointmentv1-assigncustomer--
@@ -630,8 +643,8 @@ paths:
                           "advisorId" : "anna.berater",
                           "advisorName" : "Anna Berater",
                           "advisorEmail" : "anna.berater@democompany.ch",
-                          "start" : "2026-10-20T15:08:48.164443",
-                          "end" : "2026-10-20T15:08:48.164455",
+                          "start" : "2026-11-18T16:19:01.372073",
+                          "end" : "2026-11-18T16:19:01.372123",
                           "topic" : "advice",
                           "channel" : "branch"
                         }
@@ -818,8 +831,8 @@ paths:
                       value: |-
                         [
                           {
-                            "start" : "2026-10-20T15:08:48.233773",
-                            "end" : "2026-10-20T15:08:48.233782"
+                            "start" : "2026-11-18T16:19:01.424567",
+                            "end" : "2026-11-18T16:19:01.424574"
                           }
                         ]
                       type: Json

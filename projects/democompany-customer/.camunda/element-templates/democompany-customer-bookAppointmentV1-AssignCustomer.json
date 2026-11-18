@@ -1,7 +1,7 @@
 {
   "name" : "democompany-customer-bookAppointmentV1-AssignCustomer",
   "id" : "democompany-customer-bookAppointmentV1-AssignCustomer",
-  "description" : "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest.",
+  "description" : "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest: nach dem Opt-in läuft sie nicht mehr ab, bis der Berater entschieden hat.",
   "version" : 0,
   "appliesTo" : [
     "bpmn:Activity"
