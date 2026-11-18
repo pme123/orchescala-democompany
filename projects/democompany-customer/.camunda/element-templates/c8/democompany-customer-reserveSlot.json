@@ -1,0 +1,163 @@
+[
+  {
+    "name" : "democompany-customer-reserveSlot",
+    "id" : "democompany-customer-reserveSlot",
+    "description" : "Reserviert einen freien Termin - ist er schon vergeben, ein Fehler 409 «leider vergeben».",
+    "version" : 0,
+    "appliesTo" : [
+      "bpmn:Activity"
+    ],
+    "elementType" : {
+      "value" : "bpmn:ServiceTask"
+    },
+    "properties" : [
+      {
+        "value" : "appointment",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "appointment"
+        },
+        "label" : "appointment",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "contact",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "contact"
+        },
+        "label" : "contact",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "remark",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "remark"
+        },
+        "label" : "remark",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "reservationId",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "reservationId"
+        },
+        "label" : "reservationId",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "token",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "token"
+        },
+        "label" : "token",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "reservedUntil",
+        "binding" : {
+          "type" : "zeebe:output",
+          "source" : "reservedUntil"
+        },
+        "label" : "reservedUntil",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "democompany-customer-reserveSlot",
+        "binding" : {
+          "type" : "zeebe:taskDefinition",
+          "property" : "type"
+        },
+        "label" : "",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "0",
+        "binding" : {
+          "type" : "zeebe:taskDefinition",
+          "property" : "retries"
+        },
+        "label" : "",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "true",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "_manualOutMapping"
+        },
+        "label" : "_manualOutMapping",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "[ \"reservationId\", \"token\", \"reservedUntil\" ]",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "_outputVariables"
+        },
+        "label" : "_outputVariables",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "_outputMock",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "_outputMock"
+        },
+        "label" : "_outputMock",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "[\"handledError1\", \"handledError2\"]",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "_handledErrors"
+        },
+        "label" : "_handledErrors",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "[\"errorRegex1\", \"errorRegex2\"]",
+        "binding" : {
+          "type" : "zeebe:input",
+          "name" : "_regexHandledErrors"
+        },
+        "label" : "_regexHandledErrors",
+        "description" : "",
+        "type" : "Hidden"
+      },
+      {
+        "value" : "Reserve Slot",
+        "binding" : {
+          "type" : "property",
+          "name" : "name"
+        },
+        "label" : "",
+        "description" : "",
+        "type" : "Hidden"
+      }
+    ],
+    "$schema" : "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
+    "groups" : [
+    ],
+    "entriesVisible" : true,
+    "engines" : {
+      "camunda" : "^8.6"
+    }
+  }
+]
