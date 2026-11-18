@@ -166,7 +166,7 @@
           "name": "advisorCount",
           "type": "Int",
           "description": "Anzahl aktualisierter Berater",
-          "example": "3"
+          "example": "2"
         }
       ],
       "processOut": true

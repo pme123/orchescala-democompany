@@ -32,7 +32,7 @@ object BookReservation extends CompanyBpmnCustomTaskDsl:
       @description("Zeitpunkt der Buchung")
       bookedAt: LocalDateTime,
       @description("Termin gebucht - das Ergebnis des Prozesses")
-      booked: Boolean = true
+      booked: Boolean
   )
 
   object Out:
@@ -40,7 +40,8 @@ object BookReservation extends CompanyBpmnCustomTaskDsl:
     given InOutCodec[Out] = deriveInOutCodec
 
     lazy val example = Out(
-      bookedAt = LocalDateTime.now()
+      bookedAt = LocalDateTime.now(),
+      booked = true
     )
     lazy val exampleMinimal = example
   end Out

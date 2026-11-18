@@ -32,7 +32,7 @@ object ReleaseReservation extends CompanyBpmnCustomTaskDsl:
       @description("Zeitpunkt der Freigabe")
       releasedAt: LocalDateTime,
       @description("Termin nicht gebucht - das Ergebnis des Prozesses")
-      booked: Boolean = false
+      booked: Boolean
   )
 
   object Out:
@@ -40,7 +40,8 @@ object ReleaseReservation extends CompanyBpmnCustomTaskDsl:
     given InOutCodec[Out] = deriveInOutCodec
 
     lazy val example = Out(
-      releasedAt = LocalDateTime.now()
+      releasedAt = LocalDateTime.now(),
+      booked = false
     )
     lazy val exampleMinimal = example
   end Out

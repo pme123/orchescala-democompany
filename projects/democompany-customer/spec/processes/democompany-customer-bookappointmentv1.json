@@ -671,7 +671,7 @@
           "example": "\"0b1c9a4e-7a43-4f0e-9d39-3a3f6c2d8e11\""
         }
       ],
-      "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest."
+      "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest: nach dem Opt-in läuft sie nicht mehr ab, bis der Berater entschieden hat."
     },
     {
       "id": "t-2e07e7889c",
@@ -702,7 +702,7 @@
           "optional": true
         }
       ],
-      "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest."
+      "description": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest: nach dem Opt-in läuft sie nicht mehr ab, bis der Berater entschieden hat."
     },
     {
       "id": "t-64410ae9f8",
@@ -1096,7 +1096,7 @@
       "status": "draft",
       "inTypeId": "t-828ea31ba0",
       "outTypeId": "t-2e07e7889c",
-      "descr": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest."
+      "descr": "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest: nach dem Opt-in läuft sie nicht mehr ab, bis der Berater entschieden hat."
     },
     {
       "id": "ia-0d7ee084dc",

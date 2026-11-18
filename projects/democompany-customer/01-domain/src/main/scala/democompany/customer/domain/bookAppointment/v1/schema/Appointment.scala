@@ -12,7 +12,7 @@ case class Appointment(
     @description("Beginn")
     start: LocalDateTime,
     @description("Ende")
-    end: LocalDateTime,
+    `end`: LocalDateTime,
     @description("Thema")
     topic: Topic,
     @description("Kanal")
@@ -28,7 +28,7 @@ object Appointment:
     advisorName = "Anna Berater",
     advisorEmail = "anna.berater@democompany.ch",
     start = LocalDateTime.now(),
-    end = LocalDateTime.now(),
+    `end` = LocalDateTime.now(),
     topic = Topic.advice,
     channel = Channel.branch
   )

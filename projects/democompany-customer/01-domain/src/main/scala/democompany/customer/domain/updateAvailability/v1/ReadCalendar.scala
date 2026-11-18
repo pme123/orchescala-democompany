@@ -40,7 +40,9 @@ object ReadCalendar extends CompanyBpmnCustomTaskDsl:
     lazy val example = Out(
       busy = Seq(BusyPeriod.example)
     )
-    lazy val exampleMinimal = example
+    lazy val exampleMinimal = example.copy(
+      busy = Seq.empty
+    )
   end Out
 
   lazy val example = customTask(
