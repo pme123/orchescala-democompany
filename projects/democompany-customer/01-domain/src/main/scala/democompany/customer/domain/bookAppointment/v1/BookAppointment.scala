@@ -19,7 +19,6 @@ object BookAppointment extends CompanyBpmnProcessDsl:
       contact: Contact,
       @description("Bemerkung")
       remark: Option[String],
-      @description("A way to override process configuration.\n\n**SHOULD NOT BE USED on Production!**")
       inConfig: Option[InConfig] = None
   ) extends WithConfig[InConfig]:
     lazy val defaultConfig = InConfig()

@@ -24,7 +24,9 @@ object SaveCalendarSnapshot extends CompanyBpmnCustomTaskDsl:
       advisor = Advisor.example,
       busy = Seq(BusyPeriod.example)
     )
-    lazy val exampleMinimal = example
+    lazy val exampleMinimal = example.copy(
+      busy = Seq.empty
+    )
   end In
 
   /** Speichert die belegten Zeiten des Beraters (ersetzt den letzten Stand). */

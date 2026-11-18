@@ -6,7 +6,7 @@ case class BusyPeriod(
     @description("Beginn")
     start: LocalDateTime,
     @description("Ende")
-    end: LocalDateTime
+    `end`: LocalDateTime
 )
 
 object BusyPeriod:
@@ -15,7 +15,7 @@ object BusyPeriod:
 
   lazy val example = BusyPeriod(
     start = LocalDateTime.now(),
-    end = LocalDateTime.now()
+    `end` = LocalDateTime.now()
   )
   lazy val exampleMinimal = example
 end BusyPeriod

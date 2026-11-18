@@ -2,15 +2,13 @@ package democompany.customer.domain.bookAppointment.v1
 
 import democompany.customer.domain.bookAppointment.v1.schema.*
 
-/** Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die
-  * Reservierung fest: nach dem Opt-in läuft sie nicht mehr ab, bis der Berater entschieden hat.
-  */
+/** Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest: nach dem Opt-in läuft sie nicht mehr ab, bis der Berater entschieden hat. */
 object AssignCustomer extends CompanyBpmnCustomTaskDsl:
 
   val topicName = "democompany-customer-bookAppointmentV1-AssignCustomer"
-  val descr: String = "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest."
+  val descr: String = "Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest: nach dem Opt-in läuft sie nicht mehr ab, bis der Berater entschieden hat."
 
-  /** Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent. */
+  /** Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest: nach dem Opt-in läuft sie nicht mehr ab, bis der Berater entschieden hat. */
   case class In(
       @description("Kontaktdaten aus dem Formular")
       contact: Contact,
@@ -32,7 +30,7 @@ object AssignCustomer extends CompanyBpmnCustomTaskDsl:
     lazy val exampleMinimal = example
   end In
 
-  /** Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent. */
+  /** Ordnet die Anfrage einem Kunden zu (Kunden-Nr. oder E-Mail), sonst Interessent - und hält die Reservierung fest: nach dem Opt-in läuft sie nicht mehr ab, bis der Berater entschieden hat. */
   case class Out(
       @description("Kunde oder Interessent")
       customerStatus: CustomerStatus,

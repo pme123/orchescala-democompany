@@ -42,7 +42,9 @@ object LoadAdvisors extends CompanyBpmnCustomTaskDsl:
       advisors = Seq(Advisor.example),
       advisorCount = 1
     )
-    lazy val exampleMinimal = example
+    lazy val exampleMinimal = example.copy(
+      advisors = Seq.empty
+    )
   end Out
 
   lazy val example = customTask(
